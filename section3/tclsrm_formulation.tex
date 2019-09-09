@@ -1,0 +1,41 @@
+\input{section3/general_form}
+\input{section3/spatial_projection}
+\input{section3/space_time}
+
+\subsection{\methodAcronym\ Summary}
+This section outlined the \methodAcronym\ method for model reduction. In summary, \methodAcronym\ sequentially minimizes the time continuous FOM ODE residual over the range of a space--time trial space for a series of time windows:
+\begin{equation*}
+\approxstate^n= \underset{\statey \in \stspace^n}{\text{arg\,min } }
+\mathcal{J}^n(\statey), \qquad n = 1,2,...,\nslabs,
+\end{equation*}
+where,
+\begin{align*}
+\mathcal{J}^n &\vcentcolon \statey \mapsto
+\frac{1}{2} \int_{\timeStartArg{n}}^{\timeEndArg{n}} \big[ \dot{\statey}(t)
+- \velocity(\stateyArg{}{t},t) \big]^T \stweightingMatArg{n} \big[
+\dot{\statey}(t) - \velocity(\stateyArg{}{t},t) \big] d t \\
+&\vcentcolon \RR{\fomdim}\otimes \timeSpaceArg{n} \rightarrow
+\RR{},
+\end{align*}
+subject to the boundary and continuity conditions. For the \spatialAcronym\ trial spaces, the stationary conditions for the residual minimization problem can be derived via the Euler--Lagrange equations and yield the system over the $n$th window for $t \in [\timeStartArg{n},\timeEndArg{n}]$,
+\begin{align*}\
+&\mass \frac{d}{dt} \genstateArg{n}{t}  -  \basisspace^T
+\stweightingMatArgt{n}{t} \velocity(\veloargsromn) =  \mass \adjointArg{n}{t} , \\
+ &\mass \frac{d}{dt} \adjointArg{n}{t}  + \basisspace^T \bigg[\frac{\partial
+\velocity}{\partial \statey} (\veloargsromn) \bigg]^T \stweightingMatArgt{n}{t} \basisspace
+ \adjointArg{n}{t} = \nonumber \\ 
+&-\basisspace^T \big[
+\frac{\partial \velocity}{\partial \statey}(\veloargsromn) \big]^T \stweightingMatArgt{n}{t} \bigg( \mathbf{I} -
+\basisspace [\massArgt{n}{t}]^{-1} \basisspace^T \stweightingMatArgt{n}{t} \bigg)
+ \bigg( \basisspace \frac{d}{dt}\genstateArg{n}{t}  -
+\velocity(\veloargsromn) \bigg),  &
+%\genstateArg{n}{\timeStartArg{n}} = \begin{cases}
+%\genstate^{n-1}(\timeEndArg{n-1}) & n=2,\ldots,\nslabs, \\
+%\basisspace^T(\approxstate_0 - \stateIntercept) & n=1, \end{cases}\\ &
+%\adjointArg{n}{\timeEndArg{n}} = \boldsymbol 0.
+\end{align*} 
+subject to the boundary conditions~\eqref{eq:lspg_bcs1}-\eqref{eq:lspg_bcs}. The Euler-Lagrange equations expose the fact that, for \spatialAcronym\
+trial spaces, \methodAcronym\ can be alternatively interpreted as a Lagrange problem from optimal control: the Galerkin method is forced by a 
+controller that enforces the residual minimization property. 
+
+\spaceTimeAcronym\ trial spaces were additionally considered. For \spaceTimeAcronym\ trial spaces, in where the generalized coordinates are no longer functions, the stationary conditions correspond to an algebraic system of equations.

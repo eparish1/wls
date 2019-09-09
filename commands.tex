@@ -1,0 +1,88 @@
+\newcommand{\unroll}{\boldsymbol v}
+\newcommand{\vecdummy}{\boldsymbol y}
+\newcommand{\vecdummys}{ y}
+\newcommand{\Matdummy}{\boldsymbol Y}
+\newcommand{\genstateSpace}{\hat{\mathcal{X}}}
+\newcommand{\vecfunction}{\boldsymbol z}
+\newcommand{\ndofArg}[1]{N_{\text{DOF}}^{#1}}
+%\renewcommand{\familydefault}{\sfdefault} 
+\definecolor{Blue}{rgb}{0,0,1}
+\definecolor{Red}{rgb}{1,0,0}
+%\newcommand{\snaps}[1]{\ensuremath{\snapsNo_{#1}}}  % timestep at optional
+\newcommand{\KTC}[1]{{\textcolor{Blue}{KTC: #1}}}
+\newcommand{\highlight}[1]{{\textcolor{Red}{#1}}}
+\newcommand{\param}{\boldsymbol\mu}
+\newcommand{\qoiArgs}[2]{\boldsymbol q(t_{#1},\param_{#2})}
+\newcommand{\qoiModelArgs}[3]{\tilde{\boldsymbol q}(t_{#1},\param_{#2};#3)}
+\newcommand{\qoiFunc}[3]{\boldsymbol g(\state(t_{#1},\param_{#2});#3)}
+\newcommand{\qoiFuncs}[4]{\boldsymbol g({#3}(t_{#1},\param_{#2});#4)}
+\newcommand{\dataset}{\mathbb D}
+
+%definition of args
+%\newcommand{\veloargsrom}{\decoder(\genstate,t),t;\param}
+\newcommand{\veloargsrom}{\decoder(\genstate)}
+
+%definition of dims
+\newcommand{\romstdim}{K_{st} } 
+\newcommand{\romsdim}{K_s} 
+
+\newcommand{\romwstdim}{N_{st}^{\tau} } 
+
+%definition of spaces
+\newcommand{\wstspace}{\mathcal{ ST }_w^{\tau} } 
+
+% definition of states
+\newcommand{\state}{\boldsymbol x}
+\newcommand{\error}{\boldsymbol e}
+
+\newcommand{\ststate}{\boldsymbol X}
+\newcommand{\wststate}{\boldsymbol X_{w}^{\tau}}
+
+\newcommand{\approxststate}{\tilde{\boldsymbol X}}
+\newcommand{\approxwststate}{\tilde{\boldsymbol X}_w^{\tau}}
+
+
+
+% definition of generalized coordinates
+\newcommand{\genstate}{\hat{ \boldsymbol x}}
+\newcommand{\genstatespace}{\hat{ \boldsymbol x}_s}
+\newcommand{\genstatetime}{\hat{ \boldsymbol x}_t}
+
+\newcommand{\genststate}{\hat{ \boldsymbol X}}
+\newcommand{\genwststate}{\hat{ \boldsymbol X}_w^{\tau}}
+
+%definition of residuals
+\newcommand{\resid}{\boldsymbol r}
+\newcommand{\stresid}{\boldsymbol R}
+\newcommand{\wstresid}{\boldsymbol R_{w(\tau)}^{\tau}}
+
+
+\newcommand{\wstweightingMat}{ \boldsymbol A_w^{\tau}}
+
+%definition of decoders
+\newcommand{\decoder}{\boldsymbol g}
+\newcommand{\sdecoder}{\boldsymbol g_s}
+\newcommand{\tdecoder}{\boldsymbol g_t}
+\newcommand{\stdecoder}{\boldsymbol G}
+\newcommand{\wstdecoder}{\boldsymbol G_w^{\tau}}
+
+\newcommand{\norm}[1]{ \|  #1 \|_2}
+
+\newcommand{\optparams}{\boldsymbol \theta}
+\newcommand{\velocity}{\boldsymbol f}
+
+\newcommand{\noise}{\boldsymbol \varepsilon}
+\newcommand{\finalTime}{T}
+\newcommand{\paramDomain}{\mathcal D}
+
+\newcommand{\innerproduct}[2]{\bigg( {#1},{#2} \bigg)}
+
+%Definition of linear basis
+
+\newcommand{\basistime}{\boldsymbol T}
+\newcommand{\basisst}{\boldsymbol S}
+\newcommand{\testbasis}{\boldsymbol \Psi}
+
+\newcommand{\trialtime}{\mathcal{Y}}
+%Definition of minmization
+

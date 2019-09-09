@@ -1,0 +1,508 @@
+\subsection{\spatialAcronym: Direct Solution Approach}\label{sec:direct} 
+Direct approaches solve~\eqref{eq:tclsrm} by
+``transcribing" the infinite dimensional optimization problem into a finite
+dimensional one by discretizing the state and objective function in time.
+The minimization problem is then reformulated as a nonlinear programming, or
+optimization, problem. A variety of direct solution approaches exist, 
+including collocation approaches, orthogonal polynomial (spectral  method) 
+approaches, and genetic algorithms.  
+
+In the present context, the most straightforward direct solution approach consists of the 
+following steps:
+\begin{enumerate}
+\item Numerically discretize the FOM ODE (and hence the \textit{integrand} of~\eqref{eq:obj_gen_slab}).
+\item Select a numerical quadrature rule to evaluate the \textit{integral}
+in~\eqref{eq:obj_gen_slab}.
+\end{enumerate}
+To achieve this agenda, first define a discrete temporal grid 
+by dividing each time window $[\timeStartArg{n},\timeEndArg{n}]$ into
+$\nstepsArg{n}$ strictly increasing time-step instances described by
+$\{\timeWindowArg{n}{i}\}_{i=0}^{\nstepsArg{n}}$ with  
+\begin{align}
+&\timeWindowArg{n}{0} \le \ldots \le \timeWindowArg{n}{\nstepsArg{n}} , \label{eq:timegrid1} \;
+\timeWindowArg{n}{0} \defeq \timeStartArg{n},\;
+\timeWindowArg{n}{\nstepsArg{n}} \defeq \timeEndArg{n} . 
+%\timeWindowArg{n}{0} = \timeStartArg{n}, \timeWindowArg{n}{\nstepsArg{n}} =
+%\timeEndArg{n}
+\end{align}
+This discretization is depicted in Figure~\ref{fig:slab_fig2}.
+We now outline the direct solution approach for linear-multistep schemes; we note that the formulation for
+other time-stepping methods (e.g., Runge--Kutta) follows closely. 
+\begin{figure} 
+\begin{centering} 
+\includegraphics[trim={0.0cm 5cm 0cm 3cm},clip,width=1.0\textwidth]{figs/time_grid_timesteps.pdf} 
+\caption{Decomposition of time windows into time-step instances.} 
+\label{fig:slab_fig2} 
+\end{centering} 
+\end{figure}
+%We now outline several commonly employed temporal discretization 
+%schemes, specifically linear multistep and collocation (Runge--Kutta) methods, that leverage this time-grid to discretize the FOM ODE and 
+%objective functional.  
+
+%\subsubsection{Temporal Discretization of the FOM ODE}
+%To develop the direct solution approach, we first outline several 
+%commonly employed methods used to discretize the FOM ODE, and then 
+%subsequently demonstrate how these techniques can be used to discretize 
+%and solve Eq.~\ref{eq:obj_gen_slab}. To develop the direct solution approach, 
+%we start by dividing each time slab $[\timeStartArg{n},\timeEndArg{n}]$ into
+%$\nstepsArg{n}$ strictly increasing time-step instances described by,
+%$\{\timeWindowArg{n}{i}\}_{i=0}^{\nstepsArg{n}}$, with  \begin{align*}
+%&\timeWindowArg{n}{0} \le \ldots \le \timeWindowArg{n}{\nstepsArg{n}} , \\
+%&\timeWindowArg{n}{0} \defeq \timeStartArg{n}, \\
+%&\timeWindowArg{n}{\nstepsArg{n}} \defeq \timeEndArg{n}. 
+%%\timeWindowArg{n}{0} = \timeStartArg{n}, \timeWindowArg{n}{\nstepsArg{n}} =
+%%\timeEndArg{n}
+%\end{align*}
+\subsubsection{Linear Multistep Schemes}
+Linear multistep schemes approximate the solution at time instance $\timeWindowArg{n}{i}$ using the previous $k$ time-instances.  
+%Discretizing the FOM ODE~\eqref{eq:FOM} with a linear $k$-step scheme at the $i$th time-instance over the $n$th time slab yields,
+%\begin{equation}\label{eq:kstep}
+%\sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha_j \stateFOMDiscreteArg{n,i-j} = \Delta t^{n,i} \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta_j \velocity(\stateFOMDiscreteArg{n,i-j}),
+%\end{equation}
+Employing a linear multistep method for temporal discretization of the FOM ODE yields the FOM O$\Delta$E over the $n$th window,
+\begin{align*}
+&\residLMSArg{n,i} (\stateFOMDiscreteArg{n,i},\ldots,\stateFOMDiscreteArg{n,i-k^n(i)}) = \bz, \qquad i=1,\ldots,\nstepsArg{n}, \\
+&\stateArgnt{n,0} = \begin{cases}
+\stateFOMDiscreteArg{n-1,\nstepsArg{n-1}} & n = 2,\ldots,\nslabs, \\
+\stateFOMIC & n=1, \end{cases}
+\end{align*}
+where $\stateFOMDiscreteArg{n,i} \approx \stateFOMArg{n}{\timeWindowArg{n}{i}} \in \RR{\fomdim}$ is the discrete approximation to the FOM state at the $i$th time instance over the $n$th window and $\residLMSArg{n,i}$ is the discrete linear multistep residual over the $i$th time instance of the $n$th window,
+\begin{align*}
+\residArg{n,i} &: (\stateyDiscreteArgnt{n,i},\ldots,\stateyDiscreteArgnt{n,i-k(i)}) \mapsto  \frac{1}{\Delta t^{n,i}} \sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha^{n,i}_j \stateyDiscreteArgnt{n,i-j} -  \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta^{n,i}_j \velocity(\stateyDiscreteArgnt{n,i-j},\timeWindowArg{n}{i-j},\tau^{n,i-j}) \\
+               &: \RR{\fomdim} \otimes \RR{k(i)+1} \rightarrow \RR{\fomdim}. 
+\end{align*} 
+Additionally, $\Delta t^{n,i} = \timeWindowArg{n}{i} - \timeWindowArg{n}{i-1}$ is the time-step size, $\lmsWidthArg{n}{i}$ is the width of the multistep scheme, and $\alpha^{n,i}_j$ and $\beta^{n,i}_j$ are coefficients that 
+define the specific type of multistep scheme. Examples of linear multistep schemes include Adams-Bashforth schemes and  
+Adams-Moulton schemes. 
+\begin{remark}\label{remark:LMS}
+For simplicity, we assume the linear multistep method employs time-step instances from only within the current time window. In general, the linear multistep method at the $n$th window could be designed to employ multiple time-step instances from previous time windows.
+\end{remark}
+%Employing a linear multistep method for temporal discretization of the FOM ODE leads to the FOM O$\Delta$E over the $n$th slab,
+%\begin{align*}
+%&\residLMSArg{n,i} (\stateFOMDiscreteArg{n,i},\ldots,\stateFOMDiscreteArg{n,i-k^n(i)}) = \bz, \qquad i=1,\ldots,\nstepsArg{n}, \\
+%&\stateArgnt{n,0} = \begin{cases}
+%\stateFOMDiscreteArg{n-1,\nstepsArg{n-1}} & n = 2,\ldots,\nslabs, \\
+%\stateFOMIC & n=1, \end{cases}
+%\end{align*}
+%where $\residLMSArg{n,i}$ is the discrete linear multistep residual over the $i$th time-step instance of the $n$th slab,
+%\begin{align*}
+%\residArg{n,i} &: (\stateyDiscreteArgnt{n,i},\ldots,\stateyDiscreteArgnt{n,i-k(i)}) \mapsto  \frac{1}{\Delta t^{n,i}} \sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha_j \stateyDiscreteArgnt{n,i-j} -  \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta_j \velocity(\stateyDiscreteArgnt{n,i-j}),
+%\\
+%               &: \RR{\fomdim} \otimes \RR{k(i)} \rightarrow \RR{\fomdim}. 
+%\end{align*} 
+Employing a linear multistep method allows the objective \textit{functional}~\eqref{eq:obj} to be replaced with an objective \textit{function},
+\begin{equation}\label{eq:obj_lms}
+\begin{split} 
+\objectiveArgLMS{n} &\vcentcolon (\stateyDiscreteArgnt{n,0},\ldots,\stateyDiscreteArgnt{n,\nstepsArg{n}}) \mapsto
+\frac{1}{2} \sum_{i=1}^{\nstepsArg{n}} \quadWeightsLMSScalarArg{n}{i} [\residArg{n,i}(\stateyDiscreteArgnt{n,i},\ldots, \stateyDiscreteArgnt{n,i-k(n)})]^T  \stweightingMatArgt{n}{\timeWindowArg{n}{i}} \residArg{n,i}(\stateyDiscreteArgnt{n,i},\ldots, \stateyDiscreteArgnt{n,i-k(n)}), \\
+&\vcentcolon \RR{\fomdim} \otimes \RR{\nstepsArg{n}+1} \rightarrow
+\RR{}, 
+\end{split}
+\end{equation}
+%where 
+%\begin{align*}
+%\residArg{n,i} &: (\stateyArgnt{n,i},\ldots,\stateyArgnt{n,i-k(i)}) \mapsto  \sum_{j=0}^k \alpha_j \stateyArgnt{n,i-j} = \Delta t^{n,i} \sum_{j=0}^k \beta_j \velocity(\stateyArgnt{n,i-j}),
+%\\
+%               &: \RR{\fomdim} \otimes \RR{k(i)} \rightarrow \RR{\fomdim}, 
+%\end{align*} 
+%is the discrete residual resulting from the linear multistep scheme and 
+where $\quadWeightsLMSScalarArg{n}{i} \in \RR{}$ are quadrature weights. \methodAcronym\ solves the minimization problem over each time window, 
+\begin{align*}
+&\approxstateDiscreteArg{n,0},\ldots,\approxstateDiscreteArg{n,\nstepsArg{n}} = \underset{\stateyDiscreteArgnt{n,0},\ldots,\stateyDiscreteArgnt{n,\nstepsArg{n}} \in \trialspace}{\text{arg\,min } }
+\objectiveArgLMS{n} (\stateyDiscreteArgnt{n,0},\ldots,\stateyDiscreteArgnt{n,\nstepsArg{n}}) \\
+& \text{subject to} \hspace{0.2 in}  \approxstateDiscreteArg{n,0} =
+\begin{cases} \approxstateDiscreteArg{n-1,\nstepsArg{n-1}} & n = 2,\ldots,\nslabs,\\
+\approxstateIC & n=1. \end{cases} \end{align*}
+Defining $\genstateDiscreteArg{n,i} \in \RR{\romdim}$ to be the discrete approximation to the generalized coordinates at the $i$th time-step instance over the $n$th window, 
+the minimization problem can be written equivalently as,
+\begin{equation}\label{eq:obj_gen_lms_final}
+\begin{split}
+& \genstateDiscreteArg{n,0},\ldots,\genstateDiscreteArg{n,\nstepsArg{n}}  = \underset{\genstateyDiscreteArg{n,0},\ldots,\genstateyDiscreteArg{n,\nstepsArg{n}}}{\text{arg\,min } }
+\objectiveArgLMS{n} (\basisspace \genstateyDiscreteArg{n,0} + \stateIntercept,\ldots,\basisspace \genstateyDiscreteArg{n,\nstepsArg{n}} + \stateIntercept) \\ 
+& \text{subject to} \hspace{0.2 in}
+\genstateDiscreteArg{n,0} =
+\begin{cases} \genstateDiscreteArg{n-1, \nstepsArg{n-1}} & n = 2,\ldots,\nslabs \\
+\basisspace^T(\stateFOMIC - \stateIntercept)& n=1. \end{cases} 
+\end{split}
+\end{equation}
+The optimization problem takes the form of a \textit{weighted nonlinear least-squares problem}, 
+in where the weights correspond the quadrature weights.  
+Before proceeding, it is worth mentioning that~\eqref{eq:obj_gen_lms_final} corresponds to a least-squares problem due
+to the reduction in \textit{spatial} complexity, as opposed to the reduction
+in temporal complexity (the same  number of temporal constraints and temporal 
+degrees of freedom have been introduced).
+ 
+The minimization problem~\eqref{eq:obj_gen_lms_final} requires specification of the quadrature weights (and hence the integration scheme used to discretize 
+the objective functional). Typically, the same integration scheme used to discretize the FOM ODE is employed for consistency~\cite{colloc_review}; e.g., if a  
+backward Euler method is used to discretize the FOM ODE, then a backward Euler method is the used to numerically integrate the objective functional.
+
+\begin{remark}
+For the limiting case where the window size is equivalent to the time-step size, $\DeltaSlabArg{n} \equiv \timeWindowArg{n}{1} - \timeWindowArg{n}{0}$, and uniform 
+quadrature weights are used, \methodAcronym\ recovers LSPG.
+\end{remark} 
+%%%%%%%%%%%%%%%%COLLOCATION%%%%%%%
+\begin{comment}
+\subsubsection{Collocation (Runge--Kutta) Methods}
+Collocation methods comprise another popular technique for temporal discretization. 
+Collocation methods represent the FOM state over each time-step instance $[\timeWindowArg{n}{i-1},\timeWindowArg{n}{i}]$ as,
+\begin{equation}
+\stateFOMArgnt{n}(t) \approx  \collocMatArg{n}{i} \collocBasisArg{n}{i}(t), \qquad t \in [\timeWindowArg{n}{i-1}, \timeWindowArg{n}{i} ],
+\end{equation}
+with the
+continuity and boundary constraints, 
+\begin{equation}\label{eq:colloc_constraint}
+\collocMatArg{n}{i} \collocBasisArg{n}{i}(\timeWindowArg{n}{i-1}) = 
+\begin{cases}
+\collocMatArg{n}{i-1}\collocBasisArg{n}{i-1}(\timeWindowArg{n}{i-1}) & n = 1,\ldots,\nslabs, \; i=2,\ldots,\nstepsArg{n},\\ 
+\collocMatArg{n-1}{\nstepsArg{n-1}}\collocBasisArg{n-1}{\nstepsArg{n-1}}(\timeWindowArg{n-1}{\nstepsArg{n-1}}) & n = 2,\ldots,\nslabs, \; i=1,  \\
+\stateFOMIC & n=1, \;  i=1.
+\end{cases}
+\end{equation}
+%\begin{equation}\label{eq:continuity_constraint}
+%\genCollocMatArg{n}{i} \collocBasisArg{n}{i}(\timeWindowArg{n}{i-1}) = 
+%%\genstatecollocArg{n}{i}{\timeWindowArg{n}{i-1}} =
+%%\genstatecollocArg{n}{i-1}{\timeWindowArg{n}{i-1}} , \qquad  i =
+%%2,\ldots,\nstepsArg{n}. 
+%\begin{cases} \genstatecollocArg{n}{i-1}{\timeWindowArg{n}{i-1}} & i =
+%2,\ldots,\nstepsArg{n} \\
+%\genstatecollocArg{n-1}{\nstepsArg{n}}{\timeWindowArg{n}{i-1}} & i= 1. \\
+%\end{cases} 
+%\end{equation} 
+In the above, $\collocMatArg{n}{i}  \in \RR{\fomdim \times \collocOrderArg{n}{i}}$ are \textit{space--time coordinates}
+over the $i$th time-step instance of the $n$th window, 
+%$\genstatecollocArgnt{n}{i} : [\timeWindowArg{n}{i-1},\timeWindowArg{n}{i}] \mapsto \RR{\fomdim}$ is the collocated 
+%approximation to the state over the $i$th time-step instance within the $n$th slab
+and $\collocBasisArg{n}{i} :
+[\timeWindowArg{n}{i-1},\timeWindowArg{n}{i}] \mapsto \RR{\collocOrderArg{n}{i}}$ comprise the
+$\collocOrderArg{n}{i}$ 
+\textit{polynomial basis functions} over the $i$th time-step instance of the $nth$ window. 
+%While a variety of temporal basis functions are possible,
+%polynomial basis functions are the most commonly employed and as such we consider these here. 
+
+The collocation approach generates an approximation to~\eqref{eq:FOM} by enforcing the FOM ODE at a set of \textit{collocation points}. To this end, over the $i$th time-step instance of the $n$th window, we define $\ncollocArg{n}{i} \defeq \collocOrderArg{n}{i}-1$ strictly increasing \textit{collocation points},
+\begin{align*}
+&\collocPointVecArg{n}{i} \defeq \begin{bmatrix} \collocPointArg{n}{i}{1}  &  \collocPointArg{n}{i}{2} \hdots & \collocPointArg{n}{i}{\ncollocArg{n}{i}} \end{bmatrix}, \\
+& \timeWindowArg{n}{i-1} \le \collocPointArg{n}{i}{1} \le \hdots \le \collocPointArg{n}{i}{\ncollocArg{n}{i}} \le \timeWindowArg{n}{i}.
+\end{align*} 
+Enforcing~\eqref{eq:FOM} at the collocation points replaces the FOM ODE system over the $i$th time-step instance of the 
+$n$th window with the FOM O$\Delta$E,
+\begin{align*}
+&\residCollocArg{n,i} ( \collocMatArg{n}{i} ) = \boldsymbol  0, 
+\end{align*}
+where $\collocMatArg{n}{i}$ is subject to the continuity and boundary constraints~\eqref{eq:colloc_constraint} and 
+$\residCollocArg{n,i}$ is the discrete collocation residual over the $i$th time-step instance of the $n$th window,
+\begin{align*}
+\residCollocArg{n,i} &: ( \collocMatyArg{n}{i}) \mapsto \begin{bmatrix} \big[ \collocMatyArg{n}{i} \collocBasisDotArg{n}{i}(\collocPointArg{n}{i}{1}) - 
+\velocity\big(\collocMatyArg{n}{i} \collocBasisArg{n}{i}(\collocPointArg{n}{i}{1})  \big) \big]^T& 
+\cdots &
+\big[ \collocMatyArg{n}{i} \collocBasisDotArg{n}{i}(\collocPointArg{n}{i}{\ncollocArg{n}{i}}) - 
+\velocity\big(\collocMatyArg{n}{i} \collocBasisArg{n}{i}(\collocPointArg{n}{i}{\ncollocArg{n}{i}})) \big]^T 
+\end{bmatrix}^T, \\
+&:  \RR{\fomdim \times \collocOrderArg{n}{i}} \rightarrow \RR{ \fomdim  \ncollocArg{n}{i} }.
+\end{align*}
+Employing a collocation method thus replaces the objective functional~\eqref{eq:obj} with the objective function,
+\begin{align}\label{eq:obj_colloc}
+\objectiveArgC{n} &: (\collocMatyArg{n}{1},\ldots,\collocMatyArg{n}{\nstepsArg{n}} ) \mapsto 
+\frac{1}{2} \sum_{i = 1}^{\nstepsArg{n}} [ \residCollocArg{n,i} ( \collocMatyArg{n}{i} ) \circ  \sqrt{\quadWeightsVecArg{n,i}}]^T   \stweightingMatCollocArg{n}{i}  [  \residCollocArg{n,i}  ( \collocMatyArg{n}{i} ) \circ \sqrt{\quadWeightsVecArg{n,i }}] \\
+&: \RR{\fomdim} \otimes \RR{\collocOrderArg{n}{i} \nstepsArg{n}} \rightarrow \RR{} ,
+\end{align}
+where $\quadWeightsVecArg{n,i} \in \RR{\fomdim \ncollocArg{n}{i}}$ are quadrature weights of the form,
+$$\quadWeightsVecArg{n,i} = \begin{bmatrix} \quadWeightsScalarArg{n}{i}{1} & \quadWeightsScalarArg{n}{i}{1} & \ldots & &  \quadWeightsScalarArg{n}{i}{\ncollocArg{n}{i} } & \quadWeightsScalarArg{n}{i}{\ncollocArg{n}{i}} \end{bmatrix},$$
+and $\circ$ represents the element-wise (Hadamard) product. Additionally,  
+\begin{equation*}
+\stweightingMatCollocArg{n}{i} \defeq \begin{bmatrix}
+\stweightingMatArgt{n}{\collocPointArg{n}{i}{1}} &  & & \\
+& \stweightingMatArgt{n}{\collocPointArg{n}{i}{2}} & & \\ 
+& &  \ddots & \\
+& & &  \stweightingMatArgt{n}{\collocPointArg{n}{i}{\ncollocArg{n}{i}}}
+\end{bmatrix}
+\in  \RR{\fomdim \ncollocArg{n}{i} \times \fomdim \ncollocArg{n}{i}}.
+\end{equation*}
+The \methodAcronym-ROM then  solves the minimization 
+problem,
+\begin{equation}\label{eq:min_colloc}
+\collocMatArg{n}{1},\ldots,\collocMatArg{n}{\nstepsArg{n}} 
+ = \underset{\collocMatyArg{n}{1},\ldots,\collocMatyArg{n}{\nstepsArg{n}}  \in \trialspace}{\text{arg\,min } }
+\objectiveArgC{n} (\collocMatyArg{n}{1},\ldots,\collocMatyArg{n}{\nstepsArg{n}} ) \qquad \text{ for } n = 1,2,...,\nslabs,
+\end{equation}
+subject to the boundary conditions,
+\begin{equation*}
+\collocMatArg{n}{i} \collocBasisArg{n}{i}(\timeWindowArg{n}{i-1}) = 
+\begin{cases}
+\collocMatArg{n}{i-1}\collocBasisArg{n}{i-1}(\timeWindowArg{n}{i-1}) & n = 2,\ldots,\nslabs, \; i=2,\ldots,\nstepsArg{n} ,\\ 
+\collocMatArg{n-1}{\nstepsArg{n-1}}\collocBasisArg{n-1}{\nstepsArg{n-1}}(\timeWindowArg{n-1}{\nstepsArg{n-1}}) & n = 2,\ldots,\nslabs, \; i=1 , \\
+\approxstateIC & n=1, \;  i=1.
+\end{cases}
+\end{equation*}
+Defining  $\genCollocMatArg{n}{i} \in \RR{\romdim \times \collocOrderArg{n}{i}}$ to be the generalized space--time coordinates over the $i$th time-step instance of the $n$th window,
+the objective function can be equivalently written as,
+ \begin{equation*}
+\genCollocMatArg{n}{1},\ldots,\genCollocMatArg{n}{\nstepsArg{n}} 
+ = \underset{\genCollocMatyArg{n}{1},\ldots,\genCollocMatyArg{n}{\nstepsArg{n}} }{\text{argmin } }
+\objectiveArgC{n} (\basisspace \genCollocMatyArg{n}{1} + \stateInterceptMat,\ldots,\basisspace \genCollocMatyArg{n}{\nstepsArg{n}} + \stateInterceptMat) \qquad \text{ for } n = 1,2,...,\nslabs,
+\end{equation*}
+subject to the boundary and continuity conditions,
+\begin{equation*}
+ \genCollocMatArg{n}{i} \collocBasisArg{n}{i}(\timeWindowArg{n}{i-1}) = 
+\begin{cases}
+\genCollocMatArg{n}{i-1}\collocBasisArg{n}{i-1}(\timeWindowArg{n}{i-1}) & n = 2,\ldots,\nslabs, \; i=2,\ldots,\nstepsArg{n} \\ 
+\genCollocMatArg{n-1}{\nstepsArg{n-1}}\collocBasisArg{n-1}{\nstepsArg{n-1}}(\timeWindowArg{n-1}{\nstepsArg{n-1}}) & n = 2,\ldots,\nslabs, \; i=1  \\
+\basisspace^T (\approxstateIC - \stateIntercept)& n=1, \;  i=1,
+\end{cases}
+\end{equation*}
+with $\stateInterceptMat \defeq \begin{bmatrix} \stateIntercept & \ldots & \stateIntercept \end{bmatrix} \in \RR{\fomdim \times \collocOrderArg{n}{i} }$.
+The optimization problem again corresponds to a weighted nonlinear least-squares minimization problem. As before, the specification of a numerical 
+integration scheme is required to specify the quadrature weights. For the consistent case of a collocated quadrature rule, in where the integral is approximated 
+via the Lagrange polynomials at the collocation points, the quadrature weights are given by, $\quadWeightsScalarArg{n}{i}{j} = \intSlabArg{n}\lagrangeBasisScalarArg{n}{i}{j}(t)dt,$ where $\lagrangeBasisScalarArg{n}{i}{j}$ are the Lagrange interpolating polynomials,
+$$\lagrangeBasisScalarArg{n}{i}{j}(t) = \underset{\underset{m \ne j}{1 \le m \le \ncollocArg{n}{i}}}{\Pi} \frac{t - \collocPointArg{n}{i}{m}}{\collocPointArg{n}{i}{j}- \collocPointArg{n}{i}{m}}.$$
+
+\begin{remark} %The presented collocation formulation corresponds to minimizing the
+%weighted O$\Delta$E residual over the time slab, in where the O$\Delta$E
+%results from temporal
+%discretization of the FOM ODE according to the temporal basis and collocation points. For 
+%the case where the temporal basis functions are
+%polynomials, the resulting temporal discretization schemes belongs to the family of Runge--Kutta
+%schemes~\cite{1}. 
+Collocation methods belong to the family of Runge--Kutta schemes.
+Alternative temporal discretization schemes, such as
+linear multistep methods, can be obtained by modifying the representation of
+the state and the collocation points~\cite{ajams2015362}.
+\end{remark}
+\end{comment}
+\subsubsection{Solution to the Nonlinear Least-Squares Problem through the Gauss--Newton Method}
+Discretization through linear multistep methods (as well as other techniques) 
+results in a nonlinear least-squares problem.
+A variety of algorithms exist for solving nonlinear  
+least-squares problems, including trust region approaches, the Gauss–Newton method, and the Levenberg–Marquardt method.  
+The numerical experiments presented in this work consider the Gauss--Newton method, and as such we outline this approach here. 
+
+To describe the Gauss--Newton method, we first define a ``vectorization" function that takes a tuple of time-local solutions at each time-step instance and outputs 
+a concatenated vector, 
+\begin{align*}
+ \unroll &\vcentcolon (\stateyDiscreteArg{1},\ldots,\stateyDiscreteArg{m} ) \mapsto \begin{bmatrix} [\stateyDiscreteArg{1}]^T & \ldots & [\stateyDiscreteArg{m}]^T \end{bmatrix}^T  \\
+&\vcentcolon \RR{p} \otimes \RR{m} \rightarrow \RR{pm},
+\end{align*}
+for arbitrary $p$ and $m$. The stacked vector of generalized coordinates over the $n$th time window are then defined as, 
+\begin{equation*}
+\genstatecollocMatSlabArg{n} \defeq 
+\unroll (\genstateDiscreteArg{n,0},\ldots,\genstateDiscreteArg{n,\nstepsArg{n}} ).
+\end{equation*}
+Now, define the weighted space--time residual over the entire window as
+\begin{equation*}
+\residLMSSlabArg{n} : \genstatecollocMatySlabArg{n} \mapsto \begin{bmatrix}
+ \sqrt{\quadWeightsLMSScalarArg{n}{1} } \stweightingMatOneArg{n,1} \residLMSArg{n,1}( \basisspace \genstateyDiscreteArgnt{n,1} + \stateIntercept, \ldots,\basisspace \genstateyDiscreteArgnt{n,1 - k^n(1) }  + \stateIntercept) \\
+\vdots \\
+ \sqrt{\quadWeightsLMSScalarArg{n}{\nstepsArg{n}} } \stweightingMatOneArg{n,\nstepsArg{n}} \residLMSArg{n,\nstepsArg{n}}( \basisspace \genstateyDiscreteArgnt{n,\nstepsArg{n}} + \stateIntercept, \ldots,\basisspace \genstateyDiscreteArgnt{n,\nstepsArg{n} - k^n(\nstepsArg{n}) } + \stateIntercept) \\
+\end{bmatrix},
+\end{equation*}
+where $\genstatecollocMatySlabArg{n} \defeq \unroll (\genstateyDiscreteArg{n,0},\ldots,\genstateyDiscreteArg{n,\nstepsArg{n}} ).$
+It is worth noting that, by design,
+\begin{equation*}
+\objectiveArgLMS{n} \bigg( \basisspace \genstateDiscreteArg{n,0} + \stateIntercept,\ldots,\basisspace \genstateDiscreteArg{n,\nstepsArg{n}} + \stateIntercept \ \bigg) 
+\equiv
+\bigg[\residLMSSlabArg{n}  (\genstatecollocMatSlabArg{n}) \bigg]^T \bigg[ \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n}) \bigg].
+\end{equation*} 
+Using these definitions, Algorithm~\ref{alg:colloc_gn} presents the standard Gauss--Newton method. The algorithm consists of three fundamental steps: (1) compute the FOM O$\Delta$E residual given the current guess, (2) compute the time window residual-Jacobian and form the normal equations, and (3) solve the normal equations and update the state. 
+
+The practical implementation of the Gauss--Newton algorithm requires an efficient method for computing the time window residual-Jacobians. In particular, it is important to note that for linear multistep methods (and many other time marching schemes) the time window residual Jacobian will (almost) be a block-diagonal 
+sparse matrix with the sparsity pattern,
+\begin{equation*}
+\frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{n}}(\genstatecollocMatSlabArg{n})  =
+ \begin{bmatrix*}[l]
+\matshapeb & \\%[-5pt]
+ \matshapea & \matshapea & \\%[-5pt]
+ & \matshapea  & \matshapea & \\%[-5pt]
+&  & \ddots & \\%[-5pt]
+ & &  & \matshapea &  \matshapea 
+\end{bmatrix*}.
+% \begin{bmatrix*}[c]
+%\matshapeb & \\[-5pt]
+% & \hspace{-12pt}\matshapea & \\[-5pt]
+% &  & \hspace{-12pt}\matshapea & \\[-5pt]
+%&  & \hspace{5pt} \ddots & \\[-5pt]
+% & &  & & \hspace{-15 pt} \matshapea 
+%\end{bmatrix*}.
+\end{equation*}
+This sparsity pattern can be leveraged to assemble the time window residual-Jacobian from local residual Jacobians. 
+Further, the sparsity pattern can be 
+leveraged to efficiently compute the Jacobian matrix-matrix product in the normal equations.
+It is also worth noting that the 
+normal equations will also (almost) be block-diagonal; this is a fact that can be leveraged to speed up the linear solves at each Gauss--Newton iteration.
+
+\begin{remark}\label{remark:gaussnewton}\textit{(Acceleration of the Gauss--Newton Solve)}\\
+The principle cost of a Gauss--Newton method is often the formation of the Jacobian matrix. A variety of techniques aimed at 
+reducing this computational burden exist; Jacobian-free Newton-Krylov methods~\cite{jfnk}, Broyden's method~\cite{broyden} (as explored in Ref.~\cite{carlberg_thesis}, Appendix A), and frozen Jacobian approximations are several such examples. Further, the space--time formulation exposes an extra dimension for parallelization that can be exposed to accelerate the wall-clock time of the ROM. The investigation of these additional, potentially more efficient, solution algorithms will be a topic of future work. 
+\end{remark}
+%\subsubsection{Jacobian-Free Implementation}
+%The dominant cost of the Gauss Newton algorithm is the computatation of the action of the Jacobian matrix on the trial basis. To alleviate this burden, the following Jacobian-free method is proposed:
+\begin{algorithm}
+\caption{\spatialAcronym\ trial space: algorithm for the direct solution technique with the Gauss--Newton method and a linear multistep method over the $n$th window}
+\label{alg:colloc_gn}
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{tolerance, $tol$; initial guess, $\genstateGuessDiscreteArg{n,0}{0},\ldots,\genstateGuessDiscreteArg{n,\nstepsArg{n}}{0}$}
+\Output{Solution to least squares problem, $\genstatecollocMatSlabArg{n}$} 
+\textbf{Online Steps}: \\
+%\While{ $tol \le \frac{1}{2} \sum_{i=1}^{\nstepsArg{n}} \sum_{j=1}^{\ncollocArg{n}{i}} \big[ \dot{\state}
+%(\collocPointArg{n}{i}{j})  - \velocity(\stateArg{}{\collocPointArg{n}{i}{j}}) \big]^T \stweightingMatArg{n}(\collocPointArg{n}{i}{j}) \big[ \dot{\state}(\collocPointArg{n}{i}{j}) - \velocity(\stateArg{}{\collocPointArg{n}{i}{j}}) \big] \int_{\timeStartArg{n}}^{\timeEndArg{n}}   \lagrangeBasisScalarArg{n}{i}{j}(t) d \tau$}
+$\text{converged} \leftarrow \text{false}$ \Comment{Set convergence checker} \\
+$k \leftarrow 0$ \Comment{Set counter}\\
+$\genstatecollocMatSlabArg{n}_k \leftarrow \unroll(\genstateGuessDiscreteArg{n,0}{0},\ldots,\genstateGuessDiscreteArg{n,\nstepsArg{n}}{0})$ \Comment{Assemble generalized coordinates over window} \\
+\While{\text{converged} == \text{false}}
+{
+%\For{$i=1,\hdots,\nstepsArg{n}$}{
+%  \For{$j=1,\hdots,\ncollocArg{n}{i}$}{
+%Compute: $\approxstateArgnt{n,i}  =  \basisspace  \genstateDiscreteArg{n,i} + \stateIntercept$ 
+%\Comment{Compute state} \\
+%Compute: $\velocity(\basisspace \genstateDiscreteArg{n,i} + \stateIntercept ) $ \Comment{Compute velocity at each time-step instance}\\
+%Compute: $\residLMSArg{n,i}(\basisspace \genstateDiscreteArg{n,i} + \stateIntercept, \ldots , \basisspace \genstateDiscreteArg{n,i - k^n(i)} + \stateIntercept) $  \Comment{Compute residual} \\
+%}
+$\mathbf{r} \leftarrow \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n}_k)$ \Comment{Compute weighted residual over window} \\
+$\mathbf{J} \leftarrow  
+\frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{n}}(\genstatecollocMatSlabArg{n}_k) 
+$ \Comment{Compute weighted residual-Jacobian over window} \\
+%Compute: $[\jacobianSlabArg{n}]^T \jacobianSlabArg{n}$ \Comment{Compute system matrix for the normal equations} \\
+%Compute: $[\jacobianSlabArg{n}]^T \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n}_k)$ \Comment{compute RHS for normal equations} \\
+$\Delta \genstatecollocMatSlabArg{n} \solveAlgo [\mathbf{J}]^T \mathbf{J} \Delta \genstatecollocMatSlabArg{n}=  -\mathbf{J}^T\mathbf{r}$ \Comment{Solve the normal equations} \\
+$\genstatecollocMatSlabArg{n}_{k+1} \leftarrow \genstatecollocMatSlabArg{n}_k + \Delta \genstatecollocMatSlabArg{n}$ \Comment{Update guess to the state} \\
+\If{ $\norm{ \mathbf{J}^T\mathbf{r}  } \le \text{tol}$ }{
+{\text{converged} $\leftarrow$ \text{true}}  \Comment{Check and set convergence based on gradient norm} \\
+Return: $\genstatecollocMatSlabArg{n} = \genstatecollocMatSlabArg{n}_{k+1} $ \Comment{Return converged solution}\\
+}
+$k\leftarrow k+1$
+}
+\end{algorithm}
+
+
+%\input{direct_collocation}
+
+\subsection{Spatial Trial Space: Indirect Solution Approach}\label{sec:indirect}
+In contrast to the direct approach,
+indirect methods ``indirectly" solve the minimization
+problem~\eqref{eq:tclsrm} by solving the Euler-Lagrange equations. The
+system given by the Euler Lagrange equations~\eqref{eq:lspg_continuous}-\eqref{eq:lspg_adjoint} comprises a coupled two-point boundary value
+problem. Similar to the direct solution approach, a variety of techniques have
+been devised to solve two-point boundary value problems of this type. These
+techniques include shooting methods, multiple shooting
+methods~\cite{multiple_shooting}, and the forward-backward sweep
+method~\cite{fbs} (FBSM).  This work explores using the FBSM. 
+
+%Solving this coupled problem is significantly more challenging and
+%computationally expensive than the standard Galerkin and LSPG methods as it
+%requires converging both the forward and backward solve. It is emphasized,
+%however, that the entire forward-backward system is compatable with
+%hyper-reduction techniques and thus is entirely independent of the full-order
+%model size. In addition, as the approach is minimizing the entire space-time
+%residual, we expect it to be capable of providing stable and accurate
+%solutions in cases where the standard Galerkin and LSPG methods can not.
+%Obtaining numerical solutions to Eq.~\ref{eq:lspg_continuous} requires three
+%ingrediants: \begin{enumerate} \item Solution strategy for solving the
+%coupled forward and backwards problems \item Time discretization schemes for
+%the forward and backward problems \item Efficient strategy for evaluating the
+%action of the Jacobian transpose on a vector \end{enumerate}
+
+\subsubsection{The Forward Backward Sweep Method (FBSM)}\label{sec:FBSM}
+%\subsubsection{Solution Strategy} Solving Eq.~\ref{eq:lspg_continuous} is
+%made challenging by the fact that it is a coupled two-point boundary value
+%problem. The forward problem is coupled to the backwards adjoint problem,
+%while the backwards adjoint sytem is coupled to the forward problem. The
+%problem is thus inherently implicit. The most popular techniques to solve
+%these types of two-point boundary value problems are shooting methods,
+%multiple shooting methods, fully-implicit methods, and the forward backward
+%sweep (FBS) method. This work explores using the FBS method. 
+
+%The most straightforward approach to solving Eq.~\ref{eq:lspg_continuous} is
+%to 1.) discretized both the forward and backwards problems in time and 2.)
+%form and solve the resulting (implicit) nonlinear space-time system. In
+%practice, however, this technique may not be practical for larger
+%time-windows due to the size of the resuling nonlinear problem. 
+
+The FBSM is an iterative approach that can be used to
+solve the two-point boundary value problem. The general process of the FBSM is
+as follows: First, the system~\eqref{eq:lspg_continuous} is (numerically) solved forward in
+time using an initial guess to the costate state to obtain an initial guess to
+the generalized coordinates. Next, the adjoint equation~\eqref{eq:lspg_adjoint} is solved \textit{backwards} in time given the
+approximation to the generalized coordinates. This gives a new estimate to the
+costate, which is then used to again solve the forward problem to obtain
+a new estimate of the generalized coordinates. This process is continued until
+convergence. Algorithm~\ref{alg:st_iter} outlines the method. The algorithm
+contains three parameters: the damping factor $\rho$, the growth factor
+$\fbsmGrowth$, and the decay factor $\fbsmDecay$. The damping factor controls the rate at which the costate seen by~\eqref{eq:lspg_continuous} is updated. The
+closer $\rho$ is to unity, the faster the resulting algorithm will converge.
+For large window sizes, however, too high a value of $\rho$ can lead to an unstable iterative process. 
+A proper value of $\rho$ can be
+obtained with a line search. The line search presented in~\eqref{eq:lspg_continuous} adapts the damping factor
+according to the objective. Convergence properties of the FBSM method are
+presented in Ref.~\cite{McAsey2012ConvergenceOT}. It is shown that, for a small 
+enough value of $\rho$, the algorithm will converge.
+
+\begin{algorithm} \caption{\spatialAcronym\ trial space: algorithm for the FBSM over the $n$th window.} \label{alg:st_iter} 
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{tolerance, $tol$; damping factor, $\rho$; growth factor, $\fbsmGrowth$; decay
+factor, $\fbsmDecay$} 
+\Output{Stationary point, $\genstateArgnt{n}$ }
+\textbf{Online Steps:}\\ 
+$\genstate^n_0 \leftarrow \bz$ \Comment{Set initial guess for state} \\
+$\controllerArgnt{n} \leftarrow \boldsymbol 0$ \Comment{Set initial
+guess for costate}\\ 
+$\genstateArgnt{n}_1 \solveAlgo \basisspace^T \stweightingMatArg{n}
+\basisspace \genstateDotArgnt{n}_1  -  \basisspace^T \stweightingMatArg{n}
+\velocity(\veloargsromntArg{1}) =  \controllerArgnt{n}$ 
+% Eq.~\ref{eq:lspg_continuous} with $\adjoint^n(t) = \controllerArg{n}{t}$ to
+% obtain $\genstate_0^{n}(t)$ 
+\Comment{Solve~\eqref{eq:lspg_continuous} with initial guess to
+controller}\\ 
+%Set: $\genstate^n_1 = \genstate$ \Comment{Set state} \\
+%$\objectiveArg{n}({\genstate_1^n(t)})$
+%\Comment{Evaluate objective function}\\
+$i \leftarrow 1$ \Comment{Set counter}\\
+\While{$tol \le \int_{\timeStartArg{n}}^{\timeEndArg{n}} \norm{\genstate^n_{i}(t) - \genstate^n_{i-1}(t) }dt $}{
+\small{
+\begin{multline*}
+\adjointArgnt{n} \underset{\text{solve}}{\leftarrow} 
+\frac{d}{dt} \adjoint^n  + \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\basisspace \genstate^n_i + \stateIntercept,t) \bigg]^T \stweightingMatArg{n} \basisspace \mass^{-1} \adjoint^n = \\ -\bigg[\basisspace^T \bigg[ \frac{\partial \velocity}{\partial \stateyDiscrete} ( \basisspace \genstate^n_i + \stateIntercept,t) \bigg]^T \stweightingMatArg{n} \bigg( \mathbf{I} -   \basisspace \mass^{-1} \basisspace^T \bigg)  \stweightingMatArg{n} \bigg( \basisspace \dot{\genstate}_i^n   -   \velocity( \basisspace \genstate_i^n  +\stateIntercept,t) \bigg) \bigg] 
+\end{multline*} }
+\Comment{Solve~\eqref{eq:lspg_adjoint} to obtain guess to costate state} \\
+%Solve Eq.~\ref{eq:lspg_adjoint} with $\genstate^n(t) = \genstate^n_i(t)$ to obtain $\adjoint^n(t)$ \\
+$\controllerArgnt{n}  \leftarrow \rho \controllerArgnt{n} + (1 - \rho) \adjointArgnt{n}$ \Comment{Weighted update to costate}\\
+$i \leftarrow i+1$ \Comment{Update Counter}\\
+$\genstateArgnt{n}_i \solveAlgo \basisspace^T \stweightingMatArg{n} \basisspace \genstateDotArgnt{n}_i   -  \basisspace^T \stweightingMatArg{n} \velocity(\basisspace \genstate^n_i + \stateIntercept,t) =  \controllerArgnt{n} $
+\Comment{Solve~\ref{eq:lspg_continuous} with updated guess to costate}\\
+%$\objectiveArg{n}({\genstate_i^n(t)})$ \Comment{Evaluate objective function}\\
+\uIf{ $\objectiveArg{n}({\genstate_i^n(t)}) \le \objectiveArg{n}({\genstate_{i-1}^n(t)})$}
+{
+$\rho \leftarrow \text{min}(\rho \fbsmGrowth,1)$ \Comment{Grow the damping factor}\\
+}
+\Else{
+$\rho \leftarrow \frac{\rho }{ \fbsmDecay}$ \Comment{Shrink the damping factor}\\ 
+$\genstate_i^{n} \leftarrow  \genstate_{i-1}^{n}$ \Comment{Reset state to value at previous iteration}
+}
+}
+Return converged solution, $\genstateArgnt{n}= \genstateArgnt{n}_i$
+\end{algorithm}
+\subsubsection{Numerical Considerations for the Forward and Backwards Problems}
+The FBSM requires solving~\eqref{eq:lspg_continuous} and~\eqref{eq:lspg_adjoint}, both of which are defined at the time-continuous level. 
+The numerical implementation of the FBSM requires two main ingredients: (1.) temporal discretization schemes for the forward and backward problems and (2.) 
+an efficient method for computing action of the Jacobian transpose on a vector.  
+
+This work examines the use of linear multistep methods for the purpose of temporal discretization of the forward and 
+backwards problems. As described in  
+the direct solution approach, temporal discretization is achieved by dividing each time window into $\nstepsArg{n}$ time-step instances~\eqref{eq:timegrid1}. Linear multistep methods then use this time-grid for temporal discretization of~\eqref{eq:lspg_continuous} and~\eqref{eq:lspg_adjoint}. 
+
+The second ingredient, namely an efficient method for computing the action of the Jacobian transpose on a vector, can be challenging. 
+In the case one does not have access to the full-order model Jacobian (or it is too costly to compute), the evaluation of this term can be both challenging and expensive. Here, two methods are discussed that can be used to evaluate the action of the Jacobian transpose on a vector as seen in~\eqref{eq:lspg_adjoint}:
+\begin{enumerate}
+\item Jacobian-free Derivative Approximation: A non-intrusive way to evaluate the Jacobian transpose in~\eqref{eq:lspg_adjoint} is to recognize that all terms including the Jacobian transpose are left multiplied by the transpose of the trial basis. One can make the manipulation,
+$$\basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} \bigg]^T = \bigg[  \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace \bigg]^T.$$
+This manipulation allows one to compute the action of the Jacobian on each column of $\basisspace$ by, e.g., a finite difference approximation,
+$$\frac{\partial \velocity}{\partial \stateyDiscrete} \basisvec_i \approx \frac{1}{\epsilon}\bigg( \velocity(\stateyDiscrete + \epsilon \basisvec_i) - \velocity(\stateyDiscrete) \bigg).$$
+The Jacobian transpose can be formed in $K+1$ evaluations of the velocity. For cases where the reduced-order model is low dimensional, this approach is feasible. For higher dimensional reduced-order models, this approach can be prohibitively expensive.
+
+\item Automatic Differentiation: A more intrusive, but potentially more efficient, method of computing the action of the Jacobian transpose on a vector is through automatic differentiation (AD). AD methods comprise a class of techniques that can be used to numerically evaluate derivatives of functions (e.g., Jacobians, vector-Jacobian products, etc.) by recursively applying the chain rule. The numerical examples presented later in this work leverage AD. The principle drawback of AD is that AD methods are intrusive and may not be suitable for, e.g., legacy codes.  
+\end{enumerate}
+
+\begin{remark}\label{remark:fbsm}(Acceleration of Indirect Methods)
+The FBSM is a simple iterative method for solving the coupled two-point boundary value problem. For large time windows, however, the FBSM may require many 
+forward-backward iterations for convergence. More sophisticated solution techniques, such as a multiple FBSM method or multiple shooting methods, promise 
+to reduce this cost. Analyses of additional solution techniques will be a subject of future work.
+\end{remark}
+

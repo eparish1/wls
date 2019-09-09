@@ -1,0 +1,1076 @@
+%\documentclass{article}
+\documentclass[3p,computermodern,10pt]{elsarticle}
+\input{packages}
+\input{commands}
+\input{commands_cwst}
+%\input{title}
+%\begin{frontmatter}
+%\title{Continuous Least-Squares Petrov-Galerkin for Model Reduction}
+%\author{Eric J. Parish}
+\begin{document}
+\begin{frontmatter}
+
+%\title{Model Reduction via \methodName}
+\title{Windowed Least--Squares Reduced-Order Models for Dynamical Systems}
+
+\author[a]{Eric J. Parish and Kevin T. Carlberg}
+%\ead{ejparis@sandia.gov}
+
+\address[a]{Sandia National Laboratories,  Livermore, CA}
+\begin{abstract}
+This work proposes a windowed least-squares (\methodAcronym) reduced-order modeling formulation for dynamical systems. The proposed approach 
+sequentially minimizes the time-continuous full-order model residual within a low-dimensional trial space over a series of time windows.
+Trial spaces with spatial and space--time dimension reduction are considered. 
+The stationary conditions for the resulting minimization problems are derived. Of particular interest, the stationary conditions for trial spaces with spatial dimension reduction are obtained via the Euler--Lagrange equations and comprise a coupled two-point Hamiltonian boundary value problem containing a forward and backward system. %The forward system, which is forced by an auxiliary costate, evolves the generalized coordinates of the reduced-order model. The backwards system, which is forced by the FOM residual evaluated about the ROM state, governs the dynamics of the costate.
+%For spatial trial spaces, the stationary conditions for the time-continuous minimization problems are obtained 
+%by deriving the associated Euler--Lagrange equations. 
+Two differing methods are examined to solve the minimization problems: direct (discretize then minimize) and indirect (minimize and then discretize). Various limiting cases of the proposed method yield existing reduced-order modeling techniques, namely Galerkin, Least-Squares Petrov--Galerkin, and Space--Time Least-Squares Petrov--Galerkin. 
+%By formulating the least--squares problem from the time-continuous level, the \methodAcronym\ formulation overcomes 
+%the time-step sensitivity and time-scheme dependence that LSPG is subject to. 
+%The stationary points of the minimization problems are obtained by solving the associated Euler-Lagrange equations. The Euler-Lagrange equations consist of a set of coupled two point boundary value problems defined on each time-slab containing a forward primal system and a backward adjoint system. %The approach is conceptually similar to the classic Least-Squares Petrov-Galerkin approach, but displays several advantages. First, by formulating the residual minimization problem at the continuous level, the sensitivity of the resulting method to the underlying time-discretization scheme is greatly reduced. 
+Numerical experiments on the compressible Euler and Navier--Stokes equations demonstrate that, at an increased computational cost, the \methodAcronym\ formulation can yield more accurate and physically relevant solutions than the Galerkin and Least-Squares Petrov--Galerkin approaches. 
+
+%This work proposes a least-squares residual minimization approach for reduced-order models of dynamical systems. The proposed approach, which comprises a general least-squares reduced-order modeling (LSROM) formulation for dynamical systems, sequentially minimizes the time-continuous full-order model residual within a low-dimensional trial space over a series of time slabs. The stationary conditions for the time-continuous minimization problems are obtained 
+%by deriving the associated Euler--Lagrange equations. The time-continuous formulation exposes two differing methods that can be used to solve the minimization problem, namely direct (discretize then minimize) and indirect (minimize and then discretize). The proposed approach displays commonalities with optimal control problems and is a generalization of the popular 
+%Least-Squares Petrov--Galerkin (LSPG) method. By formulating the residual minimization problem from the time-continuous level, the \methodAcronym\ approach overcomes 
+%the time-step sensitivity and time-scheme dependence that LSPG is subject to. 
+%The stationary points of the minimization problems are obtained by solving the associated Euler-Lagrange equations. The Euler-Lagrange equations consist of a set of coupled two point boundary value problems defined on each time-slab containing a forward primal system and a backward adjoint system. %The approach is conceptually similar to the classic Least-Squares Petrov-Galerkin approach, but displays several advantages. First, by formulating the residual minimization problem at the continuous level, the sensitivity of the resulting method to the underlying time-discretization scheme is greatly reduced. 
+%Numerical experiments on the compressible Euler equations demonstrate that the proposed approach leads to more accurate and physically relevant solutions than existing model reduction approaches. 
+
+\end{abstract}
+\end{frontmatter}
+
+
+%\maketitle
+\section{Introduction}
+The simulation of dynamical systems plays an important role in a variety of areas in science and engineering; such examples include engineering design and control, financial analysis, and epidemiology. It is often the case, however, that (numerically) executing a single dynamical system solve is a computationally intensive process; e.g., this is the case when the state-space dimension of the dynamical system is prohibitively large and/or a wide range of time-scales need to be resolved. In such circumstances, it is common for analysts to rely on approximate models that generate approximations to the system of interest at a greatly reduced cost. 
+
+Projection-based reduced-order models (ROMs) have proved to be a promising tool for developing low-cost approximate solutions. These ROMs leverage ``snapshot" data from high-fidelity simulations and/or numerical experiments to identify a low-dimensional ``trial" space on which the state variables can be well approximated. ROM methods then seek a solution to the governing equations that lies on this low-dimensional trial space via projection or residual minimization. Efforts by a variety of research groups have led to significant advancements in ROM technologies over the past several decades, and we refer to Ref.~\cite{wilcox_benner_rev} for a review. 
+ 
+The construction of reduced-order models for nonlinear dynamical systems has proved challenging. The principle challenge encountered when trying to construct reduced-order models for such problems is that most existing methods lack \textit{a priori} guarantees of stability, accuracy, and convergence. %The standard Galerkin and least-squares Petrov-Galerkin methods, for instance, are both subject to exponentially growing error bounds~\cite{carlberg_lspg_v_galerkin}. 
+A great deal of effort has been devoted towards developing methods that allow for more robust and accurate reduced-order models of dynamical systems. These efforts include residual-norm minimization~\cite{l1,carlberg_lspg,carlberg_gnat,legresley_1,legresley_2,legresley_3,bui_resmin_steady,bui_unsteady,rovas_thesis,carlberg_thesis,bui_thesis}, space--time methods~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC,benner_st},  ``energy-based" inner products~\cite{rowley_pod_energyproj,Kalashnikova_sand2014}, symmetry transformations~\cite{sirovich_symmetry_trans}, basis adaptation~\cite{carlberg_hadaptation,adeim_peherstorfer}, projection subspace rotations~\cite{basis_rotation}, and subgrid-scale modeling~\cite{san_iliescu_geostrophic,iliescu_pod_eddyviscosity,iliescu_vms_pod_ns,Bergmann_pod_vms,iliescu_ciazzo_residual_rom,Wang_ROM_thesis,wentland_apg,Wang:269133,San2018}. Many of these developed techniques are not mutually exclusive. Residual minimization is most relevant to the current work and is the focus of the following review.
+
+%~\cite{legresley_1,legresley_2,legresley_3,bui_resmin_steady,rovas_thesis,carlberg_thesis,bui_thesis} and then extended to dynamical systems in Refs~\cite{bui_thesis,bui_unsteady,carlberg_thesis,carlberg_gnat,carlberg_lspg,carlberg_lspg_v_galerkin}. Specifically, Refs~\cite{bui_thesis,bui_unsteady,carlberg_thesis,carlberg_gnat,carlberg_lspg}
+
+%\begin{itemize}
+%\item Galerkin is inaccurate/unstable for non-symmetric static systems -- motivates residual minimization
+%\item Residual minimization (stems from FEM): minimizes the residual of the full-order model over the range of the trial space -- originally developed for static systems
+%\item Can guarantee stability for linear static systems 
+%\item Extension to time-varying systems is challenging 
+%\begin{itemize}
+%\item What is the definition of the ODE residual?
+%\item Over what time-interval is the residual being minmized?
+%\end{itemize}
+%\end{itemize} 
+Least-squares residual minimization as a numerical solution technique for (partial) differential equations was pioneered in the finite element community and led to what is known as the least-squares finite element method (LSFEM)~\cite{ls_review,bochev_leastsquares}. Motivated by the fact that the Galerkin method can be inaccurate and unstable for nonlinear and non-self-adjoint systems, the LSFEM involves (1.) forming a quadratic functional comprising the residual norm of the partial differential equation of interest and (2.) leveraging variational principles to derive the stationary conditions of the quadratic functional; i.e, LSFEM can be thought of as finding the solution within a finite element trial space the minimizes the $2$-norm of the PDE residual. Least-squares methods often exhibit numerous advantages (e.g., least-squares system are symmetric and positive definite) over the more standard Galerkin discretization. 
+
+Residual minimization methods were extended-to and developed-for reduced-order models by a variety of researchers. Similar to LSFEM, residual minimization approaches for reduced-order models comprise finding the solution within a low-dimensional trial space that minimizes the residual norm of the full-order model. Residual minimization approaches were first applied to static (i.e., no time-dependence) reduced-order models in~\cite{legresley_1,legresley_2,legresley_3,bui_resmin_steady,rovas_thesis,carlberg_thesis,bui_thesis} and then extended to dynamical systems in~\cite{bui_thesis,bui_unsteady,carlberg_thesis,carlberg_gnat,carlberg_lspg,carlberg_lspg_v_galerkin}. Specifically, Refs.~\cite{bui_thesis,bui_unsteady,carlberg_thesis,carlberg_gnat,carlberg_lspg} formulated the residual minimization problem for dynamical systems by sequentially minimizing the \textit{fully discrete} residual (i.e., the residual after temporal discretization) at each time-step instance. This formulation is most commonly known as the \textit{Least--Squares Petrov--Galerkin} (LSPG) method. Ref.~\cite{carlberg_lspg_v_galerkin} provided numerous analyses on this formulation and examined connections with the standard Galerkin method and Petrov--Galerkin methods. Critically, it was shown that (1.) for various time-stepping methods LSPG has an equivalent continuous form that corresponds to a Petrov--Galerkin projection and (2.) the standard Galerkin method minimizes the time-instantaneous residual of the full-order model. Numerous numerical experiments have demonstrated that LSPG yields more stable (although not always more accurate) solutions than the Galerkin method~\cite{bui_thesis,carlberg_lspg_v_galerkin,carlberg_gnat,carlberg_thesis,parish_apg}. The common physical explanation for this improved performance is that, by minimizing the fully discrete residual, LSPG minimizes the residual over a \textit{finite-sized time-window}, rather than instantaneously as is done in the Galerkin method.
+ 
+The LSPG approach only guarantees residual minimization over a single time-step, and as such is not associated with residual minimization of the full dynamical system.  
+Indeed, LSPG is not equipped with \textit{a priori} guarantees of stability or convergence, even for linear time-invariant systems~\cite{bui_thesis}. Further, as it is defined at the fully discrete level, the performance of LSPG is subject to the time-step size: changing the time-step size changes the window over which the residual is minimized \textit{as well as} the temporal discretization error. As a result, LSPG provides optimal results at an intermediary time-step size. For too small a time-step, LSPG yields results similar to the Galerkin approach; in the limiting case of $\Delta t \rightarrow 0$, LSPG recovers Galerkin. For too-large a time-step, the accuracy of LSPG degrades. It is unclear if this is due to the numerical error associated with enlarging the time-step size, or rather if it is due to the size of the window the residual is being minimized over. The LSPG approach is additionally sensitive to the time discretization scheme. When used with explicit temporal discretization, for instance, LSPG again reverts to Galerkin. To gain the enhanced stability associated with LSPG, the underlying time-discretization scheme must be implicit with an appropriate time-step. This can increase the cost of the reduced-order model, especially in the case where the optimal time-step required by LSPG is small. 
+
+ 
+%The thesis of least--squares residual minimization was extended to construct reduced-order models of static systems by several authors, with two such instances being~\cite{rovas_thesis} and~\cite{bui_resmin}. Similar to the finite-element case, numerous theoretical analyses and numerical experiments have demonstrated that residual minimization methods yield more accurate and stable solutions than the Galerkin method. The extension of least--squares residual minimization methods to dynamical systems, however, has proved challenging. The least-squares Petrov-Galerkin method is arguably the most commonly adapted residual minimization method for dynamical systems. LSPG extends the idea of least--squares residual minimization to dynamical systems by sequentially minimizing the \textit{fully discrete} residual (i.e., after temporal discretization) in a weighted norm (nominally $\elltwo$) over each time step. Numerous numerical experiments have demonstrated that the LSPG approach yields more stable (although not always more accurate) solutions than the Galerkin method~\cite{carlberg_lspg_v_galerkin,carlberg_gnat,carlberg_thesis,parish_apg}. The common explanation for this improved performance is that, by minimizing the fully discrete residual, LSPG minimizes the residual over a \textit{finite-sized time-window}, rather than instantaneously as is done in the Galerkin method. 
+
+%The LSPG approach, however, is still subject to exponentially 
+%growing error bounds and, in general, lacks \textit{a priori} guarantees of stability and accuracy. Further, as it is defined at the fully discrete level, LSPG contains several nuances. First, the LSPG approach is sensitive to the time-step. In Ref.~\cite{carlberg_lspg_v_galerkin}, LSPG was shown to provide optimal results at an intermediary time-step. For too small a time-step, the LSPG approach is prone to the same stability challenges as the Galerkin approach. In the limiting case of $\Delta t \rightarrow 0$, the LSPG approach reverts to a Galerkin approach. For too-large a time-step, on the other hand, the accuracy of the LSPG method degrades. It is unclear if this is due to the numerical error associated with enlarging the time-step size, or rather if it is due to the size of the window the residual is being minimized over. The LSPG approach is additionally sensitive to the time discretization scheme. When used with explicit temporal discretization, for instance, the LSPG approach reverts to a Galerkin approach. To gain the enhanced stability associated with the LSPG method, the underlying time-discretization scheme must be implicit with an appropriate time-step. This can increase the cost of the reduced-order model, especially in the case where the optimal time-step required by LSPG is small. 
+
+ 
+%Residual minimization methods are the most relevant to the current work. Residual minimization methods seek to minimize the residual of the full-order model over the trial space defined by the POD basis. Two of the most popular reduced-order modeling approaches are (or can be interpreted as) residual minimization approaches. The Galerkin method, which is arguably the most common reduced-order modeling approach, minimizes the instantaneous FOM residual over the range of the trial basis~\cite{carlberg_lspg_v_galerkin}. %The Galerkin method is arguably the most common reduced-order modeling approach. In Ref~\cite{carlberg_lspg_v_galerkin}, Carlberg and Barone demonstrated that the Galerkin method corresponds to finding a velocity that minimizies the instananeous FOM residual over the range of the trial basis. 
+%Numerical experiments and theoretical analyses have shown, however, that the Galerkin method can be inappropriate for model-order reduction of general nonlinear dynamical systems~\cite{carlberg_gnat,carlberg_thesis,huang_combustion_roms}; error analysis has demonstrated that the Galerkin method is subject to exponentially growing error bounds while a variety of numerical experiments have demonstrated the lack of stability and inaccuracy of the method in practice. Indeed, it is well known in numerical analysis that Galerkin method performs poorly for non-symmetric systems. To address these issues, Carlberg et al. developed the least-squares Petrov-Galerkin (LSPG) method. LSPG sequentially minimizes the \textit{fully discrete} residual (i.e., after temporal discretization) in a weighted norm over each time-step. In this sense, the LSPG method is typically referred to as being \textit{discretely-optimal}. Numerous numerical experiments have demonstrated that the LSPG approach yields more stable (although not always more accurate) solutions than the Galerkin method~\cite{carlberg_lspg_v_galerkin,carlberg_gnat,carlberg_thesis,parish_apg}. The common explanation for this improved performance is that, by minimizing the fully discrete residual, LSPG minimizes the residual over a \textit{finite-sized time-window}, rather than instantaneously as is done in the Galerkin method. The LSPG approach, however, is still subject to exponentially 
+%growing error bounds and, in general, lacks \textit{a priori} guarantees of stability and accuracy. Further, as it is defined at the fully discrete level, LSPG contains several nuances. First, the LSPG approach is sensitive to the time-step. In Ref.~\cite{carlberg_lspg_v_galerkin}, LSPG was shown to provide optimal results at an intermediary time-step. For too small a time-step, the LSPG approach is prone to the same stability challenges as the Galerkin approach. In the limiting case of $\Delta t \rightarrow 0$, the LSPG approach reverts to a Galerkin approach. For too-large a time-step, on the other hand, the accuracy of the LSPG method degrades. It is unclear if this is due to the numerical error associated with enlarging the time-step size, or rather if it is due to the size of the window the residual is being minimized over. The LSPG approach is additionally sensitive to the time discretization scheme. When used with explicit temporal discretization, for instance, the LSPG approach reverts to a Galerkin approach. To gain the enhanced stability associated with the LSPG method, the underlying time-discretization scheme must be implicit with an appropriate time-step. This can increase the cost of the reduced-order model, especially in the case where the optimal time-step required by LSPG is small. 
+
+%The nuances associated with the LSPG approach lead to practical challenges. For instance, minimal analysis on the optimal \textit{a priori} time-step exists, and as such specifying an appropriate time-step for LSPG \textit{a priori} is challenging. The limitation to implicit time-schemes is also restrictive, especially considering the fact that ROMs are often much less stiff than the corresponding FOM~\cite{Bach2018StabilityCF} and thus explicit time-stepping schemes with large time-steps can sometimes be used. It is emphasized that, despite these challenges, LSPG is arguably the most robust model-order reduction 
+%formulation for general nonlinear dynamical systems and has gained wide-spread use~\cite{narmal,cheng,4,5,6}.\EP{Finish with good Refs using LSPG} 
+%Time-discrete space-time residual minimization~\cite{choi_stlspg,constantine_strom} is the third approach that has been proposed. Reference~\cite{choi_stlspg} extends the LSPG method to space-time formulations and develops the ST-LSPG method. %ST-LPSG seeks a space-time solution within a space-time trial space that is a minimizer of the fully discrete residual. The space-time trial spaces
+%ST-LSPG seeks to find the minimizer of the \textit{fully discrete} residual over the entire space-time domain within a given space-time trial space. These space-time trial spaces are constructed through higher-order singular value decompositions (SVD), such as the truncated high-order SVD.
+%\item How can a finite-time residual minimization approach be developed that is independent of the underlying temporal discretization?
+%\item Does minimizing the residual over a larger time-window improve the model prediction?
+%\end{enumerate}
+
+%Recently, LSROMs for dynamical systems have been extended to the space--time setting~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC}. These space--time LSROMs (ST-LSROMs), which are typically motivated from the need to reduce the spatial \textit{and} temporal dimension of a dynamical system model, comprise finding a space--time solution that minimizes the space--time residual within a low-dimensional space--time trial space. In contrast to standard ROMs for dynamical systems, in where the generalized coordinates are \textit{(discretized) time-dependent functions}, space--time methods ROMs represent the temporal dependence of the state via a finite dimensional temporal basis and thus the generalized coordinates are a stationary vector. ST-LSROMs thus differ from their standard LSROM counterparts in that they 1.) minimize the full space--time residual and 2.) represent the temporal dependence of the state via a prescribed trial space. ST-LSROMs thus comprise algebraic systems, while LSROMs comprise dynamical systems.  
+ 
+%ST-LSROMs involve a monolithic space--time least--squares solve, and are typically equipped with more robust error bounds than their non-space--time counterparts. To best describe how these existing methods fit into the present work, they must be viewed in a two dimensional space: one dimension corresponding the space--time trial space and one dimension corresponding to the space--time residual minimization problem.  With the exception of Ref.~\cite{bui_thesis}, existing space--time methods leverage reduced spatial and temporal trial spaces. In Ref.~\ref{choi_stlspg}, these trial spaces are constructed through higher-order singular value decompositions (SVDs), such as the truncated high-order SVD. 
+%Ref.~\cite{choi_stlspg} develops a space--time formulation of the least-squares Petrov-Galerkin approach. The formulation minimizes the \textit{fully discrete} residual over the entire space--time domain within a given space--time trial space. These space--time trial spaces are constructed through higher-order singular value decompositions (SVDs), such as the truncated high-order SVD. 
+%Another piece of relevant work is that performed by Constantine and Wang~\cite{constantine_strom}, in which a space--time residual minimization formulation for model interpolation is pursued. The present work again distinguishes itself in that it seeks to minimize the time-continuous residual over space--time slabs;~\cite{constantine_strom} considers the solution of a fully discrete optimization problem over the entire space--time domain. It is noted that, similar to the current work, a time-continuous residual-minimization formulation is used as a starting point in~\cite{constantine_strom}, and as such thematic similarities exist between~\cite{constantine_strom} and the present work.
+
+This work seeks to overcome the practical challenges associated with existing residual minimization approaches for reduced-order models. To this end, we develop a reduced-order modeling approach that minimizes the FOM ODE residual over a series of time windows. The key novelties of the work are two fold. First, the residual minimization problem is formulated to minimize the \textit{time-continuous} residual. By working from a continuous viewpoint, the present formulation decouples the underlying temporal discretization scheme from the residual minimization problem; thus addressing a key deficiency of LSPG. The continuous viewpoint additionally exposes two differing methods that can be used to solve the 
+minimization problems, namely \textit{discretize and then optimize} (direct) methods and \textit{optimize and then discretize} (indirect) methods. The second novelty is that the residual is minimized over \textit{time windows}, as opposed to over a single time step or the entire time domain. This allows for maximum flexibility in terms of computational cost and numerical accuracy. We demonstrate that this formulation recovers the Galerkin, LSPG, and space--time LSPG methods. Figure~\ref{fig:flowchart} depicts how the proposed method interfaces with existing approaches. 
+
+The resulting approach is best viewed as a hybrid space--time method. A variety of research has examined the formulation of space--time reduced-order models~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC,bui_thesis} and the present approach displays commonalities with several such efforts. First,~\cite{bui_thesis} briefly formulated a space--time least-squares ROM and connected this formulation with optimal control; specifically the thesis of optimize then discretize vs discretize then optimize was mentioned. This formulation, however, was not fully developed and was eschewed for the time-local residual minimization method (i.e., LSPG). The present work thus formally develops (and extends) several of the concepts put forth in~\cite{bui_thesis}. Next, Ref.~\cite{constantine_strom} developed a space--time residual minimization formulation for model interpolation. 
+The present work distinguishes itself from Ref.~\cite{constantine_strom} in that (1.) in addition to trial spaces with space--time dimension reduction, we consider trial spaces with spatial dimension reduction only (i.e., a classic spatial basis is employed, opposed to a space--time basis) -- in which case the generalized coordinates comprise a vector of functions, and (2.) we minimize the time-continuous residual over space--time windows;~\cite{constantine_strom} considers the solution of a fully discrete optimization problem over the entire space--time domain. It is noted that, similar to the current work, a time-continuous residual-minimization formulation is used as a starting point in~\cite{constantine_strom}, and as such thematic similarities exist between~\cite{constantine_strom} and the present work. Lastly, Ref.~\cite{choi_stlspg} develops a space--time formulation of the least-squares Petrov--Galerkin approach. The formulation minimizes the \textit{fully discrete} residual over the entire space--time domain within a given space--time trial space. %These space--time trial spaces are constructed through higher-order singular value decompositions (SVDs), such as the truncated high-order SVD. 
+The present work distinguishes itself from Ref.~\cite{choi_stlspg} in that (1.) we perform model reduction of the time-continuous system, (2.) we consider trial spaces with both space--time dimension reduction and spatial dimension reduction, and (3.) residual minimization is performed over time windows; Ref.~\cite{choi_stlspg} considers space--time bases and minimizes the fully-discrete residual over the entire domain. 
+
+
+%Ref.~\cite{choi_stlspg} develops a space--time formulation of the least-squares Petrov-Galerkin approach. The formulation minimizes the \textit{fully discrete} residual over the entire space--time domain within a given space--time trial space. These space--time trial spaces are constructed through higher-order singular value decompositions (SVDs), such as the truncated high-order SVD. The present work distinguishes itself from Ref.~\cite{choi_stlspg} in that it seeks to minimize the time-continuous residual over time slabs, as opposed to the fully-discrete residual over the entire domain. Another point of departure from Ref.~\cite{choi_stlspg} is that the present work does not consider temporal reduction; this will be a subject of future work. Instead, the temporal basis is taken to have full support. Another piece of relevant work is that performed by Constantine and Wang~\cite{constantine_strom}, in which a space--time residual minimization formulation for model interpolation is pursued. The present work again distinguishes itself in that it seeks to minimize the time-continuous residual over space--time slabs;~\cite{constantine_strom} considers the solution of a fully discrete optimization problem over the entire space--time domain. It is noted that, similar to the current work, a time-continuous residual-minimization formulation is used as a starting point in~\cite{constantine_strom}, and as such thematic similarities exist between~\cite{constantine_strom} and the present work.
+
+\begin{figure} 
+\begin{centering} 
+\includegraphics[trim={0.1cm 0cm 1cm 0cm},clip,width=0.99\textwidth]{diagram.pdf} 
+\caption{Flow chart of \methodAcronym.} 
+\label{fig:flowchart} 
+\end{centering} 
+\end{figure}
+
+
+
+ The novel contributions and findings of the present work are:
+\begin{enumerate}
+%\item The development of a time-continuous residual minimization framework for reduced-order models.
+\item The development of the \methodName\ (\methodAcronym) approach for dynamical systems. The approach sequentially minimizes the time-continuous full-order model residual over time windows.
+\item The derivation of the stationary conditions for \methodAcronymROMs\ leveraging spatial and space--time dimension reduction trial spaces. The case of spatial dimension reduction trial spaces is of particular interest: the stationary conditions are derived via the Euler--Lagrange equations and comprise a coupled 
+two-point Hamiltonian boundary value problem containing a forward and backward system. The forward system, which is forced by an auxiliary costate, evolves the generalized coordinates of the ROM. The backwards system, which is forced by the FOM residual evaluated about the ROM state, governs the dynamics of the costate. 
+\item An exploration of the use of both direct (discretize then optimize) and indirect (optimize then discretize) solution techniques. Conditions under which \methodAcronym\ recovers Galerkin, LSPG, and space--time LSPG are presented.
+\item Error analysis of the \methodAcronym\ approach for trial spaces with spatial dimension reduction. In particular, it is shown that the error in \methodAcronymROMs\ is bounded \textit{a priori} by a combination of the error at the start of the window and the integrated FOM ODE residual evaluated at the FOM state projected onto the trial space. 
+\item Numerical experiments for trial spaces with spatial dimension reduction demonstrating two key findings:
+\begin{itemize}
+\item Residual minimization over larger time windows leads to more stable and physically relevant solutions as well as lower space--time residuals. 
+\item Minimizing the residual over a larger time window does not necessarily lead to a more accurate solution in the $\elltwo$ norm. Residual 
+minimization over an intermediary-sized time-window leads to the lowest error in the $\elltwo$ norm.
+\end{itemize}
+\end{enumerate}
+
+The layout of the rest of this paper is as follows: Section~\ref{sec:math} outlines the problem statement of interest, along with the Galerkin, LSPG, and space--time LSPG ROMs. Section~\ref{sec:tclspg} outlines the \methodAcronym\ formulation proposed in this work. Section~\ref{sec:numerical_techniques} outlines numerical techniques for solving \methodAcronymROMs. Both direct and indirect methods are discussed. Next, Section~\ref{sec:analysis} provides equivalency conditions and error analysis for \methodAcronymROMs. Section~\ref{sec:numerical_experiments} presents numerical experiments. Conclusions and perspectives are provided in Section~\ref{sec:conclude}.
+The notation used is as follows: We denote vector functionals in stylized bold text, i.e., $\boldsymbol x$. We denote vectors in standard bold text, i.e., $\mathbf{x}$. Matrices are denoted with capital bold letters, i.e., $\mathbf{X} \equiv \begin{bmatrix} \mathbf{x}_1 & \cdots & \mathbf{x}_r\end{bmatrix}$. Vector and functional spaces are denoted with calligraphic fonts, i.e., $\mathcal{X}$.
+%Model reduction of nonlinear dynamical systems is a growing research area.
+%The least-squares Petrov-Galerkin (LSPG) approach has gained popularity as a model reduction technique for nonlinear dynamical systems. Derived at the fully discrete level, the LSPG approach solves a least-squares problem that minimizes the fully discrete residual of the reduced-order model at each time-step. LSPG has been shown to be an effective formulation for nonlinear model reduction on complex problems of interest.
+%\begin{comment} 
+\section{Mathematical Setting}\label{sec:math}
+We consider the system of nonlinear ordinary differential equations (ODEs),
+\begin{equation}\label{eq:FOM}
+ \frac{d}{dt}\stateFOMArg{}{t} = \velocity(\stateFOMArg{}{t},t), \qquad \stateFOM(0) = \stateFOMIC, \qquad t \in [0,T],
+\end{equation}
+where $T \in \mathbb{R}^+$ is the final time, $\stateFOM \in \RR{\fomdim} \otimes \timeSpace $ with $\stateFOM: [0,T] \rightarrow  \RR{\fomdim}$ denotes the state implicitly defined to be the solution to~\eqref{eq:FOM}, $\timeSpace$ is the set of functions acting on $[0,T]$, $\stateFOMIC \in \mathbb{R}^{\fomdim}$ are the initial conditions, and $\velocity: \mathbb{R}^{\fomdim} \times [0,T] \rightarrow \mathbb{R}^{\fomdim}$ with $(\stateyDiscrete,t) \mapsto \velocity(\stateyDiscrete,t)$ is the velocity. Equation~\eqref{eq:FOM} will be referred to as the ``full-order model" (FOM) ODE.
+
+Directly solving~\eqref{eq:FOM} can be computationally expensive due to both the high dimensionality of the state and the range of time-scales that needs to be resolved. For time-critical applications, it is important to devise computationally efficient approximations to~\eqref{eq:FOM}. Projection-based ROMs are 
+one such promising approach. 
+
+\subsection{Projection-Based Reduced-Order Models}
+Projection-based ROMs generate approximate solutions to the FOM ODE~\eqref{eq:FOM} by approximating the state in a low-dimensional trial space. For dynamical 
+systems, two distinct types of trial spaces are used: space--time trial spaces with spatial dimension reduction (\spatialAcronym) and space--time trial spaces with space--time dimension reduction (\spaceTimeAcronym). \spatialAcronym\ trial spaces are most commonly employed and are used in, e.g., the Galerkin and Least-Squares Petrov--Galerkin (LSPG) methods. \spaceTimeAcronym\ trial spaces are typically 
+employed in space--time ROMs. The following subsections outline these two trial spaces, along with the Galerkin, LSPG, and 
+space--time LSPG method. 
+
+\subsection{\spatialAcronym\ Trial Spaces}
+\spatialAcronym\ trial spaces approximate the FOM ODE solution, $\stateFOM$, with an approximate solution, $\approxstate$, that lives in a $K$-dimensional affine trial space, 
+\begin{align}\label{eq:spatial_subspace}
+& \stspaceS \defeq \trialspace \otimes \timeSpace,\\ 
+& \trialspace \defeq \text{Range}(\basismat) +  \stateIntercept,  \label{eq:spatial_subspace2}  \\
+&\basismat \defeq \begin{bmatrix}  \basisvec_1  & \cdots &  \basisvec_K \end{bmatrix}, \label{eq:spatial_subspace3} 
+\end{align}
+where we refer to $\basismat \in \RRStar{\romdim}{\fomdim}$, with $\RRStar{\romdim}{\fomdim}$ denoting the set  $\{ \mathbf{X} \in \RR{\fomdim \times \romdim} \big| \mathbf{X}^T \mathbf{X} = \mathbf{I} \}$, as the spatial trial basis matrix, $\trialspace$ as the spatial trial space, and $\stateIntercept \in \mathbb{R}^{\fomdim}$ as the reference state. 
+%where $\basisvec_i \in \mathbb{R}^N$ are orthonormal basis vectors and $\stateIntercept \in \mathbb{R}^{\fomdim}$ the ``intercept''.
+%We refer to $\basismat \in \RRStar{\fomdim \times \romdim}$, with $\RRStar{p \times q}$ denoting the set of orthogonal $q$ frames in $p$, as the spatial trial basis, and $\trialspace$ as the spatial trial space. 
+The basis vectors $\basisvec_i$ are typically constructed through, e.g., POD~\cite{berkooz_turbulence_pod}, the reduced-basis method~\cite{rb_1,rb_2,rb_3,NgocCuong2005,Rozza2008}, etc. 
+ROMs leveraging \spatialAcronym\ trial spaces approximate the state as,
+\begin{equation}\label{eq:affine_trialspace}
+\stateFOMArg{}{t} \approx \approxstate(t) \defeq \basisspace \genstateArg{}{t} + \stateIntercept,
+\end{equation}
+where $\genstate \in \RR{\romdim} \otimes \timeSpace$, with $\genstate : [0,T] \rightarrow \mathbb{R}^{\romdim}$, are the generalized coordinates. Substituting the approximation given in~\eqref{eq:affine_trialspace} into~\eqref{eq:FOM} and performing orthogonal $\elltwo$ projection of the initial conditions onto the trial space, one obtains,
+\begin{equation}\label{eq:g_truncation}
+\basisspace \frac{d }{dt}\genstateArg{}{t} = \velocity(\basisspace
+\genstateArg{}{t} + \stateIntercept,t ), \qquad \genstate(0) = \genstateIC, \qquad t \in [0,T].
+\end{equation}
+Equation~\eqref{eq:g_truncation} provides an over-determined system of $N$ equations for the $K$ generalized coordinates. Dimension reduction is predominantly performed with either the \textit{Galerkin method} or the \textit{Least-Squares Petrov--Galerkin method} (LSPG). We now outline these two methods.
+
+\subsubsection{The Galerkin Method}
+The Galerkin method is (traditionally) obtained by the following steps: (1.) The approximation~\eqref{eq:affine_trialspace} is substituted into~\eqref{eq:FOM}, and (2.) the resulting residual is enforced to be $\stweightingMatArg{}$-orthogonal to the trial space, with $\stweightingMatArg{ } \equiv \stweightingMatOneArg{ }^T \stweightingMatOneArg{ }$ being a positive (semi-)definite weighting matrix (commonly taken to be $\mathbf{I}$). This projection process results in what is known as the Galerkin method,
+\begin{equation*}\label{eq:g_truncation2}
+\frac{d}{dt}\genstateGalerkinArg{}{t} = \massArgnt{n}^{-1} \basisspace^T \stweightingMatArg{n} \velocity(\basisspace
+\genstateGalerkinArg{}{t} + \stateIntercept,t), \qquad \genstateGalerkin(0) = \genstateIC, \qquad t \in [0,T],
+\end{equation*}
+where $\massArgnt{ } \equiv \basisspace^T \stweightingMatArg{ } \basisspace$ is a mass matrix. 
+Model reduction via the Galerkin method is seen to result in a $K$-dimensional dynamical system for the 
+generalized coordinates. 
+The Galerkin method can alternatively be viewed as a residual minimization method~\cite{carlberg_lspg_v_galerkin}. In this setting, the Galerkin ROM can be 
+written as,
+$$
+\frac{d}{dt}\genstateGalerkinArg{}{t} = \underset{ \genstateyDiscrete \in \RR{\romdim}  }{\text{arg\,min}} || \basisspace \hat{\stateyDiscrete} -  \velocity(\basisspace \genstateGalerkinArg{}{t} + \stateIntercept,t) ||_{\stweightingMatArg{n}}^2. 
+%\hat{\mathbf{v}}, %\qquad \genstateGalerkin(0) = \basisspace^T(\stateFOMIC -\stateIntercept), \qquad t \in [0,T].
+$$
+%where
+%$$\hat{ \mathbf{v}} = \underset{\hat{ \stateyDiscrete}  }{\text{arg min}} || \basisspace \hat{\stateyDiscrete} -  \velocity(\basisspace \genstateGalerkinArg{}{t} + \stateIntercept) ||_{\stweightingMatArg{n}}^2.$$
+%The minimization problem has the solution,
+%$$\hat{\mathbf{v}} = \massArgnt{n}^{-1}\basismat^T \stweightingMatArg{n} \velocity(\basismat \genstateGalerkinArg{}{t} + \stateIntercept ).$$
+%Galerkin method is interpreted as finding the velocity that minimizes the FOM ODE residual~\cite{carlberg_lspg_v_galerkin},
+% The velocity that minimize the FOM ODE residual is given as the solution to the optimization problem, %To demonstrate this, we define the FOM residual, %The LSPG residual corresponds to minimizing the FOM O$\Delta$ E residual at each time-instance. obtained either by projecting Eq.~\ref{eq:g_truncation} via a test basis or by residual minimization. Equivalence conditions for these two approaches are established in Ref.~\cite{carlberg_lspg_v_galerkin}. This work considers dimension reduction by residual minimization.
+%The most common way to perform dimension reduction is by projecting Eq.~\ref{eq:g_truncation} via a test basis. An alternative philosophy that is pursued here is to perform dimension reduction through residual minimization. 
+%Define the residual,
+%\begin{align*}
+%\resid & \vcentcolon \state \mapsto \frac{d \state}{dt} - \velocity(\state), \\
+%& \vcentcolon \RR{\fomdim} \times [0,T] \rightarrow \RR{\fomdim} \times [0,T].
+%\end{align*}
+%The Galerkin method can be interpreted as finding the velocity such that the instantaneous time residual is minimized,%Minimization of the residual over the trial space leads to what is known as the Galerkin method,
+%$$\mathbf{v} = \underset{\stateyDiscrete \in \text{Range}(\basismat)  }{\text{arg min}}|| \stateyDiscrete -  \velocity(\state(t)) ||_2^2.$$
+%As $\mathbf{v} \in \text{Range}(\basismat)$, the minimization problem can be written as,%and hence $\boldsymbol v = \basismat \hat{\boldsymbol v} $,
+%$$\hat{ \mathbf{v}} = \underset{\hat{ \stateyDiscrete}  }{\text{arg min}} || \basisspace \hat{\stateyDiscrete} -  \velocity(\state(t)) ||_2^2,$$
+%where $\hat{\mathbf{v}} \in \RR{K}$ are the generalized coordinates of $\boldsymbol v$ and $\boldsymbol v = \basisspace \hat{\boldsymbol v}$. 
+%The minimization problem has the solution~\cite{carlberg_lspg_v_galerkin},
+%$$\hat{\mathbf{v}} = \basismat^T \velocity(\basismat \genstate(t) + \stateIntercept ).$$
+%The Galerkin ROM is thus given by,
+%\begin{equation*}\label{eq:g_truncation2}
+%\frac{d}{dt}\genstateGalerkinArg{}{t} = \mass^{-1}\basisspace^T \stweightingMatArg{n} \velocity(\basisspace
+%\genstateGalerkinArg{}{t} + \stateIntercept).
+%\end{equation*}
+The Galerkin ROM corresponds to \textit{time-instantaneous} minimization of the FOM ODE residual.
+%To perform dimension reduction, 
+%To perform dimension reduction, the governing equations are projected by a ``test" basis,
+%\begin{equation}\label{eq:g_truncation}
+%\testbasis^T \basisspace \frac{d \genstate}{dt} = \testbasis^T \velocity(\basisspace \genstate + \state_0,t; \param ), \qquad t \in [0,T],
+%\end{equation}
+%The most common choice is to set the test space and trial space to be equivalent, which results in the Galerkin reduced-order model,
+%\begin{equation}\label{eq:g_truncation}
+%\frac{d \genstate}{dt} = \basisspace^T \velocity(\basisspace \genstate + \state_0,t; \param ), \qquad t \in [0,T],
+%\end{equation}
+\subsubsection{Least-Squares Petrov--Galerkin}
+The Galerkin method can be unstable and inaccurate for non-self-adjoint and nonlinear problems. 
+An alternative model-reduction approach that enjoys several advantageous over the Galerkin method is the Least-Squares Petrov--Galerkin (LSPG) method~\cite{carlberg_lspg_v_galerkin,carlberg_thesis,carlberg_gnat,bui_unsteady,bui_thesis}. LSPG is defined at the fully discrete level and minimizes the fully discrete FOM O$\Delta$E residual (i.e., the FOM ODE residual after temporal discretization) at each time-step instance.  We outline the LSPG method for linear multistep methods as a demonstrative example. Defining a discretization of the continuous time domain $[0,T]$ into $N_t$ time instances $t^n = n\Delta t, n=1,2,\ldots,N_t$ with a constant time step $\Delta t = T/N_t$, temporal discretization via a linear multistep method yields the FOM O$\Delta$E,
+\begin{equation}\label{eq:lms}
+\residLMSArg{n} (\stateFOMDiscreteArg{n};\stateFOMDiscreteArg{n-1},\ldots,\stateFOMDiscreteArg{n-k^n}) = \bz, \qquad n=1,\ldots,N_t, 
+\end{equation}
+where $\stateFOMDiscreteArg{n} \approx \stateFOM(t^n)$ denotes the discrete approximation to the state at the $n${th} time instance and 
+$\residLMSArg{n}$ is the discrete linear multistep residual at the $n$th time step,
+\begin{align*}
+\residLMSArg{n} &: (\stateyDiscreteArgnt{n};\stateyDiscreteArgnt{n-1},\ldots,\stateyDiscreteArgnt{n-k^n}) \mapsto  \frac{1}{\Delta t} \sum_{j=0}^{k^n} \alpha^n_j \stateyDiscreteArgnt{n-j} -  \sum_{j=0}^{k^n} \beta^n_j \velocity(\stateyDiscreteArgnt{n-j},t^{n-j}),
+\\
+&: \RR{\fomdim} \otimes \RR{k^n + 1} \rightarrow \RR{\fomdim}. 
+\end{align*} 
+In the above, $k^n$ is the width of the multistep scheme at the $n$th time step and $\alpha^n_j,\beta^n_j$ are coefficients that define the type of multistep scheme at the $n$th time step.
+%\begin{equation}\label{eq:coarse_implicit_euler_0}
+%\residLMS \frac{\stateFOMDiscreteArg{n} - \stateFOMDiscreteArg{n-1}  }{\Delta t} - \velocity(\stateFOMDiscreteArg{n}) = \mathbf{0}, \qquad n = 1,2,\ldots,N_t,
+%\end{equation}
+%the algebraic FOM O$\Delta$E obtained after an implicit Euler temporal discretization is given by,
+%\begin{equation}\label{eq:coarse_implicit_euler_0}
+%\frac{\stateFOMDiscreteArg{n} - \stateFOMDiscreteArg{n-1}  }{\Delta t} - \velocity(\stateFOMDiscreteArg{n}) = \mathbf{0}, \qquad n = 1,2,\ldots,N_t,
+%\end{equation}
+%where $\stateFOMDiscreteArg{n} \approx \stateFOM(t^n)$ denotes the discrete approximation to the state at the $n${th} time instance.
+The FOM O$\Delta$E solution will exactly satisfy~\eqref{eq:lms}; the ROM solution will not. The LSPG method minimizes the residual of the FOM O$\Delta$E~\eqref{eq:lms} within the trial space over each time step. %We define the discrete residual for the implicit Euler method at the $n$th time-instance as,
+%\begin{align*}
+%\resid_{\text{IE}} & \vcentcolon (\stateyDiscrete;\stateFOMDiscreteArg{n-1}) \mapsto \frac{\stateyDiscrete - \stateFOMDiscreteArg{n-1}  }{\Delta t} -  \velocity(\stateyDiscrete), \\
+%& \vcentcolon \RR{\fomdim} \times \RR{\fomdim} \rightarrow \RR{\fomdim}. 
+%\end{align*}
+The LSPG method is defined as follows,
+\begin{equation*}
+\approxstateLSPG^n = \underset{\stateyDiscrete \in \trialspace  }{\text{arg\,min}}|| \lspgWeightingArg{\stateyDiscrete}\residLMSArg{n} (\stateyDiscrete; \approxstateLSPG^{n-1},\ldots,\approxstateLSPG^{n-k^n}) ||_2^2, \qquad n = 1,2,\hdots,\ntimeSteps,
+\end{equation*}
+where $\approxstateLSPG^n \approx \stateFOMDiscreteArg{n}$ denotes the LSPG approximation to the state at $n$th time-step instance and 
+$\lspgWeightingArg{\cdot} \in \RR{\nsamples \times \fomdim}$, with $\romdim \le \nsamples \le \fomdim$, is a weighting matrix that can be used, e.g., for hyper-reduction. 
+Although illustrated for linear multistep methods, LSPG can be 
+formulated for \textit{any} type of time-marching scheme (see Ref.~\cite{carlberg_lspg_v_galerkin} for, e.g., Runge--Kutta schemes). 
+
+In general, the LSPG approach has been observed to be more stable and accurate than the 
+Galerkin approach~\cite{carlberg_lspg_v_galerkin,carlberg_thesis,carlberg_gnat}. The common interpretation of the improved performance of the LSPG method over the Galerkin method is that LSPG minimizes the residual over a finite-sized time window, while Galerkin minimizes only the instantaneous residual~\cite{carlberg_lspg_v_galerkin}.  
+However, for general non-self-adjoint and nonlinear problems, LSPG, lacks \textit{a priori} guarantees of stability, accuracy, and convergence. Further, 
+LSPG is sensitive to the time-step size: changing the time-step size changes the window over which the residual is minimized 
+\textit{as well as} the temporal discretization error. As a result, optimal results are obtained at an intermediary time-step. 
+For too small a time-step, the accuracy and stability of LSPG is similar to Galerkin; in the 
+limiting case of $\Delta t \rightarrow 0$, LSPG recovers Galerkin~\cite{carlberg_lspg_v_galerkin}. 
+For too large a time-step, the accuracy of LSPG degrades~\cite{carlberg_lspg_v_galerkin,parish_apg}. The 
+precise reason for this degradation in accuracy is difficult to discern as increasing the time-step changes both the error incurred by 
+temporal discretization and the window the residual is being minimized over. Lastly, LSPG is sensitive to the time-marching scheme: changing the 
+time-marching scheme modifies the minimization problem. For example, LSPG reverts to a Galerkin approach 
+when used with an explicit time-marching scheme. It is emphasized that, despite these challenges, 
+LSPG is arguably the most popular reduced-order modeling technique for general nonlinear systems.
+
+\subsection{\spaceTimeAcronym\ Trial Spaces and Space--Time ROMs}
+Recent work has investigated space--time reduced-order models~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC,benner_st,bui_thesis}. Space--time methods 
+are advantageous in that they allow for both spatial \textit{and} temporal dimension reduction. Further, space--time 
+methods are often equipped with more favorable error bounds than non-space--time methods. The approach proposed in this work displays commonalities 
+with space--time methods and, as such, we briefly outline \spaceTimeAcronym\ trial spaces and space--time LSPG.
+
+Space--time methods leverage the \spaceTimeAcronym\ trial space $\stspaceST$,
+\begin{equation}\label{eq:sttrialspace_def}
+ \approxstateArgnt{} \in  \stspaceST \subseteq \RR{N} \otimes \timeSpace,
+\end{equation}
+and the space--time trial basis \textit{functions},
+\begin{align*}
+\stbasisArgnt{} &: t \mapsto \stbasis(t) \\
+ &: [0,T] \rightarrow  \RR{N \times \stdim} ,%\spaceTrialSpace , \\
+%&  \in \RR{N \times \stdim} \otimes \timeTrialSpaceArg{},  
+\end{align*}
+with $\text{Range}(\stbasis) + \stateInterceptArg{} \equiv \stspaceST$ and where $\stdim$ is the dimension of the space--time generalized coordinates.
+%with $\mathbb{V}_{\stdim}( \RR{N} )$ denoting the set of orthogonal $\stdim$ frames in $\RR{N}$ (e.g., an $N \times \stdim$ matrix with orthogonal column vectors).
+The state is approximated by,
+\begin{equation}\label{eq:stapprox1}
+ \stateFOMArg{}{t} \approx \approxstateArg{}{t}  = \stbasisArg{}{t} \stgenstate + \stateInterceptArg{},
+\end{equation}
+%where $\stbasisArgnt{} : \RR{\stdim} \rightarrow \spaceTrialSpace \otimes \timeTrialSpaceArg{}$ with $ \stbasisArgnt{n} \in \RR{N \times \stdim} \otimes \timeTrialSpaceArg{n}$ is the space--time trial basis, 
+where $\stgenstateArg{} \in \RR{\stdim}$ are the space--time generalized coordinates. Critically, the 
+space--time basis matrix comprises time-dependent \textit{functions}, while the generalized coordinates are a stationary vector. This is fundamentally different than  
+\spatialAcronym\ trial spaces, in where the generalized coordinates are time-dependent functions while the basis matrix is stationary.  
+
+Substituting the approximation~\eqref{eq:stapprox1} into the FOM ODE~\eqref{eq:FOM},
+\begin{equation}\label{eq:st_fom}
+\frac{d }{dt} \stbasisArg{}{t} \stgenstate =  \velocity(\stbasisArg{}{t} \stgenstate + \stateIntercept,t) , \qquad \genstate(0) =\mathbb{P}(\stateFOM)(0), \qquad t \in [0,T],
+\end{equation}
+where $\mathbb{P} : \RR{N} \otimes \timeSpace \rightarrow \stspaceST$ is an orthogonal projection onto the trial space (e.g., $\elltwo$).
+Equation~\eqref{eq:st_fom} is an over-determined algebraic system for the $\stdim$ unknowns. We now outline the Space--Time Least-Squares Petrov--Galerkin method~\cite{choi_stlspg}. 
+The space--time Galerkin method is noted to additionally be a possibility for model reduction. As the space--time Galerkin method does not associate with any residual minimization 
+principle, however, we do not outline it here.
+\subsubsection{Space--Time LSPG} 
+As in LSPG, Space--Time LSPG (ST-LSPG)~\cite{choi_stlspg} minimizes the fully discrete residual, with the key difference being that ST-LSPG minimizes the residual over the entire time domain. For brevity, ST-LSPG is outlined only for linear multistep methods.
+%As ST-LSPG acts on the discrete solution, we first note that the discrete FOM solution lives in $\RR{N} \otimes \RR{N_t}$. ST-LSPG then seeks solutions in the trial space,
+%$$\stspaceDiscrete \defeq \spaceTrialSpace \otimes \timeTrialSpaceDiscrete \subseteq \RR{N} \otimes \RR{N_t},$$
+%where $\timeTrialSpaceDiscrete$ is the discrete temporal trial space. It is noted that this trial space is a specific instance of the trial space~\ref{eq:sttrialspace_def} 
+%As before, we define a discretization of the continuous time-domain $[0,T]$ into $N_t$ time instances $t^n = n\Delta t, n=1,2,\ldots,N_t$ with a constant time-step $\Delta t = T/N_t$. We define now the space--time discrete residual for the implicit Euler method as,
+We first define the space--time discrete residual for linear multistep methods,
+\begin{align*}
+\residST_{\text{LMS}} & \vcentcolon (\stateyDiscreteArg{N_t}, \ldots ,\stateyDiscreteArg{1};\stateFOMIC) \mapsto \begin{bmatrix}
+%\frac{\stateyDiscreteArg{N_t} - \stateyDiscreteArg{N_t-1}  }{\Delta t} -  \velocity(\stateyDiscreteArg{N_t}) \\
+\residLMSArg{N_t}(\stateyDiscreteArg{N_t};\stateyDiscreteArg{N_t-1},\ldots,\stateyDiscreteArg{N_t - k^{N_t}}) \\ 
+%\frac{\stateyDiscreteArg{N_t-1} - \stateFOMDiscreteArg{N_t-2}  }{\Delta t} -  \velocity(\stateyDiscreteArg{N_t-1}) \\
+\vdots \\
+%\frac{\stateyDiscreteArg{1} - \stateFOMIC }{\Delta t} -  \velocity(\stateyDiscreteArg{1}) \\
+\residLMSArg{1}(\stateyDiscreteArg{1}; \stateFOMIC) 
+\end{bmatrix}  \\
+& \vcentcolon \RR{\fomdim} \otimes \RR{N_t+1} \rightarrow \RR{\fomdim N_t}. 
+\end{align*}
+For convenience we define the same residual with the generalized coordinates as the inputs,
+\begin{align*}
+\genresidST_{\text{LMS}} & \vcentcolon (\stgenstatey ;\stateFOMIC) \mapsto \begin{bmatrix}
+%\frac{\stateyDiscreteArg{N_t} - \stateyDiscreteArg{N_t-1}  }{\Delta t} -  \velocity(\stateyDiscreteArg{N_t}) \\
+\residLMSArg{n}\bigg( \stbasisArg{}{t^{N_t}}\stgenstatey + \stateIntercept; \stbasisArg{}{t^{N_t-1}}\stgenstatey + \stateIntercept ,\ldots,  \stbasisArg{}{t^{N_t-k^{N_t}}}\stgenstatey + \stateIntercept \bigg) \\ 
+\vdots \\
+\residLMSArg{n}\bigg( \stbasisArg{}{t^1}\stgenstatey + \stateIntercept; \stateFOMIC \bigg) \\ 
+\end{bmatrix}  \\
+& \vcentcolon \RR{\stdim} \times \RR{N} \rightarrow \RR{\fomdim N_t}. 
+\end{align*}
+ST-LSPG is defined as,
+\begin{equation*}
+\stgenstate = \underset{ \stgenstatey }{\text{arg\,min}}|| \lspgWeightingSTArg{\stgenstatey}  \genresidST_{\text{LMS}}(\stgenstatey;\stateFOMIC) ||_2^2, 
+\end{equation*}
+where $\lspgWeightingSTArg{\cdot} \in \RR{n_{st} \times N N_t}$, with $\stdim \le n_{st} \le N N_t$, is a space--time weighting matrix.
+
+
+ST-LSPG is appealing in that it (1.) allows for both spatial and temporal dimension reduction and (2.) minimizes the residual over the \textit{entire} space--time domain (as opposed to a single time-step instance as in LSPG). As a result, ST-LSPG can potentially be more efficient than standard LSPG and is equipped with more favorable error bounds~\cite{choi_stlspg}. ST-LSPG, however, is subject to several practical challenges.  Most importantly, ST-LSPG can be computationally 
+intensive as it involves (1.) computing space--time basis vectors and (2.) minimizing the entire space--time residual. For high-dimensional systems, these tasks may be intractable. Another challenge associated with ST-LSPG is that, as it requires a pre-defined temporal basis, it is unclear how it can be used, e.g., to perform future state prediction.
+  
+\subsection{Outstanding Challenges}
+This work seeks to overcome the limitations of existing reduced-order modeling approaches. Specifically, 
+we look to overcome LSPG's time-step and time-scheme dependence, the stability challenges of both Galerkin and LSPG, and the potential computational cost of ST-LSPG. To this end, we now outline the \methodName\ formulation. 
+%\end{comment}
+%\input{formulation_3}
+
+%\input{space_time}
+%\input{timecont_lspg}
+\input{section3/tclsrm_formulation}
+\input{section4/numerical_methods}
+\input{analysis}
+\input{numerical_experiments}
+
+
+\section{Conclusions}\label{sec:conclude}
+This paper introduced a windowed least-squares reduced-order modeling (\methodAcronym) formulation for dynamical systems. The approach sequentially minimizes the time-continuous full-order model residual within a low-dimensional trial space over a series of time windows. The formulation is applicable to both spatial and space--time dimension reduction trial spaces. The Galerkin, Least-Squares Petrov--Galerkin (LSPG) and space--time LSPG methods were shown to be specific instances of the proposed method 
+
+
+Two differing techniques to solve the least-squares minimization problems were considered: direct (discretize then minimize) and indirect (minimize then discretize). 
+The case of \spatialAcronym\ trial spaces proved particularly interesting: it was shown that indirect methods comprise solving a coupled two-point 
+Hamiltonian boundary value problem. The forward problem evolves the standard Galerkin ROM forced by a ``costate" variable, while a backward problem evolves the costate and is forced by the ROM residual.
+
+Numerical experiments of the compressible Euler and Navier-Stokes equations demonstrated the utility in the proposed approach. The first numerical experiment, in where the Sod shock tube was examined, demonstrated that \methodAcronymROMs\ minimizing the residual over larger time windows yielded smoother and more physically relevant solutions. Further, increasing the window size over which the residual was minimized led to a monotonic decrease in the total space--time residual. Increasing the window size over which the residual was minimized, however, did not necessarily decrease the $\elltwo$ solution error; this was observed to occur over an intermediary window size. It was 
+additionally shown that the \methodAcronymROMs\ overcome the time-step sensitivity challenges that LSPG is subject to. The second numerical experiment, which examined hyper-reduced ROMs of a compressible cavity flow, demonstrated the utility of the \methodAcronym\ formulation on a more complex flow. In this experiment, \methodAcronymROMs\ yielded predictions with relative errors less than $5-10\%$, while the Galerkin and LSPG ROMs failed to converge/blew up. Increasing the window size over which the residual was minimized again led to a lower space--time residual, but not necessarily a lower $\elltwo$ error.
+
+%In the case of spatial dimension-reduction-only, \methodAcronym\ displays improved performance over LSPG at the expense of an increased computational cost. This increase in computational cost is due to the fact that forming and/or solving the nonlinear minimization problem becomes more difficult as the time-slab size grows. To minimize this increase in cost, we intend to pursue the development of new solution techniques tailored to \methodAcronym.
+ 
+The principle challenge encountered in the \methodAcronym\ formulation is the computational cost: increasing the window size over which the residual is minimized leads to, in general, a higher computational cost. This increased cost is due to the fact that forming and solving the nonlinear least-squares problem becomes more expensive and difficult as the window size grows. While numerical experiments demonstrated that this increase in computational cost is mild, future work will focus on the development of solution techniques to improve the scaling of the method.
+
+ 
+
+%The second subspace we consider arrises when the decoder, $\decoder$, is linear and time-varying, while the generalized coordinates are time-stationary. This is the case in space-time discretizations. In this case one has,
+%$$\state(t) \approx \approxstate(t)  =  \decoder(\genstate(t),t) = \basisst(t) \genstate + \state_0 $$
+%where $\genstate \in \mathbb{R}^{\romstdim}$ are the time-stationary (space-time) generalized coordinates and the time-continuous basis is given by $\basisst \in \mathbb{R}^{romdim \times \romstdim} \times [0,T]$. The Euler-Lagrange equations are given by,
+%\begin{equation}\label{eq:euler_lagrange_st}
+% \bigg[ \dot{\basisst}^T \stweightingMat^T  - \basisst^T \big[\frac{\partial \velocity}{\partial \state} \big]^T \stweightingMat^T \bigg]  \bigg( \dot{\basisst} \genstate -    \velocity \bigg) = \mathbf{0}, \qquad \state(t=0) = \state_0\end{equation}
+%Note that the end-point boundary condition in the Euler-Lagrange equations is automatically satisfied.
+
+%\subsubsection{Solution techniques}
+%Equation~\ref{eq:euler_lagrange_st} consists of a nonlinear algebraic system to be solved at each time-instance, $t$. To obtain solutions, we must employ a temporal discretization. Here, we propose using a variational discretization with tensor products, e.g. finite elements. Let,
+%$$\basisst \equiv \basisspace \otimes \basistime \subseteq \basisspace \otimes \mathcal{T},$$
+%where $\mathcal{T}$ is the finite elements space. Similarly, let
+%$$\genstate = \genstate_s \otimes \genstate_t$$
+
+\section{Acknowledgments}
+The authors thank Yukiko Shimizo and Patrick Blonigan for numerous conversations from which this work benefited. 
+E.\ Parish acknowledges an appointment to the Sandia National Laboratories'
+John von Neumann Postdoctoral Research Fellowship in Computational Science. This paper
+describes objective technical results and analysis. Any subjective views or
+opinions that might be expressed in the paper do not necessarily represent the
+views of the U.S.\ Department of Energy or the United States Government.
+Sandia National Laboratories is a multimission laboratory managed and operated
+by National Technology and Engineering Solutions of Sandia, LLC., a wholly
+owned subsidiary of Honeywell International, Inc., for the U.S.\  Department of
+Energy's National Nuclear Security Administration under contract
+DE-NA-0003525.
+
+\begin{appendices}
+\section{Proper orthogonal decomposition}
+Algorithm~\ref{alg:pod} presents the algorithm for computing the trial basis via proper orthogonal decomposition.
+\begin{algorithm}
+\caption{Algorithm for generating POD Basis.}
+\label{alg:pod}
+Input: Number of time-steps between snapshots $N_{\text{skip}}$; intercept $\stateInterceptArg{}$; basis dimension $K$ \; 
+%\newline
+Output: POD Basis $\basisspace \in \mathbb{V}_{K}(\RR{N})$ \;
+%\newline
+Steps:
+\begin{enumerate}
+    \item Solve FOM O$\Delta$E and collect solutions into snapshot matrix
+$$\mathbf{S}(N_{\text{skip}}) \defeq \begin{bmatrix} \stateFOMDiscreteArg{0} - \stateInterceptArg{n} & \stateFOMDiscreteArg{N_{\text{skip}}} - \stateInterceptArg{n} & \cdots & \stateFOMDiscreteArg{\text{floor}(N_t/N_{\text{skip}})N_{\text{skip}}} - \stateInterceptArg{n} \end{bmatrix}$$
+    \item Compute the thin singular value decomposition, $$\mathbf{S} (N_{\text{skip}}) = \mathbf{U \Sigma Z}^T,$$
+    where $\mathbf{U} \equiv \begin{bmatrix} \mathbf{u}_1 & \cdots & \mathbf{u}_{\text{floor}(N_t/N_{\text{skip}})}\end{bmatrix}$
+    \item Truncate left singular vectors and to form the basis, $\basisspace \equiv \begin{bmatrix} \mathbf{u}_1 & \cdots & \mathbf{u}_K \end{bmatrix}$
+\end{enumerate}
+
+
+\end{algorithm}
+
+
+\section{Selection of Sampling Points}
+To construct the sampling point matrix used for hyper-reduction in the second numerical experiment, we employ q-sampling~\cite{qdeim_drmac} and the sample 
+mesh concept~\cite{carlberg_gnat}. Algorithm~\ref{alg:qdeim} outlines the steps used in the second numerical experiment to compute the sampling points.
+
+\begin{algorithm}
+\caption{Algorithm for generating the sampling matrix through q-sampling.}
+\label{alg:qdeim}
+Input: Number of time-steps between snapshots $N_{\text{skip}}$, number of primal sampling points, $n_s$ \; 
+%\newline
+Output: Weighting matrix $\stweightingMatArg{} \equiv \stweightingMatOneArg{}^T \stweightingMatOneArg{} \in \{0,1\}^{N \times N}$ \;
+%\newline
+Steps:
+\begin{enumerate}
+    \item Solve FOM O$\Delta$E and collect velocity snapshots 
+$$\mathbf{F}(N_{\text{skip}}) \defeq \begin{bmatrix} \velocity (\stateFOMDiscreteArg{0})  & \velocity( \stateFOMDiscreteArg{N_{\text{skip}}}) & \cdots & \velocity( \stateFOMDiscreteArg{\text{floor}(N_t/N_{\text{skip}})N_{\text{skip}}} ) \end{bmatrix}$$
+    \item Compute the thin singular value decomposition, $$\mathbf{F} (N_{\text{skip}}) = \mathbf{U \Sigma Z}^T,$$
+    where $\mathbf{U} \equiv \begin{bmatrix} \mathbf{u}_1 & \cdots & \mathbf{u}_{\text{floor}(N_t/N_{\text{skip}})}\end{bmatrix}$
+    \item Compute the QR factorization of  $\mathbf{U}^T$ with column pivoting,
+    \begin{equation*}
+        \mathbf{U}^T \mathbf{P}^* = \mathbf{QR}
+    \end{equation*}
+    with $\mathbf{P}^* \equiv \begin{bmatrix} \mathbf{p}_1 & \cdots & \mathbf{p}_{\text{floor}(N_t/N_{\text{skip}})} \end{bmatrix}$, $\mathbf{p}_i \in \{0,1\}^N$. 
+    \item Select the first $n_s$ columns of $\mathbf{P}^*$ to form the sampling point matrix $\stweightingMatOneArg{}^T \in \{0,1\}^{N \times n_s}$. 
+    \item Augment the sampling point matrix, $\stweightingMatOneArg{}$, with additional columns such that all unknowns are computed at the mesh cells selected by Step 3. For the second numerical experiment, these additional unknowns correspond to each conserved variable and quadrature point in the selected cells. 
+\end{enumerate}
+
+
+\end{algorithm}
+
+
+
+\section{Derivation of the Euler--Lagrange Equations}\label{appendix:eulerlagrange}
+This section details the derivation of the Euler Lagrange equations. To this end, we consider the generic functional of the form,
+\begin{equation}\label{eq:el_gen}
+\mathcal{J}: (\statey,\stateyDot) \mapsto  \int_a^b \integrand(\statey(t),\stateyDot(t),t)  dt,
+\end{equation}
+where $\integrand: \RR{M} \times \RR{M} \times[a,b] \rightarrow  \RR{}$ (for arbitrary $M$) with $\integrand: (\stateyDiscrete,\stateyDotDiscrete,t) \mapsto \integrand(\stateyDiscrete,\stateyDotDiscrete,t)$.%, $\statez: [a,b] \rightarrow \RR{M}$ and $\statezDot: [a,b] \rightarrow \RR{M}$.
+ We now introduce the function $\statez: [a,b] \rightarrow \RR{M}$ that is implicitly defined as an extremum of~\eqref{eq:el_gen} subject to the boundary condition $\statez(a) = \statez_a$. %To this end, we start by supposing that $\statez$ is a stationary point of $\mathcal{J}$ that satisfies the boundary conditions. 
+We introduce an arbitrary function $\variation : [a,b] \rightarrow \RR{M}$ with the boundary condition $\variationArg{a} = \bz$ and define a variation from the extremal by,
+\begin{align*}
+\statezBar  &: (\tau;\delta) \mapsto \statez(\tau) + \delta \variation(\tau),\\
+&: \RR{} \times [a,b] \rightarrow \RR{M}.
+\end{align*}
+We note that $\statezBar$ obeys the same boundary conditions as $\statez$ since $\variationArg{a} = \bz$.
+Evaluating the functional~\eqref{eq:el_gen} at $\statezBar(t,\epsilon)$,
+$$
+\mathcal{J}(\epsilon) = \int_a^b \integrand(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t)  dt.
+$$
+The objective is to now find $\overline{\statez}$ that makes $\mathcal{J}(\epsilon)$ stationary. This can be done by differentiating with respect to $\epsilon$, and setting the result to zero,% Noting that the extermum of Eq.~\ref{eq:el_gen} occurs when $\state = \state^*$, and thus when $\epsilon = 0$, we have,
+$$
+\frac{d}{d\epsilon} \bigg[ \mathcal{J}\big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) \big)\bigg] =  0,
+$$
+or equivalently,
+$$
+\int_a^b \frac{d}{d\epsilon} \bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon),t \big)\bigg] dt=  0.
+$$
+%As $\statez$ is a stationary point of $\mathcal{J}$, it then directly follows that,
+%\begin{equation}\label{eq:el1_appendix}
+%\bigg[ \frac{d \mathcal{J}}{d \epsilon} (\statezBar(t;0),\statezDotBar(t;0) \bigg]= 0.
+%\end{equation}
+%This fact can be used to derive the Euler--Lagrange equations. Evaluating Eq.~\eqref{eq:el1_appendix},
+%$$ \int_a^b \frac{d}{d\epsilon}\bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) \big) \bigg] = 0. $$
+We first evaluate the derivative. First using the chain rule,
+$$ \int_a^b \frac{d}{d\epsilon}\bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t\big) \bigg] dt = \int_a^b \bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t\big) \frac{\partial \statezBar }{\partial \delta}(t;\epsilon)  + \frac{\partial \integrand}{\partial \stateyDotDiscrete } \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t \big) \frac{\partial \statezDotBar}{\partial \delta} (t;\epsilon)\bigg]dt . $$
+%$$\int_a^b \bigg[ \frac{\partial \integrand  }{\partial \statezBar } \frac{\partial \statezBar }{\partial \epsilon}\big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) \big)  + \frac{\partial \integrand}{\partial \statezDotBar }\frac{\partial \statezDotBar}{\partial \epsilon} \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) \big)\bigg]dt = 0. $$
+%Setting $\epsilon = 0$,
+%$$\int_a^b \bigg[ \frac{\partial \integrand  }{\partial \statezBar } \frac{\partial \statezBar }{\partial \epsilon}\big(\statezBar(t,0),\statezDotBar(t,0) \big)  + \frac{\partial \integrand}{\partial \statezDotBar }\frac{\partial \statezDotBar}{\partial \epsilon} \big(\statezBar(t,0),\statezDotBar(t,0) \big)\bigg]dt = 0. $$
+Noting that,
+$$\frac{\partial \statezBar}{\partial \delta} (\cdot,t)= \variation(t), \qquad \frac{\partial \statezDotBar }{\partial \delta}(\cdot,t)= \variationDot(t),$$
+we have,
+$$\int_a^b \frac{d}{d\epsilon}\bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t \big) \bigg] dt = \int_a^b \bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon),t \big) \variation(t)  + \frac{\partial \integrand}{\partial \stateyDotDiscrete } \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t \big) \variationDot(t) \bigg]dt. $$
+%$$\int_a^b \bigg[\frac{\partial \integrand  }{\partial \overline{\genstate}} \variation + \frac{\partial \integrand}{\partial {\overline{\genstateDot}}}\variationDot \bigg]_{\epsilon = 0}dt = 0.$$
+We integrate the second term by parts,
+\begin{multline*}
+\int_a^b \frac{d}{d\epsilon}\bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t \big) \bigg] dt =  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t \big) \bigg) \variation(t) \bigg]dt + \\ \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(b;\epsilon),\statezDotBar(b;\epsilon) ,b \big) \variation(b)  - \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(a;\epsilon),\statezDotBar(a;\epsilon) ,a\big) \variation(a) .
+\end{multline*}
+Noting that $\variationArg{a} = \bz$,
+\begin{multline*}
+\int_a^b \frac{d}{d\epsilon}\bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon),t \big) \bigg] dt =  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) , \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t \big) \bigg) \variation(t) \bigg]dt + \\ \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(b;\epsilon),\statezDotBar(b;\epsilon) ,b \big) \variation(b) . 
+\end{multline*}
+Setting equal to zero to find the stationary points,
+$$
+  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon),t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon),t \big) \bigg) \variation(t) \bigg]dt + \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(b;\epsilon),\statezDotBar(b;\epsilon),b \big) \variation(b)  = 0. 
+$$
+By definition, we know $\statez(\cdot) \equiv \statezBar(\cdot;0)$ is a stationary point. Thus, setting $\epsilon = 0$,
+ $$
+  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statez(t),\statezDot(t),t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statez(t),\statezDot(t),t \big) \bigg) \variation(t) \bigg]dt + \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statez(b),\statezDot(b) ,b\big) \variation(b)  = 0. 
+$$
+%$$  \int_a^b \bigg[\frac{\partial \integrand  }{\partial \overline{\genstate}} \variation  - \frac{d}{dt}\frac{\partial \integrand}{\partial {\overline{\genstateDot}}}\variation \bigg]_{\epsilon = 0}dt + \bigg[\bigg[ \frac{\partial \integrand}{\partial {\overline{\genstateDot}}} \variation \bigg]_a^b\bigg]_{\epsilon = 0} = 0. $$
+%At $\epsilon = 0$ we have $\overline{\genstate} = \genstate$ and, as $\variationArg{a} = 0$, we obtain,
+%$$ \int_a^b \bigg(\frac{\partial \integrand  }{\partial \genstate} \variation  - \frac{\partial \integrand}{\partial {\genstateDot}}\variation \bigg)dt +  \frac{\partial \integrand}{\partial {\genstateDot}} \variation \bigg|_{t=b} = 0.$$
+As $\variation$ is an arbitrary function, in order for the equality to hold we must have,
+%\begin{equation}\label{eq:euler_lagrange_appendix}
+%\bigg[ \frac{\partial \integrand  }{\partial \genstate} \bigg]^T  - \bigg[\frac{\partial \integrand}{\partial {\genstateDot}}\bigg]^T = \boldsymbol 0, 
+%\end{equation}
+\begin{equation}\label{eq:euler_lagrange_appendix}
+\bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statez(t),\statezDot(t) ,t\big) \bigg]^T - \bigg[ \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statez(t),\statezDot(t) \big) \bigg) \bigg]^T = \bz  
+\end{equation}
+subject to,
+$$
+\statez(a) = \statez_a, \qquad \bigg[ \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statez(b),\statezDot(b),b \big) \variation(b) \bigg]^T = \bz.
+%\genstate(a) = \genstate_a, \qquad \bigg[ \frac{\partial \integrand}{\partial {\genstateDot}} \bigg]^T_{t=b} = \bz.
+$$
+Equation~\eqref{eq:euler_lagrange_appendix} is known as the Euler--Lagrange equation. It states that, if $\statez$ is an extremal of $\mathcal{J}$, then it must satisfy~\eqref{eq:euler_lagrange_appendix}. It is emphasized that~\eqref{eq:euler_lagrange_appendix} is a necessary condition on $\statez$ to make $\mathcal{J}$ stationary, but it is not a sufficient condition. It is additionally noted that~\eqref{eq:euler_lagrange_appendix} provides a stationary point of $\mathcal{J}$, but the resulting stationary point can be either a maximum or a minimum.
+
+\section{Evaluation of Gradients in the Euler--Lagrange Equations for \methodAcronym}\label{appendix:vector_calc} 
+To obtain the specific form of the Euler--Lagrange equations for the \methodAcronym\ formulation, we need to evaluate the gradients in~\eqref{eq:el1} for the integrand,
+\begin{align*}\label{eq:integrand_apx}
+ \minintegrand & \vcentcolon
+(\genstateyDiscreteArgnt{}, \genstateyDiscreteDotArgnt{} ,t) \mapsto \frac{1}{2} \big[
+\basisspace \genstateyDiscreteDotArgnt{} - \velocity(\basisspace \genstateyDiscreteArgnt{}
++ \stateIntercept,t) \big]^T \stweightingMatArg{} \big[
+\basisspace \genstateyDiscreteDotArgnt{}  - \velocity(\basisspace \genstateyDiscreteArgnt{} +
+\stateIntercept,t) \big], \\ & 
+\vcentcolon \RR{\romdim} \times \RR{\romdim} \times [0,T]
+ \rightarrow \RR{} .  
+\end{align*}
+To evaluate the gradients, we first expand $\minintegrand$:
+\begin{align*}
+ \minintegrand(\genstateyDiscrete,\dot{\genstateyDiscrete},t)  &= \frac{1}{2} \big[ \basisspace \genstateyDiscreteDotArgnt{}  - \velocity(\basisspace \genstateyDiscreteArgnt{} + \stateIntercept,t) \big]^T \stweightingMatArg{n} \big[ \basisspace \genstateyDiscreteDotArgnt{} - \velocity(\veloargsromy) \big] \\ 
+ &= \frac{1}{2}\big[\basisspace \genstateyDiscreteDotArgnt{}  \big]^T  \stweightingMatArg{n}  \big[\basisspace \genstateyDiscreteDotArgnt{} \big]  - \frac{1}{2}\big[ \velocity(\veloargsromy) \big]^T \stweightingMatArg{n}  \big[\basisspace \genstateyDiscreteDotArgnt{}\big] - \frac{1}{2} \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  \\ &+ \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big].
+\end{align*}
+Since $\stweightingMat$ is symmetric,
+\begin{equation}\label{eq:int_expand}
+ \minintegrand(\genstateyDiscrete,\genstateyDiscreteDot,t)  = \frac{1}{2}\big[\basisspace \genstateyDiscreteDotArgnt{}  \big]^T  \stweightingMatArg{n}  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]  -  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  + \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big].
+\end{equation}
+For notational purposes, we write the above as,
+$$  \minintegrand(\genstateyDiscrete,\dot{\genstateyDiscrete},t) =  \minintegrand_1(\genstateyDiscrete,\genstateyDiscreteDot,t) +  \minintegrand_2(\genstateyDiscrete,\genstateyDiscreteDot,t) +  \minintegrand_3(\genstateyDiscrete,\genstateyDiscreteDot,t),$$
+where
+\begin{align*}
+&\minintegrand_1(\genstateyDiscrete,\genstateyDiscreteDot,t) \equiv  \frac{1}{2}\big[\basisspace \genstateyDiscreteDotArgnt{}  \big]^T  \stweightingMatArg{n}  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big], \\
+&   \minintegrand_2(\genstateyDiscrete,\genstateyDiscreteDot,t) \equiv   -  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big], \\
+&  \minintegrand_3(\genstateyDiscrete,\genstateyDiscreteDot,t) \equiv  \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big] . 
+\end{align*}
+Constructing the Euler--Lagrange equations for this functional $\minintegrand$ requires evaluating the derivatives $\frac{\partial \minintegrand}{\partial \genstateyDiscrete}$ and $\frac{\partial \minintegrand}{\partial \genstateyDiscreteDot}$. We start by evaluating $\frac{\partial \minintegrand}{\partial \genstateyDiscrete}$ and go term by term.
+
+Starting with $\minintegrand_1(\genstateyDiscrete,\genstateyDiscreteDot)$, we see,
+$$\frac{\partial \minintegrand_1 }{\partial \genstateyDiscrete} = \boldsymbol 0,$$
+where it is noted that $\mathcal{I}_1$ only depends on $\genstateyDiscreteDot$. Working with the second term:
+\begin{align*}
+\frac{\partial \minintegrand_2}{\partial \genstateyDiscrete}  &= -\frac{\partial}{\partial \genstateyDiscrete} \bigg( \big[ \basisspace \genstateyDiscreteDot \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big] \bigg) \\ 
+&= - \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{n} \frac{\partial}{\partial \genstateyDiscreteArgnt{}} \bigg( \big[ \velocity(\veloargsromy) \big]  \bigg)\\
+ &= -\big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{n}   \frac{\partial \velocity}{\partial \stateyDiscrete}\frac{\partial \stateyDiscrete}{\partial \genstateyDiscrete} \\
+& = - \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{n}  \frac{\partial \velocity}{\partial \stateyDiscrete}\basisspace \\
+&= -[\genstateyDiscreteDotArgnt{}]^T \basisspace^T \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete}  \basisspace.
+\end{align*}
+For $\minintegrand_3$,
+\begin{align}\label{eq:i3sol}
+\frac{\partial  \minintegrand_3}{\partial \genstateyDiscrete}  &= \frac{1}{2} \frac{\partial }{\partial \genstateyDiscrete} \bigg( \big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{n}\big[ \velocity(\veloargsromy) \big] \bigg) \\  
+&=  [\velocity(\veloargsromy) ]^T \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \frac{\partial \stateyDiscrete}{\partial \genstateyDiscrete} \\
+ &=   [\velocity(\veloargsromy) ]^T  \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace.
+\end{align}
+This gives the final expression,
+$$
+ \frac{\partial \minintegrand}{\partial \boldsymbol \genstateyDiscrete} = - \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{n}  \frac{\partial \velocity}{\partial \stateyDiscrete}\basisspace +  [\velocity(\veloargsromy) ]^T \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace.
+$$%
+We now evaluate $\frac{\partial \minintegrand}{\partial \genstateyDiscreteDotArgnt{}}$ and again go term by term. Starting with $\minintegrand_1$,
+\begin{align*}
+\frac{\partial \minintegrand_1}{\partial \genstateyDiscreteDotArgnt{}} &=
+\frac{1}{2} \frac{\partial}{\partial \genstateyDiscreteDotArgnt{} }\bigg( \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]  \stweightingMatArg{n}  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]  \bigg) \\
+&= [\genstateyDiscreteDotArgnt{}]^T \basisspace^T \stweightingMatArg{n} \basisspace.
+\end{align*}
+Now working with the second term:
+\begin{align*}
+\frac{\partial \minintegrand_2}{\partial \genstateyDiscreteDotArgnt{} } &=
+\frac{\partial}{\partial \genstateyDiscreteDotArgnt{}  } \bigg( \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  \bigg)\\
+ &= \frac{\partial}{\partial \genstateyDiscreteDotArgnt{} } \bigg( [\genstateyDiscreteDotArgnt{}]^T \bigg) \basisspace^T  \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big] \\ 
+ &= \bigg[  \basisspace^T  \stweightingMatArg{n}  \velocity(\veloargsromy )   \bigg]^T \\
+ &= [\velocity(\veloargsromy) ]^T \stweightingMatArg{n} \basisspace.
+\end{align*}
+Finally, for the last term,
+\begin{align*}
+\frac{\partial \minintegrand_3}{\partial \genstateyDiscreteDotArgnt{} } &= \boldsymbol 0,
+\end{align*}
+where it is noted that $\mathcal{I}_3$ only depends on $\genstateyDiscrete$. We thus have,
+$$\frac{\partial \minintegrand}{\partial \dot{ \genstateyDiscrete} } =   [\genstateyDiscreteDotArgnt{}]^T \basisspace^T \stweightingMatArg{n} \basisspace -  [\velocity(\veloargsromy ) ]^T \stweightingMatArg{n} \basisspace.$$
+Combining all terms, the Euler--Lagrange equation reads,
+\begin{multline*}
+ \frac{\partial \minintegrand}{\partial \genstateyDiscrete}(\genstateArg{n}{t},\genstateDotArg{n}{t},t)  - \frac{d}{dt} \bigg[ \frac{\partial \minintegrand}{\partial \genstateyDiscreteDotArgnt{}} (\genstateArg{n}{t},\genstateDotArg{n}{t},t) \bigg] =  - \big[ \basisspace \genstateDotArg{n}{t}  \big]^T \stweightingMatArg{n} \big[  \frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn) \big] \basisspace \\ + [\velocity(\veloargsromn) ]^T \stweightingMatArg{n} \big[ \frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn) \big] \basisspace - \frac{d}{dt} \bigg[  [\genstateDotArg{n}{t} ]^T  \basisspace^T \stweightingMatArg{n} \basisspace - [\velocity(\veloargsromn) ]^T \stweightingMatArg{n} \basisspace \bigg]  = \boldsymbol 0.
+\end{multline*}
+To put this in a more recognizable form, we can pull out the common factor in the first two terms,
+$$ - \bigg( \big[ \basisspace \genstateDotArg{n}{t} \big]^T  -  [\velocity(\veloargsromn)] ^T \bigg) \stweightingMatArg{n}
+ \frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \basisspace - \frac{d}{dt} \bigg[  [\genstateDotArg{n}{t}]^T \basisspace^T \stweightingMatArg{n} \basisspace -  
+[\velocity(\veloargsromn) ]^T \stweightingMatArg{n} \basisspace  \bigg] = \boldsymbol 0.$$
+Taking the transpose to put into the common column major format,
+$$ -  \basisspace^T \big[ \frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn)  \big]^T \stweightingMatArg{n} \bigg( \big[ \basisspace \genstateDotArg{n}{t}\big]  -  \velocity(\veloargsromn)  \bigg) -  \frac{d}{dt} \bigg[  \basisspace^T \stweightingMatArg{n} \basisspace \genstateDotArg{n}{t}  - \basisspace^T \stweightingMatArg{n} \velocity(\veloargsromn)   \bigg] = \bz.
+ $$
+We now factor the second term,
+$$ -  \basisspace^T \big[ \frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn)  \big]^T \stweightingMatArg{n} \bigg(  \basisspace \genstateDotArg{n}{t}  -  \velocity(\veloargsromn) \bigg) -  \basisspace^T \stweightingMatArg{n} \frac{d}{dt} \bigg[   \basisspace \genstateDotArg{n}{t}  - \velocity(\veloargsromn) \bigg] = \bz. $$
+Gathering terms and multiplying by negative one, the final form of the Euler Lagrange equations are obtained,
+$$ \bigg[\basisspace^T \big[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \big]^T \stweightingMatArg{n} + \basisspace^T \stweightingMatArg{n} \frac{d}{dt} \bigg] \bigg(  \basisspace \genstateDotArg{n}{t} -  \velocity(\veloargsromn) \bigg) = \bz. $$
+This is the \methodAcronym-ROM. Note that this is a second order equation and can be written as two separate first order equations. Equation~\ref{eq:clspg_2ord} can be written equivalently as two first order equations by introducing an auxiliary ``costate" variable. Defining the costate as,
+\begin{equation*}
+%\adjoint^n(t) \defeq \basisspace^T \stweightingMatArg{n} \basisspace \genstateDotArg{n}{t}  -  \basisspace^T \stweightingMatArg{n} \velocity(\veloargsromn) ,
+\adjoint^n(t) \defeq  \genstateDotArg{n}{t}  -  \mass^{-1} \basisspace^T \stweightingMatArg{n} \velocity(\veloargsromn) ,
+\end{equation*}
+we can manipulate Eq.~\ref{eq:clspg_2ord} as follows: %First, to enable hyper-reduction later on, we leverage the fact that $\stweightingMat^2 = \stweightingMat$,
+%$$
+% \bigg[\basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn)\bigg]^T \stweightingMat^n \stweightingMat^n + \basisspace^T \stweightingMat^n \frac{d}{dt} \bigg] \bigg(  \basisspace \dot{\genstate}^n   -  \velocity(\veloargsromn) \bigg) = \bz.
+%$$
+First, we add and subtract the first term multiplied by $\basisspace [\massArgnt{n}]^{-1}\basisspace^T \stweightingMat$, 
+$$
+ \bigg[\basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \bigg]^T \stweightingMatArg{n} \bigg( \mathbf{I} - \basisspace [\massArgnt{n}]^{-1} \basisspace^T\stweightingMatArg{n} + \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \bigg)  + \basisspace^T \stweightingMatArg{n}  \frac{d}{dt} \bigg] \bigg(  \basisspace \dot{\genstate}^n   -  \velocity(\veloargsromn) \bigg) = \bz.
+$$
+Pulling out the term multiplied by the positive portion of $\basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}$,
+\begin{multline*} 
+\bigg[\basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} ( \veloargsromn) \bigg]^T \stweightingMatArg{n}\bigg( \mathbf{I} - \basisspace [\massArgnt{n}]^{-1}  \basisspace^T  \stweightingMatArg{n} \bigg)  + \\ \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn) \bigg]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}  \basisspace^T \stweightingMatArg{n} +   \basisspace^T \stweightingMatArg{n} \frac{d}{dt} \bigg] \bigg(  \basisspace \genstateDotArg{n}{t}   -  \velocity(\veloargsromn) \bigg) = \bz.
+\end{multline*}
+Splitting into two separate terms, 
+\begin{multline*}
+\basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \bigg]^T \stweightingMatArg{n}\bigg( \mathbf{I} - \basisspace [\massArgnt{n}]^{-1}  \basisspace^T \stweightingMatArg{n} \bigg)  \bigg(  \basisspace \genstateDotArg{n}{t}   -  \velocity(\veloargsromn) \bigg)  + \\  
+\bigg[ \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \bigg]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} +   \basisspace^T \stweightingMatArg{n} \frac{d}{dt} \bigg] \bigg(  \basisspace \genstateDotArg{n}{t}  -  \velocity(\veloargsromn) \bigg) = \bz.
+\end{multline*}
+Pulling $\mass^{-1} \basisspace^T \stweightingMatArg{n}$ inside the parenthesis on the second term,
+\begin{multline*}
+\basisspace^T \bigg[\frac{\partial \velocity}{\partial \state^n}(\veloargsromn) \bigg]^T \stweightingMatArg{n}\bigg( \mathbf{I} - \basisspace[\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \bigg)  \bigg(  \basisspace \genstateDotArg{n}{t}   -  \velocity(\veloargsromn) \bigg)  + \\  
+\bigg[ \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \bigg]^T \stweightingMatArg{n} \basisspace  +   \mass \frac{d}{dt} \bigg] \bigg( \genstateDotArg{n}{t}  - \mass^{-1} \basisspace^T \stweightingMatArg{n}  \velocity(\veloargsromn) \bigg) = \bz.
+\end{multline*}
+By definition, the term inside the parenthesis of the second term is $\adjointArg{n}{t}$,
+\begin{multline*}
+\basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \bigg]^T \stweightingMatArg{n}\bigg( \mathbf{I} - \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \bigg)  \bigg(  \basisspace \genstateDotArg{n}{t}    -  \velocity(\veloargsromn) \bigg)  +   \\ \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \bigg]^T \stweightingMatArg{n} \basisspace \adjointArg{n}{t}  +  \massArgnt{n} \frac{d}{dt} \adjointArg{n}{t}= \bz.
+\end{multline*}
+Re-arranging,
+\begin{multline*}
+\mass \frac{d }{dt}\adjointArg{n}{t} + \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} ( \veloargsromn ) \bigg]^T \stweightingMatArg{n} \basisspace  \adjointArg{n}{t}  \\
+= - \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn)\bigg]^T \stweightingMatArg{n}\bigg( \mathbf{I} - \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \bigg)  \bigg(  \basisspace \genstateDotArg{n}{t}   -  \velocity(\veloargsromn) \bigg).
+\end{multline*}
+We thus get the splitting,
+%Eq.~\ref{eq:clspg_2ord} can be split as,
+%\begin{equation}
+\begin{align*}\label{eq:lspg_continuous_appendix}
+& \mass \frac{d}{dt}\genstateArg{n}{t}  -  \basisspace^T \stweightingMatArg{n} \velocity(\veloargsromn) =  \mass \adjointArg{n}{t},\\
+&\mass \frac{d}{dt} \adjointArg{n}{t}  + \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn) \bigg]^T \stweightingMatArg{n} \basisspace \adjointArg{n}{t} = \\
+& -\basisspace^T \big[ \frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \big] ^T \stweightingMatArg{n}  \bigg( \mathbf{I} -   \basisspace [\massArgnt{n}]^{-1} \basisspace^T   \stweightingMatArg{n} \bigg)\bigg( \basisspace \genstateDotArg{n}{t}   -   \velocity(\veloargsromn) \bigg) . 
+\end{align*}
+\section{Evaluation of Gradients for Optimal Control Formulation}\label{appendix:optimal_control}
+When formulated as an optimal control problem of Lagrange type, the gradients of the Hamiltonian with respect to the state, controller, and costate 
+need to be evaluated. This section details this evaluation.
+
+The Pontryagin Maximum Principle leverages the following Hamiltonian,
+\begin{align*}
+\hamiltonian^n \; &: \;  (\genstateyDiscreteArgnt{},\adjointDiscreteDumArgnt{},\controllerDiscreteDumArgnt{},t) \mapsto 
+ \adjointDiscreteDumArgnt{T} \bigg[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\veloargsromy) + [\massArgnt{n}]^{-1}\controllerDiscreteDumArgnt{} \bigg] +  \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},t) \\
+&: \; \RR{\romdim} \times \RR{\romdim} \times \RR{\romdim} \times [0,T] \rightarrow \RR{},
+\end{align*} 
+where,
+\begin{align*}
+ \objectiveControlArg{} &:  (\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},t)
+\mapsto \frac{1}{2} \bigg[ \basisspace \bigg(  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n}  \velocity(\veloargsromy) + [\massArgnt{n}]^{-1}\controllerDiscreteDumArgnt{} \bigg) -
+\velocity(\veloargsromy) \bigg]^T
+\stweightingMatArg{n}  \\ & \hspace{1.5 in}\bigg[ \basisspace \bigg(
+[\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\veloargsromy) + [\massArgnt{n}]^{-1}\controllerDiscreteDumArgnt{}
+\bigg) - \velocity( \veloargsromy ) \bigg]
+, \nonumber \\ & : \RR{\romdim} \times \RR{\romdim} \times [0,T] \rightarrow \RR{}.
+\end{align*} 
+As described in Section~\ref{sec:optimal_control}, to derive the stationary conditions of the \methodAcronym\ objective function, we require evaluating the following gradients,
+$ \frac{\partial \hamiltonianArg{n}}{\partial \adjointDiscreteDumArgnt{}{}}, \;   \frac{\partial \hamiltonianArg{n}}{\partial \genstateyDiscreteArgnt{}{}}$, and $\frac{\partial \hamiltonianArg{n}}{\partial \controllerDiscreteDumArgnt{}{}}.$  Starting with $\frac{\partial \hamiltonianArg{n}}{\partial \adjointDiscreteDumArgnt{}{}}$, we have,
+$$
+\bigg[\frac{\partial \hamiltonianArg{n}}{\partial \adjointDiscreteDumArgnt{}{}}\bigg]^T = [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\veloargsromy) + [\massArgnt{n}]^{-1}\controllerDiscreteDumArgnt{} .
+$$
+Next, we address $ \frac{\partial \hamiltonianArg{n}}{\partial \genstateyArgnt{}{}}$. 
+\begin{align*}
+  \frac{\partial \hamiltonianArg{n}}{\partial \genstateyDiscreteArgnt{}{}} &= \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}} \bigg[  \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\veloargsromy) + [\massArgnt{n}]^{-1}\controllerDiscreteDumArgnt{} \big] +  \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \bigg] \\
+ &= \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}} \bigg[  \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\veloargsromy
+) + [\massArgnt{n}]^{-1}\controllerDiscreteDumArgnt{} \big] \bigg]+  \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \bigg] \\
+ &=   \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}  \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}} \bigg( \velocity(\veloargsromy)\bigg) \big] +  \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \bigg] \\
+ &=   \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}  \frac{\partial \velocity}{\partial \stateyDiscrete} \frac{\partial \stateyDiscreteArgnt{}{}}{\partial  \genstateyDiscreteArgnt{}{} } \big] +  \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \bigg] \\
+ &=   \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}  \frac{\partial \velocity}{\partial \stateyDiscrete}\basisspace  \big] +  \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \bigg]. 
+\end{align*}
+To evaluate $\frac{\partial}{\partial \genstateyDiscreteArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \bigg]$, we leverage the previous result~\eqref{eq:int_expand} and insert $\genstateyDiscreteDotArgnt{} =  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n}  \velocity(\veloargsromy) + [\massArgnt{n}]^{-1}\controllerDiscreteDumArg{}{t} .$ This leads to the expression for the expanded Lagrangian,
+\begin{multline*}
+ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) = \frac{1}{2}\big[\basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n}  \velocity(\veloargsromy)   + \basisspace [\massArgnt{n}]^{-1}\controllerDiscreteDumArg{}{t} \big]^T  \stweightingMatArg{n}  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n}  \velocity(\veloargsromy)   + \basisspace [\massArgnt{n}]^{-1}\controllerDiscreteDumArg{}{t}\big] \\  -  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n}  \velocity(\veloargsromy)  + \basisspace [\massArgnt{n}]^{-1}\controllerDiscreteDumArg{}{t} \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  + \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big].
+\end{multline*}
+Again for notational purposes, we split this into three terms,
+$$
+\objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg)  = 
+\objectiveControlArg{}_1(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg)  + 
+\objectiveControlArg{}_2(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg)  + 
+\objectiveControlArg{}_3(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) ,$$
+where
+\begin{align*}
+& \objectiveControlArg{}_1(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \equiv  \frac{1}{2}\big[\basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n}  \velocity(\veloargsromy)  + \basisspace [\massArgnt{n}]^{-1}\controllerDiscreteDumArg{}{t}  \big]^T  \stweightingMatArg{n}  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n}  \velocity(\veloargsromy)   +  \basisspace [\massArgnt{n}]^{-1}\controllerDiscreteDumArg{}{t} \big],\\
+& \objectiveControlArg{}_2(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \defeq -  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n}  \velocity(\veloargsromy)  + \basisspace [\massArgnt{n}]^{-1} \controllerDiscreteDumArgnt{n}\big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big] ,\\
+& \objectiveControlArg{}_3(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \defeq \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big] .
+\end{align*}
+Evaluating the first term,
+\begin{align*}
+\frac{\partial  \objectiveControlArg{}_1 }{\partial \genstateyDiscreteArgnt{}{}} &= 
+\frac{1}{2} \frac{\partial }{\partial \genstateyDiscreteArgnt{}{}} \bigg( [\velocity(\veloargsromy)]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n}  \velocity(\veloargsromy) \big] \bigg) +  \\
+& \qquad \frac{\partial }{\partial \genstateyDiscreteArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{n}]^T [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n}  \velocity(\veloargsromy) \big] \bigg) + \\
+& \qquad \frac{1}{2} \frac{\partial }{\partial \genstateyDiscreteArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{}]^T [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \controllerDiscreteDumArgnt{}\bigg) 
+,\\ 
+&= 
+[\velocity(\veloargsromy)]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}  \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n}  \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace + 
+[\controllerDumArgnt{n}]^T [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}   \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n} \frac{\partial \velocity}{\partial \statey} \basisspace , \\ 
+%&= 
+%[\velocity(\basisspace \genstateyArgnt{} + \stateIntercept)]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}  
+% \frac{\partial \velocity}{\partial \statey} \basisspace + 
+%[\controllerArgnt{n}]^T [\massArgnt{n}]^{-1} \stweightingMatArg{n}   \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+%\stweightingMatArg{n} \frac{\partial \velocity}{\partial \statey} \basisspace , \\  
+&= 
+\bigg( [\velocity(\veloargsromy)]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}  + [\controllerDiscreteDumArgnt{}]^T [\massArgnt{}]^{-1} \bigg)\basisspace^T  \stweightingMatArg{n}   \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace ,\\
+&= 
+[\genstateyDiscreteDotArgnt{} ]^T \basisspace^T  \stweightingMatArg{n}   \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace , \\
+&= 
+[\basisspace \genstateyDiscreteDotArgnt{} ]^T   \stweightingMatArg{n}   \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace .
+\end{align*}
+Now evaluating the second term,
+\begin{align*}
+\frac{\partial  \objectiveControlArg{}_2 }{\partial \genstateyDiscreteArgnt{}{}} &= 
+-\frac{\partial  }{\partial \genstateyDiscreteArgnt{}{}}   \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n}  \velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  - \frac{\partial  }{\partial \genstateyDiscreteArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{}]^T[\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  \bigg)  \\&= 
+-\frac{\partial  }{\partial \genstateyDiscreteArgnt{}{}}    [\velocity(\veloargsromy)]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T 
+ \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  - 
+  [\controllerDiscreteDumArgnt{}]^T[\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace 
+\\
+&= 
+- 2[\velocity(\veloargsromy)]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}  
+ \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace - 
+ [\controllerDiscreteDumArgnt{}]^T[\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace, \\
+&= - \bigg[ 2[\velocity(\veloargsromy)]^T  \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}  + [\controllerDiscreteDumArgnt{}]^T  [\massArgnt{n}]^{-1} \bigg] \basisspace^T \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace ,\\
+&= -\bigg( \big[ \basisspace \genstateyDiscreteDotArgnt{} ]^T  + \velocity(\veloargsromy)^T  \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T \bigg) \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace. 
+\end{align*}
+Next, we can use the result~\eqref{eq:i3sol} to have,
+$$ \frac{\partial  \objectiveControlArg{}_3 }{\partial \genstateyDiscreteArgnt{}{}} =
+  [\velocity(\veloargsromy) ]^T  \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace.
+$$
+Thus we have,
+\begin{align*}
+\frac{\partial \objectiveControlArg{}}{\partial \genstateyDiscreteArgnt{}} &= 
+[\basisspace \genstateyDiscreteDotArgnt{} ]^T   \stweightingMatArg{n}   \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace -
+\bigg( \big[ \basisspace \genstateyDiscreteDotArgnt{} ]^T  + \velocity(\veloargsromy)]^T  \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T  \bigg) \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace + 
+ [\velocity(\veloargsromy) ]^T  \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace, \\
+&= 
+\bigg( [\basisspace \genstateyDiscreteDotArgnt{} ]^T - \velocity(\veloargsromy)^T \bigg)  \stweightingMatArg{n}   \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace -
+\bigg( [\basisspace \genstateyDiscreteDotArgnt{} ]^T - \velocity(\veloargsromy)^T \bigg)  \stweightingMatArg{n}
+\frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace \\ 
+&= 
+\bigg( [\basisspace \genstateyDiscreteDotArgnt{} ]^T - \velocity(\veloargsromy)^T \bigg)   \bigg( \stweightingMatArg{n} \basisspace  [\massArgnt{n}]^{-1}\basisspace^T - \mathbf{I} \bigg)
+\stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace, 
+\end{align*}
+such that,
+\begin{equation*}
+\frac{\partial \hamiltonianArg{n}}{\partial \genstateyDiscreteArgnt{}{}} = 
+  \adjointDumArgnt{T} \big[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}  \frac{\partial \velocity}{\partial \stateyDiscrete}\basisspace  \big]  + 
+\bigg( [\basisspace \genstateyDiscreteDotArgnt{} ]^T - \velocity(\veloargsromy)^T \bigg)   \bigg( \stweightingMatArg{n} \basisspace  [\massArgnt{n}]^{-1}\basisspace^T - \mathbf{I} \bigg)
+\stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace.
+\end{equation*}
+Or, equivalently,
+\begin{equation*}
+\bigg[ \frac{\partial \hamiltonianArg{n}}{\partial \genstateyDiscreteArgnt{}{}} \bigg]^T =  \basisspace^T \big[  \frac{\partial \velocity}{\partial \stateyDiscrete} \big]^T \stweightingMatArg{n}  \basisspace [\massArgnt{n}]^{-1}  \adjointDiscreteDumArgnt{} + 
+ \basisspace^T \big[  \frac{\partial \velocity}{\partial \stateyDiscrete} \big]^T 
+  \stweightingMatArg{n} \bigg(  \basisspace  [\massArgnt{n}]^{-1}\basisspace^T  \stweightingMatArg{n}- \mathbf{I} \bigg)
+ \bigg( \basisspace \genstateyDiscreteDotArgnt{} - \velocity(\veloargsromy) \bigg) 
+\end{equation*}
+Next, we evaluate $\frac{\partial \hamiltonianArg{n}}{\partial \controllerDumArgnt{}}$:
+\begin{align}
+  \frac{\partial \hamiltonianArg{n}}{\partial \controllerDumArgnt{}{}} &= \frac{\partial}{\partial \controllerDumArgnt{}{}} \bigg[  \adjointDumArgnt{T} \big[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\veloargsromy) + [\massArgnt{n}]^{-1}\controllerDumArgnt{} \big] +  \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},t) \bigg] \\
+ &= \frac{\partial}{\partial \controllerDiscreteDumArgnt{}{}} \bigg[  \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\veloargsromy) + [\massArgnt{n}]^{-1}\controllerDiscreteDumArgnt{} \big] \bigg]+  \frac{\partial}{\partial \controllerDiscreteDumArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \bigg] \\
+ &= [\adjointDiscreteDumArgnt{}]^T[\massArgnt{n}]^{-1} + \frac{\partial}{\partial \controllerDiscreteDumArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},t) \bigg]. 
+\end{align}
+To evaluate $\frac{\partial}{\partial \controllerDiscreteDumArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \bigg]$, we again 
+go term by term. Starting with the first term,
+\begin{align*}
+\frac{\partial  \objectiveControlArg{}_1 }{\partial \genstateyDiscreteArgnt{}{}} &= 
+\frac{1}{2} \frac{\partial }{\partial \controllerDiscreteDumArgnt{}} \bigg( [\velocity(\veloargsromy)]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n}  \velocity(\veloargsromy) \big] \bigg) + \\
+& \qquad \frac{\partial }{\partial \controllerDiscreteDumArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{n}]^T [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n}  \velocity(\veloargsromy) \big] \bigg) + \\
+& \qquad \frac{1}{2} \frac{\partial }{\partial \controllerDiscreteDumArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{}]^T [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \controllerDiscreteDumArgnt{}\bigg) \\
+&= \bigg(  [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T                      
+\stweightingMatArg{n}  \velocity(\veloargsromy) \big] \bigg)^T +   [\controllerDiscreteDumArgnt{}]^T [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \\
+&= \big[ \velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}\basisspace^T  \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} +   [\controllerDiscreteDumArgnt{}]^T [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}. 
+\end{align*}
+Moving on to the second term,
+\begin{align*}
+\frac{\partial  \objectiveControlArg{}_2 }{\partial \controllerDiscreteDumArgnt{}{}} &= 
+-\frac{\partial  }{\partial \controllerDiscreteDumArgnt{}{}}   \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
+\stweightingMatArg{n}  \velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  - \frac{\partial  }{\partial \controllerDiscreteDumArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{}]^T[\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  \bigg)  \\
+&=- \bigg[ [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \velocity(\basisspace \genstateyDiscrete + \stateIntercept) \bigg]^T \\
+&= - [\velocity(\veloargsromy) ]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}. 
+\end{align*}
+For the third term we have simply,
+$$ \frac{\partial  \objectiveControlArg{}_3 }{\partial \controllerDiscreteDumArgnt{}{}} = \bz .$$
+Thus,
+\begin{align*}
+\frac{\partial \hamiltonianArg{n}}{\partial \controllerDiscreteDumArgnt{}} &= 
+[\adjointDiscreteDumArgnt{}]^T[\massArgnt{n}]^{-1}  +  \big[ \velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}\basisspace^T  \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} + \\
+& \qquad   [\controllerDiscreteDumArgnt{}]^T [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} - [\velocity(\veloargsromy) ]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}, \\
+& = \bigg( [\adjointDiscreteDumArgnt{}]^T - [\velocity(\veloargsromy) ]^T \stweightingMatArg{n} \basisspace \bigg) [\massArgnt{n}]^{-1}  + \bigg(  \big[ \velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \basisspace + [\controllerDiscreteDumArgnt{}]^T   \bigg) [\massArgnt{n}]^{-1}\basisspace^T  \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}  \\
+& = \bigg( [\adjointDiscreteDumArgnt{}]^T - [\velocity(\veloargsromy) ]^T \stweightingMatArg{n} \basisspace \bigg) [\massArgnt{n}]^{-1}  + \bigg(  \big[ \velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \basisspace + [\controllerDiscreteDumArgnt{}]^T   \bigg) [\massArgnt{n}]^{-1}  \\
+& =  [\adjointDiscreteDumArgnt{}]^T  [\massArgnt{n}]^{-1}  +  [\controllerDiscreteDumArgnt{}]^T   [\massArgnt{n}]^{-1}  
+\end{align*}
+Or, equivalently,
+\begin{equation*}
+\frac{\partial \hamiltonianArg{n}}{\partial \controllerDiscreteDumArgnt{}} = 
+  [\massArgnt{n}]^{-1} [\adjointDiscreteDumArgnt{} +  \controllerDiscreteDumArgnt{}]. 
+\end{equation*}
+Thus, the conditions stated via the Pontryagin Maximum Principle are,
+\begin{align*}%\label{eq:hamiltonian_sysa}
+&\frac{d}{dt}\genstateArg{n}{t} =  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\veloargsromn) + [\massArgnt{n}]^{-1}\controllerArg{n}{t}\\ 
+&\frac{d }{dt} \adjointArg{n}{t}  + \basisspace^T \big[  \frac{\partial \velocity}{\partial \statey} \big]^T \stweightingMatArg{n}  \basisspace [\massArgnt{n}]^{-1}  \adjointArg{n}{t} = 
+ - \basisspace^T \big[  \frac{\partial \velocity}{\partial \statey} \big]^T \stweightingMatArg{n} 
+\bigg(  \basisspace  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n} - \mathbf{I} \bigg)
+ \bigg( \basisspace \genstateDotArg{n}{t} - \velocity(\basisspace \genstateArg{n}{t} + \stateIntercept) \bigg) \\ 
+& \adjointArg{n}{t}= -\controllerArg{n}{t}.
+\end{align*}
+Equivalently,
+\begin{align*}%\label{eq:hamiltonian_sys}
+&\frac{d}{dt}\genstateArg{n}{t} =  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\basisspace \genstateArg{n}{t} + \stateIntercept) + [\massArgnt{n}]^{-1}\controllerArg{n}{t} \\ 
+&\frac{d}{dt} \controllerArg{n}{t}  + \basisspace^T \big[  \frac{\partial \velocity}{\partial \statey} \big]^T \stweightingMatArg{n}  \basisspace [\massArgnt{n}]^{-1}  \controllerArg{n}{t} = 
+ - \basisspace^T \big[  \frac{\partial \velocity}{\partial \statey} \big]^T \stweightingMatArg{n} 
+\bigg( \mathbf{I} -   \basisspace  [\massArgnt{n}]^{-1}\basisspace^T \bigg)
+\stweightingMatArg{n} \bigg( \basisspace \genstateDotArg{n}{t} - \velocity(\basisspace \genstateArg{n}{t} + \stateIntercept) \bigg) 
+\end{align*}
+
+
+\begin{comment}
+
+====================
+To do this, first write the above as,
+$$ \bigg[\basisspace^T \frac{\partial \velocity}{\partial \state}^T \bigg( \mathbf{I} -   \basisspace \basisspace^T + \basisspace \basisspace^T \bigg)  \stweightingMat^T + \basisspace^T \stweightingMat^T \frac{d}{dt} \bigg] \bigg(  \basisspace \dot{\genstate}   -  \velocity \bigg) = 0. $$
+Re-arranging gives,
+$$ \bigg[\basisspace^T \frac{\partial \velocity}{\partial \state}^T \bigg( \mathbf{I} -   \basisspace \basisspace^T \bigg)  \stweightingMat^T \bigg( \basisspace \dot{\genstate}   -   \velocity \bigg) \bigg]  +  \bigg[\basisspace^T \frac{\partial \velocity}{\partial \state}^T  \basisspace   +  \frac{d}{dt} \bigg] \bigg( \basisspace^T \stweightingMat \basisspace \dot{\genstate}   -  \basisspace^T \stweightingMat  \velocity \bigg) = 0. $$
+Defining the adjoint as,
+\begin{equation}
+\basisspace^T \stweightingMat \basisspace \frac{d \genstate}{dt}  -  \basisspace^T \stweightingMat \velocity =  \boldsymbol \lambda , \qquad \genstate(t=0) = \genstate_0,
+%\basisspace \frac{d \genstate}{dt}  -   \velocity =  \adjoint  , \qquad \genstate(t=0) = \genstate_0
+\end{equation}
+we then get the auxiliary adjoint equation,
+\begin{equation}
+%\basisspace^T \stweightingMat^T \frac{d}{dt} \adjoint  + \basisspace^T \frac{\partial \velocity}{\partial \genstate}^T \stweightingMat^T \adjoint = 0, \qquad \basisspace^T \stweightingMat \adjoint(t=T) = 0
+ \frac{d}{dt} \adjoint  + \basisspace^T \bigg[\frac{\partial \velocity}{\partial \state} \bigg]^T \basisspace \adjoint = -\bigg[\basisspace^T \frac{\partial \velocity}{\partial \state}^T \bigg( \mathbf{I} -   \basisspace \basisspace^T \bigg)  \stweightingMat^T \bigg( \basisspace \dot{\genstate}   -   \velocity \bigg) \bigg] , \qquad \adjoint(t=T) = 0.
+\end{equation}
+\end{comment}
+\begin{comment}
+=================================
+
+%We start $ \frac{\partial \minintegrand}{\partial \boldsymbol \genstate}$. We go term by term and note the useful link: \url{https://en.wikipedia.org/wiki/Matrix_calculus#Layout_conventions}
+%First term
+\begin{enumerate}
+\item First term: Only depends on $\dot{\genstate}$, term is zero
+\item Second term: $$\frac{\partial}{\partial \genstate} \bigg( \big[ \basisspace \dot{\genstate} \big]^T \stweightingMat \big[ \velocity(\state(\genstate),t;\param) \big] \bigg)=  \big[ \basisspace \dot{\genstate} \big]^T \stweightingMat \frac{\partial}{\partial \genstate} \bigg( \big[ \velocity(\state(\genstate),t;\param) \big]  \bigg)$$
+$$ = \big[ \basisspace \dot{\genstate} \big]^T \stweightingMat   \frac{\partial \boldsymbol f(\state)}{\partial \state}\frac{\partial \state}{\partial \genstate} $$
+$$ =  \big[ \basisspace \dot{\genstate} \big]^T \stweightingMat  \frac{\partial \boldsymbol f(\state)}{\partial \state}\basisspace $$
+%$${\color{red} \frac{\partial}{\partial \genstate} \bigg(\big[ \velocity(\state(\genstate),t;\param) \big]^T \stweightingMat  \big[ \basisspace \dot{\genstate} \big] \bigg) = \frac{\partial}{\partial \genstate} \bigg(\big[ \velocity(\state(\genstate),t;\param) \big]^T \bigg) \stweightingMat  \big[ \basisspace \dot{\genstate} \big]  }  $$
+$$ = \dot{\genstate}^T \basisspace^T \stweightingMat^T \frac{\partial \velocity}{\partial \state} \frac{\partial \state}{\partial \genstate}.$$
+$$ = \dot{\genstate}^T \basisspace^T \stweightingMat^T \frac{\partial \velocity}{\partial \state} \basisspace.$$
+%$${\color{red} ?  = \big[ \frac{\partial \velocity}{\partial \state}\frac{\partial \state}{\partial \genstate} \big]^T \stweightingMat  \big[ \basisspace \dot{\genstate} \big]  }  $$
+%$${\color{red} ?  = \big[ \basisspace \frac{\partial \state}{\partial \genstate} \big]^T \stweightingMat  \big[ \basisspace \dot{\genstate} \big]  }  $$
+\item Third term: 
+$$\frac{1}{2} \frac{\partial }{\partial \genstate} \bigg( \big[\velocity(\state(\genstate),t;\param) \big]^T \stweightingMat \big[ \velocity(\state(\genstate),t;\param) \big] \bigg)  =  \velocity^T \stweightingMat \frac{\partial \velocity}{\partial \state} \frac{\partial \state}{\partial \genstate}.$$
+$$ =   \velocity^T \stweightingMat\frac{\partial \velocity}{\partial \state} \basisspace$$
+\end{enumerate}
+This gives us,
+$$ \frac{\partial \minintegrand}{\partial \boldsymbol \genstate} = - \big[ \basisspace \dot{\genstate} \big]^T \stweightingMat  \frac{\partial \boldsymbol f(\state)}{\partial \state}\basisspace +  \velocity^T \stweightingMat \frac{\partial \velocity}{\partial \state} \basisspace $$
+
+
+Now we work on $\frac{\partial \minintegrand}{\partial \dot{ \genstate } }$:
+\begin{enumerate}
+\item First term:
+$$\frac{1}{2} \frac{\partial}{\partial \dot{\genstate}}\bigg( \big[\dot{\genstate}^T  \basisspace^T \big]  \stweightingMat  \big[ \basisspace \dot{\genstate} \big]  \bigg) =  \dot{\genstate}^T \basisspace^T \stweightingMat \basisspace$$
+\item Second term:
+$$\frac{\partial}{\partial \dot{\genstate} } \bigg( \big[ \basisspace \dot{\genstate} \big]^T \stweightingMat \big[ \velocity(\state(\genstate),t;\param) \big]  \bigg) = \frac{\partial}{\partial \dot{\genstate} } \bigg( \dot{\genstate}^T \bigg) \basisspace^T  \stweightingMat \big[ \velocity(\state(\genstate),t;\param) \big]  $$
+$$ = \bigg[  \basisspace^T  \stweightingMat \big[ \velocity(\state(\genstate),t;\param) \big]  \bigg]^T $$
+$$ = \velocity^T \stweightingMat^T \basisspace$$
+\end{enumerate}
+This gives,
+$$\frac{\partial \minintegrand}{\partial \dot{ \genstate } } =   \dot{\genstate}^T \basisspace^T \stweightingMat \basisspace -  \velocity^T \stweightingMat^T \basisspace.$$
+%\end{comment}
+
+\begin{comment}
+Let $\stweightingMat = \mathbf{I}$,
+$$ \frac{\partial \minintegrand}{\partial \boldsymbol \genstate} - \frac{d}{dt} \bigg[ \frac{\partial \boldsymbol F}{\partial \dot{\genstate}} \bigg] =   \bigg( -\big[ \basisspace \dot{\genstate} \big]^T  +  \velocity^T \bigg) \frac{\partial \velocity}{\partial \state} \basisspace - \frac{d}{dt} \bigg[   \dot{\genstate}^T  - \velocity^T \basisspace \bigg] $$
+Transposing,
+$$ =    \basisspace^T  \big[ \frac{\partial \velocity}{\partial \state} \big]^T   \bigg( -\big[ \basisspace \dot{\genstate} \big]  +  \velocity \bigg)- \frac{d}{dt} \bigg[   \dot{\genstate}  -\basisspace^T  \velocity \bigg] $$
+$$ =    \basisspace^T  \big[ \frac{\partial \velocity}{\partial \state} \big]^T   \bigg( -\big[ \basisspace \dot{\genstate} \big]  +  \velocity \bigg)- \frac{d}{dt} \bigg[ \basisspace^T \basisspace  \dot{\genstate}  -\basisspace^T  \velocity \bigg] $$
+$$ =    \basisspace^T  \big[ \frac{\partial \velocity}{\partial \state} \big]^T   \bigg( -\big[ \basisspace \dot{\genstate} \big]  +  \velocity \bigg)-  \basisspace^T  \frac{d}{dt} \bigg[\basisspace  \dot{\genstate}  -\velocity \bigg] $$
+$$ =    -\basisspace^T  \big[ \frac{\partial \velocity}{\partial \state} \big]^T   \bigg( \basisspace \dot{\genstate}  -  \velocity \bigg)-  \basisspace^T  \frac{d}{dt} \bigg[\basisspace  \dot{\genstate}  -\velocity \bigg] $$
+$$ = -\bigg[ \basisspace^T \frac{d}{dt} + \basisspace^T \big[ \frac{\partial \velocity}{\partial \state} \big]^T  \bigg] \bigg[\basisspace  \dot{\genstate}  -\velocity \bigg] $$ 
+Adjoint style
+$$ =   \basisspace^T  \frac{d }{dt}\lambda  +   \basisspace^T  \big[ \frac{\partial \velocity}{\partial \state} \big]^T   \lambda  $$
+$$ \basisspace  \dot{\genstate}  -\velocity = \lambda$$
+%Gathering terms
+
+
+
+\end{comment}
+%\begin{comment}
+
+\begin{comment}
+
+\subsection{Time-varying spacetime subspace}
+We have $\state(t)= \basisst(t) \genstate + \state_0$. Note that, in this case, the generalized coordinates are stationary in time, $\dot{\genstate} = \mathbf{0}$. Thus we only need to compute $\frac{\partial \minintegrand}{\partial \genstate}$. Going term by term:
+
+\begin{enumerate}
+\item First term: 
+$$\frac{1}{2} \frac{\partial}{\partial \genstate} \bigg(\big[\frac{\partial \decoder}{\partial t}  \big]^T \stweightingMat  \big[\frac{\partial \decoder}{\partial t} \big]\bigg) = 
+\frac{\partial}{\partial \genstate} \bigg(\big[\frac{\partial \basisst}{\partial t} \genstate \big]^T \stweightingMat  \big[\frac{\partial \basisst}{\partial t} \genstate \big]\bigg) $$
+$$
+= \genstate^T \dot{\basisst}^T \stweightingMat \dot{ \basisst }
+$$
+\item Second term: $$\frac{\partial}{\partial \genstate} \bigg( \big[ \frac{\partial \decoder}{\partial t} \big]^T \stweightingMat \big[ \velocity(\decoder,t;\param) \big] \bigg)= \frac{\partial}{\partial \genstate} \bigg( \big[ \frac{\partial \basisst}{\partial t} \genstate  \big]^T \stweightingMat  \big[ \velocity(\decoder,t;\param) \big]  \bigg)$$
+$$ = \big[ \frac{\partial \basisst}{\partial t} \genstate  \big]^T \stweightingMat \frac{\partial}{\partial \genstate}\bigg( \big[ \velocity(\decoder,t;\param) \big] \bigg) +  \big[ \velocity(\decoder,t;\param) \big]^T \stweightingMat^T \frac{\partial}{\partial \genstate} \bigg( \big[ \frac{\partial \basisst}{\partial t} \genstate  \big] \bigg)$$
+$$ = \big[ \dot{\basisst} \genstate  \big]^T \stweightingMat \frac{\partial \velocity}{\partial \decoder} \frac{\partial \decoder}{\partial \genstate} +  \big[ \velocity(\decoder,t;\param) \big]^T \stweightingMat^T  \dot{ \basisst}$$
+$$ = \big[ \dot{\basisst} \genstate  \big]^T \stweightingMat \frac{\partial \velocity}{\partial \decoder} \basisst +  \big[ \velocity(\decoder,t;\param) \big]^T \stweightingMat^T  \dot{ \basisst}$$
+\item Third term: 
+$$\frac{1}{2} \frac{\partial }{\partial \genstate} \bigg( \big[\velocity(\decoder,t;\param) \big]^T \stweightingMat \big[ \velocity(\decoder,t;\param) \big] \bigg)  =  \velocity^T \stweightingMat \frac{\partial \velocity}{\partial \state} \frac{\partial \state}{\partial \genstate}.$$
+$$ =   \velocity^T \stweightingMat\frac{\partial \velocity}{\partial \state} \basisst$$
+Putting it all together we get,
+$$ \genstate^T \dot{\basisst}^T \stweightingMat \dot{\basisst} - \bigg(  \big[ \dot{\basisst} \genstate  \big]^T \stweightingMat \frac{\partial \velocity}{\partial \decoder} \basisst +  \big[ \velocity(\decoder,t;\param) \big]^T \stweightingMat^T  \dot{ \basisst} \bigg) + \velocity^T \stweightingMat\frac{\partial \velocity}{\partial \state} \basisst = \mathbf{0}$$
+Transposing, we obtain the Euler--Lagrange equations for a space-time basis
+$$ \basisst^T \stweightingMat^T \dot{\basisst} \genstate - \bigg( \basisst^T \big[\frac{\partial \velocity}{\partial \decoder} \big]^T \stweightingMat^T \dot{\basisst} \genstate + \dot{\basisst}^T \stweightingMat \velocity  \bigg) + \basisst^T  \big[ \frac{\partial \velocity}{\partial \decoder} \big]^T \stweightingMat^T \velocity  = \mathbf{0}, \qquad \state(t=0) = \state_0.$$
+Note that the additional boundary condition is automatically satisfied.
+$$ \dot{\basisst}^T \stweightingMat^T \bigg( \dot{\basisst} \genstate -    \velocity \bigg)   - \basisst^T \big[\frac{\partial \velocity}{\partial \decoder} \big]^T \stweightingMat^T \dot{\basisst} \genstate  + \basisst^T  \big[ \frac{\partial \velocity}{\partial \decoder} \big]^T \stweightingMat^T \velocity  = \mathbf{0}, \qquad \state(t=0) = \state_0.$$
+$$ \dot{\basisst}^T \stweightingMat^T \bigg( \dot{\basisst} \genstate -    \velocity \bigg)   - \basisst^T \big[\frac{\partial \velocity}{\partial \decoder} \big]^T \stweightingMat^T \bigg( \dot{\basisst} \genstate  -  \velocity \bigg) = \mathbf{0} $$
+$$ \bigg[ \dot{\basisst}^T \stweightingMat^T  - \basisst^T \big[\frac{\partial \velocity}{\partial \decoder} \big]^T \stweightingMat^T \bigg]  \bigg( \dot{\basisst} \genstate -    \velocity \bigg) = \mathbf{0}$$
+
+Note that we can write this as two systems. To put it in the best form, write the above as,
+$$ \dot{\basisst}^T \bigg( \mathbf{I} -  \basisst \basisst^T  +  \basisst \basisst^T \bigg)  \stweightingMat^T \bigg( \dot{\basisst} \genstate -    \velocity \bigg)   - \basisst^T \big[\frac{\partial \velocity}{\partial \decoder} \big]^T \bigg( \mathbf{I} -  \basisst \basisst^T  +  \basisst \basisst^T \bigg)\stweightingMat^T \bigg( \dot{\basisst} \genstate  -  \velocity \bigg) = \mathbf{0} $$
+Defining,
+$$  \basisst^T \stweightingMat^T \dot{\basisst} \genstate  -  \basisst^T \stweightingMat^T \velocity = \boldsymbol \lambda,$$
+we have,
+$$ \bigg[ \dot{\basisst}^T   - \basisst^T \big[\frac{\partial \velocity}{\partial \decoder} \big]^T \bigg] \basisst \adjoint  = -\bigg[\dot{\basisst}^T   - \basisst^T \big[\frac{\partial \velocity}{\partial \decoder} \big]^T \bigg]  \bigg( \mathbf{I} -  \basisst \basisst^T  \bigg)\stweightingMat^T \bigg( \dot{\basisst} \genstate  -  \velocity \bigg)$$
+
+%The above can be written as two systems,
+%$$  \dot{\basisst}^T \stweightingMat^T \dot{\basisst} \genstate - \dot{\basisst}^T \stweightingMat \velocity  = \boldsymbol \lambda $$
+%$$  \basisst^T \big[\frac{\partial \velocity}{\partial \decoder} \big]^T \stweightingMat^T \dot{\basisst} \genstate  - \basisst^T  \big[ \frac{\partial \velocity}{\partial \decoder} \big]^T \stweightingMat^T \velocity  = \lambda$$
+
+
+\end{enumerate}
+\end{comment}
+
+\begin{comment}
+\textbf{Linear subspace with full temporal support}:
+For a linear subspace with full temporal support, we have $\state = \basisspace \genstate + \state_0$
+$ \frac{\partial \state}{\partial \genstate} = \basisspace.$
+We have,
+$$\minintegrand = \frac{1}{2} \big[ \basisspace \dot{\genstate} \big]^T  \stweightingMat  \big[ \basisspace \dot{\genstate} \big]  -  \big[ \basisspace \dot{\genstate} \big]^T \stweightingMat \big[ \velocity(\state(\genstate),t;\param) \big] 
+  + \frac{1}{2} \big[\velocity(\state(\genstate),t;\param) \big]^T \stweightingMat \big[ \velocity(\state(\genstate),t;\param) \big]$$
+Write this as,
+$$\minintegrand = \minintegrand_1 + \minintegrand_2 + \minintegrand_3 $$
+
+%other form
+%$${\color{red} = \big[ \basisspace \dot{\genstate} \big]^T  \stweightingMat  \big[ \basisspace \dot{\genstate} \big]  - 2 \big[ \velocity(\state(\genstate),t;\param) \big]^T \stweightingMat  \big[ \basisspace \dot{\genstate} \big] + \big[\velocity(\state(\genstate),t;\param) \big]^T \stweightingMat \big[ \velocity(\state(\genstate),t;\param) \big] }$$
+
+First we compute $ \frac{\partial \minintegrand}{\partial \boldsymbol \genstate}$. We go term by term and note the useful link: \url{https://en.wikipedia.org/wiki/Matrix_calculus#Layout_conventions}
+%First term
+\begin{enumerate}
+\item First term: Only depends on $\dot{\genstate}$, term is zero
+\item Second term: $$\frac{\partial}{\partial \genstate} \bigg( \big[ \basisspace \dot{\genstate} \big]^T \stweightingMat \big[ \velocity(\state(\genstate),t;\param) \big] \bigg)=  \big[ \basisspace \dot{\genstate} \big]^T \stweightingMat \frac{\partial}{\partial \genstate} \bigg( \big[ \velocity(\state(\genstate),t;\param) \big]  \bigg)$$
+$$ = \big[ \basisspace \dot{\genstate} \big]^T \stweightingMat   \frac{\partial \boldsymbol f(\state)}{\partial \state}\frac{\partial \state}{\partial \genstate} $$
+$$ =  \big[ \basisspace \dot{\genstate} \big]^T \stweightingMat  \frac{\partial \boldsymbol f(\state)}{\partial \state}\basisspace $$
+%$${\color{red} \frac{\partial}{\partial \genstate} \bigg(\big[ \velocity(\state(\genstate),t;\param) \big]^T \stweightingMat  \big[ \basisspace \dot{\genstate} \big] \bigg) = \frac{\partial}{\partial \genstate} \bigg(\big[ \velocity(\state(\genstate),t;\param) \big]^T \bigg) \stweightingMat  \big[ \basisspace \dot{\genstate} \big]  }  $$
+$$ = \dot{\genstate}^T \basisspace^T \stweightingMat^T \frac{\partial \velocity}{\partial \state} \frac{\partial \state}{\partial \genstate}.$$
+$$ = \dot{\genstate}^T \basisspace^T \stweightingMat^T \frac{\partial \velocity}{\partial \state} \basisspace.$$
+%$${\color{red} ?  = \big[ \frac{\partial \velocity}{\partial \state}\frac{\partial \state}{\partial \genstate} \big]^T \stweightingMat  \big[ \basisspace \dot{\genstate} \big]  }  $$
+%$${\color{red} ?  = \big[ \basisspace \frac{\partial \state}{\partial \genstate} \big]^T \stweightingMat  \big[ \basisspace \dot{\genstate} \big]  }  $$
+\item Third term: 
+$$\frac{1}{2} \frac{\partial }{\partial \genstate} \bigg( \big[\velocity(\state(\genstate),t;\param) \big]^T \stweightingMat \big[ \velocity(\state(\genstate),t;\param) \big] \bigg)  =  \velocity^T \stweightingMat \frac{\partial \velocity}{\partial \state} \frac{\partial \state}{\partial \genstate}.$$
+$$ =   \velocity^T \stweightingMat\frac{\partial \velocity}{\partial \state} \basisspace$$
+\end{enumerate}
+This gives us,
+$$ \frac{\partial \minintegrand}{\partial \boldsymbol \genstate} = - \big[ \basisspace \dot{\genstate} \big]^T \stweightingMat  \frac{\partial \boldsymbol f(\state)}{\partial \state}\basisspace +  \velocity^T \stweightingMat \frac{\partial \velocity}{\partial \state} \basisspace $$
+Now we work on $\frac{\partial \minintegrand}{\partial \dot{ \genstate } }$:
+\begin{enumerate}
+\item First term:
+$$\frac{1}{2} \frac{\partial}{\partial \dot{\genstate}}\bigg( \big[\dot{\genstate}^T  \basisspace^T \big]  \stweightingMat  \big[ \basisspace \dot{\genstate} \big]  \bigg) =  \dot{\genstate}^T \basisspace^T \stweightingMat \basisspace$$
+\item Second term:
+$$\frac{\partial}{\partial \dot{\genstate} } \bigg( \big[ \basisspace \dot{\genstate} \big]^T \stweightingMat \big[ \velocity(\state(\genstate),t;\param) \big]  \bigg) = \frac{\partial}{\partial \dot{\genstate} } \bigg( \dot{\genstate}^T \bigg) \basisspace^T  \stweightingMat \big[ \velocity(\state(\genstate),t;\param) \big]  $$
+$$ = \bigg[  \basisspace^T  \stweightingMat \big[ \velocity(\state(\genstate),t;\param) \big]  \bigg]^T $$
+$$ = \velocity^T \stweightingMat^T \basisspace$$
+\end{enumerate}
+This gives,
+$$\frac{\partial \minintegrand}{\partial \dot{ \genstate } } =   \dot{\genstate}^T \basisspace^T \stweightingMat \basisspace -  \velocity^T \stweightingMat^T \basisspace.$$
+Putting it all together, the Euler--Lagrange equation reads,
+$$ \frac{\partial \minintegrand}{\partial \boldsymbol \genstate} - \frac{d}{dt} \bigg[ \frac{\partial \minintegrand}{\partial \dot{\genstate}} \bigg] =  - \big[ \basisspace \dot{\genstate} \big]^T \stweightingMat  \frac{\partial \boldsymbol f(\state)}{\partial \state}\basisspace +  \velocity^T \stweightingMat \frac{\partial \velocity}{\partial \state} \basisspace - \frac{d}{dt} \bigg[   \dot{\genstate}^T \basisspace^T \stweightingMat \basisspace - \velocity^T \stweightingMat^T \basisspace \bigg]  = 0$$
+Factoring the first term,
+$$ - \bigg( \big[ \basisspace \dot{\genstate} \big]^T  -  \velocity^T \bigg) \stweightingMat \frac{\partial \velocity}{\partial \state} \basisspace - \frac{d}{dt} \bigg[   \dot{\genstate}^T \basisspace^T \stweightingMat \basisspace -  \velocity^T \stweightingMat^T \basisspace  \bigg] = 0$$
+Taking the transpose,
+$$ -  \basisspace^T \frac{\partial \velocity}{\partial \state}^T \stweightingMat^T \bigg( \big[ \basisspace \dot{\genstate} \big]  -  \velocity \bigg) -  \frac{d}{dt} \bigg[  \basisspace^T \stweightingMat^T \basisspace \dot{\genstate} - \basisspace^T \stweightingMat \velocity  \bigg] = 0.
+ $$
+Noting that $\stweightingMat = \stweightingMat^T$, we factor the second term,
+$$ -  \basisspace^T \frac{\partial \velocity}{\partial \state}^T \stweightingMat^T \bigg(  \basisspace \dot{\genstate}   -  \velocity \bigg) -  \basisspace^T \stweightingMat^T \frac{d}{dt} \bigg[   \basisspace \dot{\genstate} - \velocity  \bigg] = 0. $$
+Gathering terms and multiplying by negative one,
+$$ \bigg[\basisspace^T \frac{\partial \velocity}{\partial \state}^T \stweightingMat^T + \basisspace^T \stweightingMat^T \frac{d}{dt} \bigg] \bigg(  \basisspace \dot{\genstate}   -  \velocity \bigg) = 0. $$
+%Equivalently,
+%$$ \bigg[\basisspace^T \frac{\partial \velocity}{\partial \state}^T  \basisspace \basisspace^T \stweightingMat^T + \basisspace^T  \basisspace \basisspace^T \stweightingMat^T  \frac{d}{dt} \bigg] \bigg(  \basisspace \dot{\genstate}   -  \velocity \bigg) = 0. $$
+%Pulling in the $\stweightingMat^T \basisspace^T$,
+%$$ \bigg[\basisspace^T \frac{\partial \velocity}{\partial \state}^T \basisspace  +  \frac{d}{dt} \bigg] \bigg(  \basisspace^T \stweightingMat \basisspace \dot{\genstate}   -  \basisspace^T \stweightingMat \velocity \bigg) = 0. $$
+
+This is the time-continuous LSPG ROM. Note that this is a second order equation and can be written as two separate first order equations. To do this, first write the above as,
+$$ \bigg[\basisspace^T \frac{\partial \velocity}{\partial \state}^T \bigg( \mathbf{I} -   \basisspace \basisspace^T + \basisspace \basisspace^T \bigg)  \stweightingMat^T + \basisspace^T \stweightingMat^T \frac{d}{dt} \bigg] \bigg(  \basisspace \dot{\genstate}   -  \velocity \bigg) = 0. $$
+Re-arranging gives,
+$$ \bigg[\basisspace^T \frac{\partial \velocity}{\partial \state}^T \bigg( \mathbf{I} -   \basisspace \basisspace^T \bigg)  \stweightingMat^T \bigg( \basisspace \dot{\genstate}   -   \velocity \bigg) \bigg]  +  \bigg[\basisspace^T \frac{\partial \velocity}{\partial \state}^T  \basisspace   +  \frac{d}{dt} \bigg] \bigg( \basisspace^T \stweightingMat \basisspace \dot{\genstate}   -  \basisspace^T \stweightingMat  \velocity \bigg) = 0. $$
+Defining the adjoint as,
+\begin{equation}
+\basisspace^T \stweightingMat \basisspace \frac{d \genstate}{dt}  -  \basisspace^T \stweightingMat \velocity =  \boldsymbol \lambda , \qquad \genstate(t=0) = \genstate_0,
+%\basisspace \frac{d \genstate}{dt}  -   \velocity =  \adjoint  , \qquad \genstate(t=0) = \genstate_0
+\end{equation}
+we then get the auxiliary adjoint equation,
+\begin{equation}
+%\basisspace^T \stweightingMat^T \frac{d}{dt} \adjoint  + \basisspace^T \frac{\partial \velocity}{\partial \genstate}^T \stweightingMat^T \adjoint = 0, \qquad \basisspace^T \stweightingMat \adjoint(t=T) = 0
+ \frac{d}{dt} \adjoint  + \basisspace^T \bigg[\frac{\partial \velocity}{\partial \state} \bigg]^T \basisspace \adjoint = -\bigg[\basisspace^T \frac{\partial \velocity}{\partial \state}^T \bigg( \mathbf{I} -   \basisspace \basisspace^T \bigg)  \stweightingMat^T \bigg( \basisspace \dot{\genstate}   -   \velocity \bigg) \bigg] , \qquad \adjoint(t=T) = 0.
+\end{equation}
+
+\end{comment}
+
+\begin{comment}
+Let $\stweightingMat = \mathbf{I}$,
+$$ \frac{\partial \minintegrand}{\partial \boldsymbol \genstate} - \frac{d}{dt} \bigg[ \frac{\partial \boldsymbol F}{\partial \dot{\genstate}} \bigg] =   \bigg( -\big[ \basisspace \dot{\genstate} \big]^T  +  \velocity^T \bigg) \frac{\partial \velocity}{\partial \state} \basisspace - \frac{d}{dt} \bigg[   \dot{\genstate}^T  - \velocity^T \basisspace \bigg] $$
+Transposing,
+$$ =    \basisspace^T  \big[ \frac{\partial \velocity}{\partial \state} \big]^T   \bigg( -\big[ \basisspace \dot{\genstate} \big]  +  \velocity \bigg)- \frac{d}{dt} \bigg[   \dot{\genstate}  -\basisspace^T  \velocity \bigg] $$
+$$ =    \basisspace^T  \big[ \frac{\partial \velocity}{\partial \state} \big]^T   \bigg( -\big[ \basisspace \dot{\genstate} \big]  +  \velocity \bigg)- \frac{d}{dt} \bigg[ \basisspace^T \basisspace  \dot{\genstate}  -\basisspace^T  \velocity \bigg] $$
+$$ =    \basisspace^T  \big[ \frac{\partial \velocity}{\partial \state} \big]^T   \bigg( -\big[ \basisspace \dot{\genstate} \big]  +  \velocity \bigg)-  \basisspace^T  \frac{d}{dt} \bigg[\basisspace  \dot{\genstate}  -\velocity \bigg] $$
+$$ =    -\basisspace^T  \big[ \frac{\partial \velocity}{\partial \state} \big]^T   \bigg( \basisspace \dot{\genstate}  -  \velocity \bigg)-  \basisspace^T  \frac{d}{dt} \bigg[\basisspace  \dot{\genstate}  -\velocity \bigg] $$
+$$ = -\bigg[ \basisspace^T \frac{d}{dt} + \basisspace^T \big[ \frac{\partial \velocity}{\partial \state} \big]^T  \bigg] \bigg[\basisspace  \dot{\genstate}  -\velocity \bigg] $$ 
+Adjoint style
+$$ =   \basisspace^T  \frac{d }{dt}\lambda  +   \basisspace^T  \big[ \frac{\partial \velocity}{\partial \state} \big]^T   \lambda  $$
+$$ \basisspace  \dot{\genstate}  -\velocity = \lambda$$
+%Gathering terms
+\end{comment}
+
+
+
+\end{appendices}
+
+%\section*{References}
+\bibliographystyle{aiaa}
+\bibliography{refs}{}
+\end{document}
+

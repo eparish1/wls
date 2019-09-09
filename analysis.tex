@@ -1,0 +1,492 @@
+\section{Analysis}\label{sec:analysis}
+This section provides theoretical analysis of the \methodAcronym-ROM. First, we demonstrate equivalence conditions 
+between \methodAcronym\  with \spatialAcronym\ trial spaces and the Galerkin ROM for the case where the residual minimized over infinitesimal time windows.
+%\item For direct methods leveraging uniform quadrature for discretization of the objective functional, the \methodAcronym\ approach recovers the LSPG approach when 
+%the time slab corresponds to a single time-step. 
+%\end{enumerate}
+Next, \textit{a priori} error bounds are derived for autonomous systems. It is shown that:
+\begin{enumerate}
+\item The error in the \methodAcronym-ROM is bounded \textit{a priori} by a recursive summation of the integrated FOM ODE residual evaluated at the FOM state projected onto the trial space. 
+\item For the case where only 
+one time window is used, i.e., the residual is minimized over all of space and time, the error in the \methodAcronym-ROM is bounded \textit{a priori} by a single 
+integration of the FOM ODE residual evaluated at the FOM state projected onto the trial space. 
+\end{enumerate}
+The remainder of this section details these results. 
+
+\subsection{Equivalence Conditions}
+\begin{theorem}\label{theorem:galerkin_equiv}\textit{(Galerkin equivalence)}
+For sequential minimization over infinitesimal time window and \spatialAcronym\ trial spaces, the \methodAcronym-ROM recovers the standard Galerkin ROM.
+\end{theorem}
+\begin{proof}
+%\begin{equation}
+% \genstate^n(t) = \underset{\genstatey}{\text{argmin }} \mathcal{J}^n(\decoder(\genstatey) ) , \qquad n = 1,2,\ldots,\nslabs,
+%\end{equation}
+The \methodAcronym\ approach consists of solving the following sequence of minimization problems,
+\begin{equation}\label{eq:obj_proof}
+  \genstateArgnt{n} =  \underset{\genstatey}{\text{argmin }} \frac{1}{2} \intSlabArg{n} \big[ \basisspace \genstateyDotArg{}{t}  - \velocity(\basisspace \genstateyArg{}{t} + \stateIntercept,t) \big]^T \stweightingMatArg{n} \big[\basisspace \genstateyDotArg{}{t} - \velocity( \basisspace \genstateyArg{}{t} + \stateIntercept,t )\big] d t %, \qquad n = 1,2,\ldots,\nslabs,
+\end{equation}
+for $n = 1,2,\ldots,\nslabs$ and subject to $\genstate^n(\timeStartArg{n}) = \genstate^{n-1}(\timeEndArg{n-1} )$ for $n>1$ and $\genstate^1(0) = \genstateIC$. Letting $\minintegrandArg{n}(\genstateyDiscrete,\dot{\genstateyDiscrete},t)$ denote the integrand in~\eqref{eq:obj_proof} (as defined in~\eqref{eq:integrand}) and following the derivation of the Euler--Lagrange equations presented in Appendix~\ref{appendix:eulerlagrange} leads to the sequence of systems to be solved for $\genstate^n$,
+\begin{equation*}
+ \int_{\timeStartArg{n}}^{\timeEndArg{n}} \bigg( \bigg[ \frac{\partial \minintegrandArg{n}  }{\partial \genstateyDiscrete }(\genstateArg{n}{t},\genstateDotArg{n}{t},t) \bigg]  \variationArgntt{n}{t}  - \bigg[ \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDot} (\genstateArg{n}{t},\genstateDotArg{n}{t},t ) \bigg] \variationArgntt{n}{t} \bigg)dt  = 0, \qquad n = 1,2,\ldots,\nslabs,
+\end{equation*}
+subject to the boundary conditions,
+\begin{equation*}
+ \genstate^n(\timeStartArg{n})  = 
+\begin{cases}
+\genstate^{n-1}(\timeEndArg{n-1}) & n=2,\ldots,\nslabs, \\
+\genstateIC & n=1, \end{cases}, \qquad 
+\bigg[\frac{\partial \minintegrandArg{n}}{\partial \dot{\genstateyDiscrete}}(\genstateArg{n}{\timeEndArg{n}},\genstateDotArg{n}{\timeEndArg{n}},\timeEndArg{n}) \bigg]^T= \boldsymbol 0.
+\end{equation*}
+In the above, $\variationArgn{n}: [\timeStartArg{n},\timeEndArg{n}] \rightarrow \RR{\romdim}$ is an an arbitrary function that satisifes $\variationArgntt{n}{\timeStartArg{n}} = \bz$. 
+%$$\genstate^n(\timeStartArg{n}) = \genstate^{n-1}(\timeEndArg{n-1} ), \qquad \frac{\partial \integrand}{\partial \dot{\genstate}^n} \bigg|_{t=\timeEndArg{n}} = \boldsymbol 0 $$
+To examine what happens when the window size shrinks, take a uniform window size and let $\timeEndArg{n} = \timeStartArg{n} + \zeta$. Note that $\timeStartArg{n} = \zeta (n-1)$ and $\timeEndArg{n} = \zeta n$. We have, 
+\begin{equation}\label{eq:g_equiv_1}
+ \int_{\zeta (n-1)}^{\zeta n} \bigg(\bigg[ \frac{\partial \minintegrandArg{n}  }{\partial \genstateyDiscrete} (\genstateArg{n}{t},\genstateDotArg{n}{t},t)  \bigg] \variationArgntt{n}{t}  - \bigg[ \frac{\partial \minintegrandArg{n}}{\partial \dot{\genstateyDiscrete}} (\genstateArg{n}{t},\genstateDotArg{n}{t},t) \bigg] \variationArgntt{n}{t} \bigg)dt= 0, \qquad n = 1,2,\ldots,\nslabs.
+\end{equation}
+Taking the limit of $\zeta \rightarrow 0^+$, we collapse the window size to obtain the (infinite) sequence of problems,
+\begin{equation*}
+ \genstateArg{n}{\timeStartArg{n}} = 
+\begin{cases}
+\genstate^{n-1}(\timeEndArg{n-1}) & n=2,\ldots,\nslabs,\\
+\genstateIC & n=1, \end{cases}, \qquad
+%\genstate^{n-1}(\zeta n), \qquad \frac{\partial \integrand}{\partial \dot{\genstate}^n} \bigg|_{t= \zeta n} = \boldsymbol 0, \qquad n = 1,2,\nslabs,
+\bigg[ \frac{\partial \minintegrandArg{n}}{\partial \dot{\genstateyDiscrete}}(\genstateArg{n}{\timeEndArg{n}},\genstateDotArg{n}{\timeEndArg{n}},\timeEndArg{n}) \bigg]^T= \boldsymbol 0,
+\end{equation*}
+where it is noted that the integral in~\eqref{eq:g_equiv_1} dropped as,
+ \begin{equation*}
+\lim_{\zeta \rightarrow 0^+}  \int_{\zeta (n-1)}^{\zeta n} h(t) dt = 0, 
+\end{equation*}
+for any continuous $h(t)$.
+%subject to $\genstate^n(\timeStartArg{n}) = \genstate^{n-1}(\timeEndArg{n-1} )$. 
+Noting that the derivative evaluates to,
+\begin{equation*}
+\bigg[ \frac{\partial \minintegrandArg{n}}{\partial \dot{\genstateyDiscrete}}(\genstateArg{n}{\timeEndArg{n}},\genstateDotArg{n}{\timeEndArg{n}},\timeEndArg{n}) \bigg]^T=
+\basisspace^T \stweightingMatArgt{n}{\timeEndArg{n}} \basisspace \genstateDotArg{n}{\timeEndArg{n}} -  \basisspace^T \stweightingMatArgt{n}{\timeEndArg{n}} \velocity(\basisspace \genstateArg{n}{\timeEndArg{n}} + \stateIntercept ,\timeEndArg{n}), 
+%\bigg[\frac{\partial \minintegrand}{\partial \dot{ \genstate } } \bigg]^T =  \basisspace^T \stweightingMat \basisspace \frac{d}{dt}{\genstate} -  \basisspace^T \stweightingMat \velocity(\decoder(\genstate)), 
+\end{equation*}
+we then get,
+\begin{equation*}
+\basisspace^T \stweightingMatArgt{n}{\timeEndArg{n}} \basisspace \genstateDotArg{n}{\timeEndArg{n}} -  \basisspace^T \stweightingMatArgt{n}{\timeEndArg{n}} \velocity(\basisspace \genstateArg{n}{\timeEndArg{n}} + \stateIntercept ,\timeEndArg{n}) = \bz, \qquad n=1,2,\ldots,\nslabs, 
+\end{equation*}
+subject to $\genstateArg{n}{\timeStartArg{n}} = \genstateArg{n-1}{\timeEndArg{n-1}}$ for $n>1$ and $\genstateArg{1}{0} = \genstateIC $. Left multiplying by $\mass^{-1}$ yields,
+\begin{equation*}
+\genstateDotArg{n}{\timeEndArg{n}} -  \mass^{-1} \basisspace^T \stweightingMatArg{n} \velocity(\basisspace \genstateArg{n}{\timeEndArg{n}} + \stateIntercept ,\timeEndArg{n}) = \bz, \qquad n=1,2,\ldots,\nslabs. 
+\end{equation*}
+%\begin{equation*}
+%\bigg[  \frac{d}{dt}{\genstate^n} -  \basisspace^T  \velocity(\decoder(\genstate^n)) \bigg]_{t=n\zeta}= \boldsymbol 0, \qquad n = 1,2,\nslabs,
+%\end{equation*}
+%subject to $\genstate^n( n\zeta) = \genstate^{n-1}(n\zeta)$. 
+In the limit of $\zeta \rightarrow 0$ (and hence $\nslabs \rightarrow \infty$) this is a statement of the Galerkin ROM, where at every time-instance the system obeys,
+\begin{equation*}
+ \genstateDotArg{n}{t} - \mass^{-1} \basisspace^T \stweightingMatArg{n} \velocity(\basisspace \genstateArg{n}{t} + \stateIntercept ,t) = \bz, \qquad n=1,2,\ldots,\nslabs. 
+\end{equation*}
+\end{proof}
+%
+%\begin{theorem}\label{theorem:LSPG_RK_equiv}\textit{(LSPG equivalence for Collocation Schemes)}
+%For direct methods leveraging a collocation scheme and uniform quadrature for discretization of the objective~\eqref{eq:obj_colloc}, the \methodAcronym\ approach recovers the LSPG approach when the time slab corresponds to a single time-step and no weighting is used; i.e., $\stweightingMatArgt{n}{t} = \mathbf{I}$.\footnote{Ref.~\cite{carlberg_lspg_v_galerkin} derives the LSPG method for the case where the weighting matrix is a function of the state. As this is not considered here, we forgo equivalence conditions for the 
+%case with hyper-reduction.}
+%\end{theorem}
+%\begin{proof}
+%Decomposing each time slab into one time-step  instance and following Ref.~\cite{carlberg_lspg_v_galerkin} Sect. 4.1.2, for collocation (Runge-Kutta) schemes the LSPG-ROM solves the following minimization problem over first and only time-step instance on the $n$th time slab,
+%\begin{align*}
+%\collocMatArg{n}{1}
+% = \underset{\collocMatyArg{n}{1} \in \trialspace}{\text{argmin } }
+%\begin{bmatrix} \residCollocArg{n,1} ( \collocMatyArg{n}{1} ) \end{bmatrix}^T
+%\begin{bmatrix} \residCollocArg{n,1} ( \collocMatyArg{n}{1} )  \end{bmatrix}.
+%\end{align*}
+%%where $\mathbf{1} = \begin{bmatrix} 1 & \ldots  & 1 \end{bmatrix}^T \in \RR{\fomdim \ncollocArg{n}{1}}$. 
+%The LSPG-ROM is seen to uniformly minimize the residual at 
+%every stage (e.g., collocation point) of the scheme. 
+%
+%Setting the number of time-step instances over the $n$th slab to be one in Eqs.~\eqref{eq:obj_colloc}  and~\eqref{eq:min_colloc}, 
+%the \methodAcronym-ROM solves the minimization problem,
+%\begin{equation*}
+%\collocMatArg{n}{1} = \underset{\collocMatyArg{n}{1}  \in \trialspace}{\text{argmin } }
+%\objectiveArgC{n} (\collocMatyArg{n}{1}),
+%\end{equation*}
+%where,
+%\begin{align*}
+%\objectiveArgC{n} &: (\collocMatyArg{n}{1}) \mapsto 
+%\frac{1}{2}  [ \residCollocArg{n,1} ( \collocMatyArg{n}{1} ) \circ \sqrt{\quadWeightsVecArg{n,1}}]^T  [ \residCollocArg{n,1}  ( \collocMatyArg{n}{1} ) \circ \sqrt{\quadWeightsVecArg{n,1 }}] \\
+%&: \RR{\fomdim} \otimes \RR{\collocOrderArg{n}{i} \nstepsArg{n}} \rightarrow \RR{} ,
+%\end{align*}
+%where $\quadWeightsVecArg{n,1} \in \RR{\fomdim \ncollocArg{n}{1}}$ are quadrature weights. Setting $\quadWeightsVecArg{n,1} = \mathbf{1}$, the \methodAcronym-ROM is seen 
+%to solve the same minimization problem as the LSPG-ROM. 
+%\end{proof}
+%
+%\begin{remark}
+%Theorem~\ref{theorem:LSPG_RK_equiv} demonstrated equivalence conditions between the \methodAcronym-ROM and the LSPG-ROM for direct collocation methods. 
+%With respect to linear multistep methods, due to the assumption made in Remark~\ref{remark:LMS}, in where it is assumed for  simplicity that the 
+%linear multistep method employs time-instances only within the current time slab, equivalence conditions for linear multistep methods are not presented here; 
+%such conditions require employing linear  multistep methods that include time-instances from (potentially multiple) previous time slabs.
+%It is, however, straightforward to observe that in this case equivalence conditions similar to those presented in Theorem~\ref{theorem:LSPG_RK_equiv} exist.
+%\end{remark} 
+
+\subsection{A priori error bounds}
+\textit{A priori} error bounds are derived for the case where the velocity is autonomous, $\velocity(\cdot,t) \equiv \velocity(\cdot)$, and no weighting matrix is employed, $\stweightingMat = \mathbf{I}$. 
+%We define the residual as,
+%$$\resid(\state) = \dot{\state} - \velocity(\state).$$
+In the following,  $\stateFOMSolArg{n}$ is the state implicitly defined as the solution to full-order model, $\stateROMSolArg{n}$ is the state implicitly defined as the solution to the \methodAcronym-ROM, $\adjointROMSolArg{n}$ is the costate solution to the \methodAcronym-ROM, and the error is defined as,
+$$\errorArg{n} \defeq \stateFOMSolArg{n} - \stateROMSolArg{n}.$$
+Additionally, we denote $\stateFOMProjSolArg{n}$ to be the $L^2$ optimal solution,
+$$\stateFOMProjSolArg{n} = \underset{\statey \in \stspace^n}{\text{argmin } } \intSlabArg{n} \norm{ \statey(t) - \stateFOMSolArgt{n}{t} }^2.$$ 
+We begin by stating assumptions that will be used in the subsequent derivations.
+
+A1: We assume  Lipshitz continuity on the residual,
+$$ \norm{\resid(\state,t) - \resid(\statey,t) } \le \lipshitz \norm{\state(t) - \statey(t)},$$
+where  
+\begin{align*}
+\resid &: \, (\statey,t) \mapsto \frac{d}{dt}\stateyArg{}{t} - \velocity(\stateyArg{}{t},t) ,\\
+&: \, \RR{N} \otimes \timeSpaceArg{} \times [0,T] \mapsto \RR{N}.
+\end{align*}
+
+A2: We assume inverse Lipshitz continuity on the integrated residual: $\forall \state,\statey$ with $\state(\timeStartArg{n} ) \equiv \statey(\timeStartArg{n})$,
+$$  \intSlabArg{n} \norm{\state(t) - \statey(t)} dt \le  \lipshitziArg{n} \intSlabArg{n} \norm{\resid(\state,t) - \resid(\statey,t) } dt.$$
+.
+
+A3: We assume that the FOM solution at the start of each window lies within the range of the trial space,
+$$ \stateFOMSolArgt{n}{\timeStartArg{n}} \in \trialspace.$$ 
+%A3: We assume Lipshitz continuity on the velocity
+%$$ \norm{\velocity(\state) - \velocity(\boldsymbol y) } \le \lipshitzv \norm{\state - \boldsymbol y}.$$
+%
+%A4: We assume,
+%$$ \norm{ \stateROMSolArgt{n}{\timeStartArg{n}} - \stateFOMSolArgt{n}{\timeStartArg{n}} } \le \constAInt \intSlabArg{n-1} \norm{ \errorArg{n-1} }dt.$$
+
+\begin{theorem}(\textit{A priori} error bounds)\label{theorem:apriori_bound}
+Error bounds for \methodAcronymROMs\ over the $n$th window with \spatialAcronym\ trial spaces are:
+\begin{equation*}
+\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \DeltaSlabArg{n} \sqrt{1 + \lipshitz} \norm{ \errorArgt{n}{\timeStartArg{n}}  }   + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArgt{n}{t}) } dt.
+\end{equation*}
+\EP{We can do over the entire time domain, but we have to introduce an assumption to relate $ \errorArgt{n}{\timeStartArg{n}} $ to $\intSlabArg{n-1} \norm{\errorArgt{n-1}{t}} dt$}
+%\begin{equation}\label{eq:apriori_bound}
+%\sum_{i=1}^{\nslabs} \intSlabArg{i} \norm{\errorArgt{i}{t}} dt \le \sum_{i=1}^{\nslabs} \DeltaSlabArg{i} (1 + \lipshitz) \norm{\errorArgt{i}{\timeStartArg{i}} }   + \lipshitzi \int_0^T \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
+%\end{equation}
+\end{theorem}
+\begin{proof}
+To obtain an error bound over the $n$th window, we must account for the 
+fact that the initial conditions into the $n$th window can be incorrect. To this end, 
+we start by defining a new quantity, $\stateROMStarSolArg{n}$, to implicitly be the solution to the minimization problem with the correct initial conditions,
+\begin{align*}
+& \stateROMStarSolArg{n} \defeq \underset{\statey \in \stspace^n}{\text{argmin } } \objectiveArg{n}(\statey),\\
+& \stateROMStarSolArgt{n}{\timeStartArg{n}} = \stateFOMSolArgt{n}{\timeStartArg{n}}.
+\end{align*}
+Additionally, define $\adjointROMStarSolArg{n}$ to be the associated costate solution.
+ The error in the solution obtained by the 
+\methodAcronymROM\ over the $n$th window at time $t$ can be written as,
+\begin{equation*}
+\norm{ \stateROMSolArgt{n}{t} - \stateFOMSolArgt{n}{t}} = 
+\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t} + \stateROMStarSolArgt{n}{t} -  \stateFOMSolArgt{n}{t} }.
+\end{equation*}
+Applying triangle inequality,
+\begin{equation*}
+\norm{ \stateROMSolArgt{n}{t} - \stateFOMSolArgt{n}{t}} \le 
+\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} + \norm{ \stateROMStarSolArgt{n}{t} -  \stateFOMSolArgt{n}{t} }.
+\end{equation*}
+%$$\norm{ \state_R - \state_f} = \norm{ \state_R - \state^*_R + \state^*_R - \state_f}.$$
+%$$ \le \norm{\state_R - \state^*_R} + \norm{\state^*_R - \state_f}.$$
+Integrating over the $n$th window and using the definition $\errorArg{n} \defeq \stateFOMSolArg{n} - \stateROMSolArg{n}$,
+$$\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt +  \intSlabArg{n} \norm{\stateROMStarSolArgt{n}{t} - \stateFOMSolArgt{n}{t}}dt.$$
+Applying A2 (inverse Lipshitz continuity on the integrated residual), the last term on the right-hand side becomes,
+\begin{equation*}
+\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt +  \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateROMStarSolArg{n},t) - \resid(\stateFOMSolArg{n},t)} dt.
+\end{equation*}
+Noting that, $\forall t \in [0,T]$, we have $\resid(\stateFOMSolArg{n},t) = \bz$, 
+%As $\resid{\state_f} = \boldsymbol 0$,
+\begin{equation*}
+\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateROMStarSolArg{n},t) } dt.
+\end{equation*}
+%$$\int \norm{\error} dt \le \int \norm{\state_R - \state^*_R} dt +  \int \norm{\resid{\state^*_R}}dt.$$
+Leveraging the residual minimization property of the \methodAcronym\ ROM, one has, 
+$$ \intSlabArg{n} \norm{\resid(\stateROMStarSolArg{n},t)}dt \le \intSlabArg{n} \norm{\resid(\stateFOMProjSolArg{n},t)}dt.$$
+%$$ \int \norm{\resid{\state^*_R}}dt \le \int \norm{\resid{\tilde{\state}_f}}dt,$$
+This leads to the following expression for the error over the $n$th window,
+\begin{equation}\label{eq:boundtmp}
+\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
+\end{equation}
+%$$\int \norm{\error} dt \le \int \norm{\state_R - \state^*_R} dt +   \int \norm{\resid{\tilde{\state}_f}}dt.$$
+\begin{comment}
+To obtain an expression for $\norm{\stateROMSolArg{n}{t} - \stateROMStarSolArgt{n}{t}}$ start by noting that
+$\stateROMStarSolArg{n}$ and $\stateROMSolArg{n}$ are defined by the systems,
+\begin{align*} 
+&\frac{d}{dt} \genstateROMSolArg{n}   -
+\basisspace^T  \velocity(\basisspace \genstateROMSolArg{n} + \stateIntercept,t) =  \adjointROMSolArg{n} , \\
+%\end{equation} \begin{equation}\label{eq:lspg_adjoint}
+ &\frac{d}{dt} \adjointROMSolArg{n} + \basisspace^T \bigg[\frac{\partial
+\velocity}{\partial \stateyDiscrete}(\basisspace \genstateROMSolArg{n} +
+\stateIntercept,t)\bigg]^T \basisspace \adjointROMSolArg{n} = \basisspace^T \bigg[
+\frac{\partial \velocity}{\partial \stateyDiscrete} (\basisspace \genstateROMSolArg{n} +
+\stateIntercept,t) \bigg]^T \bigg( \mathbf{I} -   \basisspace \basisspace^T
+\bigg)    \velocity(\basisspace \genstateROMSolArg{n} + \stateIntercept,t) , \\  
+& \genstateROMSolArgt{n}{\timeStartArg{n}} =
+\begin{cases} \genstateROMSolArgt{n-1}{\timeEndArg{n-1}} & n=2,\ldots,\nslabs, \\
+\basisspace^T(\approxstateIC - \stateIntercept) & n=1, \end{cases}\\
+&\adjointROMSolArgt{n}{\timeEndArg{n}} = \boldsymbol 0 .  \end{align*}
+\begin{align*} 
+&\frac{d}{dt} \genstateROMStarSolArg{n}   -
+\basisspace^T  \velocity(\basisspace \genstateROMStarSolArg{n} + \stateIntercept,t) =  \adjointROMStarSolArg{n} , \\
+%\end{equation} \begin{equation}\label{eq:lspg_adjoint}
+ &\frac{d}{dt} \adjointROMStarSolArg{n} + \basisspace^T \bigg[\frac{\partial
+\velocity}{\partial \stateyDiscrete}(\basisspace \genstateROMStarSolArg{n} +
+\stateIntercept,t)\bigg]^T \basisspace \adjointROMStarSolArg{n} = \basisspace^T \bigg[
+\frac{\partial \velocity}{\partial \stateyDiscrete} (\basisspace \genstateROMStarSolArg{n} +
+\stateIntercept,t) \bigg]^T \bigg( \mathbf{I} -   \basisspace \basisspace^T
+\bigg)    \velocity(\basisspace \genstateROMStarSolArg{n} + \stateIntercept,t) , \\  
+& \genstateROMStarSolArgt{n}{\timeStartArg{n}} =
+\begin{cases} \genstateROMStarSolArgt{n-1}{\timeEndArg{n-1}} & n=2,\ldots,\nslabs, \\
+\basisspace^T(\approxstateIC - \stateIntercept) & n=1, \end{cases}\\
+&\adjointROMStarSolArgt{n}{\timeEndArg{n}} = \boldsymbol 0 .  \end{align*}
+%Next, as the codomain of the squared $2$-norm is $\RR{+}$, one has, 
+%$$\norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}^2 \le  \norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}^2 + \norm{\adjointROMSolArg{n} - 
+%\adjointROMStarSolArg{n} }^2 .$$ 
+\end{comment}
+We now find an upper bound for $\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt$. 
+First, as the codomain of the $2$-norm is $\RR{+}$, we can bound $\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}$ by above,
+\begin{align*}
+\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} &\le  \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} + \norm{\basisspace \adjointROMSolArgt{n}{t} - 
+\basisspace \adjointROMStarSolArgt{n}{t} } , \\
+%&\le \norm{\basisspace}  \norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}} + \norm{\basisspace} \norm{ \adjointROMSolArgt{n}{t} - 
+% \adjointROMStarSolArgt{n}{t} },\\ 
+&\le  \norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}} + \norm{ \adjointROMSolArgt{n}{t} - 
+ \adjointROMStarSolArgt{n}{t} }, 
+\end{align*}
+where $\genstateROMSol$ and $\genstateROMStarSol$ are the generalized coordinates of $\stateROMSol$ and $\stateROMStarSol$ and it is additionally noted that $\norm{\basisspace} = 1$.
+Critically, we now utilize the fact that the system governing the \methodAcronymROM\ with \spatialAcronym\ trial spaces is Hamiltonian. 
+Applying Liouville's theorem for Hamiltonian systems, we have the requirement 
+%states that, for Hamiltonian systems, ``the volume enclosed by a closed surface in phase-space is 
+%constant as that volume moves through phase-space~\cite{liouville}.'' In the present context, Liouville's theorem states, 
+$$ \frac{d}{dt}  \sqrt{ \norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}^2 + \norm{\adjointROMSolArg{n} - 
+\adjointROMStarSolArg{n} }^2}  = \bz \qquad t \in [\timeStartArg{n},\timeEndArg{n}].$$
+Thus, we have
+\begin{align*}
+\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt &\le 
+\intSlabArg{n} \norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}} + \norm{ \adjointROMSolArgt{n}{t} - 
+ \adjointROMStarSolArgt{n}{t} } dt \\
+&\le  \DeltaSlabArg{n}  \sqrt{ \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2 + \norm{\adjointROMSolArgt{n}{\timeStartArg{n}} - 
+\adjointROMStarSolArgt{n}{\timeStartArg{n}}  }^2}.
+\end{align*}
+Using the definition of the costate~\eqref{eq:costate_def} and residual, 
+\begin{equation*}
+\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt 
+\le  \DeltaSlabArg{n} \big[ \sqrt{ \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2 +   \norm{\basisspace^T \resid( \basisspace \stateROMSolArg{n} + \stateIntercept , {\timeStartArg{n}} ) - 
+ \basisspace^T \resid( \basisspace \stateROMStarSolArg{n} + \stateIntercept, {\timeStartArg{n}}  )}^2  } \big].
+\end{equation*}
+As, 
+\begin{equation*}
+\norm{\basisspace^T \resid( \basisspace \stateROMSolArg{n} + \stateIntercept , {\timeStartArg{n}}) - 
+ \basisspace^T \resid( \basisspace \stateROMStarSolArg{n} + \stateIntercept, {\timeStartArg{n}}  )}
+\le
+ \norm{\basisspace^T} \norm{ \resid( \basisspace \stateROMSolArg{n} + \stateIntercept , {\timeStartArg{n}}) - 
+  \resid( \basisspace \stateROMStarSolArg{n} + \stateIntercept , {\timeStartArg{n}}  )},
+\end{equation*}
+with $\norm{\basisspace^T} = 1$ (orthonormal matrix), applying A1 yields,
+%$$\norm{\stateROMSolArg{n} - \stateROMStarSolArg{n}} \le  \norm{\stateROMSolArgt{n}{\timeStartArg{n}} - \stateROMStarSolArgt{n}{\timeStartArg{n}}} + \norm{\resid( \basisspace \stateROMSolArgt{n}{\timeStartArg{n}} + \stateIntercept ) - 
+% \resid( \basisspace \stateROMStarSolArgt{n}{\timeStartArg{n}}  + \stateIntercept )} .$$
+%Applying A1,
+\begin{equation*}
+\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt 
+\le  \DeltaSlabArg{n} \big[ \sqrt{ \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2 +   \norm{\resid( \basisspace \stateROMSolArg{n} + \stateIntercept , {\timeStartArg{n}} ) - 
+\resid( \basisspace \stateROMStarSolArg{n} + \stateIntercept, {\timeStartArg{n}}  )}^2  } \big].
+\end{equation*}
+\begin{equation*}
+\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt 
+\le  \DeltaSlabArg{n} \big[ \sqrt{ \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2 +  \lipshitz^2 \norm{ \stateROMSolArg{n} - 
+ \stateROMStarSolArg{n}}^2  } \big].
+\end{equation*}
+
+
+\begin{equation}\label{eq:ustarbound}
+\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt 
+\le  \DeltaSlabArg{n} \sqrt{1 + \lipshitz} \norm{\stateROMSolArgt{n}{\timeStartArg{n}} - \stateROMStarSolArgt{n}{\timeStartArg{n} } }.
+\end{equation}
+%Lastly, as $\basisspace$ is orthonormal, 
+%\begin{align*}
+%\norm{ \stateROMSolArgt{n}{\timeStartArg{n}}  -   \stateROMStarSolArgt{n}{\timeStartArg{n}}} &= 
+%\norm{ \big( \basisspace \genstateROMSolArgt{n}{\timeStartArg{n}} + \stateIntercept \big) - \big( \basisspace \genstateROMStarSolArgt{n}{\timeStartArg{n}} + \stateIntercept \big) }, \\ 
+%&= \norm{  \basisspace \big( \genstateROMSolArgt{n}{\timeStartArg{n}}  -   \genstateROMStarSolArgt{n}{\timeStartArg{n}} \big) } ,\\
+%&=  \norm{ \genstateROMSolArgt{n}{\timeStartArg{n}}  -   \genstateROMStarSolArgt{n}{\timeStartArg{n}}}.
+%\end{align*}
+%Thus,
+%\begin{equation}\label{eq:ustarbound}
+%\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt 
+%\le  \DeltaSlabArg{n} (1 + \lipshitz) \norm{\stateROMSolArgt{n}{\timeStartArg{n}} - \stateROMStarSolArgt{n}{\timeStartArg{n} } }.
+%\end{equation}
+Inserting~\eqref{eq:ustarbound} into~\eqref{eq:boundtmp} and using $\errorArgt{n}{\timeStartArg{n}} = \stateROMSolArgt{n}{\timeStartArg{n}} - \stateROMStarSolArgt{n}{\timeStartArg{n} }$,
+\begin{equation*}
+\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \DeltaSlabArg{n} \sqrt{1 + \lipshitz} \norm{ \errorArgt{n}{\timeStartArg{n}}  }   + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArgt{n}{t}) } dt.
+\end{equation*}
+%\begin{equation*}
+%\intSlabArg{n} \norm{\errorArg{n}} dt \le \DeltaSlabArg{} (1 + \lipshitz) \norm{\errorArgt{n}{\timeStartArg{n}} }   + \lipshitzi \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n}) } dt.
+%\end{equation*}
+%Summing errors over all time slabs and using $\errorArgt{n}{\timeStartArg{n}} = \stateROMSolArgt{n}{\timeStartArg{n}} - \stateROMStarSolArgt{n}{\timeStartArg{n} }$,
+%\begin{equation*}
+%\sum_{i=1}^{\nslabs} \intSlabArg{i} \norm{\errorArgt{i}{t}} dt  \le \sum_{i=1}^{\nslabs} \DeltaSlabArg{i} (1 + \lipshitz) \norm{\errorArgt{i}{\timeStartArg{i}} }   + \lipshitziArg{n} \int_0^T \norm{ \resid(\stateFOMProjSolArgt{n}{t}) } dt.
+%\end{equation*}
+%\EP{Can bound error at the start of the time-slab vs integral over previous time-slab; but not sure if I like this}
+%===============
+\begin{comment}
+
+\begin{align}
+&\basisspace^T \frac{d}{dt}\stateROMSolArg{n} = \basisspace^T \velocity(\stateROMSolArg{n} ) + \adjointROMSolArg{n}, \qquad \stateROMSolArgt{n}{\timeStartArg{n}} = \stateROMSolArgt{n-1}{\timeEndArg{n-1}}, \label{eq:romsol1} \\
+&\basisspace^T \frac{d}{dt}\stateROMStarSolArg{n} = \basisspace^T \velocity(\stateROMStarSolArg{n} ) + \adjointROMStarSolArg{n}, \qquad \stateROMStarSolArgt{n}{\timeStartArg{n}} = \stateFOMSolArgt{n-1}{\timeEndArg{n-1}}. \label{eq:romsol2} 
+\end{align}
+Subtracting~\eqref{eq:romsol2} from~\eqref{eq:romsol1},
+\begin{equation}\label{eq:romdiff}
+\basisspace^T \frac{d}{dt}( \stateROMSolArg{n} - \stateROMStarSolArg{n}) = \basisspace^T \big(\velocity(\stateROMSolArg{n} ) - \velocity(\stateROMStarSolArg{n} )\big)  + \adjointROMSolArg{n} - \adjointROMStarSolArg{n}
+\end{equation} 
+%Next, we kknow that $\state_R$ and $\state_R^*$ are given by,
+%$$\basisspace^T \frac{d \state_R}{dt} = \basisspace^T \velocity(\state_R ) + \adjoint_R, \qquad \state_R(0) = \state_{R0},$$
+%$$\basisspace^T \frac{d \state^*_R}{dt} = \basisspace^T \velocity(\state^*_R ) + \adjoint^*_R, \qquad \state^*_R(0) = \state_{f0},$$
+%Subtracting the two gives,
+%$$ \basisspace^T \frac{d \state_R}{dt} - \basisspace^T \frac{d \state^*_R}{dt} =  \basisspace^T \velocity(\state_R ) - \basisspace^T \velocity(\state^*_R ) +  \adjoint_R - \adjoint_R^*.$$
+By definition,
+\begin{equation*}
+\adjointROMSolArg{n} - \adjointROMStarSolArg{n} = \basisspace^T \big( \resid(\stateROMSolArg{n}) - \resid(\stateROMStarSolArg{n}  \big).
+\end{equation*}
+Taking the norm and applying A1 (Lipshitz continuity of the residual):
+\begin{equation}\label{eq:lamnormineq}
+\norm{\adjointROMSolArg{n} - \adjointROMStarSolArg{n}} \le \lipshitz \norm{ \basisspace^T }\norm{\stateROMSolArg{n} -\stateROMStarSolArg{n} }.
+\end{equation}
+Taking the norm of \eqref{eq:romdiff}, 
+\begin{equation*}
+\norm{\basisspace^T \frac{d}{dt}( \stateROMSolArg{n} - \stateROMStarSolArg{n}) }  \le  \norm{ \basisspace^T \big(\velocity(\stateROMSolArg{n} ) - \velocity(\stateROMStarSolArg{n} )\big)}   + \norm{\adjointROMSolArg{n} - \adjointROMStarSolArg{n} }
+\end{equation*}
+Applying the result of~\ref{eq:lamnormineq}
+\begin{equation*}
+\norm{\basisspace^T \frac{d}{dt}( \stateROMSolArg{n} - \stateROMStarSolArg{n}) }  \le  \norm{ \basisspace^T}\norm{ \big(\velocity(\stateROMSolArg{n} ) - \velocity(\stateROMStarSolArg{n} )\big)}   + \lipshitz \norm{ \basisspace^T }\norm{\stateROMSolArg{n} -\stateROMStarSolArg{n} }  
+\end{equation*}
+Applying A3:
+\begin{equation*}
+\norm{\basisspace^T \frac{d}{dt}( \stateROMSolArg{n} - \stateROMStarSolArg{n}) }  \le  \norm{ \basisspace^T} \lipshitzv \norm{\stateROMSolArg{n} -\stateROMStarSolArg{n} }   + \lipshitz \norm{ \basisspace^T }\norm{\stateROMSolArg{n} -\stateROMStarSolArg{n} }  
+\end{equation*}
+Equivalently,
+\begin{equation*}
+ \frac{d}{dt}( \stateROMSolArg{n} - \stateROMStarSolArg{n})   \le (\lipshitzv  + \lipshitz) \norm{\stateROMSolArg{n} -\stateROMStarSolArg{n} }    
+\end{equation*}
+Defining
+$$\errorROMStarSolArgt{n}{t} \defeq \stateROMSolArg{n} - \stateROMStarSolArg{n},$$
+then,
+\begin{align*}
+ \frac{d}{dt}\norm{\errorROMStarSolArgt{n}{t}) }   \le (\lipshitzv  + \lipshitz) \norm{\errorROMStarSolArgt{n}{t} }   \\
+\errorROMStarSolArgt{n}{\timeStartArg{n}} = \norm{\stateROMSolArgt{n}{ \timeStartArg{n}} - \stateFOMSolArgt{n-1}{\timeEndArg{n-1}} }
+\end{align*}
+The solution over the $n$th window can be obtained analytically to be,
+\begin{equation*}
+\norm{\errorROMStarSolArgt{n}{t} }\le \norm{\stateROMSolArgt{n}{ \timeStartArg{n}} - \stateFOMSolArgt{n-1}{\timeEndArg{n-1}} } e^{ (\lipshitz + \lipshitzv)(t - \timeStartArg{n})}.
+\end{equation*}
+Integrating over the $n$th time window,
+\begin{equation*}
+\intSlabArg{n} \errorROMStarSolArgt{n}{t} \le  \errorConstantArg{}\norm{\stateROMSolArgt{n}{ \timeStartArg{n}} - \stateFOMSolArgt{n-1}{\timeEndArg{n-1}} } 
+%\bigg[ \frac{ e^{ (\lipshitz + \lipshitzv)(\timeEndArg{n} - \timeStartArg{n})} }{\lipshitz + \lipshitzv} - \frac{1}{\lipshitz + \lipshitzv} \bigg].
+\end{equation*}
+where,
+$$\errorConstantArg{} \defeq \frac{ e^{ (\lipshitz + \lipshitzv)(\timeEndArg{n} - \timeStartArg{n})} }{\lipshitz + \lipshitzv} - \frac{1}{\lipshitz + \lipshitzv}.$$
+It is noted that, by A5, $\errorConstantArg{}$ is equivalent for every time window. 
+Thus,
+\begin{equation*}
+\intSlabArg{n} \norm{\errorArg{n}} dt \le  \errorConstantArg{}\norm{\stateROMSolArgt{n}{ \timeStartArg{n}} - \stateFOMSolArgt{n-1}{\timeEndArg{n-1}} } + \lipshitzi \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n}) } dt.
+\end{equation*}
+Applying A4:
+\begin{equation*}
+\intSlabArg{n} \norm{\errorArg{n}} dt \le  \errorConstantArg{} \constAInt \intSlabArg{n-1} \norm{\errorArg{n-1}} + \lipshitzi \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n}) } dt.
+\end{equation*}
+Thus,
+\begin{equation*}
+\intSlabArg{n} \norm{\errorArg{}} dt \le \sum_{i=1}^{n}  (\errorConstantArg{} \constAInt )^{n-1} \lipshitzi \intSlabArg{i} \norm{\resid(\stateFOMProjSolArg{i})} dt + 
+(\errorConstantArg{})^n \norm{\errorArg{}} 
+\end{equation*}
+Summing over windows to obtain an error bound for the entire time interval,
+%================
+\end{comment}
+\end{proof}
+
+\begin{corollary}
+When only a single space-time window is used, error bounds are given by,
+\begin{equation*}
+\int_0^T \norm{\errorArgt{1}{t}} dt \le \lipshitziArg{1} \int_0^T \norm{\resid(\stateFOMProjSolArgt{1}{t})}dt +
+ T (1 + \lipshitz) \norm{\errorArgt{1}{\timeStartArg{1}} } .
+\end{equation*}
+\end{corollary}
+\begin{proof}
+Setting $n=1$ in~\eqref{eq:apriori_bound} with the time intervals $\timeStartArg{1}=0$, $\timeEndArg{1}=T$ yields the desired result.
+\end{proof}
+
+\begin{theorem}(\textit{A priori} error bounds for space--time trial space)\label{theorem:apriori_bound_st}
+Error bounds for \methodAcronymROMs\ with a space--time trial space are:
+\begin{equation}\label{eq:apriori_bound}
+\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \sum_{n=1}^{\nslabs} \DeltaSlabArg{n} \norm{\errorArgt{n}{\timeStartArg{n}} }   + \lipshitzi \int_0^T \norm{ \resid(\stateFOMProjSolArgt{n}{t}) } dt.
+\end{equation}
+\EP{These are now wrong if the norm of the trial basis isn't constant for each time-instance.}
+\end{theorem}
+
+\begin{proof}
+We note that $\stgenstateArg{n}$ are the space--time generalized coordinates implicitly defined as the solution to the \methodAcronym\ minimization problem~\eqref{eq:obj_gen_slab_spacetime}. Additionally, to account for the 
+fact that the initial conditions into the $n$th window can be incorrect, we define a new quantity $\stgenstateStarArg{n}$ to implicitly be the solution to the minimization problem with the correct initial conditions,
+\begin{align*}
+& \stgenstateStarArg{n} \defeq \underset{\stgenstatey}{\text{arg min } } \objectiveArg{n}(\stbasisArgnt{n} \stgenstatey + \stateInterceptArg{n}),\\
+& \stbasisArg{n}{\timeStartArg{n}} \stgenstateStarArg{n} + \stateIntercept = \stateFOMSolArgt{n}{\timeStartArg{n}}.
+\end{align*}
+Next, the results presented in Theorem~\ref{theorem:apriori_bound} hold for the space--time trial space through bound~\eqref{eq:boundtmp}. We now derive an upper bound for $\intSlabArg{n} \norm{ \stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}$ for the space--time case. By definition of the space--time trial space,
+\begin{align*}
+ \norm{ \stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} & \equiv \norm{ \stbasisArg{n}{t}\big[ \stgenstateArg{n} - \stgenstateStarArg{n} \big] }\\
+& \equiv \norm{ \big[ \stgenstateArg{n} - \stgenstateStarArg{n} \big] }.
+\end{align*}
+As $ \stgenstateArg{n} - \stgenstateStarArg{n} $ contains no temporal dependence, it then holds that,
+$$\frac{d}{dt}  \norm{ \stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} \equiv 0.$$
+Thus we have,
+$$ \intSlabArg{n} \norm{ \stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} = \DeltaSlabArg{n} \errorArgt{n}{\timeStartArg{n}}.$$
+Inserting the above into~\eqref{eq:boundtmp},
+\begin{equation*}
+\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \DeltaSlabArg{n} \norm{\errorArgt{n}{\timeStartArg{n}}  }   + \lipshitzi \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArgt{n}{t}) } dt.
+\end{equation*}
+%Summing over all time slabs,
+%\begin{equation*}
+%\intSlabArg{n} \norm{\errorArg{}} dt \le \sum_{i=1}^{\nslabs} \DeltaSlabArg{i}  \norm{\errorArgt{i}{\timeStartArg{i}} }   + \lipshitzi \int_0^T \norm{ \resid(\stateFOMProjSolArgt{n}{t}) } dt.
+%\end{equation*}
+\end{proof}
+
+\subsection{Discussion} 
+Theorems~\ref{theorem:apriori_bound} and~\ref{theorem:apriori_bound_st} provide \textit{a priori} bounds on the integrated normed error for the \methodAcronymROM\ for the spatial and space--time trial spaces. Several 
+observations are made. First, it is observed \methodAcronym\ is subject to algebraically growing error bounds. As the number of 
+time window grows, so does the algebraic growth of the error. Second, we observe that when a single window spans the entire domain, the error in the \methodAcronymROM is bounded \textit{a priori} by the residual of the projected FOM solution. 
+%\begin{theorem}\label{theorem:aposteriori}
+%A posteriori error bounds on the the CST-LSPG ROM are,
+%%The a posteriori error bound is then,
+%\begin{equation}\label{eq:th_1}
+%\int_0^t \norm{\error(\tau)} d\tau \le \alpha \int_0^t \norm{ \resid(\approxstate_R(\tau)) } d\tau.
+%\end{equation}
+%\end{theorem}
+%
+%\begin{proof}
+%Invoking the assumption of inverse Lipshitz continuity,
+%$$\norm{ \resid(\state_f) - \resid(\approxstate_R) } \ge \frac{1}{\alpha} \norm{\state_f - \approxstate_R} $$
+%Integrating from $0$ to $t$,
+%$$\int_0^t \norm{ \resid(\state_f(\tau) ) - \resid(\approxstate_R(\tau)) } d\tau \ge \frac{1}{\alpha} \int_0^t \norm{\state_f(\tau) - \approxstate_R(s)} d\tau.$$
+%Multiplying by $\alpha$ and noting that $\resid(\state(\tau)) = \boldsymbol 0$,
+%$$  \int_0^t \norm{\error(\tau)} d\tau \le \alpha \int_0^t \norm{ \resid(\approxstate_R(\tau)) } d\tau$$
+%\end{proof}
+%Although Theorem~\ref{theorem:aposteriori} provides an upper bound on the error, it is not particularly insightful as it is not clear what the magnitude of the residual may be.
+
+%\begin{theorem}\label{theorem:apriori}
+%\textit{A priori} error bounds for the CST-LSPG ROM are,
+%$$\int_0^t \norm{\error(\tau)}^2 d\tau \le \alpha \int_0^t \norm{ \resid( \Pi \state_f(\tau)) }^2 d\tau,$$
+%where $\Pi$ is the projector onto the trial-space,
+%$$\Pi = \basismat \basismat^T.$$
+%\end{theorem}
+%
+%\begin{proof}
+%Invoking the assumption of inverse Lipshitz continuity,
+%$$\norm{ \resid(\state_f) - \resid(\approxstate_R) }^2 \ge \frac{1}{\alpha} \norm{\state_f - \approxstate_R}^2 $$
+%Integrating from $0$ to $t$,
+%$$\int_0^t \norm{ \resid(\state_f(\tau) ) - \resid(\approxstate_R(\tau)) }^2 d\tau \ge \frac{1}{\alpha} \int_0^t \norm{\state_f(\tau) - \approxstate_R(\tau)}^2 d\tau.$$
+%Multiplying by $\alpha$ and noting that $\resid(\state_f(\tau)) = \boldsymbol 0$,
+%$$  \int_0^t \norm{\error(\tau)}^2 d\tau \le \alpha \int_0^t \norm{ \resid(\approxstate_R(\tau)) }^2 d\tau $$
+%The TC-LSPG ROM satisfies the optimality condition,
+%%$$\approxstate =\underset{\statey \in \stspace }{\text{argmin}}\frac{1}{2} \int_0^t \big[ \dot{ \statey} - \velocity(\statey,\tau;\param) \big]^T \stweightingMat(\tau) \big[ \dot{ \statey} - \velocity(\statey,\tau;\param) \big] d\tau .$$
+%$$\approxstate_R =\underset{\statey \in \stspace }{\text{argmin}}\frac{1}{2} \int_0^t \norm{ \resid(\statey(\tau)) }^2 d\tau .$$
+%Therefore,
+%$$ \int_0^t \norm{ \resid(\approxstate_R(\tau)) }^2 d\tau \le \int_0^t \norm{ \resid( \Pi \state_f(\tau)) }^2 d\tau .$$
+%It then follows that,
+%$$  \int_0^t \norm{\error(\tau)}^2 d\tau \le \alpha \int_0^t \norm{ \resid(\approxstate_R(\tau)) }^2 d\tau \le  \alpha \int_0^t \norm{ \resid( \Pi \state(\tau)) }^2 d\tau.$$
+%\end{proof}
+%Theorem~\ref{theorem:apriori} shows that the error in the CST-LSPG ROM is bounded \textit{a priori} by the integrated residual of the projected truth solution. This condition provides a a strong statement about the error in the CST-LSPG ROM. It shows that the upper bound on the error is solely based on the Lipshitz constant and the projection error. Error bounds for the Galekrin ROM, on the other hand, are known to grow exponentially in time.
+%

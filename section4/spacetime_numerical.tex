@@ -1,0 +1,85 @@
+\subsection{\spaceTimeAcronym\ Trial Spaces: Direct and Indirect Methods}
+We now briefly consider \spaceTimeAcronym\ trial spaces. 
+For \spaceTimeAcronym\ trial spaces, the distinction between a direct and indirect method is less clear as the optimization variable (i.e., the generalized coordinates) are finite 
+dimensional. There is no need to transcribe an infinite dimensional optimization variable into a finite dimensional one. There is, however, still a need to develop a finite 
+dimensional representation of the objective function~\eqref{eq:obj_gen_slab}. In what follows, we describe two techniques to do this: one that works with the FOM O$\Delta$E and one that works with the FOM ODE. We associate direct methods as those 
+that work with the O$\Delta$E and indirect methods with those that work directly with the continuous ODE.  
+
+\subsection{\spaceTimeAcronym\ Trial Spaces: Direct Solution Technique}
+The direct solution technique seeks to minimize the fully discrete objective function associated with the O$\Delta$E. For brevity, we again focus on linear multistep methods. 
+
+%The definition of the fully discrete objective functions~\eqref{eq:obj_lms} as outlined in Section~\ref{sec:direct}, can be leveraged for this purpose. For simplicity, we only 
+%outline the case for linear multistep schemes. 
+
+Leveraging the definition of the fully discrete objective function~\eqref{eq:obj_lms}, and assuming $N \nstepsArg{n} \ge \stdimArg{n}$, \methodAcronym\ leveraging a \spaceTimeAcronym\ basis is given by, 
+ \begin{equation}\label{eq:obj_gen_lms_final_st}
+\begin{split}
+&\stgenstateArg{n} = \underset{\stgenstatey}{\text{arg\,min } }
+\objectiveArgLMS{n} (\stbasisArg{n}{\timeWindowArg{n}{0}} \stgenstatey + \stateInterceptArg{n},\ldots,\stbasisArg{n}{\timeWindowArg{n}{\nstepsArg{n}}} \stgenstatey + \stateInterceptArg{n})  \\
+&\text{subject to } \;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateArg{n} = \begin{cases} 
+\mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs, \\ 
+\mathbb{P}^n(\stateFOMArgnt{1})(0) &
+n=1. \end{cases}\end{split} 
+\end{equation}
+ 
+The minimization problem~\eqref{eq:obj_gen_lms_final_st} can be solved, e.g, via the Gauss-Newton method.
+
+\begin{remark}
+For the limiting case where the window size spans the entire domain, $\DeltaSlabArg{1}\equiv T$, direct \methodAcronym\ with a \spaceTimeAcronym\ trial space recovers ST-LSPG.
+\end{remark}
+
+\subsection{\spaceTimeAcronym\ Trial Spaces: Indirect Solution Technique}
+As opposed to the direct solution technique, the indirect solution technique directly minimizes the continuous objective function~\eqref{eq:obj_gen_slab_spacetime},
+\begin{equation}\label{eq:obj_gen_slab2}
+\begin{split}
+ &\stgenstate^n =
+\underset{\stgenstatey}{\text{arg\,min }} \mathcal{J}^n \bigg( \stbasisArgnt{n} \stgenstatey + \stateInterceptArg{n}  \bigg) \\  
+&\text{subject to } \;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateArg{n} = \begin{cases} 
+\mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs, \\ 
+\mathbb{P}^n(\stateFOMArgnt{1})(0) &
+n=1. \end{cases} 
+\end{split} 
+\end{equation}
+%The first order optimality conditions are given by,
+%\begin{equation}\label{eq:st_stationary}
+% \intSlabArg{n} \bigg[ \stbasisDotArg{n}{t}^T  - \stbasisArg{n}{t}^T \bigg[\frac{\partial
+%\velocity}{\partial \stateyDiscrete} (\stbasisDotArg{n}{t} \stgenstateArg{n} +                    
+%\stateInterceptArg{n})\bigg]^T  \bigg] \stweightingMatArg{n} \bigg( \stbasisDotArg{n}{t} \stgenstateArg{n}  - \velocity (\stbasisArg{n}{t} \stgenstateArg{n} + \stateInterceptArg{n}) \bigg) dt = \bz.\end{equation}
+Numerically solving the minimization problem requires the introduction of a quadrature rule for 
+discretization of the integral. We introduce $\ncollocSTArg{n} \ge \text{ciel}(\stdim / N )$ collocation points over the $n$th window, 
+$$\timeStartArg{n} \le \collocPointSTArg{n}{1} \le \ldots \le \collocPointSTArg{n}{\ncollocSTArg{n}} \le \timeEndArg{n}.$$
+Leveraging these collocation points, the indirect method for \methodAcronym\ with a \spaceTimeAcronym\ trial space yields,
+\begin{equation}\label{eq:obj_gen_slab2} 
+\begin{split}&\stgenstate^n =
+\underset{\stgenstatey}{\text{arg\,min }} \objectiveDiscreteSTArg{n} \bigg( \stbasisArgnt{n} \stgenstatey + \stateInterceptArg{n}  \bigg) , \\
+&\text{subject to }\;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateArg{n} = \begin{cases} 
+\mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs, \\ 
+\mathbb{P}^n(\stateFOMArgnt{1})(0) &
+n=1,
+\end{cases}
+\end{split} 
+\end{equation}
+where the discrete objective function is given by, 
+$$\objectiveDiscreteSTArg{n}: \stgenstatey \mapsto \sum_{i=1}^{\ncollocSTArg{n}} \gamma_i 
+\bigg[ \stbasisDotArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ }  - \velocity (\stbasisArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ } + \stateInterceptArg{n},\collocPointSTArg{n,i}) \bigg]^T 
+\stweightingMatArg{n} 
+\bigg[ \stbasisDotArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ }  - \velocity (\stbasisArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ } + \stateInterceptArg{n},\collocPointSTArg{n,i}) \bigg].
+$$
+The nonlinear least-squares problem can again be solved, e.g., via the Gauss-Newton method. 
+%The stationary points are given by,
+%\begin{multline*}\label{eq:st_stationary_discrete}
+%\frac{\partial \objectiveDiscreteSTArg{n}}{\partial \stgenstatey}(\stgenstateArg{n}) = 
+%\sum_{i=0}^{\ncollocSTArg{n}} \gamma_i \bigg[ \stbasisDotArg{n}{\collocPointSTArg{n}{i}}^T  - \stbasisArg{n}{\collocPointSTArg{n}{i}}^T \bigg[\frac{\partial
+%\velocity}{\partial \stateyDiscrete} (\stbasisDotArg{n}{\collocPointSTArg{n}{i}} \stgenstateArg{n} +                    
+%\stateInterceptArg{n})\bigg]^T  \bigg] \stweightingMatArg{n} \bigg( \stbasisDotArg{n}{\collocPointSTArg{n}{i}} \stgenstateArg{n}  - \velocity (\stbasisArg{n}{\collocPointSTArg{n}{i}} \stgenstateArg{n} + \stateInterceptArg{n}) \bigg),\end{multline*}
+%%subject to the boundary conditions 
+%\begin{equation}
+%\stbasisArg{n}{\timeStartArg{n}}\stgenstateArg{n} = \begin{cases} 
+%\stbasisArg{n-1}{\timeEndArg{n-1}}\stgenstateArg{n-1}  & n = 2,\ldots,\nslabs, \\ 
+%\approxstateIC &
+%n=1. \end{cases} \end{equation} 
+
+\subsection{\spaceTimeAcronym\ Trial Space: Summary}
+As was just shown, \spaceTimeAcronym\ trial spaces yield a series of space--time algebraic systems over each window. As a variety of work has examined space--time reduced-order models with \spaceTimeAcronym\ trial spaces, 
+a detailed exposition of solution techniques for these systems is not pursued here. It is sufficient to say that the 
+space--time trial space yields a series of dense (non)linear systems to be solved over each window.

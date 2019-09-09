@@ -1,0 +1,2626 @@
+%% This BibTeX bibliography file was created using BibDesk.
+%% https://bibdesk.sourceforge.io/
+
+%% Created for Parish, Eric Joshua at 2019-06-10 11:19:10 -0700 
+
+
+%% Saved with string encoding Unicode (UTF-8) 
+@inproceedings{broyden,
+  title={A Class of Methods for Solving Nonlinear Simultaneous Equations},
+  author={C. G. Broyden},
+  year={1965}
+}
+
+@Article{San2018,
+author="San, Omer
+and Maulik, Romit",
+title="Neural network closures for nonlinear model order reduction",
+journal="Advances in Computational Mathematics",
+year="2018",
+month="Dec",
+day="01",
+volume="44",
+number="6",
+pages="1717--1750",
+abstract="Many reduced-order models are neither robust with respect to parameter changes nor cost-effective enough for handling the nonlinear dependence of complex dynamical systems. In this study, we put forth a robust machine learning framework for projection-based reduced-order modeling of such nonlinear and nonstationary systems. As a demonstration, we focus on a nonlinear advection-diffusion system given by the viscous Burgers equation, which is a prototypical setting of more realistic fluid dynamics applications due to its quadratic nonlinearity. In our proposed methodology the effects of truncated modes are modeled using a single layer feed-forward neural network architecture. The neural network architecture is trained by utilizing both the Bayesian regularization and extreme learning machine approaches, where the latter one is found to be more computationally efficient. A significant emphasis is laid on the selection of basis functions through the use of both Fourier bases and proper orthogonal decomposition. It is shown that the proposed model yields significant improvements in accuracy over the standard Galerkin projection methodology with a negligibly small computational overhead and provide reliable predictions with respect to parameter changes.",
+issn="1572-9044",
+doi="10.1007/s10444-018-9590-z",
+url="https://doi.org/10.1007/s10444-018-9590-z"
+}
+
+
+
+@inbook{wentland_apg,
+author = {Christopher R. Wentland and Cheng Huang and Karthikeyan Duraisamy},
+title = {Closure of Reacting Flow Reduced-Order Models via the Adjoint Petrov-Galerkin Method},
+booktitle = {AIAA Aviation 2019 Forum},
+chapter = {},
+pages = {},
+doi = {10.2514/6.2019-3531},
+URL = {https://arc.aiaa.org/doi/abs/10.2514/6.2019-3531},
+eprint = {https://arc.aiaa.org/doi/pdf/10.2514/6.2019-3531}
+}
+
+@article{Wang:269133,
+      title = {Recurrent neural network closure of parametric  POD-Galerkin reduced-order models based on the Mori-Zwanzig  formalism},
+      author = {Wang, Qian and Ripamonti, Nicolò and Hesthaven, Jan S.},
+      journal = {Journal of Computational Physics},
+      year = {2019},
+      abstract = {Closure modeling based on the Mori-Zwanzig formalism has  proven effective to improve the stability and accuracy of  projection-based model order reduction. However, closure  models are often expensive and infeasible for complex  nonlinear systems. Towards efficient model reduction of  general problems, this paper presents a recurrent neural  network (RNN) closure of parametric POD-Galerkin  reduced-order model. Based on the short time history of the  reduced-order solutions, the RNN predicts the memory  integral which represents the impact of the unresolved  scales on the resolved scales. A conditioned long short  term memory (LSTM) network is utilized as the regression  model of the memory integral, in which the POD coefficients  at a number of time steps are fed into the LSTM units, and  the physical/geometrical parameters are fed into the  initial hidden state of the LSTM. The reduced-order model  is integrated in time using an implicit-explicit (IMEX)  Runge-Kutta scheme, in which the memory term is integrated  explicitly and the remaining right-hand-side term is  integrated implicitly to improve the computational  efficiency. Numerical results demonstrate that the RNN  closure can significantly improve the accuracy and  efficiency of the POD-Galerkin reduced-order model of  nonlinear problems. The POD-Galerkin reduced-order model  with the RNN closure is also shown to be capable of making  accurate predictions, well beyond the time interval of the  training data.},
+      url = {http://infoscience.epfl.ch/record/269133},
+}
+
+
+@article{eim, 
+    Author = {Maxime Barrault and Yvon Maday and Ngoc Cuong Nguyen and Anthony T. Patera},
+    Journal = {C. R. Acad. Sci. Paris},
+    Pages = {667-672},
+    Title = {An ‘empirical interpolation’ method: application to efficient reduced-basis discretization of partial differential equations},
+    Volume = {339},
+    Number = {9},
+    Year = {2004}}
+
+@inbook{rb_2,
+author = {Karen Veroy and Christophe Prud'homme and Dimitrios Rovas and Anthony Patera},
+title = {A Posteriori Error Bounds for Reduced-Basis Approximation of Parametrized Noncoercive and Nonlinear Elliptic Partial Differential Equations},
+booktitle = {16th AIAA Computational Fluid Dynamics Conference},
+chapter = {},
+pages = {},
+doi = {10.2514/6.2003-3847},
+URL = {https://arc.aiaa.org/doi/abs/10.2514/6.2003-3847},
+eprint = {https://arc.aiaa.org/doi/pdf/10.2514/6.2003-3847}
+}
+
+@article{rb_3,
+author = {Veroy, K. and Patera, A. T.},
+title = {Certified real-time solution of the parametrized steady incompressible Navier–Stokes equations: rigorous reduced-basis a posteriori error bounds},
+journal = {International Journal for Numerical Methods in Fluids},
+volume = {47},
+number = {8‐9},
+pages = {773-788},
+keywords = {reduced-basis, a posteriori error estimation, output bounds, offline–online procedures, incompressible Navier–Stokes, natural convection, parametrized partial differential equations},
+doi = {10.1002/fld.867},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/fld.867},
+eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/fld.867},
+abstract = {Abstract We present a technique for the evaluation of linear-functional outputs of parametrized elliptic partial differential equations in the context of deployed (in service) systems. Deployed systems require real-time and certified output prediction in support of immediate and safe (feasible) action. The two essential components of our approach are (i) rapidly, uniformly convergent reduced-basis approximations, and (ii) associated rigorous and sharp a posteriori error bounds; in both components we exploit affine parametric structure and offline–online computational decompositions to provide real-time deployed response. In this paper we extend our methodology to the parametrized steady incompressible Navier–Stokes equations. We invoke the Brezzi–Rappaz–Raviart theory for analysis of variational approximations of non-linear partial differential equations to construct rigorous, quantitative, sharp, inexpensive a posteriori error estimators. The crucial new contribution is offline–online computational procedures for calculation of (a) the dual norm of the requisite residuals, (b) an upper bound for the ‘L4(Ω)-H1(Ω)’ Sobolev embedding continuity constant, (c) a lower bound for the Babuška inf–sup stability ‘constant,’ and (d) the adjoint contributions associated with the output. Numerical results for natural convection in a cavity confirm the rapid convergence of the reduced-basis approximation, the good effectivity of the associated a posteriori error bounds in the energy and output norms, and the rapid deployed response. Copyright © 2005 John Wiley \& Sons, Ltd.},
+year = {2005}
+}
+
+
+
+@Inbook{NgocCuong2005,
+author="Ngoc Cuong, Nguyen
+and Veroy, Karen
+and Patera, Anthony T.",
+editor="Yip, Sidney",
+title="Certified Real-Time Solution of Parametrized Partial Differential Equations",
+bookTitle="Handbook of Materials Modeling: Methods",
+year="2005",
+publisher="Springer Netherlands",
+address="Dordrecht",
+pages="1529--1564",
+abstract="Engineering analysis requires the prediction of (say, a single) selected ``output'' se relevant to ultimate component and system performance:* typical outputs include energies and forces, critical stresses or strains, flowrates or pressure drops, and various local and global measures of concentration, temperature, and flux. These outputs are functions of system parameters, or ``inputs'', $\mu$, that serve to identify a particular realization or configuration of the component or system: these inputs typically reflect geometry, properties, and boundary conditions and loads; we shall assume that $\mu$ is a P-vector (or P-tuple) of parameters in a prescribed closed input domain D ⊂ ℝp. The input-output relationship se($\mu$): D {\textrightarrow} ℝ thus encapsulates the behavior relevant to the desired engineering context.",
+isbn="978-1-4020-3286-8",
+doi="10.1007/978-1-4020-3286-8_76",
+url="https://doi.org/10.1007/978-1-4020-3286-8_76"
+}
+
+
+
+
+@article{rb_1,
+    author = {Prud’homme , C.  and Rovas , D. V.  and Veroy , K.  and Machiels, L.  and Maday, Y.  and Patera, A. T.  and Turinici, G. },
+    title = "{Reliable Real-Time Solution of Parametrized Partial Differential Equations: Reduced-Basis Output Bound Methods }",
+    journal = {Journal of Fluids Engineering},
+    volume = {124},
+    number = {1},
+    pages = {70-80},
+    year = {2001},
+    month = {11},
+    abstract = "{We present a technique for the rapid and reliable prediction of linear-functional outputs of elliptic (and parabolic) partial differential equations with affine parameter dependence. The essential components are (i) (provably) rapidly convergent global reduced-basis approximations—Galerkin projection onto a space WN spanned by solutions of the governing partial differential equation at N selected points in parameter space; (ii) a posteriori error estimation—relaxations of the error-residual equation that provide inexpensive yet sharp and rigorous bounds for the error in the outputs of interest; and (iii) off-line/on-line computational procedures methods which decouple the generation and projection stages of the approximation process. The operation count for the on-line stage in which, given a new parameter value, we calculate the output of interest and associated error bound, depends only on N (typically very small) and the parametric complexity of the problem; the method is thus ideally suited for the repeated and rapid evaluations required in the context of parameter estimation, design, optimization, and real-time control. }",
+    issn = {0098-2202},
+    doi = {10.1115/1.1448332},
+    url = {https://doi.org/10.1115/1.1448332},
+    eprint = {https://asmedigitalcollection.asme.org/fluidsengineering/article-pdf/124/1/70/4780603/70\_1.pdf},
+}
+
+@Article{Rozza2008,
+author="Rozza, G.
+and Huynh, D. B. P.
+and Patera, A. T.",
+title="Reduced Basis Approximation and a Posteriori Error Estimation for Affinely Parametrized Elliptic Coercive Partial Differential Equations",
+journal="Archives of Computational Methods in Engineering",
+year="2008",
+month="May",
+day="21",
+volume="15",
+number="3",
+pages="229",
+abstract="In this paper we consider (hierarchical, Lagrange) reduced basis approximation and a posteriori error estimation for linear functional outputs of affinely parametrized elliptic coercive partial differential equations. The essential ingredients are (primal-dual) Galerkin projection onto a low-dimensional space associated with a smooth ``parametric manifold''---dimension reduction; efficient and effective greedy sampling methods for identification of optimal and numerically stable approximations---rapid convergence; a posteriori error estimation procedures---rigorous and sharp bounds for the linear-functional outputs of interest; and Offline-Online computational decomposition strategies---minimum marginal cost for high performance in the real-time/embedded (e.g., parameter-estimation, control) and many-query (e.g., design optimization, multi-model/scale) contexts. We present illustrative results for heat conduction and convection-diffusion, inviscid flow, and linear elasticity; outputs include transport rates, added mass, and stress intensity factors.",
+issn="1886-1784",
+doi="10.1007/s11831-008-9019-9",
+url="https://doi.org/10.1007/s11831-008-9019-9"
+}
+
+
+
+@article{br1,
+title = "A High-Order Accurate Discontinuous Finite Element Method for the Numerical Solution of the Compressible Navier–Stokes Equations",
+journal = "Journal of Computational Physics",
+volume = "131",
+number = "2",
+pages = "267 - 279",
+year = "1997",
+issn = "0021-9991",
+doi = "https://doi.org/10.1006/jcph.1996.5572",
+url = "http://www.sciencedirect.com/science/article/pii/S0021999196955722",
+author = "F. Bassi and S. Rebay",
+abstract = "This paper deals with a high-order accurate discontinuous finite element method for the numerical solution of the compressible Navier–Stokes equations. We extend a discontinuous finite element discretization originally considered for hyperbolic systems such as the Euler equations to the case of the Navier–Stokes equations by treating the viscous terms with a mixed formulation. The method combines two key ideas which are at the basis of the finite volume and of the finite element method, the physics of wave propagation being accounted for by means of Riemann problems and accuracy being obtained by means of high-order polynomial approximations within elements. As a consequence the method is ideally suited to compute high-order accurate solution of the Navier–Stokes equations on unstructured grids. The performance of the proposed method is illustrated by computing the compressible viscous flow on a flat plate and around a NACA0012 airfoil for several flow regimes using constant, linear, quadratic, and cubic elements."
+}
+
+
+@article{bochev_leastsquares,
+author = {Bochev, P. and Gunzburger, M.},
+title = {Finite Element Methods of Least-Squares Type},
+journal = {SIAM Review},
+volume = {40},
+number = {4},
+pages = {789-837},
+year = {1998},
+doi = {10.1137/S0036144597321156},
+
+URL = { 
+        https://doi.org/10.1137/S0036144597321156
+    
+},
+eprint = { 
+        https://doi.org/10.1137/S0036144597321156
+    
+}
+}
+
+@inbook{legresley_3,
+author = {Patrick LeGresley and Juan Alonso},
+title = {Dynamic Domain Decomposition and Error Correction for Reduced Order Models},
+booktitle = {41st Aerospace Sciences Meeting and Exhibit},
+chapter = {},
+pages = {},
+doi = {10.2514/6.2003-250},
+URL = {https://arc.aiaa.org/doi/abs/10.2514/6.2003-250},
+eprint = {https://arc.aiaa.org/doi/pdf/10.2514/6.2003-250}
+}
+
+
+@inproceedings{legresley_2,
+  title={Investigation of non-linear projection for POD based reduced order models for Aerodynamics},
+  author={Patrick LeGresley and Juan J. Alonso},
+  year={2001}
+}
+
+@inbook{legresley_1,
+author = {Patrick LeGresley and Juan Alonso},
+title = {Airfoil design optimization using reduced order models based on proper orthogonal decomposition},
+booktitle = {Fluids 2000 Conference and Exhibit},
+chapter = {},
+pages = {},
+doi = {10.2514/6.2000-2545},
+URL = {https://arc.aiaa.org/doi/abs/10.2514/6.2000-2545},
+eprint = {https://arc.aiaa.org/doi/pdf/10.2514/6.2000-2545}
+}
+
+
+@article{ls_review,
+author = {Eason, Ernest D.},
+title = {A review of least-squares methods for solving partial differential equations},
+journal = {International Journal for Numerical Methods in Engineering},
+volume = {10},
+number = {5},
+pages = {1021-1046},
+doi = {10.1002/nme.1620100505},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/nme.1620100505},
+eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/nme.1620100505},
+abstract = {Abstract Continuous (integral) and discrete (point-matching) least-squares methods are presented for linear and non-linear problems in boundary-value, eigenvalue, and initial-value form. The history is traced, and important theoretical and practical results are summarized. A comprehensive sample of the literature is presented, indexed to show type of application, version of least squares used, and results of comparison studies. The advantages of least-squares methods are discussed, including convenience in formulation and error evaluation, generality of mixed and local (finite element) versions, and performance that is competitive with other methods.},
+year = {1976}
+}
+
+
+
+@article{bui_resmin_steady,
+author = {Bui-Thanh, T. and Willcox, K. and Ghattas, O.},
+title = {Model Reduction for Large-Scale Systems with High-Dimensional Parametric Input Space},
+journal = {SIAM Journal on Scientific Computing},
+volume = {30},
+number = {6},
+pages = {3270-3288},
+year = {2008},
+doi = {10.1137/070694855},
+
+URL = { 
+        https://doi.org/10.1137/070694855
+    
+},
+eprint = { 
+        https://doi.org/10.1137/070694855
+    
+}
+
+}
+
+
+
+@article{URBAN2012203,
+title = "A new error bound for reduced basis approximation of parabolic partial differential equations",
+journal = "Comptes Rendus Mathematique",
+volume = "350",
+number = "3",
+pages = "203 - 207",
+year = "2012",
+issn = "1631-073X",
+doi = "https://doi.org/10.1016/j.crma.2012.01.026",
+url = "http://www.sciencedirect.com/science/article/pii/S1631073X12000374",
+author = "Karsten Urban and Anthony T. Patera",
+abstract = "We consider a space–time variational formulation for linear parabolic partial differential equations. We introduce an associated Petrov–Galerkin truth finite element discretization with favorable discrete inf-sup constant βδ: βδ is unity for the heat equation; βδ grows only linearly in time for non-coercive (but asymptotically stable) convection operators. The latter in turn permits effective long-time a posteriori error bounds for reduced basis approximations, in sharp contrast to classical (pessimistic) exponentially growing energy estimates.
+Résumé
+Nous considérons une formulation variationnelle espace–temps pour les équations différentielles paraboliques linéaires. Nous y associons une discrétisation par éléments finis de Petrov–Galerkin pour laquelle la constante de stabilité inf-sup βδ possède des propriétés agréables : βδ est unité pour lʼéquation de la chaleur ; βδ a une croissance seulement linéaire en temps pour des opérateurs de convection non-coercifs (mais asymptotiquement stables). Dans le cadre des approximations par bases réduites, cette dernière propriété permet dʼobtenir des bornes efficaces pour lʼerreur a posteriori en temps long, en net contraste avec les estimateurs dʼerreur en énergie classiques (pessimistes) qui présentent une croissance exponentielle."
+}
+
+
+@article{Yano2014ASC,
+author = "Yano, Masayuki and Patera, Anthony T. and Urban, Karsten",
+Title = "A space-time hp-interpolation-based certified reduced basis method for Burgers equation",
+journal = {Mathematical Models and Methods in Applied Sciences},
+volume = {24},
+number = {09},
+pages = {1903-1935},
+year = {2014},
+doi = {10.1142/S0218202514500110},
+}
+
+
+
+
+@article{liouville,
+  Author = {J. Liouville},
+  Journal = {{Journ. de Math.}},
+  Number = {3},
+  Volume = {349}
+  Year = {1838}}
+
+
+@article{leeCarlberg,
+  Author = {Lee, K. and Carlberg, K.},
+  Journal = {arXiv e-print},
+  Number = {1812.08373},
+  Title = {Model reduction of dynamical systems on nonlinear manifolds using deep convolutional autoencoders},
+  Year = {2018}}
+
+@article{jfnk,
+title = "Jacobian-free Newton–Krylov methods: a survey of approaches and applications",
+journal = "Journal of Computational Physics",
+volume = "193",
+number = "2",
+pages = "357 - 397",
+year = "2004",
+issn = "0021-9991",
+doi = "https://doi.org/10.1016/j.jcp.2003.08.010",
+url = "http://www.sciencedirect.com/science/article/pii/S0021999103004340",
+author = "D.A. Knoll and D.E. Keyes",
+abstract = "Jacobian-free Newton–Krylov (JFNK) methods are synergistic combinations of Newton-type methods for superlinearly convergent solution of nonlinear equations and Krylov subspace methods for solving the Newton correction equations. The link between the two methods is the Jacobian-vector product, which may be probed approximately without forming and storing the elements of the true Jacobian, through a variety of means. Various approximations to the Jacobian matrix may still be required for preconditioning the resulting Krylov iteration. As with Krylov methods for linear problems, successful application of the JFNK method to any given problem is dependent on adequate preconditioning. JFNK has potential for application throughout problems governed by nonlinear partial differential equations and integro-differential equations. In this survey paper, we place JFNK in context with other nonlinear solution algorithms for both boundary value problems (BVPs) and initial value problems (IVPs). We provide an overview of the mechanics of JFNK and attempt to illustrate the wide variety of preconditioning options available. It is emphasized that JFNK can be wrapped (as an accelerator) around another nonlinear fixed point method (interpreted as a preconditioning process, potentially with significant code reuse). The aim of this paper is not to trace fully the evolution of JFNK, nor to provide proofs of accuracy or optimal convergence for all of the constituent methods, but rather to present the reader with a perspective on how JFNK may be applicable to applications of interest and to provide sources of further practical information."
+}
+
+
+@article{Bach2018StabilityCF,
+  title={Stability conditions for the explicit integration of projection based nonlinear reduced-order and hyper reduced structural mechanics finite element models},
+  author={Carlo Bach and Linze Song and Tatjana Erhart and Fabian Duddeck},
+  journal={CoRR},
+  year={2018},
+  volume={abs/1806.11404}
+}
+
+@article{colloc_review,
+author = {Anil Rac},
+year = {2010},
+month = {01},
+pages = {},
+title = {A Survey of Numerical Methods for Optimal Control},
+volume = {135},
+journal = {Advances in the Astronautical Sciences}
+}
+
+@article{parish_apg,
+author = {Parish, Eric and Wentland, Christopher and Duraisamy, Karthik},
+year = {2018},
+month = {10},
+pages = {50},
+journal = {CMAME (Submitted)}
+title = {The Adjoint Petrov-Galerkin Method for Non-Linear Model Reduction}
+}
+
+
+@article{wilcox_benner_rev,
+author = {Benner, P. and Gugercin, S. and Willcox, K.},
+title = {A Survey of Projection-Based Model Reduction Methods for Parametric Dynamical Systems},
+journal = {SIAM Review},
+volume = {57},
+number = {4},
+pages = {483-531},
+year = {2015},
+doi = {10.1137/130932715},
+
+URL = { 
+        https://doi.org/10.1137/130932715
+    
+},
+eprint = { 
+        https://doi.org/10.1137/130932715
+    
+}
+
+}
+
+@article{benner_st,
+author = {Baumann, M. and Benner, P. and Heiland, J.},
+title = {Space-Time Galerkin POD with Application in Optimal Control of Semilinear Partial Differential Equations},
+journal = {SIAM Journal on Scientific Computing},
+volume = {40},
+number = {3},
+pages = {A1611-A1641},
+year = {2018},
+doi = {10.1137/17M1135281},
+
+URL = { 
+        https://doi.org/10.1137/17M1135281
+    
+},
+eprint = { 
+        https://doi.org/10.1137/17M1135281
+    
+}
+
+}
+
+
+@article{carlberg_hadaptation,
+author = {Carlberg, Kevin},
+title = {Adaptive h-refinement for reduced-order models},
+journal = {International Journal for Numerical Methods in Engineering},
+volume = {102},
+number = {5},
+pages = {1192-1210},
+keywords = {adaptive refinement, h-refinement, model reduction, dual-weighted residual, adjoint error estimation, clustering},
+doi = {10.1002/nme.4800},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/nme.4800},
+eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/nme.4800},
+abstract = {SummaryThis work presents a method to adaptively refine reduced-order models a posteriori without requiring additional full-order-model solves. The technique is analogous to mesh-adaptive h-refinement: it enriches the reduced-basis space online by ‘splitting’ a given basis vector into several vectors with disjoint support. The splitting scheme is defined by a tree structure constructed offline via recursive k-means clustering of the state variables using snapshot data. The method identifies the vectors to split online using a dual-weighted-residual approach that aims to reduce error in an output quantity of interest. The resulting method generates a hierarchy of subspaces online without requiring large-scale operations or full-order-model solves. Further, it enables the reduced-order model to satisfy any prescribed error tolerance regardless of its original fidelity, as a completely refined reduced-order model is mathematically equivalent to the original full-order model. Experiments on a parameterized inviscid Burgers equation highlight the ability of the method to capture phenomena (e.g., moving shocks) not contained in the span of the original reduced basis. Copyright © 2014 John Wiley \& Sons, Ltd.},,
+year = {2015}
+}
+
+@article{McAsey2012ConvergenceOT,
+  title={Convergence of the forward-backward sweep method in optimal control},
+  author={Michael McAsey and Libin Mou and Weimin Han},
+  journal={Comp. Opt. and Appl.},
+  year={2012},
+  volume={53},
+  pages={207-226}
+}
+
+@article{ajams2015362,
+author={{T. Aboiyar and T. Luga and B.V. Iyorter}},
+title={Derivation of Continuous Linear Multistep Methods Using Hermite Polynomials as Basis Functions},
+journal={American Journal of Applied Mathematics and Statistics},
+volume={3},
+number={6},
+pages={220--225},
+year={2015},
+url={http://pubs.sciepub.com/ajams/3/6/2},
+issn={2328-7292},
+doi={10.12691/ajams-3-6-2}
+publisher={Science and Education Publishing}
+}
+
+@article{AREVALO20025,
+title = "A collocation formulation of multistep methods for variable step-size extensions",
+journal = "Applied Numerical Mathematics",
+volume = "42",
+number = "1",
+pages = "5 - 16",
+year = "2002",
+note = "Numerical Solution of Differential and Differential-Algebraic Equations, 4-9 September 2000, Halle, Germany",
+issn = "0168-9274",
+doi = "https://doi.org/10.1016/S0168-9274(01)00138-6",
+url = "http://www.sciencedirect.com/science/article/pii/S0168927401001386",
+author = "Carmen Arévalo and Claus Führer and Mónica Selva",
+keywords = "Ordinary differential equations (ODEs), Multistep methods, Variable step-size formulas, Collocation",
+abstract = "Multistep methods are classically constructed by specially designed difference operators on an equidistant time grid. To make them practically useful, they have to be implemented by varying the step-size according to some error-control algorithm. It is well known how to extend Adams and BDF formulas to a variable step-size formulation. In this paper we present a collocation approach to construct variable step-size formulas. We make use of piecewise polynomials to show that every k-step method of order k+1 has a variable step-size polynomial collocation formulation."
+}
+
+
+@phdthesis{carlberg_thesis,
+	Author = {Kevin Carlberg},
+	Date-Added = {2019-06-10 11:17:22 -0700},
+	Date-Modified = {2019-06-10 11:19:10 -0700},
+	School = {Stanford University},
+	Title = {Model Reduction of Nonlinear Mechanical Systems via Pptimal Projection and Tensor Approximation},
+	Year = {2011}}
+
+Kirk, D. E. (1970). Optimal Control Theory: An Introduction. Prentice Hall. ISBN 0-486-43484-2.
+@book{optimal_control_book,
+	Author = {D. E. Kirk},
+	Date-Added = {2019-05-28 20:39:55 -0700},
+	Date-Modified = {2019-05-28 20:40:50 -0700},
+	Publisher = {Prentice Hall},
+	Title = {Optimal Control Theory: An Introduction},
+	Year = {2007}}
+
+
+@book{fbs,
+	Author = {S. Lenhart and J.T. Workman},
+	Date-Added = {2019-05-28 20:39:55 -0700},
+	Date-Modified = {2019-05-28 20:40:50 -0700},
+	Publisher = {Chpman \& Hall/CRC Press},
+	Title = {Optimal Control Applied to Biological Models},
+	Year = {2007}}
+
+@article{multiple_shooting,
+	Author = {David Morrison and Janes Riley and John Zancanaro},
+	Date-Added = {2019-05-05 14:23:10 -0700},
+	Date-Modified = {2019-05-05 14:24:34 -0700},
+	Journal = {Communications of the ACM},
+	Number = {2},
+	Pages = {613-614},
+	Title = {Multiple Shooting Method for Two-Point Boundary Value Problems},
+	Volume = {5},
+	Year = {1962}}
+
+@article{conway_optimalcontrolreview,
+	Author = {Bruce A. Conway},
+	Date-Added = {2019-05-05 14:23:10 -0700},
+	Date-Modified = {2019-05-05 14:24:34 -0700},
+	Journal = {J. Optim. Theory Appl.},
+	Pages = {271--306},
+	Title = {A Survey of Methods Available for the Numerical Optimization of Continuous Dynamic Systems},
+	Volume = {152},
+	Year = {2012}}
+
+@article{basis_rotation,
+	Author = {M. Balajewicz and I. Tezaur and E. Dowell},
+	Date-Added = {2019-05-05 14:23:10 -0700},
+	Date-Modified = {2019-05-05 14:24:34 -0700},
+	Journal = {Journal of Computational Physics},
+	Pages = {224-241},
+	Title = {Minimal subspace rotation on the Stiefel manifold for stabilization and enhancement of projection-based reduced order models for the compressible Navier--Stokes equations},
+	Volume = {321},
+	Year = {2016}}
+
+@article{l1,
+	Author = {R. Abgrall and R. Crisovan},
+	Date-Added = {2019-05-05 14:14:31 -0700},
+	Date-Modified = {2019-05-05 14:15:20 -0700},
+	Journal = {International Journal for Numerical Methods in Fluids},
+	Number = {12},
+	Pages = {628--651},
+	Title = {Model reduction using L1-norm minimization as an application to nonlinear hyperbolic problems},
+	Volume = {87},
+	Year = {2018}}
+
+@article{constantine_strom,
+	Author = {Paul G. Constantine and Qiqi Wang},
+	Date-Added = {2019-05-03 09:44:47 -0700},
+	Date-Modified = {2019-05-03 09:45:48 -0700},
+	Journal = {SIAM J. Sci. Comput.},
+	Title = {Residual Minimizing Model Interpolation for Parameterized Nonlinear Dynamical Systems},
+	Year = {2012}}
+
+@article{choi_stlspg,
+	Author = {Youngsoo Choi and Kevin Carlberg},
+	Date-Added = {2019-05-03 09:41:30 -0700},
+	Date-Modified = {2019-05-03 09:42:36 -0700},
+	Journal = {SIAM J. Sci. Comput.},
+	Title = {{Space-Time Least-Squares Petrov-Galerkin Projection for Nonlinear Model Reduction}},
+	Year = {2019}}
+
+@book{ZwanzigBook,
+	Author = {R. Zwanzig},
+	Date-Added = {2016-10-30 16:18:36 +0000},
+	Date-Modified = {2016-10-30 16:19:34 +0000},
+	Publisher = {Oxford University Press},
+	Title = {{Nonequilibrium Statistical Mechanics}},
+	Year = {2001}}
+
+@book{BoydSpectralMethods,
+	Author = {John P. Boyd},
+	Date-Added = {2016-10-30 16:18:36 +0000},
+	Date-Modified = {2016-10-30 16:19:34 +0000},
+	Publisher = {Dover Publications Inc.},
+	Title = {{Chebyshev and Fourier Spectral Methods}},
+	Year = {2000}}
+
+@book{idolikecfd,
+	Author = {Katate Masatsuka},
+	Date-Added = {2016-10-30 16:18:36 +0000},
+	Date-Modified = {2016-10-30 16:19:34 +0000},
+	Publisher = {Katate Masatsuka},
+	Title = {{I do like CFD, VOL. 1}},
+	Year = {2017}}
+
+@book{combustionmodeling,
+	Author = {Tarek Echekki and Epaminondas Mastorakos},
+	Date-Added = {2016-10-30 16:18:36 +0000},
+	Date-Modified = {2016-10-30 16:19:34 +0000},
+	Publisher = {Springer-Verlag},
+	Title = {{Turbulent Combustion Modeling}},
+	Year = {1988}}
+
+@book{SpectralMethodsInFluidDynamics,
+	Author = {C. Canuto and M.Y. Hussaini and A. Quarteroni and T.A. Zang},
+	Date-Added = {2016-10-30 16:18:36 +0000},
+	Date-Modified = {2016-10-30 16:19:34 +0000},
+	Publisher = {Springer-Verlag},
+	Title = {{Spectral Methods in Fluid Dynamics}},
+	Year = {1988}}
+
+@conference{persson_peraire,
+	Address = {Reno, Nevada},
+	Author = {Per-Olof Persson and Jaime Peraire},
+	Booktitle = {44th AIAA Aerospace Sciences Meeting and Exhibit},
+	Date-Added = {2016-03-26 02:46:42 +0000},
+	Date-Modified = {2016-03-26 02:47:47 +0000},
+	Month = {January},
+	Title = {{Sub-Cell Shock Capturing for Discontinuous Galerkin Methods}},
+	Year = {2006}}
+
+@conference{persson_shockcapturing,
+	Address = {San Diego, CA},
+	Author = {Per-Olof Person},
+	Booktitle = {21st AIAA Computational Fluid Dynamics Conference},
+	Date-Added = {2016-03-26 02:46:42 +0000},
+	Date-Modified = {2016-03-26 02:47:47 +0000},
+	Title = {{Shock Capturing for High-Order Discontinuous Galerkin Simulation of Transient Flow Problems}},
+	Year = {2013}}
+
+@conference{feynman,
+	Address = {Boston, MA},
+	Author = {R. Feynman and R. B. Leighton and M. Sands},
+	Booktitle = {Addison-Wesley},
+	Date-Added = {2016-03-26 02:46:42 +0000},
+	Date-Modified = {2016-03-26 02:47:47 +0000},
+	Title = {{The Feynman lectures on physics}},
+	Year = {1964}}
+
+@conference{similarity_models,
+	Address = {Snowmass, CO},
+	Author = {J. Bardina and J.H. Ferziger and W.C. Reynolds},
+	Booktitle = {13th Fluid and Plasma Dynamics Conference},
+	Date-Added = {2016-03-26 02:46:42 +0000},
+	Date-Modified = {2016-03-26 02:47:47 +0000},
+	Title = {{Improved subgrid scale models for Large Eddy Simulation}},
+	Year = {1980}}
+
+@conference{poggie_iles,
+	Address = {Atlanta, Georgia},
+	Author = {Jonathn Poggie},
+	Booktitle = {AIAA Aviation Forum},
+	Date-Added = {2016-03-26 02:46:42 +0000},
+	Date-Modified = {2016-03-26 02:47:47 +0000},
+	Month = {June},
+	Title = {{Large-Scale Structures in Implicit Large-Eddy Simulation of Compressible Turbulent Flow}},
+	Year = {2014}}
+
+@conference{dg_channel_iles,
+	Address = {Thessaloniki, Greece},
+	Author = {Corentin Carton de Wiart and Koen Hillewaert and Phillippe Geuzaine and Robbi Luccioni and Laurent Bricteux and Gregory Coussement and Gregoire Winckelmans},
+	Booktitle = {9th International Ercoftac symposium on Engineering Turbulence Modeling and Measurements},
+	Date-Added = {2016-03-26 02:46:42 +0000},
+	Date-Modified = {2016-03-26 02:47:47 +0000},
+	Month = {June},
+	Title = {{Assessment of LES modeling within a high order discontinuous Galerkin solver}},
+	Year = {2012}}
+
+@article{rowley_pod_energyproj,
+	Author = {Clarence W. Rowley and Tim Colonius and Richard M. Murray},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Physica D: Nonlinear Phenomena},
+	Number = {1-2},
+	Pages = {115-129},
+	Title = {{Model reduction for compressible flows using POD and Galerkin projection}},
+	Volume = {189},
+	Year = {2004}}
+
+@techreport{smag_ROM,
+	Author = {B.R. Noack and P. Papas and P.A. Monkewitz},
+	Date-Added = {2016-03-26 02:38:55 +0000},
+	Date-Modified = {2016-03-26 02:40:16 +0000},
+	Institution = {\'Ecole Polytechnique F\'ed\'erale de Lausanne},
+	Number = {2002-01},
+	Title = {{Low-dimensional Galerkin model of a laminar shear-layer}},
+	Type = {Report},
+	Year = {2002}}
+
+@article{deim,
+	Author = {Saifon Chaturantabut and Danny C. Sorensen},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {SIAM J. Sci. Comput.},
+	Number = {5},
+	Pages = {2737-2764},
+	Title = {{Nonlinear Model Reduction via Discrete Empirical Interpolation}},
+	Volume = {32},
+	Year = {2010}}
+
+@article{everson_sirovich_gappy,
+	Author = {R. Everson and L. Sirovich},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Journal of the Optical Society of America A},
+	Pages = {1657-1644},
+	Title = {{Karhunen-Lo`eve procedure for gappy data}},
+	Volume = {12},
+	Year = {1995}}
+
+@article{wang_smag,
+	Author = {Z. Wang and I. Akhtar and J. Borggaard and T. Iliescu},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Journal of Computational Physics},
+	Number = {1},
+	Pages = {126-146},
+	Title = {{Two-level discretizations of nonlinear closure models for proper orthogonal decomposition}},
+	Volume = {230},
+	Year = {2011}}
+
+@article{Bergmann_pod_vms,
+	Author = {M. Bergmann and C.H. Bruneaua and A. Iollo},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Journal of Computational Physics},
+	Number = {1},
+	Pages = {516-538},
+	Title = {{Enablers for robust POD models}},
+	Volume = {228},
+	Year = {2009}}
+
+@article{iliescu_ciazzo_residual_rom,
+	Author = {Alfonso Caiazzo and Traian Iliescu and Volker John and Swetlana Schyschlowa},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Journal of Computational Physics},
+	Number = {1},
+	Pages = {598-616},
+	Title = {{A numerical investigation of velocity-pressure reduced models for incompressible flows}},
+	Volume = {259},
+	Year = {2014}}
+
+@article{iliescu_vms_pod_supg,
+	Author = {Swetlana Giere and Traian Iliescu and John Volker and David Wells},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Computer Methods in Applied Mechanics and Engineering},
+	Number = {1},
+	Pages = {454-474},
+	Title = {{Variational Multiscale Proper Orthogonal Decomposition: Navier-Stokes Equations}},
+	Volume = {289},
+	Year = {2015}}
+
+@article{san_iliescu_geostrophic,
+	Author = {Omar San and Traian Iliescu},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Adv Comput Math},
+	Number = {1},
+	Pages = {1289-1319},
+	Title = {{A stabilized proper orthogonal decomposition reduced-order model for large scale quasigeostrophic ocean circulation}},
+	Volume = {41},
+	Year = {2015}}
+
+@article{wang_pod_compare_closure,
+	Author = {Zhu Wang, Imran Akhtar, Jeff Borggaard, Traian Iliescu},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Comput. Methods Appl. Mech. Engrg.},
+	Pages = {10-26},
+	Title = {{Proper orthogonal decomposition closure models for turbulent flows: A numerical comparison}},
+	Volume = {237},
+	Year = {2012}}
+
+@article{iliescu_vms_pod_ns,
+	Author = {Traian Iliescu and Zhu Wang},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Numerical Methods for Partial Differential Equations},
+	Number = {2},
+	Pages = {641-663},
+	Title = {{Variational Multiscale Proper Orthogonal Decomposition: Navier-Stokes Equations}},
+	Volume = {30},
+	Year = {2014}}
+
+@article{carlberg_lspg,
+	Author = {Kevin Carlberg and Charbel Bou-Mosleh and Charbel Farhat},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Int. J. Numer. Methods Eng.},
+	Pages = {155--181},
+	Title = {Efficient non-linear model reduction via a least-squares Petrov-Galerkin projection and compressive tensor approximations},
+	Volume = {86},
+	Year = {2011}}
+
+@article{bui_unsteady,
+author = {Bui-Thanh, T. and Willcox, K. and Ghattas, O.},
+title = {Parametric Reduced-Order Models for Probabilistic Analysis of Unsteady Aerodynamic Applications},
+journal = {AIAA Journal},
+volume = {46},
+number = {10},
+pages = {2520-2529},
+year = {2008},
+doi = {10.2514/1.35850},
+
+URL = { 
+        https://doi.org/10.2514/1.35850
+    
+},
+eprint = { 
+        https://doi.org/10.2514/1.35850
+    
+}
+
+}
+
+
+
+@article{carlberg_gnat,
+	Author = {Kevin Carlberg and Charbel Farhat and Julien Cortial and David Amsallem},
+	Journal = {Journal of Computational Physics},
+	Pages = {623--647},
+	Publisher = {Elsevier},
+	Title = {The GNAT method for nonlinear model reduction: Effective implementation and application to computational fluid dynamics and turbulent flows},
+	Volume = {242},
+	Year = {2013}}
+
+@article{carlberg_lspg_v_galerkin,
+	Author = {Kevin Carlberg and Matthew Barone and Harbir Antil},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Journal of Computational Physics},
+	Pages = {693--734},
+	Title = {{Galerkin v. least-squares Petrov-Galerkin projection in nonlinear model reduction}},
+	Volume = {330},
+	Year = {2017}}
+
+@article{carlberg_conservative_rom,
+	Author = {Kevin Carlberg and Youngsoo Choi and Syuzanna Sargsyan},
+	Journal = {Journal of Computational Physics},
+	Pages = {280-314},
+	Publisher = {Elsevier},
+	Title = {Conservative model reduction for finite-volume models},
+	Volume = {371},
+	Year = {2018}}
+
+@article{boris_iles,
+	Author = {J.P. Boris and F.F. Grinstein and E.S. Oran and R.L. Kolbe},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Fluid Dynamics Research},
+	Pages = {199-228},
+	Title = {{New insights into large eddy simulation}},
+	Volume = {10},
+	Year = {1992}}
+
+@article{taylorgreen,
+	Author = {G. I. Taylor and A. E. Green},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Proc. R. Soc. Lond. A},
+	Pages = {499-521},
+	Title = {{Mechanism of the Production of Small Eddies from Large Ones}},
+	Volume = {158},
+	Year = {1937}}
+
+@article{jameson_rk4,
+	Author = {J. Pike and P. L. Roe},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Computers and Fluids},
+	Number = {2},
+	Pages = {223-236},
+	Title = {{Accelerated Convergence of Jameson's Finite-Volume Euler Scheme Using Van Der Houwen Integrators}},
+	Volume = {13},
+	Year = {1985}}
+
+@article{chiwangshu_entropy,
+	Author = {Tianheng Chen and Chi-Wang Shu},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Journal of Computational Physics},
+	Number = {15},
+	Pages = {427-261},
+	Title = {{Entropy stable high order discontinuous Galerkin methods with suitable quadrature rules for hyperbolic conservation equations}},
+	Volume = {345},
+	Year = {2017}}
+
+@article{ctr_timefiltering,
+	Author = {Daniele Carati and Alan A. Wray},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Center for Turbulence Research, Proceedings of the Summer Program},
+	Title = {{Time filtering in large eddy simulations}},
+	Year = {2000}}
+
+@article{meneveau_review,
+	Author = {Charles Meneveau and Joseph Katz},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Annu. Rev. Fluid Mech.},
+	Pages = {1-32},
+	Title = {{Grid-independent large-eddy simulation using explicit filtering}},
+	Volume = {32},
+	Year = {2000}}
+
+@article{bose_explicit_les,
+	Author = {Sanjeeb Bose and Parviz Moin and Donghyun You},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Physics of Fluids},
+	Number = {10},
+	Title = {{Grid-independent large-eddy simulation using explicit filtering}},
+	Volume = {22},
+	Year = {2010}}
+
+@article{lund_explicit_les,
+	Author = {T.S. Lund},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Computers and Mathematics with Applications},
+	Pages = {603-616},
+	Title = {{The Use of Explicit Filters in Large Eddy Simulation}},
+	Volume = {46},
+	Year = {2003}}
+
+@article{kdur_ageofdata,
+	Author = {Karthik Duraisamy and Gianluca Iaccarino and Heng Xiao},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {arXiv:1804.00183v1},
+	Title = {{Turbulence Modeling in the Age of Data}},
+	Year = {2018}}
+
+@article{fernandez_iles1,
+	Author = {P. Fernandez and N.C. Nguyen and X. Roca and J. Peraire},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {arXiv:1605.01020v1},
+	Title = {{Implicit large-eddy simulations of compressible flows using the Interior Embedded Discontinuous Galerkin method}},
+	Year = {2016}}
+
+@article{rans_aerodynamics,
+	Author = {Pietro Catalano and Marcello Amato},
+	Date-Added = {2016-04-03 14:29:30 +0000},
+	Date-Modified = {2016-04-03 14:30:13 +0000},
+	Journal = {Aerospace Science and Technology},
+	Number = {7},
+	Pages = {493-509},
+	Title = {{An evaluation of RANS turbulence modelling for aerodynamic applications}},
+	Volume = {7},
+	Year = {2003}}
+
+@article{yee_vortex,
+	Author = {H-C Yee and N. Sandham and M. Djomehri},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Journal of Computational Physics},
+	Number = {1},
+	Pages = {199-238},
+	Title = {{Low dissipative high order shock-capturing methods using characteristic based filters}},
+	Volume = {150},
+	Year = {1999}}
+
+@article{mixed_models,
+	Author = {Yan Zhang and Robert L. Street and Jeffrey R. Koseff},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Physics of Fluids},
+	Number = {3186},
+	Title = {{A dynamic mixed subgrid-scale model and its application to turbulent recirculating flows}},
+	Volume = {5},
+	Year = {1993}}
+
+@article{cockburn_shu,
+	Author = {Bernardo Cockburn and Chi-Wang Shu},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Journal of Scientific Computing},
+	Number = {3},
+	Pages = {173-261},
+	Title = {{Runge-Kutta discontinuous Galerkin methods for convection-dominated problems}},
+	Volume = {16},
+	Year = {2001}}
+
+@article{krivodonova,
+	Author = {Lilia Krivodonova},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Journal of Computational Physics},
+	Number = {1},
+	Pages = {879-896},
+	Title = {{Limiters for high-order discontinuous Galerkin methods}},
+	Volume = {226},
+	Year = {2007}}
+
+@article{rusanov,
+	Author = {VV Rusanov},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Journal of Computational Physics},
+	Pages = {507-516},
+	Title = {{On Difference Schemes of Third Order Accuracy for Nonlinear Hyperbolic Systems}},
+	Volume = {5},
+	Year = {1970}}
+
+@article{jhdatabase_mhd,
+	Author = {H. Aluie},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Ph.D. Thesis},
+	Title = {{Hydrodynamic and Magnetohydrodynamic Turbulence: Invariants, Cascades, and Locality}},
+	Volume = {The Johns Hopkins University, Baltimore},
+	Year = {2009}}
+
+@article{lilly2,
+	Author = {D. K. Lilly},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Physics of Fluids},
+	Pages = {633-636},
+	Title = {{A proposed modification of the Germano subgrid-scale closure method}},
+	Volume = {4},
+	Year = {1992}}
+
+@article{mpi4py,
+	Author = {Lisandro D. Dalcin and Rodrigo R. Paz and Pablo A. Kler and Alejandro Cosimo},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Advances in Water Resources},
+	Pages = {1124-1139},
+	Title = {{Parallel distributed computing using Python}},
+	Volume = {34},
+	Year = {2011}}
+
+@article{pythonHPC,
+	Author = {Mikael Mortensen and Hans Petter Langtangen},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Computer Physics Communications},
+	Pages = {53-65},
+	Title = {{High performance Python for direct numerical simulations of turbulent flows}},
+	Volume = {203},
+	Year = {2016}}
+
+@article{CBC,
+	Author = {G. Comte-Bellot and S. Corrsin},
+	Date-Added = {2016-10-31 14:04:02 +0000},
+	Date-Modified = {2016-10-31 14:05:10 +0000},
+	Journal = {Journal of Fluid Mechanics},
+	Pages = {273},
+	Title = {{Simple Eulerian time correlation of full and narrow band velocity signals in isotropic turbulence}},
+	Volume = {48},
+	Year = {1971}}
+
+@article{lilly,
+	Author = {D. K. Lilly},
+	Date-Added = {2016-10-30 16:05:17 +0000},
+	Date-Modified = {2017-12-21 18:11:30 +0000},
+	Journal = {NCAR Manuscript},
+	Number = {123},
+	Title = {{On the Application of the Eddy Viscosity Concept in the Inertial Sub-range of Turbulence}},
+	Year = {1966}}
+
+@article{2dhit,
+	Author = {J. R. Chasnov},
+	Date-Added = {2016-10-30 16:05:17 +0000},
+	Date-Modified = {2017-12-21 18:11:30 +0000},
+	Journal = {Phys. Fluids},
+	Number = {1},
+	Pages = {171-180},
+	Title = {{On the decay of two-dimensional homogeneous turbulence}},
+	Volume = {9},
+	Year = {1996}}
+
+@article{iliescu_pod_eddyviscosity,
+	Author = {Omer San and Traian Iliescu},
+	Date-Added = {2016-10-30 16:05:17 +0000},
+	Date-Modified = {2017-12-21 18:11:30 +0000},
+	Journal = {Comput. Methods Appl. Mech. Engrg},
+	Number = {3},
+	Pages = {217-237},
+	Title = {{Proper Orthogonal Decomposition Closure Models for Fluid Flows: Burgers Equation}},
+	Volume = {5},
+	Year = {2014}}
+
+@article{mhd_vms,
+	Author = {David Sondak and Assad A. Oberai},
+	Date-Added = {2016-10-30 16:05:17 +0000},
+	Date-Modified = {2017-12-21 18:11:30 +0000},
+	Journal = {Physics of Plasmas},
+	Number = {10},
+	Pages = {102308},
+	Title = {{Large eddy simulation models for incompressible magnetohydrodynamics derived from the variational multiscale formulation}},
+	Volume = {19},
+	Year = {2012}}
+
+@article{mhd_vms_shadid,
+	Author = {D. Sondak and J.N. Shadid and A.A. Oberai and R.P. Pawlowski and E.C. Cyr},
+	Date-Added = {2016-10-30 16:05:17 +0000},
+	Date-Modified = {2017-12-21 18:11:30 +0000},
+	Journal = {Journal of Computational Physics},
+	Number = {15},
+	Pages = {596-616},
+	Title = {{A new class of finite element variational multiscale turbulence models for incompressible magnetohydrodynamics}},
+	Volume = {295},
+	Year = {2015}}
+
+@article{codina_vmsrom,
+	Author = {Joan Baiges and Ramon Codina and Sergio Idelsohn},
+	Date-Added = {2016-10-30 16:05:17 +0000},
+	Date-Modified = {2017-12-21 18:11:30 +0000},
+	Journal = {Comput. Methods Appl. Mech. Engrg.},
+	Number = {1},
+	Title = {{Reduced-order subscales for POD models}},
+	Volume = {291},
+	Year = {2016}}
+
+@article{parishVMS,
+	Author = {Eric J. Parish and Karthik Duraisamy},
+	Date-Added = {2016-10-30 16:05:17 +0000},
+	Date-Modified = {2017-12-21 18:11:30 +0000},
+	Journal = {CMAME},
+	Number = {Submitted},
+	Title = {{A Unified Framework for Multiscale Modeling Using Mori-Zwanzig and the Variational Multiscale Method}},
+	Year = {2018}}
+
+@article{parishMZ1,
+	Author = {Eric J. Parish and Karthik Duraisamy},
+	Date-Added = {2016-10-30 16:05:17 +0000},
+	Date-Modified = {2017-12-21 18:11:30 +0000},
+	Journal = {Physical Review Fluids},
+	Number = {1},
+	Title = {{Non-Markovian Closure Models for Large Eddy Simulation using the Mori-Zwanzig Formalism}},
+	Volume = {2},
+	Year = {2017}}
+
+@article{hughes2004multiscale,
+	Author = {Hughes, Thomas JR and Scovazzi, Guglielmo and Franca, Leopoldo P},
+	Journal = {Encyclopedia of computational mechanics},
+	Publisher = {Wiley Online Library},
+	Title = {{Multiscale and stabilized methods}},
+	Year = {2004}}
+
+@article{codina2017variational,
+	Author = {Codina, R and Badia, S and Baiges, J and Principe, J},
+	Journal = {Encyclopedia of computational mechanics, E. Stein, R. de Borst, and TJ Hughes, Eds., Wiley Online Library},
+	Title = {{Variational multiscale methods in computational fluid dynamics}},
+	Year = {2017}}
+
+@article{zhu_mz_error,
+	Author = {Yuanran Zhu and Jason M. Dominy and Daniele Venturi},
+	Date-Added = {2017-12-19 17:19:15 +0000},
+	Date-Modified = {2017-12-19 17:20:39 +0000},
+	Journal = {arXiv:1708.02235v2},
+	Title = {{Rigorous error estimates for the memory integral in the Mori-Zwanzig formulation}},
+	Year = {2017}}
+
+@article{zhu_mz_faber,
+	Author = {Yuanran Zhu and Daniele Venturi},
+	Date-Added = {2017-12-19 17:18:26 +0000},
+	Date-Modified = {2017-12-19 17:21:07 +0000},
+	Journal = {arXiv:1708.03806v2},
+	Title = {{Faber approximation to the Mori-Zwanzig equation}},
+	Year = {2017}}
+
+@article{hughes_sangalli,
+	Author = {T.J.R. Hughes and G. Sangalli},
+	Date-Added = {2017-12-18 23:36:23 +0000},
+	Date-Modified = {2017-12-18 23:37:11 +0000},
+	Journal = {SIAM Journal on Numerical Analysis},
+	Number = {2},
+	Pages = {539-557},
+	Title = {{Variational Multiscale Analysis: The Fine-Scale Green's Function, Projection, Optimization, Localization, and Stabilized Methods}},
+	Volume = {45},
+	Year = {2007}}
+
+@article{collis_vms,
+	Author = {SS. Collis},
+	Date-Added = {2017-12-18 23:33:44 +0000},
+	Date-Modified = {2017-12-18 23:34:47 +0000},
+	Journal = {Physics of Fluids},
+	Number = {6},
+	Pages = {1800-1806},
+	Title = {{Monitoring unresolved scales in multiscale turbulence modeling}},
+	Volume = {13},
+	Year = {2001}}
+
+@article{br1,
+	Author = {F. Bassi and S. Rebay},
+	Date-Added = {2017-11-21 19:45:53 +0000},
+	Date-Modified = {2017-11-21 19:46:51 +0000},
+	Journal = {Journal of Computational Physics},
+	Pages = {267-279},
+	Title = {{A High Order Accurate Discontinuous Finite Element Method for the Numerical Solution of the Compressible Navier-Stokes Equations}},
+	Volume = {131},
+	Year = {1997}}
+
+@article{mu,
+	Date-Added = {2017-11-20 17:34:20 +0000},
+	Date-Modified = {2017-11-20 17:34:27 +0000}}
+
+@article{codina_oss,
+	Author = {Ramon Codina},
+	Date-Added = {2017-11-20 16:25:06 +0000},
+	Date-Modified = {2017-11-20 16:25:33 +0000},
+	Journal = {Computer methods in applied mechanics and engineering},
+	Number = {1579-1599},
+	Title = {{Stabilization of incompressibility and convection through orthogonal sub-scales in finite element methods}},
+	Volume = {190},
+	Year = {2000}}
+
+@article{codina_oss0,
+	Author = {Ramon Codina},
+	Date-Added = {2017-11-20 16:24:07 +0000},
+	Date-Modified = {2017-11-20 16:24:53 +0000},
+	Journal = {Computer methods in applied mechanics and engineering},
+	Number = {4295-4321},
+	Title = {{Stabilized finite element approximation of transient incompressible flows using orthogonal subscales}},
+	Volume = {191},
+	Year = {2002}}
+
+@article{codina_oss1,
+	Author = {Oriol Guasch and Ramon Codina},
+	Date-Added = {2017-11-20 16:22:27 +0000},
+	Date-Modified = {2017-11-20 16:23:52 +0000},
+	Journal = {Computer methods in applied mechanics and engineering},
+	Number = {154-166},
+	Title = {{Statistical behavior of the orthogonal subgrid scale stabilization terms in the finite element large eddy simulation of turbulent flows}},
+	Volume = {261-262},
+	Year = {2013}}
+
+@article{codina_ossburgers,
+	Author = {Camilo Bayona and Joan Baiges and Ramon Codina},
+	Date-Added = {2017-11-20 16:20:08 +0000},
+	Date-Modified = {2017-11-20 16:21:25 +0000},
+	Journal = {International Journal for Numerical Methods in Fluids},
+	Title = {{Variational multi-scale approximation of the one-dimensional forced Burgers equation: the role of orthogonal sub-grid scales in turbulence modeling}},
+	Year = {2017}}
+
+@article{PriceMZ2,
+	Author = {Jacob Price and Panos Stinis},
+	Date-Added = {2017-11-20 16:01:45 +0000},
+	Date-Modified = {2017-11-20 16:02:29 +0000},
+	Journal = {arXiv:1805.08766v1},
+	Title = {{Renormalization and blow-up for the 3D Euler equations}},
+	Year = {2018}}
+
+@article{PriceMZ,
+	Author = {Jacob Price and Panos Stinis},
+	Date-Added = {2017-11-20 16:01:45 +0000},
+	Date-Modified = {2017-11-20 16:02:29 +0000},
+	Journal = {arXiv:1707.01955v1},
+	Title = {{Renormalized Reduced Order Models with Memory for Long Time Prediction}},
+	Year = {2017}}
+
+@article{adjointFEM,
+	Author = {L.P. Franca and S.L. Frey and T.J.R. Hughes},
+	Date-Added = {2017-11-20 14:36:14 +0000},
+	Date-Modified = {2017-11-20 14:37:35 +0000},
+	Journal = {Computer methods in applied mechanics and engineering},
+	Number = {2},
+	Pages = {253-276},
+	Title = {{Stabilized finite element methods: 1. Application to the advective-diffusive model}},
+	Volume = {95},
+	Year = {1992}}
+
+@article{Roe,
+	Author = {P.L. Roe},
+	Date-Added = {2017-11-19 16:41:22 +0000},
+	Date-Modified = {2017-11-19 16:41:52 +0000},
+	Title = {{Approximate Riemann solvers, parameter vectors and difference schemes}}}
+
+@article{Koopman,
+	Author = {B.O. Koopman},
+	Date-Added = {2017-05-03 13:08:00 +0000},
+	Date-Modified = {2017-05-03 13:08:46 +0000},
+	Journal = {Proceedings of the National Academy of Sciences of the US A},
+	Number = {5},
+	Pages = {315-318},
+	Title = {{Hamiltonian systems and transformations in Hilbert space}},
+	Volume = {17},
+	Year = {1931}}
+
+@article{parish_dtau,
+	Author = {Eric J. Parish and Karthik Duraisamy},
+	Date-Added = {2017-11-18 22:49:11 +0000},
+	Date-Modified = {2017-11-18 22:50:24 +0000},
+	Journal = {Journal of Computational Physics},
+	Pages = {154-175},
+	Title = {{A dynamic subgrid scale model for Large Eddy Simulations based on the Mori-Zwanzig formalism}},
+	Volume = {349},
+	Year = {2017}}
+
+@article{tadmor_spectral_ke,
+	Author = {Claude Bardos and Eitan Tadmor},
+	Date-Added = {2017-09-14 11:56:16 +0000},
+	Date-Modified = {2017-09-14 11:57:42 +0000},
+	Journal = {Numerische Mathematik},
+	Number = {4},
+	Pages = {749-782},
+	Title = {{Stability and spectral convergence of Fourier method for nonlinear problems: on the shortcomings of the 2/3 de-aliasing method}},
+	Volume = {129},
+	Year = {2015}}
+
+@article{kolmogorov_constant,
+	Author = {Katepalli R. Sreenivasan},
+	Date-Added = {2017-09-02 15:02:39 +0000},
+	Date-Modified = {2017-09-02 15:03:27 +0000},
+	Journal = {Physics of Fluids},
+	Number = {11},
+	Title = {{On the universality of the Kolmogorov constant}},
+	Volume = {7},
+	Year = {1995}}
+
+@article{Champagne,
+	Author = {F.H. Champagne and C.A. Friehe and J.C. LaRue and J.C. Wyngaard},
+	Date-Added = {2017-09-02 15:01:20 +0000},
+	Date-Modified = {2017-09-02 15:02:33 +0000},
+	Journal = {Journal of Atmospheric Science},
+	Pages = {515-530},
+	Title = {{Flux measurements, flux estimation techniques and fine-scale turbulence measurements in the unstable surface layer over land}},
+	Volume = {34},
+	Year = {1977}}
+
+@article{trends_in_les,
+	Author = {Marcel Lesieur and Olivier Metais},
+	Date-Added = {2017-09-02 14:58:34 +0000},
+	Date-Modified = {2017-09-02 15:00:23 +0000},
+	Journal = {Annu. Rev. Fluid. Mech.},
+	Number = {28},
+	Pages = {45-82},
+	Title = {{New Trends in Large-Eddy Simulations of Turbulence}},
+	Year = {1996}}
+
+@article{structure_model,
+	Author = {O. Metais and M. Lesieur},
+	Date-Added = {2017-09-02 14:57:20 +0000},
+	Date-Modified = {2017-09-02 14:58:14 +0000},
+	Journal = {Journal of Fluid Mechanics},
+	Pages = {157-194},
+	Title = {{Spectral large-eddy simulations of isotropic and stably-stratified turbulence}},
+	Volume = {239},
+	Year = {1992}}
+
+@article{kraichnan,
+	Author = {R.H. Kraichnan},
+	Date-Added = {2017-09-02 14:55:46 +0000},
+	Date-Modified = {2017-09-02 14:56:49 +0000},
+	Journal = {Journal of Atmospheric Science},
+	Pages = {1521-1536},
+	Title = {{Eddy Viscosity in two and three dimensions}},
+	Volume = {33},
+	Year = {1976}}
+
+@article{ssp_rk3,
+	Author = {Sigal Gottlieb and Chi-Wang Shu and Eitan Tadmor},
+	Date-Added = {2017-09-01 13:23:47 +0000},
+	Date-Modified = {2017-09-01 13:24:30 +0000},
+	Journal = {SIAM Review},
+	Number = {1},
+	Pages = {89-112},
+	Title = {{Strong Stability-Preserving High-Order Time Discretization Methods}},
+	Volume = {43},
+	Year = {2001}}
+
+@article{interior_penalty,
+	Author = {Ralf Hartmann and Paul Houston},
+	Date-Added = {2017-09-01 13:20:55 +0000},
+	Date-Modified = {2017-09-01 13:22:18 +0000},
+	Journal = {International Journal o fNumerical Analysis and Modeling},
+	Number = {3},
+	Pages = {1-20},
+	Title = {{Symmetric Interior Penalty DG Methods for the Compressible Navier-Stokes Equations I: Method Formulation}},
+	Year = {2006}}
+
+@article{chen_entropy,
+	Author = {Tianheng Chen and Chi-Wang Shu},
+	Date-Added = {2017-09-01 12:50:43 +0000},
+	Date-Modified = {2017-09-01 12:51:55 +0000},
+	Journal = {Journal of Computational Physics},
+	Pages = {427-461},
+	Title = {{Entropy stable high order discontinuous Galerkin methods with suitable quadrature rules for hyperbolic conservation laws}},
+	Volume = {345},
+	Year = {2017}}
+
+@article{laslo_murman_entropy,
+	Author = {Laslo T. Diosady and Scott M. Murman},
+	Date-Added = {2017-09-01 12:24:51 +0000},
+	Date-Modified = {2017-09-01 12:25:46 +0000},
+	Journal = {53rd AIAA Aerospace Sciences Meeting},
+	Title = {{High-Order Methods for Compressible Turbulent Flows Using Entropy Variables}},
+	Year = {2015}}
+
+@article{roescheme,
+	Author = {P.L. Roe},
+	Date-Added = {2017-09-01 12:21:59 +0000},
+	Date-Modified = {2017-09-01 12:22:37 +0000},
+	Journal = {Journal of Computational Physics},
+	Pages = {357-372},
+	Title = {{Approximate Riemann solvers, parameter vectors and difference schemes}},
+	Volume = {43},
+	Year = {1981}}
+
+@article{ismailRoe,
+	Author = {Farzad Ismail and Philip L. Roe},
+	Date-Added = {2017-09-01 12:17:50 +0000},
+	Date-Modified = {2017-09-01 12:21:01 +0000},
+	Journal = {Journal of Computational Physics},
+	Pages = {5410-5436},
+	Title = {{Affordable, entropy-consistent Euler flux functions II: Entropy production at shocks}},
+	Volume = {228},
+	Year = {2009}}
+
+@article{tadmor2,
+	Author = {E. Tadmor},
+	Date-Added = {2017-09-01 01:58:03 +0000},
+	Date-Modified = {2017-09-01 01:58:53 +0000},
+	Journal = {Mathematics of Computation},
+	Number = {91-103},
+	Title = {{The numerical viscosity of entropy stable schemes for conservation laws. I.}},
+	Volume = {49},
+	Year = {1987}}
+
+@article{tadmor1,
+	Author = {E. Tadmor},
+	Date-Added = {2017-09-01 01:56:48 +0000},
+	Date-Modified = {2017-09-01 01:57:33 +0000},
+	Journal = {Journal of Mathematical Analysis and Applications},
+	Number = {2},
+	Pages = {355-359},
+	Title = {{Entropy functions for symmetric systems of conservation laws}},
+	Volume = {122},
+	Year = {1987}}
+
+
+@phdthesis{rovas_thesis,
+	Author = {Dimitrios V. Rovas},
+	Date-Added = {2017-09-01 01:54:33 +0000},
+	Date-Modified = {2017-09-01 01:55:44 +0000},
+	School = {Massachusetts Institute of Technology},
+	Title = {{Reduced-basis output bound methods for parametrized partial differential equations}},
+	Year = {2003}}
+
+
+@phdthesis{bui_thesis,
+	Author = {Tan Bui-Thanh},
+	Date-Added = {2017-09-01 01:54:33 +0000},
+	Date-Modified = {2017-09-01 01:55:44 +0000},
+	School = {Massachusetts Institute of Technology},
+	Title = {{Model-constrained optimization methods for reduction of parameterized large-scale systems}},
+	Year = {2007}}
+
+
+@phdthesis{Wang_ROM_thesis,
+	Author = {Zhu Wang},
+	Date-Added = {2017-09-01 01:54:33 +0000},
+	Date-Modified = {2017-09-01 01:55:44 +0000},
+	School = {Virginia Polytechnic Institute and State University},
+	Title = {{Reduced-Order Modeling of Complex Engineering and Geophysical Flows: Analysis and Computations}},
+	Year = {2012}}
+
+@phdthesis{ismail_thesis,
+	Author = {Farzad Ismail},
+	Date-Added = {2017-09-01 01:54:33 +0000},
+	Date-Modified = {2017-09-01 01:55:44 +0000},
+	School = {University of Michigan},
+	Title = {{Toward a reliable prediction of shocks in hypersonic flow: resolving carbuncles with entropy and vorticity control}},
+	Year = {2006}}
+
+@article{Germano,
+	Author = {M. Germano},
+	Date-Added = {2017-08-31 13:24:24 +0000},
+	Date-Modified = {2017-08-31 13:25:08 +0000},
+	Journal = {Journal of Fluid Mechanics},
+	Number = {238},
+	Pages = {325-336},
+	Title = {{Turbulence: the filtering approach}},
+	Year = {1992}}
+
+@article{Germano1,
+	Author = {M. Germano and U. Piomelli and P. Moin and W.H. Cabot},
+	Date-Added = {2017-08-31 13:22:47 +0000},
+	Date-Modified = {2017-08-31 13:24:20 +0000},
+	Journal = {Phys. Fluids},
+	Number = {3},
+	Pages = {1760-1765},
+	Title = {{A dynamic subgrid-scale eddy viscosity model}},
+	Volume = {A},
+	Year = {1991}}
+
+@article{LES_PLB,
+	Author = {S.B. Pope},
+	Date-Added = {2017-08-28 00:12:34 +0000},
+	Date-Modified = {2017-08-28 00:13:41 +0000},
+	Journal = {Fluid Mechanics and the Environment: Dynamical Approaches},
+	Pages = {239-265},
+	Title = {{Large-Eddy Simulation Using Projection onto Local Basis Functions}},
+	Year = {2001}}
+
+@article{MILES,
+	Author = {J.P. Boris and F.F. Grinstein and E.S. Oran and R.J. Kolbe},
+	Date-Added = {2017-08-28 00:10:25 +0000},
+	Date-Modified = {2017-08-28 00:11:39 +0000},
+	Journal = {Fluid Dynamics Research},
+	Number = {199-227},
+	Title = {{New Insights into Large Eddy Simulation}},
+	Volume = {4-6},
+	Year = {1992}}
+
+@article{hughes1,
+	Author = {Thomas J.R. Hughes and GR Feijoo and L Mazzei and JB Qunicy},
+	Date-Added = {2017-08-27 23:59:25 +0000},
+	Date-Modified = {2017-08-28 00:00:36 +0000},
+	Journal = {Computer methods in applied mechanics and engineering},
+	Pages = {173-189},
+	Title = {{The variational multiscale method - a paradigm for computational mechanics}},
+	Volume = {166},
+	Year = {1998}}
+
+@article{hughes0,
+	Author = {Thomas J.R. Hughes},
+	Date-Added = {2017-08-27 23:57:30 +0000},
+	Date-Modified = {2017-08-27 23:59:22 +0000},
+	Journal = {Comput. Methods Appl. Mech. Eng.},
+	Pages = {387-401},
+	Title = {{Multiscale phenomena: Green's functions, the Dirichlet-to-Neumann formulation, subgridscale models, bubbles and the origins of stabilized methods}},
+	Volume = {127},
+	Year = {1995}}
+
+@article{schumann,
+	Author = {U. Schumann},
+	Date-Added = {2017-08-27 23:54:15 +0000},
+	Date-Modified = {2017-08-27 23:55:03 +0000},
+	Journal = {Journal of Computational Physics},
+	Number = {3},
+	Pages = {429-438},
+	Title = {{Subgrid-scale model for finite difference simulation of turbulent flows in plane channels and annuli}},
+	Volume = {85},
+	Year = {1975}}
+
+@article{deardoff,
+	Author = {JW Deardoff},
+	Date-Added = {2017-08-27 23:52:55 +0000},
+	Date-Modified = {2017-08-27 23:54:08 +0000},
+	Journal = {Journal of Fluid Mechanics},
+	Number = {2},
+	Pages = {453-480},
+	Title = {{A numerical study of three-dimensional turbulent channel flow at large Reynolds numbers}},
+	Volume = {41},
+	Year = {1970}}
+
+@article{Stinis-rMZ,
+	Author = {Panos Stinis},
+	Date-Added = {2016-10-30 16:12:12 +0000},
+	Date-Modified = {2017-12-21 18:09:28 +0000},
+	Journal = {Commun. Appl. Math. Comput. Sci.},
+	Number = {1},
+	Pages = {39-66},
+	Title = {{Renormalized reduced models for singular PDEs}},
+	Volume = {8},
+	Year = {2013}}
+
+@article{CTR16,
+	Author = {Eric Parish and Karthik Duraisamy},
+	Journal = {Proceedings of the Summer Program, Center for Turbulence Research, Stanford University},
+	Title = {{A Dynamic Subgrid Scale Model for LES based on the Mori-Zwanzig Formalism}},
+	Year = {2016}}
+
+@article{MoserChannel,
+	Author = {R. Moser and J. Kim and N. Mansour},
+	Date-Added = {2016-09-06 11:26:54 +0000},
+	Date-Modified = {2016-09-06 11:27:57 +0000},
+	Journal = {Physics of Fluids},
+	Number = {4},
+	Pages = {943-945},
+	Title = {{Direct numerical simulation of channel flow up to $Re_{\tau}$ = 590}},
+	Volume = {11},
+	Year = {1999}}
+
+@article{MoinChannel1,
+	Author = {P. Moin and J. Kim},
+	Date-Added = {2016-09-01 13:35:21 +0000},
+	Date-Modified = {2016-09-01 13:36:25 +0000},
+	Journal = {Journal of Computational Physics},
+	Number = {35},
+	Pages = {381-392},
+	Title = {{On the Numerical Solution of Time-Dependent Viscous Incompressible Fluid Flows Involving Solid Boundaries}},
+	Year = {1980}}
+
+@article{LagrangianDynamic,
+	Author = {Charles Meneveau and Thomas S. Lund and William H. Cabot},
+	Date-Added = {2016-08-31 13:31:03 +0000},
+	Date-Modified = {2016-08-31 13:32:06 +0000},
+	Journal = {Journal of Fluid Mechanics},
+	Pages = {353-385},
+	Title = {{A Lagrangian dynamic subgrid-scale model of turbulence}},
+	Volume = {319},
+	Year = {1996}}
+
+@article{HaldPredictFromData,
+	Author = {Alexandre J. Chorin and Ole H. Hald and Raz Kupferman},
+	Date-Added = {2016-05-11 22:21:19 +0000},
+	Date-Modified = {2016-05-11 22:22:35 +0000},
+	Journal = {Journal of Scientific Computing},
+	Month = {September},
+	Number = {2-3},
+	Pages = {245-261},
+	Title = {{Prediction from Partial Data, Renormalization, and Averaging}},
+	Volume = {28},
+	Year = {2006}}
+
+@book{adolc,
+	Author = {A. Walther und A. Griewank},
+	Date-Added = {2016-05-09 16:21:55 +0000},
+	Date-Modified = {2016-05-11 23:27:51 +0000},
+	Publisher = {Chapman-Hall CRC Computational Science},
+	Title = {{Getting started with ADOL-C. In Combinatorial Scientific Computing.}},
+	Year = {2012}}
+
+
+@book{kfid_cfdnotes,
+	Author = {Krzysztof Fidkowski},
+	Date-Added = {2016-05-09 16:21:55 +0000},
+	Date-Modified = {2016-05-11 23:27:51 +0000},
+	Month = {February},
+	Publisher = {Aero 623 Course Notes},
+	Title = {{Advanced Computational Fluid Dynamics}},
+	Year = {2017}}
+
+@book{PrinciplesOfMultiscaleModeling,
+	Author = {Weinan E},
+	Date-Added = {2016-05-09 16:21:55 +0000},
+	Date-Modified = {2016-05-11 23:27:51 +0000},
+	Month = {May},
+	Publisher = {Cambridge},
+	Title = {{Principles of Multiscale Modeling}},
+	Year = {2011}}
+
+@article{GivonOrthogonal,
+	Author = {Dror Givon and Ole H. Hald and Raz Kupferman},
+	Date-Added = {2016-05-09 16:12:24 +0000},
+	Date-Modified = {2016-05-09 16:13:39 +0000},
+	Journal = {Israel Journal of Mathematics},
+	Number = {1},
+	Pages = {221-241},
+	Title = {{Existence Proof for Orthogonal Dynamics and the Mori-Zwanzig Formalism}},
+	Volume = {145},
+	Year = {2005}}
+
+@article{MoriTransport,
+	Author = {H. Mori},
+	Date-Added = {2016-05-09 16:11:31 +0000},
+	Date-Modified = {2016-05-09 16:12:20 +0000},
+	Journal = {Prog. Theoret. Phys},
+	Number = {3},
+	Pages = {423-455},
+	Title = {{Transport, collective motion, and Brownian motion}},
+	Volume = {33},
+	Year = {1965}}
+
+@article{ZwanzigTransport,
+	Author = {R. Zwanzig},
+	Date-Added = {2016-05-09 16:11:31 +0000},
+	Date-Modified = {2016-05-09 16:12:20 +0000},
+	Journal = {Phys. Rev.},
+	Number = {4},
+	Pages = {983},
+	Title = {{Memory Effects in Irreversible Thermodynamics}},
+	Volume = {124},
+	Year = {1961}}
+
+@inbook{ZwanzigTransport2,
+	Author = {R. Zwanzig},
+	Chapter = {Problems in nonlinear transport theory},
+	Date-Added = {2016-05-09 16:10:37 +0000},
+	Date-Modified = {2016-05-09 16:11:30 +0000},
+	Title = {S}}
+
+@article{ZwanzigLangevin,
+	Author = {R. Zwanzig},
+	Date-Added = {2016-05-09 16:09:30 +0000},
+	Date-Modified = {2016-05-09 16:10:29 +0000},
+	Journal = {Journal of Statistical Physics},
+	Pages = {215-220},
+	Title = {{Nonlinear generalized Langevin equations}},
+	Year = {1973}}
+
+@article{vreman,
+	Author = {AW Vreman},
+	Date-Added = {2016-04-10 15:16:06 +0000},
+	Date-Modified = {2016-04-10 15:16:59 +0000},
+	Journal = {Physics of Fluids},
+	Number = {10},
+	Title = {{An eddy-viscosity subgrid-scale model for turbulent shear flow: Algebraic theory and applications}},
+	Volume = {16},
+	Year = {2004}}
+
+@article{vms_eps,
+	Author = {Z. Wang and A.A. Oberai},
+	Date-Added = {2016-04-10 15:16:06 +0000},
+	Date-Modified = {2016-04-10 15:16:59 +0000},
+	Journal = {Comput. Methods Appl. Mech. Engrg.},
+	Number = {13-16},
+	Title = {{Spectral analysis of the dissipation of the residual-based variational multiscale method}},
+	Volume = {199},
+	Year = {2010}}
+
+@article{hughes_les,
+	Author = {Y. Bazilevs and V.M. Calo and J.A. Cottrell and T.J.R. Hughes and A. Reali and G. Scovazzi},
+	Date-Added = {2016-04-10 15:16:06 +0000},
+	Date-Modified = {2016-04-10 15:16:59 +0000},
+	Journal = {Comput. Methods Appl. Mech. Engrg.},
+	Number = {1-4},
+	Title = {{Variational multiscale residual-based turbulence modeling for large eddy simulation of incompressible flows}},
+	Volume = {197},
+	Year = {2007}}
+
+@article{hughes,
+	Author = {Thomas J.R. Hughes and Luca Mazzei and Kenneth E. Jansen},
+	Date-Added = {2016-04-10 15:16:06 +0000},
+	Date-Modified = {2016-04-10 15:16:59 +0000},
+	Journal = {Computing and Visualization in Science},
+	Title = {{Large Eddy Simulation and the variational multiscale method}},
+	Year = {2000}}
+
+@article{gravemeir,
+	Author = {Volker Gravemeier},
+	Date-Added = {2016-04-10 15:13:35 +0000},
+	Date-Modified = {2016-04-10 15:14:48 +0000},
+	Journal = {Journal of Computational Physics},
+	Number = {212},
+	Pages = {400-435},
+	Title = {{Scale-separating operators for variational multiscale large eddy simulation of turbulent flows}},
+	Year = {2006}}
+
+@article{OrtizHierarchical,
+	Author = {E.B. Tadmor and R. Phillips and M. Ortiz},
+	Date-Added = {2016-04-08 16:05:22 +0000},
+	Date-Modified = {2016-04-08 16:06:31 +0000},
+	Journal = {International Journal of Solids and Structures},
+	Title = {{Hierarchical modeling in the mechanics of materials}},
+	Year = {2000}}
+
+@article{stinis_UQ2,
+	Author = {Panos Stinis},
+	Date-Added = {2016-04-03 17:01:22 +0000},
+	Date-Modified = {2016-04-03 17:04:00 +0000},
+	Journal = {arXiv preprint},
+	Title = {{Mori-Zwanzig reduced models for uncertainty quantification II: Initial condition uncertainty}},
+	Volume = {1212.6360v1},
+	Year = {2012}}
+
+@article{Darve_CGMZ,
+	Author = {Hee Sun Lee and Surl-Hee Ahn and Eric F. Darve},
+	Date-Added = {2016-04-03 16:44:02 +0000},
+	Date-Modified = {2016-04-04 12:53:11 +0000},
+	Journal = {MRS Proceedings},
+	Title = {{Building a Coarse-Grained Model Based on the Mori-Zwanzig Formalism}},
+	Volume = {1753},
+	Year = {2015}}
+
+@article{Karniadakis_CGMZ,
+	Author = {Zhen Li and Xin Bian and Xiantao Li and George Em Karniadakis},
+	Date-Added = {2016-04-03 16:40:11 +0000},
+	Date-Modified = {2016-04-03 16:41:51 +0000},
+	Journal = {The Journal of Chemical Physics},
+	Number = {24},
+	Title = {{Incorporation of memory effects in coarse-grained modeling via the Mori-Zwanzig formalism}},
+	Volume = {143},
+	Year = {2015}}
+
+@incollection{MZ_for_UQ,
+	Author = {Daniele Venturi and Heyrim Cho and George Em Karniadakis},
+	Booktitle = {Handbook on Uncertainty Quantification},
+	Date-Added = {2016-04-03 16:34:37 +0000},
+	Date-Modified = {2016-12-15 17:30:57 +0000},
+	Publisher = {Springer},
+	Title = {{The Mori-Zwanzig Approach to Uncertainty Quantification}},
+	Year = {2016}}
+
+@article{CGMethods,
+	Author = {Marissa G. Saunders and Gregory A. Voth},
+	Date-Added = {2016-04-03 14:48:43 +0000},
+	Date-Modified = {2016-04-03 14:49:51 +0000},
+	Journal = {Annu. Rev. Biophys.},
+	Number = {73},
+	Title = {{Coarse-Graining Methods for Computational Biology}},
+	Volume = {42},
+	Year = {2013}}
+
+@article{Pope10questions,
+	Author = {Stephen B. Pope},
+	Date-Added = {2016-04-03 14:29:30 +0000},
+	Date-Modified = {2016-04-03 14:30:13 +0000},
+	Journal = {New Journal of Physics},
+	Title = {{Ten questions concerning the large-eddy simulation of turbulent flows}},
+	Year = {2004}}
+
+@article{astroReview,
+	Author = {Rachel S. Somerville and Romell Dave},
+	Date-Added = {2016-03-27 13:55:21 +0000},
+	Date-Modified = {2016-03-27 13:56:40 +0000},
+	Journal = {The Annual Review of Astronomy and Astrophysics},
+	Title = {{Physical Models of Galaxy Formation in a Cosmological Framework}},
+	Year = {2015}}
+
+@article{Smagorinsky,
+	Author = {Joseph Smagorinsky},
+	Date-Added = {2016-03-26 03:18:24 +0000},
+	Date-Modified = {2016-03-26 03:20:08 +0000},
+	Journal = {Monthly Weather Review},
+	Month = {March},
+	Number = {3},
+	Pages = {99--164},
+	Title = {{General Circulation Experiments with the Primitive Equations}},
+	Volume = {91},
+	Year = {1963}}
+
+@phdthesis{BarberThesis,
+	Address = {CA},
+	Author = {J. L. Barber},
+	Date-Added = {2016-03-26 03:01:56 +0000},
+	Date-Modified = {2016-05-11 23:30:36 +0000},
+	School = {University of California, Berkeley},
+	Title = {{Application of Optimal Prediction to Molecular Dynamics}},
+	Year = {2004}}
+
+@article{ChorinOptimalPrediction,
+	Author = {Alexandre J. Chorin and O. Hald and R. Kupferman},
+	Date-Added = {2016-03-26 02:59:38 +0000},
+	Date-Modified = {2016-03-26 03:01:09 +0000},
+	Journal = {Proc. Natl Acad. Sci.},
+	Number = {(doi:10.1073/pnas.97.7.2968)},
+	Pages = {2968--2973},
+	Title = {{Optimal prediction and the Mori-Zwanzig representation of irreversible processes}},
+	Volume = {97},
+	Year = {2000}}
+
+@book{StatisticalMechanics,
+	Author = {Alexandre J. Chorin and Ole H. Hald},
+	Date-Added = {2016-03-26 02:56:05 +0000},
+	Date-Modified = {2016-05-11 23:37:32 +0000},
+	Publisher = {Springer},
+	Title = {{Stochastic Tools for Mathematics and Science}},
+	Year = {2013}}
+
+@conference{huang_combustion_roms,
+	Address = {Cincinnati, Ohio},
+	Author = {Cheng Huang and Karthik Duraisamy and Charles L. Merkle},
+	Booktitle = {2018 Joint Propulsion Conference, AIAA Propulsion and Energy Forum},
+	Date-Added = {2016-03-26 02:46:42 +0000},
+	Date-Modified = {2016-03-26 02:47:47 +0000},
+	Title = {{Challenges in Reduced Order Modeling of Reacing Flow}},
+	Year = {2018}}
+
+@conference{Ullmann_smag,
+	Address = {Lisbon, Portugal},
+	Author = {S. Ullmann and J. Lang},
+	Booktitle = {J.C.F. Pereira, A. Sequeira (Eds.), V European Conference on Computational Fluid Dynamics, ECCOMAS CFD},
+	Date-Added = {2016-03-26 02:46:42 +0000},
+	Date-Modified = {2016-03-26 02:47:47 +0000},
+	Title = {{A POD-Galerkin reduced model with updated coefficients for Smagorinsky LES}},
+	Year = {2010}}
+
+@conference{FFTW,
+	Address = {Atlanta, Georgia},
+	Author = {Matteo Frigo},
+	Booktitle = {Proceedings of the 1999 ACM SIGPLAN Conference on Programming Language Design and Implementation (PLDI '99)},
+	Date-Added = {2016-03-26 02:46:42 +0000},
+	Date-Modified = {2016-03-26 02:47:47 +0000},
+	Month = {May},
+	Title = {{A Fast Fourier Transform Compiler}},
+	Year = {1999}}
+
+@article{stinisHighOrderEuler,
+	Author = {Panagiotis Stinis},
+	Date-Added = {2016-03-26 02:41:52 +0000},
+	Date-Modified = {2017-12-21 18:07:13 +0000},
+	Journal = {Multiscale Model. Simul.},
+	Number = {3},
+	Pages = {741-760},
+	Title = {{Higher order Mori-Zwanzig models for the Euler equations}},
+	Volume = {6},
+	Year = {2007}}
+
+@techreport{Kalashnikova_sand2014,
+	Author = {Irina Kalashnikova and Srinivasan Arunajatesan and Matthew F. Barone and Bart G. van Bloemen Waanders and Jeffrey A. Fike},
+	Date-Added = {2016-03-26 02:38:55 +0000},
+	Date-Modified = {2016-03-26 02:40:16 +0000},
+	Institution = {Sandia},
+	Month = {May},
+	Number = {SAND2014-4693},
+	Title = {{Reduced Order Modeling for Prediction and Control of Large-Scale Systems}},
+	Type = {Report},
+	Year = {2014}}
+
+@techreport{nasa_timeles,
+	Author = {C. D. Pruett},
+	Date-Added = {2016-03-26 02:38:55 +0000},
+	Date-Modified = {2016-03-26 02:40:16 +0000},
+	Institution = {NASA},
+	Month = {July},
+	Number = {NAG1-02033},
+	Title = {{Temporal Large-Eddy Simulation}},
+	Type = {Final Report},
+	Year = {2004}}
+
+@techreport{rans_nasa_rev,
+	Author = {Karthik Duraisamy and Philippe R. Spalart and Christopher L. Rumsey	},
+	Date-Added = {2016-03-26 02:38:55 +0000},
+	Date-Modified = {2016-03-26 02:40:16 +0000},
+	Institution = {NASA},
+	Month = {November},
+	Number = {219682},
+	Title = {{Status, Emerging Ideas and Future Directions of Turbulence Modeling Research in Aeronautics}},
+	Type = {Technical Memorandum},
+	Year = {2017}}
+
+@techreport{Rogallo,
+	Author = {Robert S. Rogallo},
+	Date-Added = {2016-03-26 02:38:55 +0000},
+	Date-Modified = {2016-03-26 02:40:16 +0000},
+	Institution = {NASA},
+	Month = {September},
+	Number = {81315},
+	Title = {{Numerical Experiments in Homogeneous Turbulence}},
+	Type = {Technical Memorandum},
+	Year = {1981}}
+
+@conference{ZJWangBurgers,
+	Address = {Kissimmee, Florida},
+	Author = {Yanan Li and Z.J. Wang},
+	Booktitle = {53rd AIAA Aerospace Sciences Meeting},
+	Date-Added = {2016-03-26 02:23:25 +0000},
+	Date-Modified = {2016-05-11 23:38:54 +0000},
+	Month = {5-9 January},
+	Title = {{A Priori and A Posteriori Evaluations of Subgrid Stress Models with the Burgers' Equation}},
+	Year = {2015}}
+
+@article{ProblemReduction,
+	Author = {A. Chorin and P. Stinis},
+	Date-Added = {2016-01-15 03:28:21 +0000},
+	Date-Modified = {2016-01-15 03:29:24 +0000},
+	Journal = {Commun. Appl. Math. Comput. Sci.},
+	Pages = {239-257},
+	Title = {{Problem reduction, renormalization, and memory}},
+	Year = {2006}}
+
+@book{Chorin_book,
+	Author = {A. Chorin and O. Hald},
+	Date-Added = {2016-01-15 03:26:48 +0000},
+	Date-Modified = {2016-01-15 03:28:19 +0000},
+	Publisher = {Springer-Verlag},
+	Title = {{Stochastic Tools in Mathematics and Science}},
+	Year = {2005}}
+
+@article{Chorin_predictwithmem,
+	Author = {A. Chorin and O. Hald and R. Kupferman},
+	Date-Added = {2016-01-15 03:25:30 +0000},
+	Date-Modified = {2016-01-15 03:26:35 +0000},
+	Journal = {Phys. D},
+	Pages = {239-257},
+	Title = {{Optimal prediction with memory}},
+	Year = {2002}}
+
+@article{stinisEuler,
+	Author = {Ole H. Hald and P. Stinis},
+	Date-Added = {2016-01-14 22:15:23 +0000},
+	Date-Modified = {2016-01-14 22:16:27 +0000},
+	Journal = {Proceedings of the National Academy of Sciences},
+	Number = {16},
+	Pages = {6527-6532},
+	Title = {{Optimal prediction and the rate of decay for solutions of the Euler equations in two and three dimensions}},
+	Volume = {104},
+	Year = {2007}}
+
+@article{stins_phasetransition,
+	Author = {P. Stinis},
+	Date-Added = {2016-01-14 22:12:01 +0000},
+	Date-Modified = {2016-01-14 22:13:22 +0000},
+	Journal = {arXiv},
+	Title = {{Phase Transition approach to detecting singularities of PDEs}},
+	Volume = {0812.4691},
+	Year = {2009}}
+
+@article{bernsteinBurgers,
+	Author = {David Bernstein},
+	Date-Added = {2016-01-14 22:10:49 +0000},
+	Date-Modified = {2016-02-26 05:03:27 +0000},
+	Journal = {Multiscale Model. Simul.},
+	Number = {1},
+	Pages = {27-52},
+	Title = {{Optimal Prediction of Burgers's Equation}},
+	Volume = {6},
+	Year = {2007}}
+
+@article{ChandyFrankelLES,
+	Author = {Abhilash J. Chandy and Steven H. Frankel},
+	Date-Added = {2016-01-14 22:08:32 +0000},
+	Date-Modified = {2016-03-26 03:05:04 +0000},
+	Journal = {Multiscale Model. Simul.},
+	Number = {2},
+	Pages = {445-462},
+	Title = {{The t-model as a Large Eddy Simulation model for the Navier-Stokes Equations}},
+	Volume = {8},
+	Year = {2009}}
+
+@article{stinis_finitememory,
+	Author = {Panos Stinis},
+	Date-Added = {2016-01-14 22:07:21 +0000},
+	Date-Modified = {2017-12-21 18:14:14 +0000},
+	Journal = {arXiv:1211.4285},
+	Title = {{Mori-Zwanzig reduced models for uncertainty quantification I: Parametric uncertainty}},
+	Year = {2012}}
+
+@article{RenormalizedMZ,
+	Author = {Panos Stinis},
+	Date-Added = {2016-01-14 22:06:48 +0000},
+	Date-Modified = {2017-12-21 18:16:33 +0000},
+	Journal = {Proceedings of The Royal Society A},
+	Number = {20140446},
+	Title = {{Renormalized Mori-Zwanzig-reduced models for systems without scale separation}},
+	Volume = {471},
+	Year = {2015}}
+
+@article{pymc,
+	Author = {A. Patil and D. Huard and C.J. Fonnesbeck},
+	Date-Added = {2015-09-23 01:27:16 +0000},
+	Date-Modified = {2015-09-23 01:28:47 +0000},
+	Journal = {Journal of Statistical Software},
+	Title = {{PyMC: Bayesian Stochastic Modelling in Python}},
+	Year = {2010}}
+
+@article{sc1,
+	Author = {Arendt, Paul D and Apley, Daniel W and Chen, Wei},
+	Journal = {Journal of Mechanical Design},
+	Number = {10},
+	Pages = {100908},
+	Publisher = {American Society of Mechanical Engineers},
+	Title = {{Quantification of model uncertainty: Calibration, model discrepancy, and identifiability}},
+	Volume = {134},
+	Year = {2012}}
+
+@book{sc2,
+	Author = {Smith, Ralph C},
+	Publisher = {SIAM},
+	Title = {{Uncertainty Quantification: Theory, Implementation, and Applications}},
+	Volume = {12},
+	Year = {2013}}
+
+@article{rasmussen,
+	Author = {Rasmussen, Carl Edward},
+	Publisher = {MIT Press},
+	Title = {{Gaussian processes for machine learning}},
+	Year = {2006}}
+
+@book{wilcox,
+	Author = {Wilcox, David C},
+	Publisher = {DCW industries La Canada, CA},
+	Title = {{Turbulence modeling for CFD}},
+	Volume = {2},
+	Year = {1998}}
+
+@article{giles,
+	Author = {Giles, Michael B and Duta, Mihai C , Jens-Dominik Mueller and Pierce, Niles A},
+	Journal = {AIAA journal},
+	Number = {2},
+	Pages = {198--205},
+	Title = {{Algorithm developments for discrete adjoint methods}},
+	Volume = {41},
+	Year = {2003}}
+
+@article{berliner,
+	Author = {L Mark Berliner and Kenneth Jezek and Noel Cressie and Youngku Kim and Calvin Lam and Cornelis Van Der Veen},
+	Date-Added = {2015-06-28 23:25:35 +0000},
+	Date-Modified = {2015-06-28 23:27:13 +0000},
+	Journal = {Journal of Glaciology},
+	Pages = {705-714},
+	Title = {{Modeling dynamic controls on ice streams: a Bayesian statistical approach}},
+	Volume = {54},
+	Year = {2008}}
+
+@techreport{Loepkky,
+	Author = {Jason L. Loeppky and Derek Bingham and William J. Welch},
+	Date-Added = {2015-06-28 21:04:01 +0000},
+	Date-Modified = {2015-06-28 21:05:52 +0000},
+	Institution = {University of British Columbia},
+	Title = {{Computer Model Calibration or Tuning in Practice}},
+	Year = {2006}}
+
+@article{Najm,
+	Author = {K. Sargsyan and H.N Najm and R. Ghanem},
+	Date-Added = {2015-06-28 20:57:57 +0000},
+	Date-Modified = {2015-06-28 20:59:43 +0000},
+	Journal = {International Journal of Chemical Kinetics},
+	Month = {April},
+	Number = {4},
+	Pages = {246-276},
+	Title = {{On the Statistical Calibration of Physical Models}},
+	Volume = {47},
+	Year = {2015}}
+
+@article{cheung,
+	Author = {Cheung, Sai Hung and Oliver, Todd A and Prudencio, Ernesto E and Prudhomme, Serge and Moser, Robert D},
+	Journal = {Reliability Engineering \& System Safety},
+	Number = {9},
+	Pages = {1137--1149},
+	Publisher = {Elsevier},
+	Title = {{Bayesian uncertainty analysis with applications to turbulence modeling}},
+	Volume = {96},
+	Year = {2011}}
+
+@article{KOH,
+	Author = {Marc C. Kennedy and Anthony OʼHagan},
+	Date-Added = {2015-06-28 20:43:03 +0000},
+	Date-Modified = {2015-06-28 20:44:17 +0000},
+	Journal = {Journal of the Royal Statistical Society. Series B (Statistical Methodology)},
+	Number = {3},
+	Pages = {425-464},
+	Title = {{Bayesian Calibration of Computer Models}},
+	Volume = {63},
+	Year = {2001}}
+
+@article{NLSD,
+	Author = {G. Kerschen and K. Worden and A.F. Vakakis and J.C. Golinval},
+	Date-Added = {2015-06-28 20:37:49 +0000},
+	Date-Modified = {2015-06-28 20:40:30 +0000},
+	Journal = {Mechanical System and Signal Processing},
+	Pages = {505-592},
+	Title = {{Past, Present, and Future of System Identification in Structural Dynamics}},
+	Volume = {20},
+	Year = {2006}}
+
+@inproceedings{navon,
+	Author = {Ionel M. Navon},
+	Booktitle = {Data Assimilation for Atmospheric, Oceanic, and Hydrologic Applications},
+	Date-Added = {2015-06-21 16:47:13 +0000},
+	Date-Modified = {2015-06-21 16:52:08 +0000},
+	Publisher = {Springer},
+	Title = {{Data Assimilation for Numerical Weather Prediction: A Review}},
+	Year = {2009}}
+
+@article{GouasmiMZ1,
+	Author = {Ayoub Gouasmi and Eric J. Parish and Karthik Duraisamy},
+	Date-Added = {2016-10-30 16:09:34 +0000},
+	Date-Modified = {2017-12-21 18:18:11 +0000},
+	Journal = {Proceedings of The Royal Society A},
+	Number = {20170385},
+	Title = {{A priori estimation of memory effects in reduced-order models of nonlinear systems using the Mori-Zwanzig formalism}},
+	Volume = {473},
+	Year = {2017}}
+
+@conference{parishAIAA2016,
+	Address = {Washington, D.C.},
+	Author = {Eric Parish and Karthik Duraisamy},
+	Booktitle = {46th AIAA Fluid Dynamics Conference, AIAA AVIATION Forum},
+	Date-Added = {2016-09-02 14:35:07 +0000},
+	Date-Modified = {2016-09-02 14:38:19 +0000},
+	Month = {June},
+	Title = {{Reduced Order Modeling of Turbulent Flows Using Statistical Coarse-graining}},
+	Year = {2016}}
+
+@conference{parishAIAA15,
+	Address = {Dallas, Texas},
+	Author = {Eric Parish and Karthik Duraisamy},
+	Booktitle = {AIAA Aviation and Aeronautics Forum and Exposition},
+	Date-Added = {2015-06-21 16:39:26 +0000},
+	Date-Modified = {2015-06-21 16:40:29 +0000},
+	Month = {June},
+	Title = {{Quantification of Turbulence Modeling Uncertainties Using Full Field Inversion}},
+	Year = {2015}}
+
+@article{BLv2k,
+	Author = {F. Billard and D. Laurence},
+	Date-Added = {2015-06-09 18:33:57 +0000},
+	Date-Modified = {2015-06-09 18:35:27 +0000},
+	Journal = {International Journal of Heat and Fluid Flow},
+	Title = {{A robust k-e-v2/k elliptic blending turbulence model applied to near-wall, separated and buoyant flows}},
+	Year = {2011}}
+
+@article{dow,
+	Author = {Dow, Eric and Wang, Qiqi},
+	Journal = {AIAA Paper},
+	Title = {{Quantification of Structural Uncertainties in the k- $\omega$ Turbulence Model}},
+	Volume = {1762},
+	Year = {2011}}
+
+@article{SARC,
+	Author = {P. R. Spalart and M. L. Shur},
+	Journal = {Aerospace Science and Technology},
+	Pages = {297-302},
+	Title = {{On the Sensitization of Turbulence Models to Rotation and Curvature}},
+	Volume = {1},
+	Year = {1997}}
+
+@article{lbfgs,
+	Author = {Dennis, Jr, John E and Mor{\'e}, Jorge J},
+	Journal = {SIAM review},
+	Number = {1},
+	Pages = {46--89},
+	Publisher = {SIAM},
+	Title = {{Quasi-Newton methods, motivation and theory}},
+	Volume = {19},
+	Year = {1977}}
+
+@conference{helenAIAA15,
+	Address = {Dallas, Texas},
+	Author = {Ze Jia Zhang and Karthik Duraisamy},
+	Booktitle = {AIAA Aviation and Aeronautics Forum and Exposition},
+	Date-Added = {2015-05-19 20:35:34 +0000},
+	Date-Modified = {2015-06-28 20:03:41 +0000},
+	Month = {June},
+	Title = {{Machine Learning Methods for Data-Driven Turbulence Modeling}},
+	Year = {2015}}
+
+@conference{sa,
+	Address = {Reno, NV},
+	Author = {P.R. Spalart and S.R. Allmaras},
+	Booktitle = {30th Aerospace Sciences Meeting and Exhibit},
+	Date-Added = {2015-05-19 02:12:22 +0000},
+	Date-Modified = {2015-05-19 02:14:21 +0000},
+	Month = {Jan},
+	Title = {{A One-Equation Turbulence Model for Aerodynamic Flows}},
+	Year = {1992}}
+
+@conference{ScitechDuraisamy2015,
+	Address = {Orlando, Florida},
+	Author = {K. Duraisamy and Z. Zhang and A.P. Singh},
+	Booktitle = {AIAA Scitech},
+	Date-Added = {2015-05-19 02:06:06 +0000},
+	Date-Modified = {2015-05-20 02:47:01 +0000},
+	Month = {January},
+	Title = {{New Approaches in Turbulence and Transition Modeling Using Data-driven Techniques}},
+	Year = {2015}}
+
+@article{Brynjarsdottir2014,
+	Author = {Jenn{\'y} Brynjarsd{\'o}ttir and Anthony OʼHagan},
+	Date-Added = {2015-05-19 02:00:15 +0000},
+	Date-Modified = {2015-05-19 02:04:15 +0000},
+	Journal = {Institute of Physics Publishing},
+	Title = {{Learning about physical parameters: The importance of model discrepancy}},
+	Year = {2014}}
+
+@conference{Olsen2015Scitech_3rdorderturbmodel,
+	Author = {Michael E. Olsen},
+	Booktitle = {53rd AIAA Aerospace Sciences Meeting},
+	Date-Added = {2015-05-19 01:57:47 +0000},
+	Date-Modified = {2015-05-19 01:59:55 +0000},
+	Title = {{Prediction of Large Separations with a Third-Order-Moment Model}},
+	Year = {2015}}
+
+@article{PressureIncompressible,
+	Author = {Philip M. Gresho and Robert L. Sani},
+	Date-Added = {2016-10-30 16:22:11 +0000},
+	Date-Modified = {2016-10-30 16:23:19 +0000},
+	Journal = {International Journal for Numerical Methods in Fluids},
+	Pages = {1111-1145},
+	Title = {{On pressure boundary conditions for the incompressible Navier-Stokes Equations}},
+	Volume = {7},
+	Year = {1987}}
+
+@article{Gerolymos_PressureStrain,
+	Author = {G.A. Gerolymos and C. Lo and I. Vallet},
+	Date-Added = {2015-05-19 01:55:12 +0000},
+	Date-Modified = {2015-05-19 01:57:36 +0000},
+	Journal = {Journal of Applied Mechanics},
+	Title = {{Tensorial Representation of Reynolds-stress pressure-strain redistribution}},
+	Year = {2010}}
+
+@conference{Poroseva_FORANS,
+	Author = {S.V. Poroseva and S.M. Murman},
+	Booktitle = {Proc. the AIAA Aviation and Aeronautics Forum and Exposition},
+	Date-Added = {2015-05-19 01:52:35 +0000},
+	Date-Modified = {2015-05-19 01:54:37 +0000},
+	Month = {June},
+	Title = {{Velocity/Pressure-Gradient Correlations in a FORANS Approach to Turbulence Modeling}},
+	Year = {2014}}
+
+@conference{CamposDursaisamyIaccarino2013,
+	Author = {Gianluca Iaccarino and Karthik Duraisamy and Alejandro Campos and Michael Emory and Sungmin Ryu},
+	Booktitle = {Bulletin of the American Physical Society},
+	Date-Added = {2015-05-19 01:47:59 +0000},
+	Date-Modified = {2015-05-19 01:52:29 +0000},
+	Title = {{Large eddy simulation of a wing-body junction flow}},
+	Year = {2014}}
+
+@article{Jimenez,
+	Author = {Javier Jimenez and Serio Hoyas},
+	Date-Added = {2015-05-17 20:33:50 +0000},
+	Date-Modified = {2015-05-17 20:35:02 +0000},
+	Journal = {Journal of Fluid Mechanics},
+	Pages = {215-236},
+	Title = {{Turbulent fluctuations above the buffer layer of wall-bounded flows}},
+	Volume = {611},
+	Year = {2008}}
+
+@article{hascoet2013tapenade,
+	Author = {L. Hasco{\"e}t and V. Pascual},
+	Date-Added = {2015-05-17 01:56:32 +0000},
+	Date-Modified = {2015-05-17 01:58:15 +0000},
+	Journal = {CM Transactions on Mathematical Software},
+	Title = {{The Tapenade Automatic Differentiation tool: Principles, Model, and Specification}},
+	Year = {2013}}
+
+@book{aster2013parameter,
+	Author = {Richard Aster},
+	Date-Added = {2015-05-17 01:50:42 +0000},
+	Date-Modified = {2015-05-17 01:53:32 +0000},
+	Publisher = {Elsevier Academic Press},
+	Title = {{Parameter Estimation and Inverse Problems}},
+	Year = {2005}}
+
+@conference{complexStep,
+	Author = {Kok-Lam Lai, John L. Crassidis},
+	Booktitle = {AIAA},
+	Date-Added = {2015-04-30 18:41:44 +0000},
+	Date-Modified = {2015-04-30 18:47:59 +0000},
+	Title = {{Generalizations of the Complex-Step Derivative Approximation}},
+	Year = {2006}}
+
+@misc{joqMart,
+	Author = {Joaquim R. R. A. Martins},
+	Date-Added = {2015-04-30 18:26:16 +0000},
+	Date-Modified = {2015-04-30 18:28:02 +0000},
+	Howpublished = {Personal Course Text},
+	Month = {January},
+	Title = {{AE588: Multidisciplinary Design Optimization}},
+	Year = {2014}}
+
+@misc{Anand,
+	Author = {Anand Pratap Singh},
+	Date-Added = {2015-04-30 18:21:35 +0000},
+	Date-Modified = {2015-04-30 18:22:01 +0000},
+	Title = {{Personal Correspondence}}}
+
+@techreport{adjoints,
+	Author = {C. Praveen},
+	Date-Added = {2015-04-30 18:07:33 +0000},
+	Date-Modified = {2015-04-30 18:09:15 +0000},
+	Institution = {National Aerospace Laboratories},
+	Month = {April},
+	Title = {{Adjoint code development and optimization using automatic differentiation}},
+	Year = {2006}}
+
+@unpublished{Caplan,
+	Author = {Philip Caplan},
+	Date-Added = {2015-04-30 18:03:33 +0000},
+	Date-Modified = {2015-05-19 02:19:53 +0000},
+	Month = {December},
+	Note = {Unpublished Academic Report, MIT},
+	Title = {{Numerical Computation of Second Derivatives with Applications to Optimization Problems}},
+	Year = {2012}}
+
+@periodical{Ge,
+	Author = {X Ge and S Arolla and P. Durbin},
+	Date-Added = {2015-02-27 16:58:03 +0000},
+	Date-Modified = {2015-02-27 16:58:52 +0000},
+	Journal = {Flow, Turbulence, and Combustion},
+	Title = {{A bypass transition model based on the intermitency function}},
+	Year = {2014}}
+
+@periodical{Edeling,
+	Author = {W N Edeling and P Cinnella and R P Dwight},
+	Date-Added = {2015-02-27 03:50:14 +0000},
+	Date-Modified = {2015-02-27 03:51:10 +0000},
+	Journal = {Journal of Computational Physics},
+	Title = {{Bayesian estimates of parameter variability in the k - e turbulence model}},
+	Year = {2014}}
+
+@periodical{k41,
+	Author = {A.N Kolmogorov},
+	Date-Added = {2015-02-27 03:32:31 +0000},
+	Date-Modified = {2015-02-27 03:34:19 +0000},
+	Journal = {Doklady Akademiya Nauk SSR},
+	Title = {{Local Structure of Turbulence in Incompressible Viscous Fluid for Very Large Reynolds Number}},
+	Year = {1941}}
+
+@techreport{cfd2030,
+	Author = {Mavriplis, Dimitri and Lurie, Elizabeth and Gropp, William and Darmofal, David and Alonso, Juan and Khodadoust, Abdollah and Slotnick, Jeffrey},
+	Date-Added = {2015-02-27 03:21:02 +0000},
+	Date-Modified = {2015-05-18 03:17:49 +0000},
+	Institution = {NASA},
+	Number = {CR-2014-218178},
+	Title = {{CFD Vision 2030 Study: A Path to Revolutionary Computational Aerosciences}},
+	Year = {2013}}
+
+@book{launder,
+	Author = {B.E. Launder and D.B. Spalding},
+	Date-Added = {2015-02-27 03:13:57 +0000},
+	Date-Modified = {2015-02-27 03:14:59 +0000},
+	Publisher = {Academic Press},
+	Title = {{Mathematical Models of Turbulence}},
+	Year = {1972}}
+
+@periodical{cebeci,
+	Author = {Tuncer Cebeci and A.M.O Smith},
+	Date-Added = {2015-02-27 03:08:57 +0000},
+	Date-Modified = {2015-02-27 03:26:07 +0000},
+	Journal = {Journal of Applied Mechanics},
+	Title = {{Analysis of Turbulent Boundary Layers}},
+	Volume = {Vol. 43},
+	Year = {1974}}
+
+@conference{Chien,
+	Author = {K-Y. Chien},
+	Booktitle = {AIAA 18th Aerospace Sciences Meeting},
+	Date-Added = {2015-02-27 03:03:31 +0000},
+	Date-Modified = {2015-02-27 03:04:34 +0000},
+	Title = {{Predictions of channel and boundary-layer flows with a low-Reynolds-number two-equation model of turbulence}},
+	Year = {1980}}
+
+@periodical{Reynolds,
+	Author = {Osborne Reynolds},
+	Date-Added = {2015-02-27 02:59:09 +0000},
+	Date-Modified = {2015-02-27 03:00:43 +0000},
+	Journal = {Philosophical Transactions of the Royal Society of London},
+	Title = {{On the Dynamical Theory of Incompressible Viscous Fluids and the Determination of the Criterion}},
+	Year = {1895}}
+
+@conference{Isaac,
+	Author = {Tobin Isaac and Noemi Petra and Georg Stadlera and Omar Ghattas},
+	Booktitle = {Journal of Computational Physics},
+	Date-Added = {2015-02-27 02:48:09 +0000},
+	Date-Modified = {2015-02-27 03:15:45 +0000},
+	Title = {{Scalable and efficient algorithms for the propagation of uncertainty from data through inference to prediction for large-scale problems, with application to flow of the Antarctic ice sheet}},
+	Year = {2014}}
+
+@conference{Leredde,
+	Author = {Y. Leredde and J.-L. Devenon, I. Dekeyser},
+	Booktitle = {European Geosciences Union},
+	Date-Added = {2015-02-27 02:45:14 +0000},
+	Date-Modified = {2015-02-27 03:16:17 +0000},
+	Title = {{Turbulent viscosity optimized by data assimilation}},
+	Year = {1999}}
+
+@conference{Kato,
+	Author = {Hiroshi Kato and Shigeru Obayashi},
+	Booktitle = {16TH AIAA Non-Determinisitc Approaches Conference},
+	Date-Added = {2015-02-27 02:40:24 +0000},
+	Date-Modified = {2015-02-27 03:15:51 +0000},
+	Organization = {The American Institute of Aeronautics and Astronautics},
+	Title = {{Data Assimilation for Turbulent Flows}},
+	Year = {2014}}
+
+@conference{Yarlanki,
+	Address = {San Diego, CA},
+	Author = {S. Yarlanki and B. Rajendran and H. Hamann},
+	Booktitle = {Thermal and Thermomechanical Phenomena in Electronic Systems},
+	Date-Added = {2015-02-27 02:37:44 +0000},
+	Date-Modified = {2015-05-19 02:18:04 +0000},
+	Pages = {38 - 42},
+	Title = {{Estimation of turbulence closure coefficients for data centers using machine learning algorithms}},
+	Year = {2012}}
+
+@conference{tracey,
+	Author = {Brendan D. Tracey and Karthikeyan Duraisamy and Juan J. Alonso},
+	Booktitle = {53rd AIAA Aerospace Sciences Meeting.},
+	Date-Added = {2015-02-27 02:33:23 +0000},
+	Date-Modified = {2015-02-27 03:16:29 +0000},
+	Organization = {The American Institute of Aeronautics and Astronautics},
+	Title = {{A Machine Learning Strategy to Assist Turbulence Model Development}},
+	Year = {2015}}
+
+@conference{kdur,
+	Author = {Karthkeyan Duraisamy and Ze J. Zhange and Anand Pratap Singh},
+	Booktitle = {53rd AIAA Aerospace Sciences Meeting},
+	Date-Added = {2015-02-27 02:28:20 +0000},
+	Date-Modified = {2015-02-27 03:16:04 +0000},
+	Organization = {The American Institute of Aeronautics and Astronautics},
+	Title = {{New Approaches in Turbulence and Transition Modeling Using Data-driven Techniques}},
+	Year = {2015}}
+
+@book{Wilcox,
+	Author = {David C. Wilcox},
+	Date-Added = {2015-02-27 02:11:03 +0000},
+	Date-Modified = {2015-02-27 02:12:09 +0000},
+	Publisher = {DCW Industries},
+	Title = {{Turbulence Modeling for CFD}},
+	Volume = {Third Edition},
+	Year = {2006}}
+
+@book{durbin,
+	Author = {Karthik Rudra Reddy and Paul Durbin},
+	Title = {{Personal communication}},
+	Year = {2015}}
+
+@book{napvv,
+	Author = {National Research Council},
+	Publisher = {National Academies Press},
+	Title = {{Assessing the reliability of complex models: mathematical and statistical foundations of verification, validation, and uncertainty quantification}},
+	Year = {2012}}
+
+@article{KOH2,
+	Author = {Kennedy, Marc C and Anderson, Clive W and Conti, Stefano and O'Hagan, Anthony},
+	Journal = {Reliability Engineering \& System Safety},
+	Number = {10},
+	Pages = {1301--1309},
+	Publisher = {Elsevier},
+	Title = {{Case studies in Gaussian process modelling of computer codes}},
+	Volume = {91},
+	Year = {2006}}
+
+@article{physical,
+	Author = {Brynjarsd{\'o}ttir, Jenn{\`y} and OʼHagan, Anthony},
+	Journal = {Inverse Problems},
+	Number = {11},
+	Pages = {114007},
+	Publisher = {IOP Publishing},
+	Title = {{Learning about physical parameters: The importance of model discrepancy}},
+	Volume = {30},
+	Year = {2014}}
+
+@article{KOH3,
+	Author = {Conti, Stefano and Gosling, John Paul and Oakley, Jeremy E and O'hagan, Anthony},
+	Journal = {Biometrika},
+	Pages = {asp028},
+	Publisher = {Biometrika Trust},
+	Title = {{Gaussian process emulation of dynamic computer codes}},
+	Year = {2009}}
+
+@article{model_class,
+	Author = {Beck, Jim L and Katafygiotis, Lambros S},
+	Journal = {Journal of Engineering Mechanics},
+	Number = {4},
+	Pages = {455--461},
+	Publisher = {American Society of Civil Engineers},
+	Title = {{Updating models and their uncertainties. I: Bayesian statistical framework}},
+	Volume = {124},
+	Year = {1998}}
+
+@article{soize,
+	Author = {Soize, C},
+	Journal = {Journal of Sound and Vibration},
+	Number = {10},
+	Pages = {2379--2395},
+	Publisher = {Elsevier},
+	Title = {{Stochastic modeling of uncertainties in computational structural dynamics recent theoretical advances}},
+	Volume = {332},
+	Year = {2013}}
+
+@book{mehta,
+	Author = {Mehta, Madan Lal},
+	Publisher = {Academic press},
+	Title = {{Random matrices}},
+	Volume = {142},
+	Year = {2004}}
+
+@article{sod,
+	Author = {Sod, Gary A.},
+	Journal = {Journal of Computational Physics},
+	Pages = {1--31},
+	Publisher = {Elsevier},
+	Title = {{Survey of several finite difference methods for systems of nonlinear hyperbolic conservation laws}},
+	Volume = {27},
+	Year = {1978}}
+
+@article{berkooz_turbulence_pod,
+	Author = {Berkooz, Gal and Holmes, Philip and Lumley, John L.},
+	Journal = {Annu. Rev. Fluid Mech.},
+	Pages = {539--575},
+	Publisher = {Annual Reviews},
+	Title = {The proper orthogonal decomposition in the analysis of turbulent flows},
+	Volume = {25},
+	Year = {1993}}
+
+@article{kerschen_mech_pod,
+	Author = {Kerschen, Gaetan and Golinval, Jean-Claude and Vakakis, Alexander F. and Bergman, Lawrence A.},
+	Journal = {Nonlinear Dynamics},
+	Pages = {147--169},
+	Publisher = {Springer},
+	Title = {The method of proper orthogonal decomposition for dynamical characterization and order reduction in mechanical systems: An overview},
+	Volume = {41},
+	Year = {2005}}
+
+@article{chatterjee_pod_intro,
+	Author = {Chatterjee, Anindya},
+	Journal = {Current Science},
+	Number = {7},
+	Pages = {808--817},
+	Publisher = {JSTOR},
+	Title = {An introduction to the proper orthogonal decomposition},
+	Volume = {78},
+	Year = {2000}}
+
+@article{padhi_neural_net_pod,
+	Author = {Padhi, Radhakant and Balakrishnan, S.N.},
+	Journal = {Neural Networks},
+	Pages = {719--728},
+	Publisher = {Elsevier},
+	Title = {Proper orthogonal decomposition based optimal neurocontrol synthesis of a chemical reactor process using approximate dynamic programming},
+	Volume = {16},
+	Year = {2003}}
+
+@article{aubry_mixlength_pod,
+	Author = {Aubry, Nadine and Holmes, Philip and Lumley, John L. and Stone, Emily},
+	Journal = {J. Fluid Mech.},
+	Pages = {115--173},
+	Publisher = {Cambridge University Press},
+	Title = {The dynamics of coherent structures in the wall region of a turbulent boundary layer},
+	Volume = {192},
+	Year = {1988}}
+
+@article{cao_meteorology_pod,
+	Author = {Cao, Yanhua and Zhu, Jiang and Navon, I.M. and Luo Zhengdong},
+	Journal = {Int. J. Numer. Meth. Fluids},
+	Pages = {1571--1583},
+	Publisher = {Wiley},
+	Title = {A reduced-order approach to four-dimensional variational data assimilation using proper orthogonal decomposition},
+	Volume = {53},
+	Year = {2007}}
+
+@book{holmes_turbstruct_pod,
+	Author = {Holmes, Philip and Lumley, John L. and Berkooz, Gahl and Rowley, Clarence W.},
+	Publisher = {Cambridge University Press},
+	Title = {Turbulence, coherent structures, dynamical systems and symmetry},
+	Year = {2012}}
+
+@article{sirovich_symmetry_trans,
+	Author = {Sirovich, Lawrence},
+	Journal = {Quarterly of Applied Mathematics},
+	Number = {3},
+	Pages = {573--582},
+	Publisher = {Brown University},
+	Title = {Turbulence and the dynamics of coherent structures. II: Symmetries and transformations},
+	Volume = {45},
+	Year = {1987}}
+
+@article{brooks_supg,
+	Author = {Alexander N. Brooks and Thomas J.R. Hughes},
+	Journal = {Comput. Method Appl. M.},
+	Pages = {199--259},
+	Publisher = {North-Holland},
+	Title = {Streamline upwind/Petrov-Galerkin formulations for convection dominated flows with particular emphasis on the incompressible Navier-Stokes equations},
+	Volume = {32},
+	Year = {1982}}
+
+@article{hughes_petrovgalerkin,
+	Author = {Thomas J.R. Hughes and Tayfun E. Tezduyar},
+	Journal = {Comput Method Appl. M.},
+	Pages = {217--284},
+	Publisher = {North-Holland},
+	Title = {Finite element methods for first-order hyperbolic systems with particular emphasis on the compressible Euler equations},
+	Volume = {45},
+	Year = {1984}}
+
+@article{qdeim_drmac,
+	Author = {Zlatko Drmac and Serkan Gugercin},
+	Issue = {2},
+	Journal = {J. Sci. Comput.},
+	Pages = {A631--A648},
+	Publisher = {SIAM},
+	Title = {A new selection operator for the discrete empirical Interpolation method---Improved a priori error bound and extensions},
+	Volume = {38},
+	Year = {2016}}
+
+@article{adeim_peherstorfer,
+	Author = {Benjamin Peherstorfer and Karen Willcox},
+	Issue = {4},
+	Journal = {J. Sci. Comput.},
+	Pages = {A2123--A2150},
+	Publisher = {SIAM},
+	Title = {Online adaptive model reduction for nonlinear systems via low-rank updates},
+	Volume = {37},
+	Year = {2015}}
+
+@article{qr_decomp_gu,
+	Author = {Ming Gu and Stanley C. Eisenstat},
+	Issue = {4},
+	Journal = {J. Sci. Comput.},
+	Pages = {848--869},
+	Publisher = {SIAM},
+	Title = {Efficient algorithms for computing a strong rank-revealing QR factorization},
+	Volume = {17},
+	Year = {1996}}
