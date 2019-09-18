@@ -14,13 +14,23 @@ The direct solution technique seeks to minimize the fully discrete objective fun
 Leveraging the definition of the fully discrete objective function~\eqref{eq:obj_lms}, and assuming $N \nstepsArg{n} \ge \stdimArg{n}$, \methodAcronym\ leveraging a \spaceTimeAcronym\ basis is given by, 
  \begin{equation}\label{eq:obj_gen_lms_final_st}
 \begin{split}
-&\stgenstateArg{n} = \underset{\stgenstatey}{\text{arg\,min } }
+& \underset{\stgenstatey}{\text{minimize } }
 \objectiveArgLMS{n} (\stbasisArg{n}{\timeWindowArg{n}{0}} \stgenstatey + \stateInterceptArg{n},\ldots,\stbasisArg{n}{\timeWindowArg{n}{\nstepsArg{n}}} \stgenstatey + \stateInterceptArg{n})  \\
-&\text{subject to } \;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateArg{n} = \begin{cases} 
+&\text{subject to } \;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateyArg{n} = \begin{cases} 
 \mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs, \\ 
 \mathbb{P}^n(\stateFOMArgnt{1})(0) &
 n=1. \end{cases}\end{split} 
 \end{equation}
+
+% \begin{equation}\label{eq:obj_gen_lms_final_st}
+%\begin{split}
+%&\stgenstateArg{n} = \underset{\stgenstatey}{\text{arg\,min } }
+%\objectiveArgLMS{n} (\stbasisArg{n}{\timeWindowArg{n}{0}} \stgenstatey + \stateInterceptArg{n},\ldots,\stbasisArg{n}{\timeWindowArg{n}{\nstepsArg{n}}} \stgenstatey + \stateInterceptArg{n})  \\
+%&\text{subject to } \;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateArg{n} = \begin{cases} 
+%\mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs, \\ 
+%\mathbb{P}^n(\stateFOMArgnt{1})(0) &
+%n=1. \end{cases}\end{split} 
+%\end{equation}
  
 The minimization problem~\eqref{eq:obj_gen_lms_final_st} can be solved, e.g, via the Gauss-Newton method.
 
@@ -32,14 +42,23 @@ For the limiting case where the window size spans the entire domain, $\DeltaSlab
 As opposed to the direct solution technique, the indirect solution technique directly minimizes the continuous objective function~\eqref{eq:obj_gen_slab_spacetime},
 \begin{equation}\label{eq:obj_gen_slab2}
 \begin{split}
- &\stgenstate^n =
-\underset{\stgenstatey}{\text{arg\,min }} \mathcal{J}^n \bigg( \stbasisArgnt{n} \stgenstatey + \stateInterceptArg{n}  \bigg) \\  
-&\text{subject to } \;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateArg{n} = \begin{cases} 
+ & \underset{\stgenstatey}{\text{minimize }} \mathcal{J}^n \bigg( \stbasisArgnt{n} \stgenstatey + \stateInterceptArg{n}  \bigg) \\  
+&\text{subject to } \;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateyArg{n} = \begin{cases} 
 \mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs, \\ 
 \mathbb{P}^n(\stateFOMArgnt{1})(0) &
 n=1. \end{cases} 
 \end{split} 
 \end{equation}
+%\begin{equation}\label{eq:obj_gen_slab2}
+%\begin{split}
+% &\stgenstate^n =
+%\underset{\stgenstatey}{\text{arg\,min }} \mathcal{J}^n \bigg( \stbasisArgnt{n} \stgenstatey + \stateInterceptArg{n}  \bigg) \\  
+%&\text{subject to } \;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateArg{n} = \begin{cases} 
+%\mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs, \\ 
+%\mathbb{P}^n(\stateFOMArgnt{1})(0) &
+%n=1. \end{cases} 
+%\end{split} 
+%\end{equation}
 %The first order optimality conditions are given by,
 %\begin{equation}\label{eq:st_stationary}
 % \intSlabArg{n} \bigg[ \stbasisDotArg{n}{t}^T  - \stbasisArg{n}{t}^T \bigg[\frac{\partial
@@ -50,15 +69,25 @@ discretization of the integral. We introduce $\ncollocSTArg{n} \ge \text{ciel}(\
 $$\timeStartArg{n} \le \collocPointSTArg{n}{1} \le \ldots \le \collocPointSTArg{n}{\ncollocSTArg{n}} \le \timeEndArg{n}.$$
 Leveraging these collocation points, the indirect method for \methodAcronym\ with a \spaceTimeAcronym\ trial space yields,
 \begin{equation}\label{eq:obj_gen_slab2} 
-\begin{split}&\stgenstate^n =
-\underset{\stgenstatey}{\text{arg\,min }} \objectiveDiscreteSTArg{n} \bigg( \stbasisArgnt{n} \stgenstatey + \stateInterceptArg{n}  \bigg) , \\
-&\text{subject to }\;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateArg{n} = \begin{cases} 
+\begin{split}
+&\underset{\stgenstatey}{\text{minimize }} \objectiveDiscreteSTArg{n} \bigg( \stbasisArgnt{n} \stgenstatey + \stateInterceptArg{n}  \bigg) , \\
+&\text{subject to }\;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateyArg{n} = \begin{cases} 
 \mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs, \\ 
 \mathbb{P}^n(\stateFOMArgnt{1})(0) &
 n=1,
 \end{cases}
 \end{split} 
 \end{equation}
+%\begin{equation}\label{eq:obj_gen_slab2} 
+%\begin{split}&\stgenstate^n =
+%\underset{\stgenstatey}{\text{arg\,min }} \objectiveDiscreteSTArg{n} \bigg( \stbasisArgnt{n} \stgenstatey + \stateInterceptArg{n}  \bigg) , \\
+%&\text{subject to }\;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateArg{n} = \begin{cases} 
+%\mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs, \\ 
+%\mathbb{P}^n(\stateFOMArgnt{1})(0) &
+%n=1,
+%\end{cases}
+%\end{split} 
+%\end{equation}
 where the discrete objective function is given by, 
 $$\objectiveDiscreteSTArg{n}: \stgenstatey \mapsto \sum_{i=1}^{\ncollocSTArg{n}} \gamma_i 
 \bigg[ \stbasisDotArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ }  - \velocity (\stbasisArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ } + \stateInterceptArg{n},\collocPointSTArg{n,i}) \bigg]^T 

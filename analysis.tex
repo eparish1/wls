@@ -21,11 +21,22 @@ For sequential minimization over infinitesimal time window and \spatialAcronym\ 
 %\begin{equation}
 % \genstate^n(t) = \underset{\genstatey}{\text{argmin }} \mathcal{J}^n(\decoder(\genstatey) ) , \qquad n = 1,2,\ldots,\nslabs,
 %\end{equation}
-The \methodAcronym\ approach consists of solving the following sequence of minimization problems,
+The \methodAcronym\ approach comprises solving the following sequence of minimization problems for $\genstateArgnt{n}$,
 \begin{equation}\label{eq:obj_proof}
-  \genstateArgnt{n} =  \underset{\genstatey}{\text{argmin }} \frac{1}{2} \intSlabArg{n} \big[ \basisspace \genstateyDotArg{}{t}  - \velocity(\basisspace \genstateyArg{}{t} + \stateIntercept,t) \big]^T \stweightingMatArg{n} \big[\basisspace \genstateyDotArg{}{t} - \velocity( \basisspace \genstateyArg{}{t} + \stateIntercept,t )\big] d t %, \qquad n = 1,2,\ldots,\nslabs,
+\begin{split}
+      & \underset{\genstateyArgnt{n} \in \RR{\romdim}}{\text{minimize}}\; \mathcal{J}^n(\basisspace \genstateyArgnt{n} + \stateIntercept), \\ 
+      & \text{subject to }\; \genstateyArg{n}{\timeStartArg{n}} =
+\begin{cases} \genstateArg{n-1}{\timeEndArg{n-1}} & n = 2,\ldots,\nslabs \\
+\genstateIC & n=1, \end{cases} 
+\end{split}
 \end{equation}
-for $n = 1,2,\ldots,\nslabs$ and subject to $\genstate^n(\timeStartArg{n}) = \genstate^{n-1}(\timeEndArg{n-1} )$ for $n>1$ and $\genstate^1(0) = \genstateIC$. Letting $\minintegrandArg{n}(\genstateyDiscrete,\dot{\genstateyDiscrete},t)$ denote the integrand in~\eqref{eq:obj_proof} (as defined in~\eqref{eq:integrand}) and following the derivation of the Euler--Lagrange equations presented in Appendix~\ref{appendix:eulerlagrange} leads to the sequence of systems to be solved for $\genstate^n$,
+for $n = 1,2,\ldots,\nslabs$. Letting $\minintegrandArg{n}(\genstateyDiscrete,\dot{\genstateyDiscrete},t)$ denote the integrand in~\eqref{eq:obj_proof} (as defined in~\eqref{eq:integrand}) and following the derivation of the Euler--Lagrange equations presented in Appendix~\ref{appendix:eulerlagrange} leads to the sequence of systems to be solved for $\genstate^n$,
+%for $n = 1,2,\ldots,\nslabs$ and subject to $\genstate^n(\timeStartArg{n}) = \genstate^{n-1}(\timeEndArg{n-1} )$ for $n>1$ and $\genstate^1(0) = \genstateIC$. Letting $\minintegrandArg{n}(\genstateyDiscrete,\dot{\genstateyDiscrete},t)$ denote the integrand in~\eqref{eq:obj_proof} (as defined in~\eqref{eq:integrand}) and following the derivation of the Euler--Lagrange equations presented in Appendix~\ref{appendix:eulerlagrange} leads to the sequence of systems to be solved for $\genstate^n$,
+
+%\begin{equation}\label{eq:obj_proof}
+%  \genstateArgnt{n} =  \underset{\genstatey}{\text{argmin }} \frac{1}{2} \intSlabArg{n} \big[ \basisspace \genstateyDotArg{}{t}  - \velocity(\basisspace \genstateyArg{}{t} + \stateIntercept,t) \big]^T \stweightingMatArg{n} \big[\basisspace \genstateyDotArg{}{t} - \velocity( \basisspace \genstateyArg{}{t} + \stateIntercept,t )\big] d t %, \qquad n = 1,2,\ldots,\nslabs,
+%\end{equation}
+%for $n = 1,2,\ldots,\nslabs$ and subject to $\genstate^n(\timeStartArg{n}) = \genstate^{n-1}(\timeEndArg{n-1} )$ for $n>1$ and $\genstate^1(0) = \genstateIC$. Letting $\minintegrandArg{n}(\genstateyDiscrete,\dot{\genstateyDiscrete},t)$ denote the integrand in~\eqref{eq:obj_proof} (as defined in~\eqref{eq:integrand}) and following the derivation of the Euler--Lagrange equations presented in Appendix~\ref{appendix:eulerlagrange} leads to the sequence of systems to be solved for $\genstate^n$,
 \begin{equation*}
  \int_{\timeStartArg{n}}^{\timeEndArg{n}} \bigg( \bigg[ \frac{\partial \minintegrandArg{n}  }{\partial \genstateyDiscrete }(\genstateArg{n}{t},\genstateDotArg{n}{t},t) \bigg]  \variationArgntt{n}{t}  - \bigg[ \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDot} (\genstateArg{n}{t},\genstateDotArg{n}{t},t ) \bigg] \variationArgntt{n}{t} \bigg)dt  = 0, \qquad n = 1,2,\ldots,\nslabs,
 \end{equation*}
@@ -154,9 +165,9 @@ $$ \stateFOMSolArgt{n}{\timeStartArg{n}} \in \trialspace.$$
 
 \begin{theorem}(\textit{A priori} error bounds)\label{theorem:apriori_bound}
 Error bounds for \methodAcronymROMs\ over the $n$th window with \spatialAcronym\ trial spaces are:
-\begin{equation*}
+\begin{equation}\label{eq:apriori_bound}
 \intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \DeltaSlabArg{n} \sqrt{1 + \lipshitz} \norm{ \errorArgt{n}{\timeStartArg{n}}  }   + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArgt{n}{t}) } dt.
-\end{equation*}
+\end{equation}
 \EP{We can do over the entire time domain, but we have to introduce an assumption to relate $ \errorArgt{n}{\timeStartArg{n}} $ to $\intSlabArg{n-1} \norm{\errorArgt{n-1}{t}} dt$}
 %\begin{equation}\label{eq:apriori_bound}
 %\sum_{i=1}^{\nslabs} \intSlabArg{i} \norm{\errorArgt{i}{t}} dt \le \sum_{i=1}^{\nslabs} \DeltaSlabArg{i} (1 + \lipshitz) \norm{\errorArgt{i}{\timeStartArg{i}} }   + \lipshitzi \int_0^T \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
@@ -410,6 +421,7 @@ When only a single space-time window is used, error bounds are given by,
 Setting $n=1$ in~\eqref{eq:apriori_bound} with the time intervals $\timeStartArg{1}=0$, $\timeEndArg{1}=T$ yields the desired result.
 \end{proof}
 
+\begin{comment}
 \begin{theorem}(\textit{A priori} error bounds for space--time trial space)\label{theorem:apriori_bound_st}
 Error bounds for \methodAcronymROMs\ with a space--time trial space are:
 \begin{equation}\label{eq:apriori_bound}
@@ -443,9 +455,9 @@ Inserting the above into~\eqref{eq:boundtmp},
 %\intSlabArg{n} \norm{\errorArg{}} dt \le \sum_{i=1}^{\nslabs} \DeltaSlabArg{i}  \norm{\errorArgt{i}{\timeStartArg{i}} }   + \lipshitzi \int_0^T \norm{ \resid(\stateFOMProjSolArgt{n}{t}) } dt.
 %\end{equation*}
 \end{proof}
-
+\end{comment}
 \subsection{Discussion} 
-Theorems~\ref{theorem:apriori_bound} and~\ref{theorem:apriori_bound_st} provide \textit{a priori} bounds on the integrated normed error for the \methodAcronymROM\ for the spatial and space--time trial spaces. Several 
+Theorems~\ref{theorem:apriori_bound} provides \textit{a priori} bounds on the integrated normed error for the \methodAcronymROM\ for \spatialAcronym trial spaces. Several 
 observations are made. First, it is observed \methodAcronym\ is subject to algebraically growing error bounds. As the number of 
 time window grows, so does the algebraic growth of the error. Second, we observe that when a single window spans the entire domain, the error in the \methodAcronymROM is bounded \textit{a priori} by the residual of the projected FOM solution. 
 %\begin{theorem}\label{theorem:aposteriori}
