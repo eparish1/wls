@@ -24,8 +24,8 @@ Substituting the approximation~\eqref{eq:stapprox} into the minimization problem
 the \spaceTimeAcronym\ trial space computes the sequence of generalized coordinates $\stgenstateArg{n}$, for $n=1,\ldots,\nslabs$, as the solution to the minimization problems,
 \begin{align}\label{eq:obj_gen_slab_spacetime}
 \begin{split}
-&\stgenstateArg{n} = \underset{\stgenstatey \in \RR{\stdim}}{\text{arg\,min}}\; \mathcal{J}^n( \stbasisArgnt{n} \stgenstatey + \stateInterceptArg{n} ), \\ 
-      &\text{subject to }\;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateArg{n}  =
+&\underset{\stgenstateyArg{n} \in \RR{\stdim}}{\text{minimize}}\; \mathcal{J}^n( \stbasisArgnt{n} \stgenstateyArg{n} + \stateInterceptArg{n} ), \\ 
+      &\text{subject to }\;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateyArg{n}  =
   \begin{cases} 
 \mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1})  & n = 2,\ldots,\nslabs, \\ 
 \mathbb{P}^n(\stateFOMArgnt{1})(0)
@@ -34,6 +34,19 @@ the \spaceTimeAcronym\ trial space computes the sequence of generalized coordina
 %\genstateIC & n=1, \end{cases} 
 \end{split}
 \end{align}
+
+%\begin{align}\label{eq:obj_gen_slab_spacetime}
+%\begin{split}
+%&\stgenstateArg{n} = \underset{\stgenstatey \in \RR{\stdim}}{\text{arg\,min}}\; \mathcal{J}^n( \stbasisArgnt{n} \stgenstatey + \stateInterceptArg{n} ), \\ 
+%      &\text{subject to }\;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateArg{n}  =
+%  \begin{cases} 
+%\mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1})  & n = 2,\ldots,\nslabs, \\ 
+%\mathbb{P}^n(\stateFOMArgnt{1})(0)
+% & n=1. \end{cases}
+%%\begin{cases} \genstateyArg{n-1}{\timeEndArg{n-1}} & n = 2,\ldots,\nslabs \\
+%%\genstateIC & n=1, \end{cases} 
+%\end{split}
+%\end{align}
 
 %Inserting the approximation~\eqref{eq:stapprox} into the optimization problem~\eqref{eq:tclsrm}, the
 %constrained minimization problem over the $n$th time slab can be re-written as,

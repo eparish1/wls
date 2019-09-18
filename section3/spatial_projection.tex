@@ -13,7 +13,7 @@ where the spatial trial space is equivalent over each time window. Over the $n$t
 \end{equation}
 where $\stateFOMArgnt{n}: [\timeStartArg{n},\timeEndArg{n}] \rightarrow \mathbb{R}^{\fomdim}$ is the FOM state over the $n$th window, and $\genstateArgnt{n} \in \RR{\romdim} \otimes \timeSpaceArg{n}$ with $\genstateArgnt{n}: [\timeStartArg{n},\timeEndArg{n}] \rightarrow \mathbb{R}^{\romdim}$ are the generalized coordinates over the $n$th time window. 
 Substituting the approximation~\eqref{eq:affine_trialspace_tclsrm} into the minimization problem~\eqref{eq:tclsrm}, \methodAcronym\ computes  
-the generalized coordinates $\genstateArgnt{n}$, for $n = 1,\ldots,\nslabs$, as the solution to the minimization problem,
+the generalized coordinates $\genstateArgnt{n}$, for $n = 1,\ldots,\nslabs$, as the solution to the minimization problems,
 %For notational purposes, we define the ``decoder", or ``lifting operator",
 %that maps the generalized coordinates to the state-space of the full-order
 %model as, \begin{align}\label{eq:decoder} \decoder  \vcentcolon & \;
@@ -24,24 +24,22 @@ the generalized coordinates $\genstateArgnt{n}$, for $n = 1,\ldots,\nslabs$, as 
 %The
 %constrained minimization problem over the $n$th time slab can be re-written as,
 
-%\begin{equation}\label{eq:obj_gen_slab}
-%\begin{split}
-%      & \underset{\genstatey \in \RR{\romdim}}{\text{minimize}}\; \mathcal{J}^n(\basisspace \genstatey + \stateIntercept), \\ 
-%      & \text{subject to }\; \genstateyArg{ }{\timeStartArg{n}} =
-%\begin{cases} \genstateArg{n-1}{\timeEndArg{n-1}} & n = 2,\ldots,\nslabs \\
-%\genstateIC & n=1, \end{cases} 
-%\end{split}
-%\end{equation}
-
- 
 \begin{equation}\label{eq:obj_gen_slab}
 \begin{split}
-      &\genstateArgnt{n} =   \underset{\genstatey \in \RR{\romdim}}{\text{arg\,min}}\; \mathcal{J}^n(\basisspace \genstatey + \stateIntercept),\\ 
-      &\text{subject to }\; \genstateArg{n}{\timeStartArg{n}} =
+      & \underset{\genstateyArgnt{n} \in \RR{\romdim}}{\text{minimize}}\; \mathcal{J}^n(\basisspace \genstateyArgnt{n} + \stateIntercept), \\ 
+      & \text{subject to }\; \genstateyArg{n}{\timeStartArg{n}} =
 \begin{cases} \genstateArg{n-1}{\timeEndArg{n-1}} & n = 2,\ldots,\nslabs \\
 \genstateIC & n=1, \end{cases} 
 \end{split}
 \end{equation}
+%\begin{equation}\label{eq:obj_gen_slab}
+%\begin{split}
+%      &\genstateArgnt{n} =   \underset{\genstatey \in \RR{\romdim}}{\text{arg\,min}}\; \mathcal{J}^n(\basisspace \genstatey + \stateIntercept),\\ 
+%      &\text{subject to }\; \genstateArg{n}{\timeStartArg{n}} =
+%\begin{cases} \genstateArg{n-1}{\timeEndArg{n-1}} & n = 2,\ldots,\nslabs \\
+%\genstateIC & n=1, \end{cases} 
+%\end{split}
+%\end{equation}
 %
 %Substituting the approximation~\eqref{eq:affine_trialspace_tclsrm} into the minimization problem~\eqref{eq:tclsrm}, the
 %constrained minimization problem over the $n$th time slab can be re-written as,
@@ -279,22 +277,39 @@ Hence~\eqref{eq:obj_controller} is a measure of the same residual as in~\eqref{e
 that computes the controller $\controllerArgnt{n}$, for $n=1,\ldots,\nslabs$, as the solution to the minimization problem, 
 \begin{equation}\label{eq:tclspg_oc1a} 
 \begin{split}
-&\controllerArgnt{n} =
-\underset{\controllerDumArgnt{} }{\text{arg\,min } } 
+&\underset{\controllerDumArgnt{n} }{\text{minimize } } 
 \int_{\timeStartArg{n}}^{\timeEndArg{n}}
-\objectiveControlArg{}(\genstateArg{n}{t},\controllerDumArg{}{t},t)dt, 
+\objectiveControlArg{}(\genstateArg{n}{t},\controllerDumArg{n}{t},t)dt, 
  \\
 &\text{subject to } \;  \left\{\begin{array}{l} 
  \basisspace^T \stweightingMatArgt{n}{t}
 \basisspace \frac{d}{dt} \genstateArg{n}{t}  - \basisspace^T
 \stweightingMatArgt{n}{t} \velocity(\basisspace \genstateArg{n}{t} +
-\stateIntercept,t) =\controllerArg{n}{t}, \\
+\stateIntercept,t) =\controllerDumArg{n}{t}, \\
  \genstateArg{n}{\timeStartArg{n}} =
 \begin{cases} \genstate^{n-1}(\timeEndArg{n-1} ) & n = 2,\ldots,\nslabs,
  \\ \basisspace^T(\stateFOMIC - \stateIntercept) & n=1. \end{cases} \end{array} \right.
 % \genstateArg{n-1}{\timeEndArg{n-1}}.
 \end{split}
 \end{equation}
+%\begin{equation}\label{eq:tclspg_oc1a} 
+%\begin{split}
+%&\controllerArgnt{n} =
+%\underset{\controllerDumArgnt{} }{\text{arg\,min } } 
+%\int_{\timeStartArg{n}}^{\timeEndArg{n}}
+%\objectiveControlArg{}(\genstateArg{n}{t},\controllerDumArg{}{t},t)dt, 
+% \\
+%&\text{subject to } \;  \left\{\begin{array}{l} 
+% \basisspace^T \stweightingMatArgt{n}{t}
+%\basisspace \frac{d}{dt} \genstateArg{n}{t}  - \basisspace^T
+%\stweightingMatArgt{n}{t} \velocity(\basisspace \genstateArg{n}{t} +
+%\stateIntercept,t) =\controllerArg{n}{t}, \\
+% \genstateArg{n}{\timeStartArg{n}} =
+%\begin{cases} \genstate^{n-1}(\timeEndArg{n-1} ) & n = 2,\ldots,\nslabs,
+% \\ \basisspace^T(\stateFOMIC - \stateIntercept) & n=1. \end{cases} \end{array} \right.
+%% \genstateArg{n-1}{\timeEndArg{n-1}}.
+%\end{split}
+%\end{equation}
 %Noting that
 %$$\basisspace^T \stweightingMat \basisspace \dot{\genstate} = \basisspace^T \controller + \basisspace^T \stweightingMat \velocity(\basisspace \genstate).$$
 %$$\basisspace \dot{\genstate} =  \basisspace \controller + \basisspace \basisspace^T \velocity(\basisspace \genstate).$$

@@ -76,24 +76,23 @@ symmetric positive semi-definite matrix that, e.g., enables hyper-reduction and/
 it is assumed that the weighting matrix is the same for all time windows. 
 
 \methodAcronym\ computes a sequence of approximate solutions $\approxstateArgnt{n}$, for $n=1,\ldots,\nslabs$, as the solution to the minimization problems,
-%\begin{equation}\label{eq:tclsrm}
-%\begin{split}
-%      &\underset{\statey \in \stspace^n}{\text{minimize}} \; \mathcal{J}^n(\statey), \\
-%      &\text{subject to } \;  \stateyArg{}{\timeStartArg{n}} =
-%\begin{cases}\mathbb{P}^n (\approxstateArgnt{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs \\
-%\mathbb{P}^n( \stateFOMArgnt{1})(0)& n=1, \end{cases} 
-%\end{split}
-%\end{equation}
-
-%\methodAcronym\ computes a sequence of approximate solutions $\approxstateArgnt{n}$ as the solution to the minimization problem,
 \begin{equation}\label{eq:tclsrm}
 \begin{split}
-       &\approxstateArgnt{n} =  \underset{\statey \in \stspace^n}{\text{arg\,min}} \; \mathcal{J}^n(\statey), \\ 
-      &\text{subject to }\;  \approxstateArg{n}{\timeStartArg{n}} =
+      &\underset{\stateyArgnt{n} \in \stspace^n}{\text{minimize}} \; \mathcal{J}^n(\stateyArgnt{n}), \\
+      &\text{subject to } \;  \stateyArg{n}{\timeStartArg{n}} =
 \begin{cases}\mathbb{P}^n (\approxstateArgnt{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs \\
 \mathbb{P}^n( \stateFOMArgnt{1})(0)& n=1, \end{cases} 
 \end{split}
 \end{equation}
+%\methodAcronym\ computes a sequence of approximate solutions $\approxstateArgnt{n}$ as the solution to the minimization problem,
+%\begin{equation}\label{eq:tclsrm}
+%\begin{split}
+%       &\approxstateArgnt{n} =  \underset{\statey \in \stspace^n}{\text{arg\,min}} \; \mathcal{J}^n(\statey), \\ 
+%      &\text{subject to }\;  \approxstateArg{n}{\timeStartArg{n}} =
+%\begin{cases}\mathbb{P}^n (\approxstateArgnt{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs \\
+%\mathbb{P}^n( \stateFOMArgnt{1})(0)& n=1, \end{cases} 
+%\end{split}
+%\end{equation}
 where $\mathbb{P}^n: \RR{N} \otimes \timeSpaceArg{n} \rightarrow \stspaceArg{n}$ is an orthogonal projection onto the 
 trial space (e.g., $\elltwo$).
 %\methodAcronym\ generates approximations to~\eqref{eq:FOM} by sequentially minimizing

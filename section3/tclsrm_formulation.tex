@@ -3,10 +3,11 @@
 \input{section3/space_time}
 
 \subsection{\methodAcronym\ Summary}
-This section outlined the \methodAcronym\ method for model reduction. In summary, \methodAcronym\ sequentially minimizes the time continuous FOM ODE residual over the range of a space--time trial space for a series of time windows:
+This section outlined the \methodAcronym\ method for model reduction. In summary, \methodAcronym\ sequentially minimizes the time continuous FOM ODE residual over the range of a space--time trial space for a series of time windows: \methodAcronym\  
+computes the generalized coordinates $\genstateArgnt{n}$, for $n = 1,\ldots,\nslabs$, as the solution to the minimization problems,
 \begin{equation*}
-\approxstate^n= \underset{\statey \in \stspace^n}{\text{arg\,min } }
-\mathcal{J}^n(\statey), \qquad n = 1,2,...,\nslabs,
+\underset{\stateyArgnt{n} \in \stspace^n}{\text{minimize } }
+\mathcal{J}^n(\stateyArgnt{n}), \qquad n = 1,2,...,\nslabs,
 \end{equation*}
 where,
 \begin{align*}
