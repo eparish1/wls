@@ -12,7 +12,7 @@
 
 %\title{Model Reduction via \methodName}
 %\title{Windowed least--squares reduced-order models for dynamical systems}
-\title{Windowed residual-minimization model reduction for dynamical systems}
+\title{Windowed Residual-Minimization Model Reduction for Dynamical Systems}
 
 \author[a]{Eric J. Parish and Kevin T. Carlberg}
 %\ead{ejparis@sandia.gov}
@@ -21,36 +21,60 @@
 \begin{abstract}
 This work proposes a \methodNameLower\ (\methodAcronym) model-reduction
 	formulation for dynamical systems. The proposed approach minimizes the
-	time-continuous full-order-model residual over a low-dimensional space--time
-	trial subspace across a sequence of time windows that decompose the time
-	domain of interest.  We consider two types of space--time trial subspaces
-	within this framework:
+	time-continuous full-order-model residual over a low-dimensional 
+	trial subspace across a sequence of time windows and addresses key deficiencies in existing model-reduction approaches; e.g., the time-step and time-scheme dependence of least-squares Petrov--Galerkin (LSPG), the exponentially growing error bounds present in Galerkin and LSPG, and the offline cost of space--time LSPG. 
+We consider two types of trial subspaces
+	within the proposed framework:
 	one that reduces the spatial dimension of the full-order model, and one that
-	reduces both the spatial and temporal dimensions of the full-order model.
-	\KTC{Why are we saying the next two sentences? These seem kind of random.
-	The abstract should explain why the work is necessary; this more reads like
-	a list of interesting factoids.} The stationary conditions for the resulting minimization problems are
-	derived.  Of particular interest, the stationary conditions for trial spaces
-	with spatial dimension reduction are obtained via the Euler--Lagrange
-	equations and comprise a coupled two-point Hamiltonian boundary value
-	problem containing a forward and backward system. 
-%The forward system, which is forced by an auxiliary costate, evolves the generalized coordinates of the reduced-order model. The backwards system, which is forced by the FOM residual evaluated about the ROM state, governs the dynamics of the costate.
+	reduces both the spatial and temporal dimensions of the full-order model. For both types of trial spaces, we consider two differing solution techniques: direct (i.e., discretize-then-optimize) and indirect (i.e., optimize-then-discretize). Critically, we show that various instances of this framework yield existing model-reduction approaches, namely Galerkin, Least-Squares Petrov–Galerkin, and Space–Time Least-Squares Petrov– Galerkin. Numerical experiments on the compressible Euler and Navier--Stokes equations demonstrate that, at an increased computational cost, the \methodAcronym\ formulation can yield more accurate and physically relevant solutions than the Galerkin and Least-Squares Petrov--Galerkin approaches. 
+
+
+
+
+
+\begin{comment}
+This work proposes a \methodNameLower\ (\methodAcronym) model-reduction
+	formulation for dynamical systems.  
+% In contrast to (1.) the Galerkin method, which minimizes the time-instantaneous residual, (2.) the Least-Squares Petrov--Galerkin (LSPG) method, which sequentially minimizes the discrete residual over a single time step, and (3.) the Space--Time LSPG method, which minimizes the discrete space–time residual,
+%In contrast to existing residual minimization model-reduction approaches, which generate solutions in a low-dimensional space--time trial space that either minimizes (1.) the time-continuous residual over an infinitesimal time-window (Galerkin), (2.) the time-discrete residual over a single time-step instance (Least-Squares Petrov--Galerkin), or (3.) the time-discrete residual over the entire time domain (Space--Time Least-Squares Petrov--Galerkin), 
+%the proposed approach minimizes the
+%	time-continuous full-order-model residual over a low-dimensional space--time
+%	trial subspace across a sequence of time windows. Among other advantages, this process yields an approach that overcomes the 
+%time-step and time-scheme dependence that the least-squares Petrov--Galerkin method is subject to. 
+%that decompose the time
+%	domain of interest.
+The proposed approach minimizes the
+	time-continuous full-order-model residual over a low-dimensional 
+	trial subspace across a sequence of time windows. % that decompose the time
+%	domain of interest. The proposed approach overcomes the time-step and time-scheme dependence that the least-squares Petrov--Galerkin method is subject to.  
+%	\KTC{Why are we saying the next two sentences? These seem kind of random.
+%	The abstract should explain why the work is necessary; this more reads like
+%	a list of interesting factoids.} %The forward system, which is forced by an auxiliary costate, evolves the generalized coordinates of the reduced-order model. The backwards system, which is forced by the FOM residual evaluated about the ROM state, governs the dynamics of the costate.
 %For spatial trial spaces, the stationary conditions for the time-continuous minimization problems are obtained 
 %by deriving the associated Euler--Lagrange equations. 
+We consider two types of trial subspaces
+	within this framework:
+	one that reduces the spatial dimension of the full-order model, and one that
+	reduces both the spatial and temporal dimensions of the full-order model. 
+%The stationary conditions for the resulting minimization problems are derived. Of particular interest, the stationary conditions for trial spaces with spatial dimension reduction are obtained via the Euler–Lagrange equations and comprise a coupled two-point Hamiltonian boundary value problem containing a forward and backward system. 
 We consider two methods to solve the residual-minimization problems: direct
 	(i.e., discretize-then-optimize) and indirect (i.e.,
-	optimize-then-discretize).  Critically, we show that the proposed method
-	comprises a generalization of many existing techniques and provides a
-	unified framework to reason about existing model-redcution techniques. In
-	particular, we show that specific instances of the proposed method lead to
-	the existing reduced-order modeling techniques of Galerkin projection,
-	least-squares Petrov--Galerkin (LSPG) projection, and space--time
-	least-squares Petrov--Galerkin (ST-LSPG) projection. 
+	optimize-then-discretize).
+The approach addresses key deficiencies in a variety 
+of existing model-reduction approaches; e.g., the time-step and time-scheme dependence of least-squares Petrov--Galerkin (LSPG), the exponentially growing error bounds present in Galerkin and LSPG, and the offline cost of space--time LSPG. 
+Various limiting cases of the proposed method yield existing reduced-order modeling techniques, namely Galerkin, Least-Squares Petrov–Galerkin, and Space–Time Least-Squares Petrov– Galerkin.
+%  We show that the proposed method
+%	comprises a generalization of many existing techniques and provides a
+%	unified framework to reason about existing model-redcution techniques. In
+%	particular, we show that specific instances of the proposed method lead to
+%	the existing reduced-order modeling techniques of Galerkin projection,
+%	least-squares Petrov--Galerkin (LSPG) projection, and space--time
+%	least-squares Petrov--Galerkin (ST-LSPG) projection. 
 %By formulating the least--squares problem from the time-continuous level, the \methodAcronym\ formulation overcomes 
 %the time-step sensitivity and time-scheme dependence that LSPG is subject to. 
 %The stationary points of the minimization problems are obtained by solving the associated Euler-Lagrange equations. The Euler-Lagrange equations consist of a set of coupled two point boundary value problems defined on each time-slab containing a forward primal system and a backward adjoint system. %The approach is conceptually similar to the classic Least-Squares Petrov-Galerkin approach, but displays several advantages. First, by formulating the residual minimization problem at the continuous level, the sensitivity of the resulting method to the underlying time-discretization scheme is greatly reduced. 
 Numerical experiments on the compressible Euler and Navier--Stokes equations demonstrate that, at an increased computational cost, the \methodAcronym\ formulation can yield more accurate and physically relevant solutions than the Galerkin and Least-Squares Petrov--Galerkin approaches. 
-
+\end{comment}
 %This work proposes a least-squares residual minimization approach for reduced-order models of dynamical systems. The proposed approach, which comprises a general least-squares reduced-order modeling (LSROM) formulation for dynamical systems, sequentially minimizes the time-continuous full-order model residual within a low-dimensional trial space over a series of time slabs. The stationary conditions for the time-continuous minimization problems are obtained 
 %by deriving the associated Euler--Lagrange equations. The time-continuous formulation exposes two differing methods that can be used to solve the minimization problem, namely direct (discretize then minimize) and indirect (minimize and then discretize). The proposed approach displays commonalities with optimal control problems and is a generalization of the popular 
 %Least-Squares Petrov--Galerkin (LSPG) method. By formulating the residual minimization problem from the time-continuous level, the \methodAcronym\ approach overcomes 
@@ -79,8 +103,8 @@ many-query in nature, analysts must replace such large-scale parameterized
 dynamical-system models with a low-cost approximation that makes the
 application tractable.
 
-\KTC{I reworked this. Methods like balanced truncation or IRKA do \textit{not}
-use snapshot data!}
+%\KTC{I reworked this. Methods like balanced truncation or IRKA do \textit{not}
+%use snapshot data!}
 
 Projection-based reduced-order models (ROMs) comprise one such approximation
 strategy. First, these techniques execute a computationally expensive
@@ -93,18 +117,14 @@ dynamical-system trajectory that reside on this trial subspace via a
 residual-minimization or projection process.
  
 Model reduction for linear-time-invariant systems (and other strongly
-structured dynamical systems) is quite mature \cite{wilcox_benner_rev}
-\KTC{Also cite classical refs on balanced truncation, Gugercin's IRKA,. Note
-that I moved \cite{wilcox_benner_rev} here because that review mainly deals
-with linear systems}, as system-theoretic properties (e.g., controllability,
+structured dynamical systems) is quite mature \cite{wilcox_benner_rev,moore,roberts,GugercinIRKA} as system-theoretic properties (e.g., controllability,
 observability, asymptotic stability, $\mathcal H_2$-optimality) can be readily
 quantified and accounted for in the projection process, which yields
 reduced-order models that inherit such properties.  The primary challenge for
 developing reduced-order models for general nonlinear dynamical systems is
-that such properties are difficult to assess for such systems. As a result, it
-is difficult to develop projection methods that preserve important
-dynamical-system properties in the reduced-order model, which can lead to
-models that are inaccurate or unstable.  To address this, researchers have
+that such properties are difficult to assess. As a result, it
+is difficult to develop reduced-order models that preserve important
+dynamical-system properties, a fact that can lead to inaccurate or unstable methods.  To address this, researchers have
 pursued several directions that aim to imbue reduced-order models of nonlinear
 dynamical systems with properties that can improve robustness and accuracy.
 These
@@ -113,20 +133,18 @@ projection that imbues the ROM solution with a notion of optimality~\cite{l1,car
 space--time
 projection that leads to error bounds that grow slowly in time~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC,benner_st};
 ``energy-based'' inner
-products that ensure non-increasing entropy in the ROM solution~\cite{rowley_pod_energyproj,Kalashnikova_sand2014}; symmetry
-transformations that \KTC{what?} ~\cite{sirovich_symmetry_trans},
-basis-adaptation methods that improve the ROM's accuracy \textit{a posteriori}~\cite{carlberg_hadaptation,adeim_peherstorfer}, subspace
-rotations that \KTC{what?} ~\cite{basis_rotation}, structure-preserving
+products that ensure non-increasing entropy in the ROM solution~\cite{rowley_pod_energyproj,Kalashnikova_sand2014};
+basis-adaptation methods that improve the ROM's accuracy \textit{a posteriori}~\cite{carlberg_hadaptation,adeim_peherstorfer}, stabilizing subspace rotations that account for truncated modes \textit{a priori}~\cite{basis_rotation}, structure-preserving
 methods that enforce conservation \cite{carlberg_conservative_rom} or
 (port-)Hamiltonian/Lagrangian structure
-\cite{carlberg2012spd,structurePreserveBeattie,chaturantabut2016structure,farhat2014dimensional}
-\KTC{Can use more here. See my presentation} in the ROM; and subgrid-scale
+\cite{carlberg2012spd,structurePreserveBeattie,chaturantabut2016structure,farhat2014dimensional,LALL2003304} in the ROM; and subgrid-scale
 modeling methods that aim to improve accuracy by addressing the closure
 problem~\cite{san_iliescu_geostrophic,iliescu_pod_eddyviscosity,iliescu_vms_pod_ns,Bergmann_pod_vms,iliescu_ciazzo_residual_rom,Wang_ROM_thesis,wentland_apg,Wang:269133,San2018}.
 We note that these techniques are often not mutually exclusive.
+%Residual-minimizing projection methods are the most relevant to the current work and comprise the focus of the following review.
 Residual-minimizing and space--time projection are the most relevant classes of
 methods to the current work and comprise the focus of the following review.
-\KTC{Shouldn't we review space-time also?} 
+\KTC{Shouldn't we review space-time also?}
 
 \KTC{HERE}
 
