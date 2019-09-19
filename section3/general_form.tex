@@ -1,14 +1,14 @@
 \section{Windowed Least-Squares Formulation}\label{sec:tclspg} This section
-outlines the proposed \methodName\ 
+outlines the proposed \methodNameLower\ 
 formulation (\methodAcronym). In contrast to (1.) the Galerkin method, which minimizes the 
 time-instantaneous residual, (2.) the LSPG method, which sequentially minimizes the discrete 
 residual over a single time step, and (3.) the ST-LSPG method, which minimizes the discrete 
 space--time residual, the proposed \methodAcronym\ method sequentially minimizes the 
 time-continuous FOM ODE residual over a series of
-\textit{time windows}. The formulation is compatible with both \spatialAcronym\ and \spaceTimeAcronym\ trial spaces. 
+\textit{time windows}. The formulation is compatible with both \spatialAcronym\ and \spaceTimeAcronym\ trial subspaces. 
 In this section, we start by outlining the \methodAcronym\ formulation  
-for a general trial space. We then examine the \spatialAcronym\ 
-trial space, followed by the \spaceTimeAcronym\ trial space. In each case, we derive the stationary conditions 
+for a general trial subspace. We then examine the \spatialAcronym\ 
+trial subspace, followed by the \spaceTimeAcronym\ trial subspace. In each case, we derive the stationary conditions 
 associated with the minimization problems.
  %The proposed method can be formulated equivalently from
 %two viewpoints. The first formulation corresponds to a sequence of
@@ -44,7 +44,7 @@ temporal domain into a set of $\nslabs$ windows of size $\DeltaSlabArg{n}$. This
 \includegraphics[trim={0.0cm 5cm 0cm 3cm},clip,width=1.0\textwidth]{figs/time_grid.pdf} \caption{Decomposition of time
 domain into time windows.} \label{fig:slab_fig} \end{centering} 
 \end{figure}
-Over each time window, we introduce the space--time trial space,
+Over each time window, we introduce the space--time trial subspace,
 $$\approxstate^n \in \stspace^n \subseteq \RR{N} \otimes \timeSpaceArg{n} , \qquad  n = 1,\ldots,\nslabs,$$ 
 where $\approxstate^n :  [\timeStartArg{n} , \timeEndArg{n}] \rightarrow
 \RR{\fomdim}$
@@ -94,7 +94,7 @@ it is assumed that the weighting matrix is the same for all time windows.
 %\end{split}
 %\end{equation}
 where $\mathbb{P}^n: \RR{N} \otimes \timeSpaceArg{n} \rightarrow \stspaceArg{n}$ is an orthogonal projection onto the 
-trial space (e.g., $\elltwo$).
+trial subspace (e.g., $\elltwo$).
 %\methodAcronym\ generates approximations to~\eqref{eq:FOM} by sequentially minimizing
 %the FOM ODE residual over the trial space for each time slab.
 %\methodAcronym\ is defined as follows,
@@ -109,7 +109,7 @@ trial space (e.g., $\elltwo$).
 %where $\mathbb{P}^n: \RR{N} \rightarrow \stspaceArg{n}$ projects onto the 
 %trial space (e.g., an $L^2$ projector).
 \begin{remark}
-It is possible to construct the trial spaces such that they have continuous support between time windows through the 
+It is possible to construct the trial subspaces such that they have continuous support between time windows through the 
 use of, e.g., affine transformations.
 \end{remark}
 %and 
@@ -118,8 +118,8 @@ use of, e.g., affine transformations.
 %is the approximate solution over the $n$th time slab.% and $\approxstate_0 \in
 %\RR{\fomdim}$ is the FOM initial condition
 %projected onto the trial space; (e.g., via for $L^2$ projection).
-We now define the trial spaces $\stspaceArg{n}$. We consider \spatialAcronym\ trial spaces and \spaceTimeAcronym\ trial spaces. 
-We leave further investigation into other trial spaces, such as nonlinear manifolds~\cite{leeCarlberg}, as a subject for future work.
+We now define the trial subspaces $\stspaceArg{n}$. We consider \spatialAcronym\ trial subspaces and \spaceTimeAcronym\ trial subspaces. 
+We leave further investigation into other trial subspaces, such as nonlinear manifolds~\cite{leeCarlberg}, as a subject for future work.
 %A variety of trial spaces have been examined in the model-order reduction community.
 %The most popular trial space comprises a linear, spatial-projection-only trial space (e.g., Eqns.~\eqref{eq:spatial_subspace}-\eqref{eq:spatial_subspace3}), although recently 
 %nonlinear trial spaces~\cite{leeCarlberg} and space--time trial spaces~\cite{choi_stlspg,constantine_strom,2,3} have gained attention. This work focuses on the classic 

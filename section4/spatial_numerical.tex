@@ -354,7 +354,7 @@ reducing this computational burden exist; Jacobian-free Newton-Krylov methods~\c
 %\subsubsection{Jacobian-Free Implementation}
 %The dominant cost of the Gauss Newton algorithm is the computatation of the action of the Jacobian matrix on the trial basis. To alleviate this burden, the following Jacobian-free method is proposed:
 \begin{algorithm}
-\caption{\spatialAcronym\ trial space: algorithm for the direct solution technique with the Gauss--Newton method and a linear multistep method over the $n$th window}
+\caption{\spatialAcronym\ trial subspace: algorithm for the direct solution technique with the Gauss--Newton method and a linear multistep method over the $n$th window}
 \label{alg:colloc_gn}
 \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
 \Input{tolerance, $tol$; initial guess, $\genstateGuessDiscreteArg{n,0}{0},\ldots,\genstateGuessDiscreteArg{n,\nstepsArg{n}}{0}$}
@@ -453,7 +453,7 @@ according to the objective. Convergence properties of the FBSM method are
 presented in Ref.~\cite{McAsey2012ConvergenceOT}. It is shown that, for a small 
 enough value of $\rho$, the algorithm will converge.
 
-\begin{algorithm} \caption{\spatialAcronym\ trial space: algorithm for the FBSM over the $n$th window.} \label{alg:st_iter} 
+\begin{algorithm} \caption{\spatialAcronym\ trial subspace: algorithm for the FBSM over the $n$th window.} \label{alg:st_iter} 
 \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
 \Input{tolerance, $tol$; damping factor, $\rho$; growth factor, $\fbsmGrowth$; decay
 factor, $\fbsmDecay$} 

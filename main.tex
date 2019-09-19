@@ -26,7 +26,7 @@ This work proposes a \methodNameLower\ (\methodAcronym) model-reduction
 We consider two types of trial subspaces
 	within the proposed framework:
 	one that reduces the spatial dimension of the full-order model, and one that
-	reduces both the spatial and temporal dimensions of the full-order model. For both types of trial spaces, we consider two differing solution techniques: direct (i.e., discretize-then-optimize) and indirect (i.e., optimize-then-discretize). Critically, we show that various instances of this framework yield existing model-reduction approaches, namely Galerkin, Least-Squares Petrov–Galerkin, and Space–Time Least-Squares Petrov– Galerkin. Numerical experiments on the compressible Euler and Navier--Stokes equations demonstrate that, at an increased computational cost, the \methodAcronym\ formulation can yield more accurate and physically relevant solutions than the Galerkin and Least-Squares Petrov--Galerkin approaches. 
+	reduces both the spatial and temporal dimensions of the full-order model. For both types of trial subspaces, we consider two differing solution techniques: direct (i.e., discretize-then-optimize) and indirect (i.e., optimize-then-discretize). Critically, we show that various instances of this framework yield existing model-reduction approaches, namely Galerkin, Least-Squares Petrov–Galerkin, and Space–Time Least-Squares Petrov– Galerkin. Numerical experiments on the compressible Euler and Navier--Stokes equations demonstrate that, at an increased computational cost, the \methodAcronym\ formulation can yield more accurate and physically relevant solutions than the Galerkin and Least-Squares Petrov--Galerkin approaches. 
 
 
 
@@ -162,7 +162,7 @@ methods to the current work and comprise the focus of the following review.
 %\end{itemize} 
 Least-squares residual minimization as a numerical solution technique for (partial) differential equations was pioneered in the finite element community and led to what is known as the least-squares finite element method (LSFEM)~\cite{ls_review,bochev_leastsquares}. Motivated by the fact that the Galerkin method can be inaccurate and unstable for nonlinear and non-self-adjoint systems, the LSFEM involves (1.) forming a quadratic functional comprising the residual norm of the partial differential equation of interest and (2.) leveraging variational principles to derive the stationary conditions of the quadratic functional; i.e, LSFEM can be thought of as finding the solution within a finite element trial space the minimizes the $2$-norm of the PDE residual. Least-squares methods often exhibit numerous advantages (e.g., least-squares system are symmetric and positive definite) over the more standard Galerkin discretization. 
 
-Residual minimization methods were extended-to and developed-for reduced-order models by a variety of researchers. Similar to LSFEM, residual minimization approaches for reduced-order models comprise finding the solution within a low-dimensional trial space that minimizes the residual norm of the full-order model. Residual minimization approaches were first applied to static (i.e., no time-dependence) reduced-order models in~\cite{legresley_1,legresley_2,legresley_3,bui_resmin_steady,rovas_thesis,carlberg_thesis,bui_thesis} and then extended to dynamical systems in~\cite{bui_thesis,bui_unsteady,carlberg_thesis,carlberg_gnat,carlberg_lspg,carlberg_lspg_v_galerkin}. Specifically, Refs.~\cite{bui_thesis,bui_unsteady,carlberg_thesis,carlberg_gnat,carlberg_lspg} formulated the residual minimization problem for dynamical systems by sequentially minimizing the \textit{fully discrete} residual (i.e., the residual after temporal discretization) at each time-step instance. This formulation is most commonly known as the \textit{Least--Squares Petrov--Galerkin} (LSPG) method. Ref.~\cite{carlberg_lspg_v_galerkin} provided numerous analyses on this formulation and examined connections with the standard Galerkin method and Petrov--Galerkin methods. Critically, it was shown that (1.) for various time-stepping methods LSPG has an equivalent continuous form that corresponds to a Petrov--Galerkin projection and (2.) the standard Galerkin method minimizes the time-instantaneous residual of the full-order model. Numerous numerical experiments have demonstrated that LSPG yields more stable (although not always more accurate) solutions than the Galerkin method~\cite{bui_thesis,carlberg_lspg_v_galerkin,carlberg_gnat,carlberg_thesis,parish_apg}. The common physical explanation for this improved performance is that, by minimizing the fully discrete residual, LSPG minimizes the residual over a \textit{finite-sized time-window}, rather than instantaneously as is done in the Galerkin method.
+Residual minimization methods were extended-to and developed-for reduced-order models by a variety of researchers. Similar to LSFEM, residual minimization approaches for reduced-order models comprise finding the solution within a low-dimensional trial subspace that minimizes the residual norm of the full-order model. Residual minimization approaches were first applied to static (i.e., no time-dependence) reduced-order models in~\cite{legresley_1,legresley_2,legresley_3,bui_resmin_steady,rovas_thesis,carlberg_thesis,bui_thesis} and then extended to dynamical systems in~\cite{bui_thesis,bui_unsteady,carlberg_thesis,carlberg_gnat,carlberg_lspg,carlberg_lspg_v_galerkin}. Specifically, Refs.~\cite{bui_thesis,bui_unsteady,carlberg_thesis,carlberg_gnat,carlberg_lspg} formulated the residual minimization problem for dynamical systems by sequentially minimizing the \textit{fully discrete} residual (i.e., the residual after temporal discretization) at each time-step instance. This formulation is most commonly known as the \textit{Least--Squares Petrov--Galerkin} (LSPG) method. Ref.~\cite{carlberg_lspg_v_galerkin} provided numerous analyses on this formulation and examined connections with the standard Galerkin method and Petrov--Galerkin methods. Critically, it was shown that (1.) for various time-stepping methods LSPG has an equivalent continuous form that corresponds to a Petrov--Galerkin projection and (2.) the standard Galerkin method minimizes the time-instantaneous residual of the full-order model. Numerous numerical experiments have demonstrated that LSPG yields more stable (although not always more accurate) solutions than the Galerkin method~\cite{bui_thesis,carlberg_lspg_v_galerkin,carlberg_gnat,carlberg_thesis,parish_apg}. The common physical explanation for this improved performance is that, by minimizing the fully discrete residual, LSPG minimizes the residual over a \textit{finite-sized time-window}, rather than instantaneously as is done in the Galerkin method.
  
 The LSPG approach only guarantees residual minimization over a single time-step, and as such is not associated with residual minimization of the full dynamical system.  
 Indeed, LSPG is not equipped with \textit{a priori} guarantees of stability or convergence, even for linear time-invariant systems~\cite{bui_thesis}. Further, as it is defined at the fully discrete level, the performance of LSPG is subject to the time-step size: changing the time-step size changes the window over which the residual is minimized \textit{as well as} the temporal discretization error. As a result, LSPG provides optimal results at an intermediary time-step size. For too small a time-step, LSPG yields results similar to the Galerkin approach; in the limiting case of $\Delta t \rightarrow 0$, LSPG recovers Galerkin. For too-large a time-step, the accuracy of LSPG degrades. It is unclear if this is due to the numerical error associated with enlarging the time-step size, or rather if it is due to the size of the window the residual is being minimized over. The LSPG approach is additionally sensitive to the time discretization scheme. When used with explicit temporal discretization, for instance, LSPG again reverts to Galerkin. To gain the enhanced stability associated with LSPG, the underlying time-discretization scheme must be implicit with an appropriate time-step. This can increase the cost of the reduced-order model, especially in the case where the optimal time-step required by LSPG is small. 
@@ -223,8 +223,8 @@ formally develops (and extends) several of the concepts put forth
 in~\cite{bui_thesis}. Next, Ref.~\cite{constantine_strom} developed a
 space--time residual minimization formulation for model interpolation.  The
 present work distinguishes itself from Ref.~\cite{constantine_strom} in that
-(1.) in addition to trial spaces with space--time dimension reduction, we
-consider trial spaces with spatial dimension reduction only (i.e., a classic
+(1.) in addition to trial subspaces with space--time dimension reduction, we
+consider trial subspaces with spatial dimension reduction only (i.e., a classic
 spatial basis is employed, opposed to a space--time basis) -- in which case
 the generalized coordinates comprise a vector of functions, and (2.) we
 minimize the time-continuous residual over space--time
@@ -236,11 +236,11 @@ such thematic similarities exist between~\cite{constantine_strom} and the
 present work. Lastly, Ref.~\cite{choi_stlspg} develops a space--time
 formulation of the least-squares Petrov--Galerkin approach. The formulation
 minimizes the \textit{fully discrete} residual over the entire space--time
-domain within a given space--time trial space. 
+domain within a given space--time trial subspace. 
 %These space--time trial spaces are constructed through higher-order singular value decompositions (SVDs), such as the truncated high-order SVD. 
 The present work distinguishes itself from Ref.~\cite{choi_stlspg} in that
 (1.) we perform model reduction of the time-continuous system, (2.) we
-consider trial spaces with both space--time dimension reduction and spatial
+consider trial subspaces with both space--time dimension reduction and spatial
 dimension reduction, and (3.) residual minimization is performed over time
 windows; Ref.~\cite{choi_stlspg} considers space--time bases and minimizes the
 fully-discrete residual over the entire domain. 
@@ -261,12 +261,12 @@ fully-discrete residual over the entire domain.
  The novel contributions and findings of the present work are:
 \begin{enumerate}
 %\item The development of a time-continuous residual minimization framework for reduced-order models.
-\item The development of the \methodName\ (\methodAcronym) approach for dynamical systems. The approach sequentially minimizes the time-continuous full-order model residual over time windows.
-\item The derivation of the stationary conditions for \methodAcronymROMs\ leveraging spatial and space--time dimension reduction trial spaces. The case of spatial dimension reduction trial spaces is of particular interest: the stationary conditions are derived via the Euler--Lagrange equations and comprise a coupled 
+\item The development of the \methodNameLower\ (\methodAcronym) approach for dynamical systems. The approach sequentially minimizes the time-continuous full-order model residual over time windows.
+\item The derivation of the stationary conditions for \methodAcronymROMs\ leveraging spatial and space--time dimension reduction trial subspaces. The case of spatial dimension reduction trial subspaces is of particular interest: the stationary conditions are derived via the Euler--Lagrange equations and comprise a coupled 
 two-point Hamiltonian boundary value problem containing a forward and backward system. The forward system, which is forced by an auxiliary costate, evolves the generalized coordinates of the ROM. The backwards system, which is forced by the FOM residual evaluated about the ROM state, governs the dynamics of the costate. 
 \item An exploration of the use of both direct (discretize then optimize) and indirect (optimize then discretize) solution techniques. Conditions under which \methodAcronym\ recovers Galerkin, LSPG, and space--time LSPG are presented.
-\item Error analysis of the \methodAcronym\ approach for trial spaces with spatial dimension reduction. In particular, it is shown that the error in \methodAcronymROMs\ is bounded \textit{a priori} by a combination of the error at the start of the window and the integrated FOM ODE residual evaluated at the FOM state projected onto the trial space. 
-\item Numerical experiments for trial spaces with spatial dimension reduction demonstrating two key findings:
+\item Error analysis of the \methodAcronym\ approach for trial subspaces with spatial dimension reduction. In particular, it is shown that the error in \methodAcronymROMs\ is bounded \textit{a priori} by a combination of the error at the start of the window and the integrated FOM ODE residual evaluated at the FOM state projected onto the trial subspace. 
+\item Numerical experiments for trial subspaces with spatial dimension reduction demonstrating two key findings:
 \begin{itemize}
 \item Residual minimization over larger time windows leads to more stable and physically relevant solutions as well as lower space--time residuals. 
 \item Minimizing the residual over a larger time window does not necessarily lead to a more accurate solution in the $\elltwo$ norm. Residual 
@@ -290,27 +290,27 @@ Directly solving~\eqref{eq:FOM} can be computationally expensive due to both the
 one such promising approach. 
 
 \subsection{Projection-Based Reduced-Order Models}
-Projection-based ROMs generate approximate solutions to the FOM ODE~\eqref{eq:FOM} by approximating the state in a low-dimensional trial space. For dynamical 
-systems, two distinct types of trial spaces are used: space--time trial spaces with spatial dimension reduction (\spatialAcronym) and space--time trial spaces with space--time dimension reduction (\spaceTimeAcronym). \spatialAcronym\ trial spaces are most commonly employed and are used in, e.g., the Galerkin and Least-Squares Petrov--Galerkin (LSPG) methods. \spaceTimeAcronym\ trial spaces are typically 
-employed in space--time ROMs. The following subsections outline these two trial spaces, along with the Galerkin, LSPG, and 
+Projection-based ROMs generate approximate solutions to the FOM ODE~\eqref{eq:FOM} by approximating the state in a low-dimensional trial subspace. For dynamical 
+systems, two distinct types of trial subspaces are used: space--time trial subspaces with spatial dimension reduction (\spatialAcronym) and space--time trial subspaces with space--time dimension reduction (\spaceTimeAcronym). \spatialAcronym\ trial subspaces are most commonly employed and are used in, e.g., the Galerkin and Least-Squares Petrov--Galerkin (LSPG) methods. \spaceTimeAcronym\ trial subspaces are typically 
+employed in space--time ROMs. The following subsections outline these two trial subspaces, along with the Galerkin, LSPG, and 
 space--time LSPG method. 
 
-\subsection{\spatialAcronym\ Trial Spaces}
-\spatialAcronym\ trial spaces approximate the FOM ODE solution, $\stateFOM$, with an approximate solution, $\approxstate$, that lives in a $K$-dimensional affine trial space, 
+\subsection{\spatialAcronym\ Trial Subspaces}
+\spatialAcronym\ trial subspaces approximate the FOM ODE solution, $\stateFOM$, with an approximate solution, $\approxstate$, that lives in a $K$-dimensional affine trial subspace, 
 \begin{align}\label{eq:spatial_subspace}
 & \stspaceS \defeq \trialspace \otimes \timeSpace,\\ 
 & \trialspace \defeq \text{Range}(\basismat) +  \stateIntercept,  \label{eq:spatial_subspace2}  \\
 &\basismat \defeq \begin{bmatrix}  \basisvec_1  & \cdots &  \basisvec_K \end{bmatrix}, \label{eq:spatial_subspace3} 
 \end{align}
-where we refer to $\basismat \in \RRStar{\romdim}{\fomdim}$, with $\RRStar{\romdim}{\fomdim}$ denoting the set  $\{ \mathbf{X} \in \RR{\fomdim \times \romdim} \big| \mathbf{X}^T \mathbf{X} = \mathbf{I} \}$, as the spatial trial basis matrix, $\trialspace$ as the spatial trial space, and $\stateIntercept \in \mathbb{R}^{\fomdim}$ as the reference state. 
+where we refer to $\basismat \in \RRStar{\romdim}{\fomdim}$, with $\RRStar{\romdim}{\fomdim}$ denoting the set  $\{ \mathbf{X} \in \RR{\fomdim \times \romdim} \big| \mathbf{X}^T \mathbf{X} = \mathbf{I} \}$, as the spatial trial basis matrix, $\trialspace$ as the spatial trial subspace, and $\stateIntercept \in \mathbb{R}^{\fomdim}$ as the reference state. 
 %where $\basisvec_i \in \mathbb{R}^N$ are orthonormal basis vectors and $\stateIntercept \in \mathbb{R}^{\fomdim}$ the ``intercept''.
 %We refer to $\basismat \in \RRStar{\fomdim \times \romdim}$, with $\RRStar{p \times q}$ denoting the set of orthogonal $q$ frames in $p$, as the spatial trial basis, and $\trialspace$ as the spatial trial space. 
 The basis vectors $\basisvec_i$ are typically constructed through, e.g., POD~\cite{berkooz_turbulence_pod}, the reduced-basis method~\cite{rb_1,rb_2,rb_3,NgocCuong2005,Rozza2008}, etc. 
-ROMs leveraging \spatialAcronym\ trial spaces approximate the state as,
+ROMs leveraging \spatialAcronym\ trial subspaces approximate the state as,
 \begin{equation}\label{eq:affine_trialspace}
 \stateFOMArg{}{t} \approx \approxstate(t) \defeq \basisspace \genstateArg{}{t} + \stateIntercept,
 \end{equation}
-where $\genstate \in \RR{\romdim} \otimes \timeSpace$, with $\genstate : [0,T] \rightarrow \mathbb{R}^{\romdim}$, are the generalized coordinates. Substituting the approximation given in~\eqref{eq:affine_trialspace} into~\eqref{eq:FOM} and performing orthogonal $\elltwo$ projection of the initial conditions onto the trial space, one obtains,
+where $\genstate \in \RR{\romdim} \otimes \timeSpace$, with $\genstate : [0,T] \rightarrow \mathbb{R}^{\romdim}$, are the generalized coordinates. Substituting the approximation given in~\eqref{eq:affine_trialspace} into~\eqref{eq:FOM} and performing orthogonal $\elltwo$ projection of the initial conditions onto the trial subspace, one obtains,
 \begin{equation}\label{eq:g_truncation}
 \basisspace \frac{d }{dt}\genstateArg{}{t} = \velocity(\basisspace
 \genstateArg{}{t} + \stateIntercept,t ), \qquad \genstate(0) = \genstateIC, \qquad t \in [0,T].
@@ -318,7 +318,7 @@ where $\genstate \in \RR{\romdim} \otimes \timeSpace$, with $\genstate : [0,T] \
 Equation~\eqref{eq:g_truncation} provides an over-determined system of $N$ equations for the $K$ generalized coordinates. Dimension reduction is predominantly performed with either the \textit{Galerkin method} or the \textit{Least-Squares Petrov--Galerkin method} (LSPG). We now outline these two methods.
 
 \subsubsection{The Galerkin Method}
-The Galerkin method is (traditionally) obtained by the following steps: (1.) The approximation~\eqref{eq:affine_trialspace} is substituted into~\eqref{eq:FOM}, and (2.) the resulting residual is enforced to be $\stweightingMatArg{}$-orthogonal to the trial space, with $\stweightingMatArg{ } \equiv \stweightingMatOneArg{ }^T \stweightingMatOneArg{ }$ being a positive (semi-)definite weighting matrix (commonly taken to be $\mathbf{I}$). This projection process results in what is known as the Galerkin method,
+The Galerkin method is (traditionally) obtained by the following steps: (1.) The approximation~\eqref{eq:affine_trialspace} is substituted into~\eqref{eq:FOM}, and (2.) the resulting residual is enforced to be $\stweightingMatArg{}$-orthogonal to the trial subspace, with $\stweightingMatArg{ } \equiv \stweightingMatOneArg{ }^T \stweightingMatOneArg{ }$ being a positive (semi-)definite weighting matrix (commonly taken to be $\mathbf{I}$). This projection process results in what is known as the Galerkin method,
 \begin{equation*}\label{eq:g_truncation2}
 \frac{d}{dt}\genstateGalerkinArg{}{t} = \massArgnt{n}^{-1} \basisspace^T \stweightingMatArg{n} \velocity(\basisspace
 \genstateGalerkinArg{}{t} + \stateIntercept,t), \qquad \genstateGalerkin(0) = \genstateIC, \qquad t \in [0,T],
@@ -388,7 +388,7 @@ In the above, $k^n$ is the width of the multistep scheme at the $n$th time step 
 %\frac{\stateFOMDiscreteArg{n} - \stateFOMDiscreteArg{n-1}  }{\Delta t} - \velocity(\stateFOMDiscreteArg{n}) = \mathbf{0}, \qquad n = 1,2,\ldots,N_t,
 %\end{equation}
 %where $\stateFOMDiscreteArg{n} \approx \stateFOM(t^n)$ denotes the discrete approximation to the state at the $n${th} time instance.
-The FOM O$\Delta$E solution will exactly satisfy~\eqref{eq:lms}; the ROM solution will not. The LSPG method minimizes the residual of the FOM O$\Delta$E~\eqref{eq:lms} within the trial space over each time step. %We define the discrete residual for the implicit Euler method at the $n$th time-instance as,
+The FOM O$\Delta$E solution will exactly satisfy~\eqref{eq:lms}; the ROM solution will not. The LSPG method minimizes the residual of the FOM O$\Delta$E~\eqref{eq:lms} within the trial subspace over each time step. %We define the discrete residual for the implicit Euler method at the $n$th time-instance as,
 %\begin{align*}
 %\resid_{\text{IE}} & \vcentcolon (\stateyDiscrete;\stateFOMDiscreteArg{n-1}) \mapsto \frac{\stateyDiscrete - \stateFOMDiscreteArg{n-1}  }{\Delta t} -  \velocity(\stateyDiscrete), \\
 %& \vcentcolon \RR{\fomdim} \times \RR{\fomdim} \rightarrow \RR{\fomdim}. 
@@ -420,9 +420,9 @@ LSPG is arguably the most popular reduced-order modeling technique for general n
 Recent work has investigated space--time reduced-order models~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC,benner_st,bui_thesis}. Space--time methods 
 are advantageous in that they allow for both spatial \textit{and} temporal dimension reduction. Further, space--time 
 methods are often equipped with more favorable error bounds than non-space--time methods. The approach proposed in this work displays commonalities 
-with space--time methods and, as such, we briefly outline \spaceTimeAcronym\ trial spaces and space--time LSPG.
+with space--time methods and, as such, we briefly outline \spaceTimeAcronym\ trial subspaces and space--time LSPG.
 
-Space--time methods leverage the \spaceTimeAcronym\ trial space $\stspaceST$,
+Space--time methods leverage the \spaceTimeAcronym\ trial subspace $\stspaceST$,
 \begin{equation}\label{eq:sttrialspace_def}
  \approxstateArgnt{} \in  \stspaceST \subseteq \RR{N} \otimes \timeSpace,
 \end{equation}
@@ -441,13 +441,13 @@ The state is approximated by,
 %where $\stbasisArgnt{} : \RR{\stdim} \rightarrow \spaceTrialSpace \otimes \timeTrialSpaceArg{}$ with $ \stbasisArgnt{n} \in \RR{N \times \stdim} \otimes \timeTrialSpaceArg{n}$ is the space--time trial basis, 
 where $\stgenstateArg{} \in \RR{\stdim}$ are the space--time generalized coordinates. Critically, the 
 space--time basis matrix comprises time-dependent \textit{functions}, while the generalized coordinates are a stationary vector. This is fundamentally different than  
-\spatialAcronym\ trial spaces, in where the generalized coordinates are time-dependent functions while the basis matrix is stationary.  
+\spatialAcronym\ trial subspaces, in where the generalized coordinates are time-dependent functions while the basis matrix is stationary.  
 
 Substituting the approximation~\eqref{eq:stapprox1} into the FOM ODE~\eqref{eq:FOM},
 \begin{equation}\label{eq:st_fom}
 \frac{d }{dt} \stbasisArg{}{t} \stgenstate =  \velocity(\stbasisArg{}{t} \stgenstate + \stateIntercept,t) , \qquad \genstate(0) =\mathbb{P}(\stateFOM)(0), \qquad t \in [0,T],
 \end{equation}
-where $\mathbb{P} : \RR{N} \otimes \timeSpace \rightarrow \stspaceST$ is an orthogonal projection onto the trial space (e.g., $\elltwo$).
+where $\mathbb{P} : \RR{N} \otimes \timeSpace \rightarrow \stspaceST$ is an orthogonal projection onto the trial subspace (e.g., $\elltwo$).
 Equation~\eqref{eq:st_fom} is an over-determined algebraic system for the $\stdim$ unknowns. We now outline the Space--Time Least-Squares Petrov--Galerkin method~\cite{choi_stlspg}. 
 The space--time Galerkin method is noted to additionally be a possibility for model reduction. As the space--time Galerkin method does not associate with any residual minimization 
 principle, however, we do not outline it here.
@@ -504,11 +504,11 @@ we look to overcome LSPG's time-step and time-scheme dependence, the stability c
 
 
 \section{Conclusions}\label{sec:conclude}
-This paper introduced a windowed least-squares reduced-order modeling (\methodAcronym) formulation for dynamical systems. The approach sequentially minimizes the time-continuous full-order model residual within a low-dimensional trial space over a series of time windows. The formulation is applicable to both spatial and space--time dimension reduction trial spaces. The Galerkin, Least-Squares Petrov--Galerkin (LSPG) and space--time LSPG methods were shown to be specific instances of the proposed method 
+This paper introduced a windowed least-squares reduced-order modeling (\methodAcronym) formulation for dynamical systems. The approach sequentially minimizes the time-continuous full-order model residual within a low-dimensional trial subspace over a series of time windows. The formulation is applicable to both spatial and space--time dimension reduction trial subspaces. The Galerkin, Least-Squares Petrov--Galerkin (LSPG) and space--time LSPG methods were shown to be specific instances of the proposed method 
 
 
 Two differing techniques to solve the least-squares minimization problems were considered: direct (discretize then minimize) and indirect (minimize then discretize). 
-The case of \spatialAcronym\ trial spaces proved particularly interesting: it was shown that indirect methods comprise solving a coupled two-point 
+The case of \spatialAcronym\ trial subspaces proved particularly interesting: it was shown that indirect methods comprise solving a coupled two-point 
 Hamiltonian boundary value problem. The forward problem evolves the standard Galerkin ROM forced by a ``costate" variable, while a backward problem evolves the costate and is forced by the ROM residual.
 
 Numerical experiments of the compressible Euler and Navier-Stokes equations demonstrated the utility in the proposed approach. The first numerical experiment, in where the Sod shock tube was examined, demonstrated that \methodAcronymROMs\ minimizing the residual over larger time windows yielded smoother and more physically relevant solutions. Further, increasing the window size over which the residual was minimized led to a monotonic decrease in the total space--time residual. Increasing the window size over which the residual was minimized, however, did not necessarily decrease the $\elltwo$ solution error; this was observed to occur over an intermediary window size. It was 

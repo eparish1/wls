@@ -1,13 +1,13 @@
 \subsection{\spatialAcronym\ Trial Spaces}
-The \spatialAcronym\ trial space over the $n$th time window is given as, 
+The \spatialAcronym\ trial subspace over the $n$th time window is given as, 
 \begin{equation}\label{eq:sttrialspace}
  \approxstateArgnt{n} \in \stspaceSArg{n} \defeq \trialspace \otimes \timeSpaceArg{n},
 \end{equation}
-where the spatial trial space, $\trialspace$, is as defined in~\eqref{eq:spatial_subspace2}-\eqref{eq:spatial_subspace3}.
+where the spatial trial subspace, $\trialspace$, is as defined in~\eqref{eq:spatial_subspace2}-\eqref{eq:spatial_subspace3}.
 % and  
 %$\approxstateArgnt{n}: [\timeStartArg{n},\timeEndArg{n}] \rightarrow  \trialspace$ is the \methodAcronym\ approximation to the state over the $n$th time slab.
 For simplicity, we study the case 
-where the spatial trial space is equivalent over each time window. Over the $n$th time window, the state is approximated within the trial space as, 
+where the spatial trial subspace is equivalent over each time window. Over the $n$th time window, the state is approximated within the trial subspace as, 
 \begin{equation}\label{eq:affine_trialspace_tclsrm}
 \stateFOMArg{n}{t} \approx \approxstateArgnt{n}(t) \defeq \basisspace \genstateArg{n}{t} + \stateIntercept,
 \end{equation}
@@ -372,7 +372,7 @@ Evaluation of the required gradients (Appendix~\ref{appendix:optimal_control}) y
 %\end{align}           
 The system defined by~\eqref{eq:sys_oc1}-\eqref{eq:sys_oc5} is seen to be equivalent to that defined by~\eqref{eq:lspg_continuous}-\eqref{eq:lspg_bcs} (perform 
 the change of variables $\controllerArgnt{n} = \mass \adjointArgnt{n}$ in~\eqref{eq:sys_oc1} and $\adjointOCArgnt{n} = -\mass \adjointArgnt{n}$ in~\eqref{eq:sys_oc2}). 
-Thus, \methodAcronym\ with \spatialAcronym\ trial spaces be formulated as an optimal control problem: \methodAcronym\ finds a controller that modifies the Galerkin ROM such that the residual minimization objective is achieved. In addition to commonalities with optimal control problems, this second formulation displays commonalities with subgrid-scale modeling techniques, in where an additional term is added to the reduced-order model to account for the impact of the truncated modes. \methodAcronym\ can thus be interpreted as a subgrid-scale modeling technique, in where a residual minimizing subgrid-scale model is constructed.
+Thus, \methodAcronym\ with \spatialAcronym\ trial subspaces be formulated as an optimal control problem: \methodAcronym\ finds a controller that modifies the Galerkin ROM such that the residual minimization objective is achieved. In addition to commonalities with optimal control problems, this second formulation displays commonalities with subgrid-scale modeling techniques, in where an additional term is added to the reduced-order model to account for the impact of the truncated modes. \methodAcronym\ can thus be interpreted as a subgrid-scale modeling technique, in where a residual minimizing subgrid-scale model is constructed.
 
 \begin{remark}
 The Euler--Lagrange equations comprise a Hamiltonian system. This imbues \methodAcronym\ with certain properties; e.g., for autonomous systems the Hamiltonian~\eqref{eq:hamiltonian} is conserved. 
