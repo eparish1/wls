@@ -1,21 +1,21 @@
 \section{Analysis}\label{sec:analysis}
 This section provides theoretical analysis of the \methodAcronym-ROM. First, we demonstrate equivalence conditions 
-between \methodAcronym\  with \spatialAcronym\ trial spaces and the Galerkin ROM for the case where the residual minimized over infinitesimal time windows.
+between \methodAcronym\  with \spatialAcronym\ trial subspaces and the Galerkin ROM for the case where the residual minimized over infinitesimal time windows.
 %\item For direct methods leveraging uniform quadrature for discretization of the objective functional, the \methodAcronym\ approach recovers the LSPG approach when 
 %the time slab corresponds to a single time-step. 
 %\end{enumerate}
 Next, \textit{a priori} error bounds are derived for autonomous systems. It is shown that:
 \begin{enumerate}
-\item The error in the \methodAcronym-ROM is bounded \textit{a priori} by a recursive summation of the integrated FOM ODE residual evaluated at the FOM state projected onto the trial space. 
+\item The error in the \methodAcronym-ROM is bounded \textit{a priori} by a recursive summation of the integrated FOM ODE residual evaluated at the FOM state projected onto the trial subspace. 
 \item For the case where only 
 one time window is used, i.e., the residual is minimized over all of space and time, the error in the \methodAcronym-ROM is bounded \textit{a priori} by a single 
-integration of the FOM ODE residual evaluated at the FOM state projected onto the trial space. 
+integration of the FOM ODE residual evaluated at the FOM state projected onto the trial subspace. 
 \end{enumerate}
 The remainder of this section details these results. 
 
 \subsection{Equivalence Conditions}
 \begin{theorem}\label{theorem:galerkin_equiv}\textit{(Galerkin equivalence)}
-For sequential minimization over infinitesimal time window and \spatialAcronym\ trial spaces, the \methodAcronym-ROM recovers the standard Galerkin ROM.
+For sequential minimization over infinitesimal time window and \spatialAcronym\ trial subspaces, the \methodAcronym-ROM recovers the standard Galerkin ROM.
 \end{theorem}
 \begin{proof}
 %\begin{equation}
@@ -155,7 +155,7 @@ A2: We assume inverse Lipshitz continuity on the integrated residual: $\forall \
 $$  \intSlabArg{n} \norm{\state(t) - \statey(t)} dt \le  \lipshitziArg{n} \intSlabArg{n} \norm{\resid(\state,t) - \resid(\statey,t) } dt.$$
 .
 
-A3: We assume that the FOM solution at the start of each window lies within the range of the trial space,
+A3: We assume that the FOM solution at the start of each window lies within the range of the trial subspace,
 $$ \stateFOMSolArgt{n}{\timeStartArg{n}} \in \trialspace.$$ 
 %A3: We assume Lipshitz continuity on the velocity
 %$$ \norm{\velocity(\state) - \velocity(\boldsymbol y) } \le \lipshitzv \norm{\state - \boldsymbol y}.$$
@@ -164,7 +164,7 @@ $$ \stateFOMSolArgt{n}{\timeStartArg{n}} \in \trialspace.$$
 %$$ \norm{ \stateROMSolArgt{n}{\timeStartArg{n}} - \stateFOMSolArgt{n}{\timeStartArg{n}} } \le \constAInt \intSlabArg{n-1} \norm{ \errorArg{n-1} }dt.$$
 
 \begin{theorem}(\textit{A priori} error bounds)\label{theorem:apriori_bound}
-Error bounds for \methodAcronymROMs\ over the $n$th window with \spatialAcronym\ trial spaces are:
+Error bounds for \methodAcronymROMs\ over the $n$th window with \spatialAcronym\ trial subspaces are:
 \begin{equation}\label{eq:apriori_bound}
 \intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \DeltaSlabArg{n} \sqrt{1 + \lipshitz} \norm{ \errorArgt{n}{\timeStartArg{n}}  }   + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArgt{n}{t}) } dt.
 \end{equation}
@@ -261,7 +261,7 @@ First, as the codomain of the $2$-norm is $\RR{+}$, we can bound $\norm{\stateRO
  \adjointROMStarSolArgt{n}{t} }, 
 \end{align*}
 where $\genstateROMSol$ and $\genstateROMStarSol$ are the generalized coordinates of $\stateROMSol$ and $\stateROMStarSol$ and it is additionally noted that $\norm{\basisspace} = 1$.
-Critically, we now utilize the fact that the system governing the \methodAcronymROM\ with \spatialAcronym\ trial spaces is Hamiltonian. 
+Critically, we now utilize the fact that the system governing the \methodAcronymROM\ with \spatialAcronym\ trial subspaces is Hamiltonian. 
 Applying Liouville's theorem for Hamiltonian systems, we have the requirement 
 %states that, for Hamiltonian systems, ``the volume enclosed by a closed surface in phase-space is 
 %constant as that volume moves through phase-space~\cite{liouville}.'' In the present context, Liouville's theorem states, 
@@ -422,8 +422,8 @@ Setting $n=1$ in~\eqref{eq:apriori_bound} with the time intervals $\timeStartArg
 \end{proof}
 
 \begin{comment}
-\begin{theorem}(\textit{A priori} error bounds for space--time trial space)\label{theorem:apriori_bound_st}
-Error bounds for \methodAcronymROMs\ with a space--time trial space are:
+\begin{theorem}(\textit{A priori} error bounds for space--time trial subspace)\label{theorem:apriori_bound_st}
+Error bounds for \methodAcronymROMs\ with a space--time trial subspace are:
 \begin{equation}\label{eq:apriori_bound}
 \intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \sum_{n=1}^{\nslabs} \DeltaSlabArg{n} \norm{\errorArgt{n}{\timeStartArg{n}} }   + \lipshitzi \int_0^T \norm{ \resid(\stateFOMProjSolArgt{n}{t}) } dt.
 \end{equation}
@@ -437,7 +437,7 @@ fact that the initial conditions into the $n$th window can be incorrect, we defi
 & \stgenstateStarArg{n} \defeq \underset{\stgenstatey}{\text{arg min } } \objectiveArg{n}(\stbasisArgnt{n} \stgenstatey + \stateInterceptArg{n}),\\
 & \stbasisArg{n}{\timeStartArg{n}} \stgenstateStarArg{n} + \stateIntercept = \stateFOMSolArgt{n}{\timeStartArg{n}}.
 \end{align*}
-Next, the results presented in Theorem~\ref{theorem:apriori_bound} hold for the space--time trial space through bound~\eqref{eq:boundtmp}. We now derive an upper bound for $\intSlabArg{n} \norm{ \stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}$ for the space--time case. By definition of the space--time trial space,
+Next, the results presented in Theorem~\ref{theorem:apriori_bound} hold for the space--time trial subspace through bound~\eqref{eq:boundtmp}. We now derive an upper bound for $\intSlabArg{n} \norm{ \stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}$ for the space--time case. By definition of the space--time trial subspace,
 \begin{align*}
  \norm{ \stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} & \equiv \norm{ \stbasisArg{n}{t}\big[ \stgenstateArg{n} - \stgenstateStarArg{n} \big] }\\
 & \equiv \norm{ \big[ \stgenstateArg{n} - \stgenstateStarArg{n} \big] }.
@@ -457,7 +457,7 @@ Inserting the above into~\eqref{eq:boundtmp},
 \end{proof}
 \end{comment}
 \subsection{Discussion} 
-Theorems~\ref{theorem:apriori_bound} provides \textit{a priori} bounds on the integrated normed error for the \methodAcronymROM\ for \spatialAcronym trial spaces. Several 
+Theorems~\ref{theorem:apriori_bound} provides \textit{a priori} bounds on the integrated normed error for the \methodAcronymROM\ for \spatialAcronym trial subspaces. Several 
 observations are made. First, it is observed \methodAcronym\ is subject to algebraically growing error bounds. As the number of 
 time window grows, so does the algebraic growth of the error. Second, we observe that when a single window spans the entire domain, the error in the \methodAcronymROM is bounded \textit{a priori} by the residual of the projected FOM solution. 
 %\begin{theorem}\label{theorem:aposteriori}

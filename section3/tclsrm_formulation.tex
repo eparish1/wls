@@ -3,7 +3,7 @@
 \input{section3/space_time}
 
 \subsection{\methodAcronym\ Summary}
-This section outlined the \methodAcronym\ method for model reduction. In summary, \methodAcronym\ sequentially minimizes the time continuous FOM ODE residual over the range of a space--time trial space for a series of time windows: \methodAcronym\  
+This section outlined the \methodAcronym\ method for model reduction. In summary, \methodAcronym\ sequentially minimizes the time continuous FOM ODE residual over the range of a space--time trial subspace for a series of time windows: \methodAcronym\  
 computes the generalized coordinates $\genstateArgnt{n}$, for $n = 1,\ldots,\nslabs$, as the solution to the minimization problems,
 \begin{equation*}
 \underset{\stateyArgnt{n} \in \stspace^n}{\text{minimize } }
@@ -18,7 +18,7 @@ where,
 &\vcentcolon \RR{\fomdim}\otimes \timeSpaceArg{n} \rightarrow
 \RR{},
 \end{align*}
-subject to the boundary and continuity conditions. For the \spatialAcronym\ trial spaces, the stationary conditions for the residual minimization problem can be derived via the Euler--Lagrange equations and yield the system over the $n$th window for $t \in [\timeStartArg{n},\timeEndArg{n}]$,
+subject to the boundary and continuity conditions. For the \spatialAcronym\ trial subspaces, the stationary conditions for the residual minimization problem can be derived via the Euler--Lagrange equations and yield the system over the $n$th window for $t \in [\timeStartArg{n},\timeEndArg{n}]$,
 \begin{align*}\
 &\mass \frac{d}{dt} \genstateArg{n}{t}  -  \basisspace^T
 \stweightingMatArgt{n}{t} \velocity(\veloargsromn) =  \mass \adjointArg{n}{t} , \\
@@ -36,7 +36,7 @@ subject to the boundary and continuity conditions. For the \spatialAcronym\ tria
 %\adjointArg{n}{\timeEndArg{n}} = \boldsymbol 0.
 \end{align*} 
 subject to the boundary conditions~\eqref{eq:lspg_bcs1}-\eqref{eq:lspg_bcs}. The Euler-Lagrange equations expose the fact that, for \spatialAcronym\
-trial spaces, \methodAcronym\ can be alternatively interpreted as a Lagrange problem from optimal control: the Galerkin method is forced by a 
+trial subspaces, \methodAcronym\ can be alternatively interpreted as a Lagrange problem from optimal control: the Galerkin method is forced by a 
 controller that enforces the residual minimization property. 
 
-\spaceTimeAcronym\ trial spaces were additionally considered. For \spaceTimeAcronym\ trial spaces, in where the generalized coordinates are no longer functions, the stationary conditions correspond to an algebraic system of equations.
+\spaceTimeAcronym\ trial subspaces were additionally considered. For \spaceTimeAcronym\ trial subspaces, in where the generalized coordinates are no longer functions, the stationary conditions correspond to an algebraic system of equations.
