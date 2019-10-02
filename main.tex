@@ -12,7 +12,7 @@
 
 %\title{Model Reduction via \methodName}
 %\title{Windowed least--squares reduced-order models for dynamical systems}
-\title{Windowed Residual-Minimization Model Reduction for Dynamical Systems}
+\title{Windowed residual-minimization model reduction for dynamical systems}
 
 \author[a]{Eric J. Parish and Kevin T. Carlberg}
 %\ead{ejparis@sandia.gov}
@@ -260,30 +260,35 @@ the Galerkin method.
 
 >>>>>>> 8d8eebd9e5358b1cd8ef93841a5cfd2512d0b126
  
-\KTC{HERE}
-
+\KTC{Let's discuss. What specifically do we want to point out about
+deficiencies in LSPG in this section? Should we also look in ST-LSPG? It seems you're trying
+to say that we don't like how the time step size \textit{and} time
+discretization method dictate so much about the method (I agree with this). If
+so, we should structure this to include other discretize-then-optimize methods
+I think. Or we could just focus on the time-step aspect (i.e., not the time
+discretization method), in which case we should focus on LSPG.}
 The LSPG approach sequentially performs residual minimization over a single
 time-step, and as such is not associated with residual minimization over the
 entire time interval. \KTC{This is what ST-LSPG does. Why do we ignore it? the
 full dynamical system} Indeed, LSPG is not equipped with \textit{a priori}
 guarantees of stability or convergence, even for linear time-invariant
-systems~\cite{bui_thesis}. Further, LSPG performs residual minimization over a
-time step, its performance is affected by the time-step size in two distinct
-ways: changing the time-step size modifies the window over which the residual
-is minimized \textit{as well as} the time-discretization error. As a result,
-LSPG often yields the lowest error for an intermediate value of the time step.
-For too small a time-step, LSPG yields results similar to the Galerkin
-approach; in the limiting case of $\Delta t \rightarrow 0$, LSPG recovers
-Galerkin. For too-large a time-step, the accuracy of LSPG degrades. It is
-unclear if this is due to the numerical error associated with enlarging the
-time-step size, or rather if it is due to the size of the window the residual
-is being minimized over. The LSPG approach is additionally sensitive to the
-time discretization scheme. When used with explicit temporal discretization,
-for instance, LSPG again reverts to Galerkin. To gain the enhanced stability
-associated with LSPG, the underlying time-discretization scheme must be
-implicit with an appropriate time-step. This can increase the cost of the
-reduced-order model, especially in the case where the optimal time-step
-required by LSPG is small. 
+systems~\cite{bui_thesis}. Further, the performance of LSPG depends on the
+time step in two distinct ways: changing the time-step size modifies both the
+time window over which LSPG minimizes the residual \textit{as well as} the
+time-discretization error of the full-order model on which LSPG is based. As a
+result, LSPG often yields the smallest error for an intermediate value of the
+time step (see, e.g., Ref.~\cite[Figure 9]{carlberg_lspg_v_galerkin}). In
+particular, as the time step decreases, the accuracy of LSPG approaches that
+of Galerkin (which is often poor)\footnote{This occurs because LSPG projection
+is equivalent to Galerkin projection in the limit $\Delta t \rightarrow 0$.};
+as the time step increases, the time discretization error of the full-order
+model (on which the LSPG ROM is based) increases.  LSPG projection additionally is
+additionally sensitive to the time discretization scheme. When used with
+explicit temporal discretization, for instance, LSPG again reverts to
+Galerkin. To gain the enhanced stability associated with LSPG, the underlying
+time-discretization scheme must be implicit with an appropriate time-step.
+This can increase the cost of the reduced-order model, especially in the case
+where the optimal time-step required by LSPG is small. 
 
  
 %The thesis of least--squares residual minimization was extended to construct reduced-order models of static systems by several authors, with two such instances being~\cite{rovas_thesis} and~\cite{bui_resmin}. Similar to the finite-element case, numerous theoretical analyses and numerical experiments have demonstrated that residual minimization methods yield more accurate and stable solutions than the Galerkin method. The extension of least--squares residual minimization methods to dynamical systems, however, has proved challenging. The least-squares Petrov-Galerkin method is arguably the most commonly adapted residual minimization method for dynamical systems. LSPG extends the idea of least--squares residual minimization to dynamical systems by sequentially minimizing the \textit{fully discrete} residual (i.e., after temporal discretization) in a weighted norm (nominally $\elltwo$) over each time step. Numerous numerical experiments have demonstrated that the LSPG approach yields more stable (although not always more accurate) solutions than the Galerkin method~\cite{carlberg_lspg_v_galerkin,carlberg_gnat,carlberg_thesis,parish_apg}. The common explanation for this improved performance is that, by minimizing the fully discrete residual, LSPG minimizes the residual over a \textit{finite-sized time-window}, rather than instantaneously as is done in the Galerkin method. 
@@ -312,21 +317,26 @@ required by LSPG is small.
 
 This work seeks to overcome the practical challenges associated with existing
 residual minimization approaches for reduced-order models. To this end, we
-develop a reduced-order modeling approach that minimizes the FOM ODE residual
-over a series of time windows. The key novelties of the work are two fold.
+propose the \methodName\ method for model reduction, which minimizes the FOM ODE residual
+over a sequence of time windows. The key novelties of the work are two fold.
 First, the residual minimization problem is formulated to minimize the
-\textit{time-continuous} residual. By working from a continuous viewpoint, the
+\textit{time-continuous} residual. By working from a time-continuous viewpoint, the
 present formulation decouples the underlying temporal discretization scheme
 from the residual minimization problem; thus addressing a key deficiency of
-LSPG. The continuous viewpoint additionally exposes two differing methods that
-can be used to solve the minimization problems, namely \textit{discretize and
-then optimize} (direct) methods and \textit{optimize and then discretize}
-(indirect) methods. The second novelty is that the residual is minimized over
-\textit{time windows}, as opposed to over a single time step or the entire
-time domain. This allows for maximum flexibility in terms of computational
-cost and numerical accuracy. We demonstrate that this formulation recovers the
-Galerkin, LSPG, and space--time LSPG methods. Figure~\ref{fig:flowchart}
-depicts how the proposed method interfaces with existing approaches. 
+LSPG \KTC{This is also true for ST-LSPG and maybe other discretization-based
+methods? Have to check}. The time-continuous viewpoint additionally exposes
+two different methods that
+can be used to solve the residual-minimization problems, namely
+a \textit{discretize-then-optimize} (i.e., direct) method and
+an \textit{optimize-then-discretize} (i.e., indirect) method. The second novelty
+is that the residual is minimized over \textit{time windows} rather than over
+a single time step or the entire time domain. This equips the method with
+additionaly flexibility that enables it
+to explore more fine-grained tradeoffs in computational cost and error. We
+demonstrate that this method can be viewed as a generalization of existing
+methods, as particular instances of this formulation recover Galerkin, LSPG,
+and space--time LSPG projection. Figure~\ref{fig:flowchart} depicts how the
+proposed method is related to existing approaches. 
 
 The resulting approach is best viewed as a hybrid space--time method. A
 variety of research has examined the formulation of space--time reduced-order
@@ -369,7 +379,8 @@ fully-discrete residual over the entire time domain.
 \begin{figure} 
 \begin{centering} 
 \includegraphics[trim={0.1cm 0cm 1cm 0cm},clip,width=0.99\textwidth]{diagram.pdf} 
-\caption{Flow chart of \methodAcronym.} 
+\caption{Relationship diagram for the \methodAcronym\ framework for model
+	reduction.} 
 \label{fig:flowchart} 
 \end{centering} 
 \end{figure}
