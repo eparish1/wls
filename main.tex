@@ -315,26 +315,27 @@ where the optimal time-step required by LSPG is small.
 
 This work seeks to overcome the practical challenges associated with existing
 residual minimization approaches for reduced-order models. To this end, we
-propose the \methodName\ method for model reduction, which minimizes the FOM ODE residual
-over a sequence of time windows. The key novelties of the work are two fold.
-First, the residual minimization problem is formulated to minimize the
-\textit{time-continuous} residual. By working from a time-continuous viewpoint, the
-present formulation decouples the underlying temporal discretization scheme
-from the residual minimization problem; thus addressing a key deficiency of
-LSPG \KTC{This is also true for ST-LSPG and maybe other discretization-based
-methods? Have to check}. The time-continuous viewpoint additionally exposes
-two different methods that
-can be used to solve the residual-minimization problems, namely
-a \textit{discretize-then-optimize} (i.e., direct) method and
-an \textit{optimize-then-discretize} (i.e., indirect) method. The second novelty
-is that the residual is minimized over \textit{time windows} rather than over
-a single time step or the entire time domain. This equips the method with
-additionaly flexibility that enables it
-to explore more fine-grained tradeoffs in computational cost and error. We
+propose the \methodNameLower\ (\methodAcronym) method for model reduction,
+which minimizes the FOM ODE residual over a sequence of arbitrarily defined
+time windows. The key novelties of the work are twofold.  First, the method
+minimizes the \textit{time-continuous}  residual (i.e., that associated with
+the full-order model ODE). By adopting a time-continuous viewpoint, the
+formulation decouples the underlying temporal discretization scheme from the
+residual minimization problem, thus addressing a key deficiency of LSPG
+\KTC{This is also true for ST-LSPG and maybe other discretization-based
+methods? Have to check}. Time-continuous residual minimization also exposes
+two different solution methods,  namely a \textit{discretize-then-optimize}
+(i.e., direct) method and an \textit{optimize-then-discretize} (i.e.,
+indirect) method. The second novelty is that the method sequentially minimizes
+the residual over arbitrarily defined \textit{time windows} rather than
+sequentially minimizing the residual over time steps or over the entire time
+domain. This equips the method with additionaly flexibility that enables it to
+explore more fine-grained tradeoffs between computational cost and error. We
 demonstrate that this method can be viewed as a generalization of existing
-methods, as particular instances of this formulation recover Galerkin, LSPG,
-and space--time LSPG projection. Figure~\ref{fig:flowchart} depicts how the
-proposed method is related to existing approaches. 
+methods, because particular instances of this formulation are equivalent to
+Galerkin, LSPG, and space--time LSPG projection. Figure~\ref{fig:flowchart}
+depicts how the proposed \methodAcronym\ method is related to existing
+approaches. 
 
 The resulting approach is best viewed as a hybrid space--time method. A
 variety of research has examined the formulation of space--time reduced-order
