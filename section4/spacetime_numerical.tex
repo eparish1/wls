@@ -1,11 +1,11 @@
-\subsection{\spaceTimeAcronym\ Trial Spaces: Direct and Indirect Methods}
+\subsection{\spaceTimeAcronym\ trial spaces: direct and indirect methods}
 We now briefly consider \spaceTimeAcronym\ trial subspaces. 
 For \spaceTimeAcronym\ trial subspaces, the distinction between a direct and indirect method is less clear as the optimization variable (i.e., the generalized coordinates) are finite 
 dimensional. There is no need to transcribe an infinite dimensional optimization variable into a finite dimensional one. There is, however, still a need to develop a finite 
 dimensional representation of the objective function~\eqref{eq:obj_gen_slab}. In what follows, we describe two techniques to do this: one that works with the FOM O$\Delta$E and one that works with the FOM ODE. We associate direct methods as those 
 that work with the O$\Delta$E and indirect methods with those that work directly with the continuous ODE.  
 
-\subsection{\spaceTimeAcronym\ Trial Spaces: Direct Solution Technique}
+\subsection{\spaceTimeAcronym\ trial spaces: direct solution technique}
 The direct solution technique seeks to minimize the fully discrete objective function associated with the O$\Delta$E. For brevity, we again focus on linear multistep methods. 
 
 %The definition of the fully discrete objective functions~\eqref{eq:obj_lms} as outlined in Section~\ref{sec:direct}, can be leveraged for this purpose. For simplicity, we only 
@@ -38,7 +38,7 @@ The minimization problem~\eqref{eq:obj_gen_lms_final_st} can be solved, e.g, via
 For the limiting case where the window size spans the entire domain, $\DeltaSlabArg{1}\equiv T$, direct \methodAcronym\ with a \spaceTimeAcronym\ trial subspace recovers ST-LSPG.
 \end{remark}
 
-\subsection{\spaceTimeAcronym\ Trial Spaces: Indirect Solution Technique}
+\subsection{\spaceTimeAcronym\ trial spaces: indirect solution technique}
 As opposed to the direct solution technique, the indirect solution technique directly minimizes the continuous objective function~\eqref{eq:obj_gen_slab_spacetime},
 \begin{equation}\label{eq:obj_gen_slab2}
 \begin{split}
@@ -108,7 +108,7 @@ The nonlinear least-squares problem can again be solved, e.g., via the Gauss-New
 %\approxstateIC &
 %n=1. \end{cases} \end{equation} 
 
-\subsection{\spaceTimeAcronym\ Trial Space: Summary}
+\subsection{\spaceTimeAcronym\ trial space: summary}
 As was just shown, \spaceTimeAcronym\ trial subspaces yield a series of space--time algebraic systems over each window. As a variety of work has examined space--time reduced-order models with \spaceTimeAcronym\ trial subspaces, 
 a detailed exposition of solution techniques for these systems is not pursued here. It is sufficient to say that the 
 space--time trial subspace yields a series of dense (non)linear systems to be solved over each window.
