@@ -226,35 +226,6 @@ than time instantanously), LSPG projection computes solutions that are more
 accurate over a larger part the trajectory compared with Galerkin projection.
 
 
-Residual minimization methods were extended-to and developed-for reduced-order
-models by a variety of researchers. Similar to LSFEM, residual minimization
-approaches for reduced-order models comprise finding the solution within a
-low-dimensional trial subspace that minimizes the residual norm of the
-full-order model. Residual minimization approaches were first applied to
-static (i.e., no time-dependence) reduced-order models
-in~\cite{legresley_1,legresley_2,legresley_3,bui_resmin_steady,rovas_thesis,carlberg_thesis,bui_thesis}
-and then extended to dynamical systems
-in~\cite{bui_thesis,bui_unsteady,carlberg_thesis,carlberg_gnat,carlberg_lspg,carlberg_lspg_v_galerkin}.
-Specifically,
-Refs.~\cite{bui_thesis,bui_unsteady,carlberg_thesis,carlberg_gnat,carlberg_lspg}
-formulated the residual minimization problem for dynamical systems by
-sequentially minimizing the \textit{fully discrete} residual (i.e., the
-residual after temporal discretization) at each time-step instance. This
-formulation is most commonly known as the \textit{Least--Squares
-Petrov--Galerkin} (LSPG) method. Ref.~\cite{carlberg_lspg_v_galerkin} provided
-numerous analyses on this formulation and examined connections with the
-standard Galerkin method and Petrov--Galerkin methods. Critically, it was
-shown that (1.) for various time-stepping methods LSPG has an equivalent
-continuous form that corresponds to a Petrov--Galerkin projection and (2.) the
-standard Galerkin method minimizes the time-instantaneous residual of the
-full-order model. Numerous numerical experiments have demonstrated that LSPG
-yields more stable (although not always more accurate) solutions than the
-Galerkin
-method~\cite{bui_thesis,carlberg_lspg_v_galerkin,carlberg_gnat,carlberg_thesis,parish_apg}.
-The common physical explanation for this improved performance is that, by
-minimizing the fully discrete residual, LSPG minimizes the residual over a
-\textit{finite-sized time-window}, rather than instantaneously as is done in
-the Galerkin method.
  
 \KTC{Let's discuss. What specifically do we want to point out about
 deficiencies in LSPG in this section? Should we also look in ST-LSPG? It seems you're trying
