@@ -107,10 +107,10 @@ simulation at a single parameter instance---which entails the numerical
 integration of a system of ordinary differential equations (ODEs)---incurs an
 extremely large computational expense.  This occurs, for example, when the
 state-space dimension is large (e.g., due to fine spatial resolution when
-discretizing a partial-differential-equation) and/or when the number
-of time instances is large (e.g., due to stability or accuracy requirements
-that limit the time step).  When the application is time-critical or
-many-query in nature, analysts must replace such large-scale parameterized
+discretizing a partial differential equation) and/or when the number of time
+instances is large (e.g., due to time-step limitations incurred by stability
+or accuracy considerations).  When the application is time critical or many
+query in nature, analysts must replace such large-scale parameterized
 dynamical-system models with a low-cost approximation that makes the
 application tractable.
 
@@ -120,12 +120,12 @@ application tractable.
 Projection-based reduced-order models (ROMs) comprise one such approximation
 strategy. First, these techniques execute a computationally expensive
 \textit{offline} stage that computes a low-dimensional ``trial'' subspace on
-which the (parameterized) dynamical-system state can be well approximated
-(e.g., by computing state ``snapshots'' at different parameter instances, by
-solving Lyapunov equations). Second, these methods execute an inexpensive
+which the dynamical-system state can be well approximated (e.g., by computing
+state ``snapshots'' at different time and parameter instances, by solving
+Lyapunov equations). Second, these methods execute an inexpensive
 \textit{online} stage during which they compute approximations to the
 dynamical-system trajectory that reside on this trial subspace via a
-residual-minimization or projection process.
+projection process.
  
 Model reduction for linear-time-invariant systems (and other strongly
 structured dynamical systems) is quite mature \cite{wilcox_benner_rev,moore,roberts,GugercinIRKA} as system-theoretic properties (e.g., controllability,
@@ -133,29 +133,30 @@ observability, asymptotic stability, $\mathcal H_2$-optimality) can be readily
 quantified and accounted for in the projection process, which yields
 reduced-order models that inherit such properties.  The primary challenge for
 developing reduced-order models for general nonlinear dynamical systems is
-that such properties are difficult to assess. As a result, it
+that such properties are difficult to quantitatively assess. As a result, it
 is difficult to develop reduced-order models that preserve important
-dynamical-system properties, a fact that can lead to inaccurate or unstable methods.  To address this, researchers have
-pursued several directions that aim to imbue reduced-order models of nonlinear
+dynamical-system properties, which often results in inaccurate or unstable
+methods.  To address this, researchers have pursued several directions that
+aim to imbue reduced-order models for nonlinear
 dynamical systems with properties that can improve robustness and accuracy.
 These
 efforts include residual-minimizing
-projection that imbues the ROM solution with a notion of optimality~\cite{l1,carlberg_lspg,carlberg_gnat,legresley_1,legresley_2,legresley_3,bui_resmin_steady,bui_unsteady,rovas_thesis,carlberg_thesis,bui_thesis};
+projection that equips the ROM solution with a notion of optimality~\cite{l1,carlberg_lspg,carlberg_gnat,legresley_1,legresley_2,legresley_3,bui_resmin_steady,bui_unsteady,rovas_thesis,carlberg_thesis,bui_thesis};
 space--time
 projection that leads to error bounds that grow slowly in time~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC,benner_st};
 ``energy-based'' inner
 products that ensure non-increasing entropy in the ROM solution~\cite{rowley_pod_energyproj,Kalashnikova_sand2014};
-basis-adaptation methods that improve the ROM's accuracy \textit{a posteriori}~\cite{carlberg_hadaptation,adeim_peherstorfer}, stabilizing subspace rotations that account for truncated modes \textit{a priori}~\cite{basis_rotation}, structure-preserving
+basis-adaptation methods that improve the ROM's accuracy \textit{a
+posteriori}~\cite{carlberg_hadaptation,adeim_peherstorfer,etter2019online}, stabilizing subspace rotations that account for truncated modes \textit{a priori}~\cite{basis_rotation}, structure-preserving
 methods that enforce conservation \cite{carlberg_conservative_rom} or
 (port-)Hamiltonian/Lagrangian structure
-\cite{carlberg2012spd,structurePreserveBeattie,chaturantabut2016structure,farhat2014dimensional,LALL2003304} in the ROM; and subgrid-scale
+\cite{LALL2003304,carlberg2012spd,structurePreserveBeattie,chaturantabut2016structure,farhat2014dimensional} in the ROM; and subgrid-scale
 modeling methods that aim to improve accuracy by addressing the closure
 problem~\cite{san_iliescu_geostrophic,iliescu_pod_eddyviscosity,iliescu_vms_pod_ns,Bergmann_pod_vms,iliescu_ciazzo_residual_rom,Wang_ROM_thesis,wentland_apg,Wang:269133,San2018}.
 We note that these techniques are often not mutually exclusive.
 %Residual-minimizing projection methods are the most relevant to the current work and comprise the focus of the following review.
 Residual-minimizing and space--time projection are the most relevant classes of
 methods to the current work and comprise the focus of the following review.
-\KTC{Shouldn't we review space-time also?}
 
 \KTC{HERE}
 
@@ -173,6 +174,7 @@ methods to the current work and comprise the focus of the following review.
 %\end{itemize} 
 
 <<<<<<< HEAD
+
 \KTC{Why are we reviewing LSFEM? This isn't a ROM. Don't think it's relevant}
 Least-squares residual minimization as a numerical solution technique for
 partial differential equations was pioneered in the finite-element community
@@ -223,31 +225,65 @@ The common intuitive explanation for this improved performance is that, by
 minimizing the full-order-model residual over a finite time window (rather
 than time instantanously), LSPG projection computes solutions that are more
 accurate over a larger part the trajectory compared with Galerkin projection.
+
 =======
-Residual minimization methods were extended-to and developed-for reduced-order models by a variety of researchers. Similar to LSFEM, residual minimization approaches for reduced-order models comprise finding the solution within a low-dimensional trial subspace that minimizes the residual norm of the full-order model. Residual minimization approaches were first applied to static (i.e., no time-dependence) reduced-order models in~\cite{legresley_1,legresley_2,legresley_3,bui_resmin_steady,rovas_thesis,carlberg_thesis,bui_thesis} and then extended to dynamical systems in~\cite{bui_thesis,bui_unsteady,carlberg_thesis,carlberg_gnat,carlberg_lspg,carlberg_lspg_v_galerkin}. Specifically, Refs.~\cite{bui_thesis,bui_unsteady,carlberg_thesis,carlberg_gnat,carlberg_lspg} formulated the residual minimization problem for dynamical systems by sequentially minimizing the \textit{fully discrete} residual (i.e., the residual after temporal discretization) at each time-step instance. This formulation is most commonly known as the \textit{Least--Squares Petrov--Galerkin} (LSPG) method. Ref.~\cite{carlberg_lspg_v_galerkin} provided numerous analyses on this formulation and examined connections with the standard Galerkin method and Petrov--Galerkin methods. Critically, it was shown that (1.) for various time-stepping methods LSPG has an equivalent continuous form that corresponds to a Petrov--Galerkin projection and (2.) the standard Galerkin method minimizes the time-instantaneous residual of the full-order model. Numerous numerical experiments have demonstrated that LSPG yields more stable (although not always more accurate) solutions than the Galerkin method~\cite{bui_thesis,carlberg_lspg_v_galerkin,carlberg_gnat,carlberg_thesis,parish_apg}. The common physical explanation for this improved performance is that, by minimizing the fully discrete residual, LSPG minimizes the residual over a \textit{finite-sized time-window}, rather than instantaneously as is done in the Galerkin method.
+
+Residual minimization methods were extended-to and developed-for reduced-order
+models by a variety of researchers. Similar to LSFEM, residual minimization
+approaches for reduced-order models comprise finding the solution within a
+low-dimensional trial subspace that minimizes the residual norm of the
+full-order model. Residual minimization approaches were first applied to
+static (i.e., no time-dependence) reduced-order models
+in~\cite{legresley_1,legresley_2,legresley_3,bui_resmin_steady,rovas_thesis,carlberg_thesis,bui_thesis}
+and then extended to dynamical systems
+in~\cite{bui_thesis,bui_unsteady,carlberg_thesis,carlberg_gnat,carlberg_lspg,carlberg_lspg_v_galerkin}.
+Specifically,
+Refs.~\cite{bui_thesis,bui_unsteady,carlberg_thesis,carlberg_gnat,carlberg_lspg}
+formulated the residual minimization problem for dynamical systems by
+sequentially minimizing the \textit{fully discrete} residual (i.e., the
+residual after temporal discretization) at each time-step instance. This
+formulation is most commonly known as the \textit{Least--Squares
+Petrov--Galerkin} (LSPG) method. Ref.~\cite{carlberg_lspg_v_galerkin} provided
+numerous analyses on this formulation and examined connections with the
+standard Galerkin method and Petrov--Galerkin methods. Critically, it was
+shown that (1.) for various time-stepping methods LSPG has an equivalent
+continuous form that corresponds to a Petrov--Galerkin projection and (2.) the
+standard Galerkin method minimizes the time-instantaneous residual of the
+full-order model. Numerous numerical experiments have demonstrated that LSPG
+yields more stable (although not always more accurate) solutions than the
+Galerkin
+method~\cite{bui_thesis,carlberg_lspg_v_galerkin,carlberg_gnat,carlberg_thesis,parish_apg}.
+The common physical explanation for this improved performance is that, by
+minimizing the fully discrete residual, LSPG minimizes the residual over a
+\textit{finite-sized time-window}, rather than instantaneously as is done in
+the Galerkin method.
+
 >>>>>>> 8d8eebd9e5358b1cd8ef93841a5cfd2512d0b126
  
 \KTC{HERE}
-The LSPG approach only guarantees residual minimization over a single
-time-step, and as such is not associated with residual minimization of the
-full dynamical system.  Indeed, LSPG is not equipped with \textit{a priori}
+
+The LSPG approach sequentially performs residual minimization over a single
+time-step, and as such is not associated with residual minimization over the
+entire time interval. \KTC{This is what ST-LSPG does. Why do we ignore it? the
+full dynamical system} Indeed, LSPG is not equipped with \textit{a priori}
 guarantees of stability or convergence, even for linear time-invariant
-systems~\cite{bui_thesis}. Further, as it is defined at the fully discrete
-level, the performance of LSPG is subject to the time-step size: changing the
-time-step size changes the window over which the residual is minimized
-\textit{as well as} the temporal discretization error. As a result, LSPG
-provides optimal results at an intermediary time-step size. For too small a
-time-step, LSPG yields results similar to the Galerkin approach; in the
-limiting case of $\Delta t \rightarrow 0$, LSPG recovers Galerkin. For
-too-large a time-step, the accuracy of LSPG degrades. It is unclear if this is
-due to the numerical error associated with enlarging the time-step size, or
-rather if it is due to the size of the window the residual is being minimized
-over. The LSPG approach is additionally sensitive to the time discretization
-scheme. When used with explicit temporal discretization, for instance, LSPG
-again reverts to Galerkin. To gain the enhanced stability associated with
-LSPG, the underlying time-discretization scheme must be implicit with an
-appropriate time-step. This can increase the cost of the reduced-order model,
-especially in the case where the optimal time-step required by LSPG is small. 
+systems~\cite{bui_thesis}. Further, LSPG performs residual minimization over a
+time step, its performance is affected by the time-step size in two distinct
+ways: changing the time-step size modifies the window over which the residual
+is minimized \textit{as well as} the time-discretization error. As a result,
+LSPG often yields the lowest error for an intermediate value of the time step.
+For too small a time-step, LSPG yields results similar to the Galerkin
+approach; in the limiting case of $\Delta t \rightarrow 0$, LSPG recovers
+Galerkin. For too-large a time-step, the accuracy of LSPG degrades. It is
+unclear if this is due to the numerical error associated with enlarging the
+time-step size, or rather if it is due to the size of the window the residual
+is being minimized over. The LSPG approach is additionally sensitive to the
+time discretization scheme. When used with explicit temporal discretization,
+for instance, LSPG again reverts to Galerkin. To gain the enhanced stability
+associated with LSPG, the underlying time-discretization scheme must be
+implicit with an appropriate time-step. This can increase the cost of the
+reduced-order model, especially in the case where the optimal time-step
+required by LSPG is small. 
 
  
 %The thesis of least--squares residual minimization was extended to construct reduced-order models of static systems by several authors, with two such instances being~\cite{rovas_thesis} and~\cite{bui_resmin}. Similar to the finite-element case, numerous theoretical analyses and numerical experiments have demonstrated that residual minimization methods yield more accurate and stable solutions than the Galerkin method. The extension of least--squares residual minimization methods to dynamical systems, however, has proved challenging. The least-squares Petrov-Galerkin method is arguably the most commonly adapted residual minimization method for dynamical systems. LSPG extends the idea of least--squares residual minimization to dynamical systems by sequentially minimizing the \textit{fully discrete} residual (i.e., after temporal discretization) in a weighted norm (nominally $\elltwo$) over each time step. Numerous numerical experiments have demonstrated that the LSPG approach yields more stable (although not always more accurate) solutions than the Galerkin method~\cite{carlberg_lspg_v_galerkin,carlberg_gnat,carlberg_thesis,parish_apg}. The common explanation for this improved performance is that, by minimizing the fully discrete residual, LSPG minimizes the residual over a \textit{finite-sized time-window}, rather than instantaneously as is done in the Galerkin method. 
@@ -325,7 +361,7 @@ The present work distinguishes itself from Ref.~\cite{choi_stlspg} in that
 consider trial subspaces with both space--time dimension reduction and spatial
 dimension reduction, and (3.) residual minimization is performed over time
 windows; Ref.~\cite{choi_stlspg} considers space--time bases and minimizes the
-fully-discrete residual over the entire domain. 
+fully-discrete residual over the entire time domain. 
 
 
 %Ref.~\cite{choi_stlspg} develops a space--time formulation of the least-squares Petrov-Galerkin approach. The formulation minimizes the \textit{fully discrete} residual over the entire space--time domain within a given space--time trial space. These space--time trial spaces are constructed through higher-order singular value decompositions (SVDs), such as the truncated high-order SVD. The present work distinguishes itself from Ref.~\cite{choi_stlspg} in that it seeks to minimize the time-continuous residual over time slabs, as opposed to the fully-discrete residual over the entire domain. Another point of departure from Ref.~\cite{choi_stlspg} is that the present work does not consider temporal reduction; this will be a subject of future work. Instead, the temporal basis is taken to have full support. Another piece of relevant work is that performed by Constantine and Wang~\cite{constantine_strom}, in which a space--time residual minimization formulation for model interpolation is pursued. The present work again distinguishes itself in that it seeks to minimize the time-continuous residual over space--time slabs;~\cite{constantine_strom} considers the solution of a fully discrete optimization problem over the entire space--time domain. It is noted that, similar to the current work, a time-continuous residual-minimization formulation is used as a starting point in~\cite{constantine_strom}, and as such thematic similarities exist between~\cite{constantine_strom} and the present work.
