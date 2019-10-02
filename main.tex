@@ -21,16 +21,27 @@
 \begin{abstract}
 This work proposes a \methodNameLower\ (\methodAcronym) model-reduction
 	formulation for dynamical systems. The proposed approach minimizes the
-	time-continuous full-order-model residual over a low-dimensional 
-	trial subspace across a sequence of time windows and addresses key deficiencies in existing model-reduction approaches; e.g., the time step and time scheme dependence of least-squares Petrov--Galerkin (LSPG), the exponentially growing error bounds present in Galerkin and LSPG, and the offline cost of space--time LSPG. 
+	time-continuous full-order-model residual over a low-dimensional trial
+	subspace across a sequence of time windows and addresses key deficiencies in
+	existing model-reduction approaches, e.g., the time-step and time-scheme
+	dependence of least-squares Petrov--Galerkin (LSPG) projection, \textit{a
+	posteriori} error bounds that grow exponentially in time for Galerkin and
+	LSPG projection, and the offline cost of space--time LSPG projection.
+	\KTC{How do we address the offline cost of ST-LSPG?}
 We consider two types of trial subspaces
 	within the proposed framework:
-	one that reduces the spatial dimension of the full-order model, and one that
-	reduces both the spatial and temporal dimensions of the full-order model. For both types of trial subspaces, we consider two differing solution techniques: direct (i.e., discretize-then-optimize) and indirect (i.e., optimize-then-discretize). Critically, we show that various instances of this framework yield existing model-reduction approaches, namely Galerkin, Least-Squares Petrov–Galerkin, and Space–Time Least-Squares Petrov– Galerkin. Numerical experiments on the compressible Euler and Navier--Stokes equations demonstrate that, at an increased computational cost, the \methodAcronym\ formulation can yield more accurate and physically relevant solutions than the Galerkin and Least-Squares Petrov--Galerkin approaches. 
-
-
-
-
+	one that reduces only the spatial dimension of the full-order model, and one that
+	reduces both the spatial and temporal dimensions of the full-order model.
+	For each type of trial subspaces, we consider two different solution
+	techniques: direct (i.e., discretize-then-optimize) and indirect (i.e.,
+	optimize-then-discretize). Critically, we show that various instances of
+	this framework yield existing model-reduction approaches, namely Galerkin,
+	LSPG, and space–time LSPG projection. Numerical experiments on the
+	compressible Euler and Navier--Stokes equations demonstrate that, at an
+	increased computational cost, the \methodAcronym\ formulation can yield more
+	accurate and physically relevant solutions than Galerkin and
+	LSPG projection.  \KTC{So which is better? Should we emphasize that it is
+	more general?}
 
 \begin{comment}
 This work proposes a \methodNameLower\ (\methodAcronym) model-reduction
