@@ -173,7 +173,6 @@ methods to the current work and comprise the focus of the following review.
 %\end{itemize}
 %\end{itemize} 
 
-<<<<<<< HEAD
 
 \KTC{Why are we reviewing LSFEM? This isn't a ROM. Don't think it's relevant}
 Least-squares residual minimization as a numerical solution technique for
@@ -226,7 +225,6 @@ minimizing the full-order-model residual over a finite time window (rather
 than time instantanously), LSPG projection computes solutions that are more
 accurate over a larger part the trajectory compared with Galerkin projection.
 
-=======
 
 Residual minimization methods were extended-to and developed-for reduced-order
 models by a variety of researchers. Similar to LSFEM, residual minimization
@@ -257,8 +255,6 @@ The common physical explanation for this improved performance is that, by
 minimizing the fully discrete residual, LSPG minimizes the residual over a
 \textit{finite-sized time-window}, rather than instantaneously as is done in
 the Galerkin method.
-
->>>>>>> 8d8eebd9e5358b1cd8ef93841a5cfd2512d0b126
  
 \KTC{Let's discuss. What specifically do we want to point out about
 deficiencies in LSPG in this section? Should we also look in ST-LSPG? It seems you're trying
@@ -267,6 +263,8 @@ discretization method dictate so much about the method (I agree with this). If
 so, we should structure this to include other discretize-then-optimize methods
 I think. Or we could just focus on the time-step aspect (i.e., not the time
 discretization method), in which case we should focus on LSPG.}
+\KTC{HERE}
+
 The LSPG approach sequentially performs residual minimization over a single
 time-step, and as such is not associated with residual minimization over the
 entire time interval. \KTC{This is what ST-LSPG does. Why do we ignore it? the
