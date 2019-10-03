@@ -442,13 +442,14 @@ calligraphic fonts (i.e., $\mathcal{X}$).
 \section{Mathematical setting}\label{sec:math}
 We consider the system of nonlinear ordinary differential equations (ODEs),
 \begin{equation}\label{eq:FOM}
- \frac{d\stateFOM}{dt} = \velocity(\stateFOM,t), \qquad \stateFOM(0) = \stateFOMIC,
+ \frac{d\stateFOM}{dt} = \velocity(\stateFOM,t), \qquad \stateFOM(0) =
+	\stateFOMIC,\qquad t \in [0,T]
 \end{equation}
-where $t \in [0,T]$ denotes time with 
-$T \in \mathbb{R}^+$ denoting the final time, $\stateFOM \in \RR{\fomdim}
+where 
+$T \in \mathbb{R}^+$ denotes the final time, $\stateFOM \in \RR{\fomdim}
 	\otimes \timeSpace $ with $\stateFOM: [0,T] \rightarrow  \RR{\fomdim}$
 	denotes the state implicitly defined as the solution to initial value
-	problem~\eqref{eq:FOM}, $\stateFOMIC \in \mathbb{R}^{\fomdim}$ denotes the initial conditions,
+	problem~\eqref{eq:FOM}, $\stateFOMIC \in \mathbb{R}^{\fomdim}$ denotes the initial condition,
 	and $\velocity: \mathbb{R}^{\fomdim} \times [0,T] \rightarrow
 	\mathbb{R}^{\fomdim}$ with $(\stateyDiscrete,t) \mapsto
 	\velocity(\stateyDiscrete,t)$ denotes the velocity, which is possibly
@@ -484,42 +485,76 @@ Projection-based ROMs generate approximate solutions to the FOM
 	\KTC{HERE}
 
 \subsection{\spatialAcronym\ trial subspaces}
-\spatialAcronym\ trial subspaces approximate the FOM ODE solution, $\stateFOM$, with an approximate solution, $\approxstate$, that lives in a $K$-dimensional affine trial subspace, 
+\spatialAcronym\ trial subspaces approximate the FOM ODE solution
+	$\stateFOM$ with an approximation $\approxstate$ that resides in an
+	affine space--time trial subspace of dimension $K\ll\fomdim$, i.e., 
 \begin{align}\label{eq:spatial_subspace}
-& \stspaceS \defeq \trialspace \otimes \timeSpace,\\ 
-& \trialspace \defeq \text{Range}(\basismat) +  \stateIntercept,  \label{eq:spatial_subspace2}  \\
+& \stspaceS \defeq \trialspace \otimes \timeSpace +
+	\stateIntercept\otimes\onesFunction,\\ 
+& \trialspace \defeq \text{Range}(\basismat),  \label{eq:spatial_subspace2}  \\
 &\basismat \defeq \begin{bmatrix}  \basisvec_1  & \cdots &  \basisvec_K \end{bmatrix}, \label{eq:spatial_subspace3} 
 \end{align}
-where we refer to $\basismat \in \RRStar{\romdim}{\fomdim}$, with $\RRStar{\romdim}{\fomdim}$ denoting the set  $\{ \mathbf{X} \in \RR{\fomdim \times \romdim} \big| \mathbf{X}^T \mathbf{X} = \mathbf{I} \}$, as the spatial trial basis matrix, $\trialspace$ as the spatial trial subspace, and $\stateIntercept \in \mathbb{R}^{\fomdim}$ as the reference state. 
+where 
+	$\timeSpace$ denotes the set of real-valued functions acting on the time
+	domain
+	$[0,T]$, $\onesFunction\in\timeSpace$ is defined as $\onesFunction:[0,T]\rightarrow\{1\}$,
+	$\basismat \in \RRStar{\romdim}{\fomdim}$ denotes the spatial trial subspace with
+	$\RRStar{\romdim}{\fomdim}$ denoting the compact Stiefel manifold (i.e.,  $
+	\RRStar{\romdim}{\fomdim}\defeq
+	\{ \mathbf{X} \in \RR{\fomdim
+	\times \romdim}\, \big|\, \mathbf{X}^T \mathbf{X} = \mathbf{I} \}$),
+	$\trialspace\subseteq\RR{\fomdim}$ denotes the spatial trial subspace, and
+	$\stateIntercept \in \mathbb{R}^{\fomdim}$ denotes the reference state that
+	is often taken to be the initial condition (i.e., $\stateIntercept = \stateFOMIC$). 
 %where $\basisvec_i \in \mathbb{R}^N$ are orthonormal basis vectors and $\stateIntercept \in \mathbb{R}^{\fomdim}$ the ``intercept''.
 %We refer to $\basismat \in \RRStar{\fomdim \times \romdim}$, with $\RRStar{p \times q}$ denoting the set of orthogonal $q$ frames in $p$, as the spatial trial basis, and $\trialspace$ as the spatial trial space. 
-The basis vectors $\basisvec_i$ are typically constructed through, e.g., POD~\cite{berkooz_turbulence_pod}, the reduced-basis method~\cite{rb_1,rb_2,rb_3,NgocCuong2005,Rozza2008}, etc. 
-ROMs leveraging \spatialAcronym\ trial subspaces approximate the state as,
+The basis vectors $\basisvec_i$, $i=1,\ldots,K$ are typically constructed
+using state snapshots, e.g., via
+proper orthogonal decomposition (POD)~\cite{berkooz_turbulence_pod} or the reduced-basis method~\cite{rb_1,rb_2,rb_3,NgocCuong2005,Rozza2008}. 
+At any time instance $t\in[0,T]$, ROMs that employ the  \spatialAcronym\ trial subspace approximate the state as
 \begin{equation}\label{eq:affine_trialspace}
-\stateFOMArg{}{t} \approx \approxstate(t) \defeq \basisspace \genstateArg{}{t} + \stateIntercept,
+\stateFOMArg{}{t} \approx \approxstate(t) = \basisspace \genstateArg{}{t} + \stateIntercept,
 \end{equation}
-where $\genstate \in \RR{\romdim} \otimes \timeSpace$, with $\genstate : [0,T] \rightarrow \mathbb{R}^{\romdim}$, are the generalized coordinates. Substituting the approximation given in~\eqref{eq:affine_trialspace} into~\eqref{eq:FOM} and performing orthogonal $\elltwo$ projection of the initial conditions onto the trial subspace, one obtains,
+where $\genstate \in \RR{\romdim} \otimes \timeSpace$ denotes the generalized
+coordinates. Substituting the approximation~\eqref{eq:affine_trialspace} in
+Eq.~\eqref{eq:FOM} and performing orthogonal
+$\elltwo$-projection of the initial condition onto the trial subspace yields
+the overdetermined system of ODEs
 \begin{equation}\label{eq:g_truncation}
-\basisspace \frac{d }{dt}\genstateArg{}{t} = \velocity(\basisspace
-\genstateArg{}{t} + \stateIntercept,t ), \qquad \genstate(0) = \genstateIC, \qquad t \in [0,T].
+\basisspace \frac{d\genstate }{dt} = \velocity(\basisspace
+\genstate + \stateIntercept,t ), \qquad \genstate(0) = \genstateIC, \qquad t \in [0,T].
 \end{equation}
-Equation~\eqref{eq:g_truncation} provides an over-determined system of $N$ equations for the $K$ generalized coordinates. Dimension reduction is predominantly performed with either the \textit{Galerkin method} or the \textit{Least-Squares Petrov--Galerkin method} (LSPG). We now outline these two methods.
+Because Eq.~\eqref{eq:g_truncation} is overdetermined, a solution may not
+exist. Typically, either \textit{Galerkin projection} or \textit{least-squares
+Petrov--Galerkin projection} is employed to reduce the number of equations
+such that a unique solution exists. We now describe these two methods.
 
 \subsubsection{Galerkin projection}
-The Galerkin method is (traditionally) obtained by the following steps: (1.) The approximation~\eqref{eq:affine_trialspace} is substituted into~\eqref{eq:FOM}, and (2.) the resulting residual is enforced to be $\stweightingMatArg{}$-orthogonal to the trial subspace, with $\stweightingMatArg{ } \equiv \stweightingMatOneArg{ }^T \stweightingMatOneArg{ }$ being a positive (semi-)definite weighting matrix (commonly taken to be $\mathbf{I}$). This projection process results in what is known as the Galerkin method,
-\begin{equation*}\label{eq:g_truncation2}
-\frac{d}{dt}\genstateGalerkinArg{}{t} = \massArgnt{n}^{-1} \basisspace^T \stweightingMatArg{n} \velocity(\basisspace
-\genstateGalerkinArg{}{t} + \stateIntercept,t), \qquad \genstateGalerkin(0) = \genstateIC, \qquad t \in [0,T],
-\end{equation*}
-where $\massArgnt{ } \equiv \basisspace^T \stweightingMatArg{ } \basisspace$ is a mass matrix. 
-Model reduction via the Galerkin method is seen to result in a $K$-dimensional dynamical system for the 
-generalized coordinates. 
-The Galerkin method can alternatively be viewed as a residual minimization method~\cite{carlberg_lspg_v_galerkin}. In this setting, the Galerkin ROM can be 
-written as,
-$$
-\frac{d}{dt}\genstateGalerkinArg{}{t} = \underset{ \genstateyDiscrete \in \RR{\romdim}  }{\text{arg\,min}} || \basisspace \hat{\stateyDiscrete} -  \velocity(\basisspace \genstateGalerkinArg{}{t} + \stateIntercept,t) ||_{\stweightingMatArg{n}}^2. 
+Galerkin projection reduces the number of equations in
+Eq.~\eqref{eq:g_truncation} by enforcing orthogonality of the 
+residual to the spatial trial subspace in the (semi-)inner product induced by the 
+positive (semi-)definite $\fomdim\times\fomdim$ matrix $\stweightingMatArg{}\equiv \stweightingMatOneArg{ }^T
+\stweightingMatOneArg{ }$ (commonly set to
+$\stweightingMatArg{}=\mathbf{I}$), i.e.,
+\begin{equation}\label{eq:g_truncation2}
+\frac{d\genstateGalerkin}{dt} = \massArgnt{n}^{-1} \basisspace^T \stweightingMatArg{n} \velocity(\basisspace
+\genstateGalerkin + \stateIntercept,t), \qquad \genstateGalerkin(0) = \genstateIC, \qquad t \in [0,T],
+\end{equation}
+where $\massArgnt{ } \equiv \basisspace^T \stweightingMatArg{ } \basisspace$
+denotes the $K\times K$ positive definite mass matrix.
+As demonstrated in Ref.~\cite{carlberg_lspg_v_galerkin}, Galerkin projection
+can be viewed alternatively as a residual-minimization
+method, as the Galerkin ODE~\eqref{eq:g_truncation2} is equivalent
+to
+\begin{equation}\label{eq:GalOptimal}
+\frac{d\genstateGalerkin}{dt} = \underset{ \genstateyDiscrete \in \RR{\romdim}
+	}{\text{arg\,min}} \| \basisspace \hat{\stateyDiscrete} -
+	\velocity(\basisspace \genstateGalerkin + \stateIntercept,t)
+	\|_{\stweightingMatArg{n}}^2,
 %\hat{\mathbf{v}}, %\qquad \genstateGalerkin(0) = \basisspace^T(\stateFOMIC -\stateIntercept), \qquad t \in [0,T].
-$$
+\end{equation}
+where $\|\mathbf{x}\|_{\stweightingMatArg{n}}\equiv
+\sqrt{\mathbf{x}^T\stweightingMatArg{n}\mathbf{x}}$.
 %where
 %$$\hat{ \mathbf{v}} = \underset{\hat{ \stateyDiscrete}  }{\text{arg min}} || \basisspace \hat{\stateyDiscrete} -  \velocity(\basisspace \genstateGalerkinArg{}{t} + \stateIntercept) ||_{\stweightingMatArg{n}}^2.$$
 %The minimization problem has the solution,
@@ -544,7 +579,10 @@ $$
 %\frac{d}{dt}\genstateGalerkinArg{}{t} = \mass^{-1}\basisspace^T \stweightingMatArg{n} \velocity(\basisspace
 %\genstateGalerkinArg{}{t} + \stateIntercept).
 %\end{equation*}
-The Galerkin ROM corresponds to \textit{time-instantaneous} minimization of the FOM ODE residual.
+Thus, the computed velocity $\frac{d\genstateGalerkin}{dt}(t)$ minimizes the
+time-instantaneous FOM ODE residual evaluated at the state $\basisspace
+\genstateGalerkin(t) + \stateIntercept$ and time $t$ over the spatial trial
+subspace $\trialspace$.
 %To perform dimension reduction, 
 %To perform dimension reduction, the governing equations are projected by a ``test" basis,
 %\begin{equation}\label{eq:g_truncation}
@@ -555,19 +593,44 @@ The Galerkin ROM corresponds to \textit{time-instantaneous} minimization of the 
 %\frac{d \genstate}{dt} = \basisspace^T \velocity(\basisspace \genstate + \state_0,t; \param ), \qquad t \in [0,T],
 %\end{equation}
 \subsubsection{Least-Squares Petrov--Galerkin projection}
-The Galerkin method can be unstable and inaccurate for non-self-adjoint and nonlinear problems. 
-An alternative model-reduction approach that enjoys several advantageous over the Galerkin method is the Least-Squares Petrov--Galerkin (LSPG) method~\cite{carlberg_lspg_v_galerkin,carlberg_thesis,carlberg_gnat,bui_unsteady,bui_thesis}. LSPG is defined at the fully discrete level and minimizes the fully discrete FOM O$\Delta$E residual (i.e., the FOM ODE residual after temporal discretization) at each time-step instance.  We outline the LSPG method for linear multistep methods as a demonstrative example. Defining a discretization of the continuous time domain $[0,T]$ into $N_t$ time instances $t^n = n\Delta t, n=1,2,\ldots,N_t$ with a constant time step $\Delta t = T/N_t$, temporal discretization via a linear multistep method yields the FOM O$\Delta$E,
+Despite its time-instantaneous optimality property 
+\eqref{eq:GalOptimal}, Galerkin projection can yield inaccurate solutions,
+particularly if the velocity is not self-adjoint or
+is nonlinear. 
+Least-squares Petrov--Galerkin (LSPG)
+projection~\cite{carlberg_lspg_v_galerkin,carlberg_thesis,carlberg_gnat,bui_unsteady,bui_thesis}
+is an alternative projection method that exhibits several advantages over Galerkin
+projection.
+Rather than minimize the (time-continuous) FOM ODE residual as in Galerkin
+projection, at each time step, LSPG minimizes
+the FOM O$\Delta$E residual, i.e., the residual arising after applying time discretization to the FOM ODE.  
+We now describe LSPG projection in the case of linear multistep methods;
+Ref.~\cite{carlberg_lspg_v_galerkin} also presents LSPG projection for Runge--Kutta
+schemes. 
+
+To begin, and without loss of generality, we introduce a uniform time
+grid characterized by the time step $\Delta t$ and time instances
+$t^n = n\Delta
+t$, $n=1,\ldots,N_t$.
+Applying a linear multistep method to discretize the FOM ODE \eqref{eq:FOM}
+with this time grid
+yields the FOM O$\Delta$E, which computes the sequence of FOM O$\Delta$E
+solutions
+$\stateFOMDiscreteArg{n}( \approx \stateFOM(t^n))$, $n=1,\ldots,N_t$
+as the implicit solution to the system of algebraic equations
 \begin{equation}\label{eq:lms}
-\residLMSArg{n} (\stateFOMDiscreteArg{n};\stateFOMDiscreteArg{n-1},\ldots,\stateFOMDiscreteArg{n-k^n}) = \bz, \qquad n=1,\ldots,N_t, 
+\residLMSArg{n} (\stateFOMDiscreteArg{n};\stateFOMDiscreteArg{n-1},\ldots,\stateFOMDiscreteArg{n-k^n}) = \bz, 
 \end{equation}
-where $\stateFOMDiscreteArg{n} \approx \stateFOM(t^n)$ denotes the discrete approximation to the state at the $n${th} time instance and 
-$\residLMSArg{n}$ is the discrete linear multistep residual at the $n$th time step,
+where  $k^n$ denotes the number of steps employed by the scheme at the $n$th
+time instance and 
+$\residLMSArg{n}$ denotes the FOM O$\Delta$E residual, which is defined as
 \begin{align*}
 \residLMSArg{n} &: (\stateyDiscreteArgnt{n};\stateyDiscreteArgnt{n-1},\ldots,\stateyDiscreteArgnt{n-k^n}) \mapsto  \frac{1}{\Delta t} \sum_{j=0}^{k^n} \alpha^n_j \stateyDiscreteArgnt{n-j} -  \sum_{j=0}^{k^n} \beta^n_j \velocity(\stateyDiscreteArgnt{n-j},t^{n-j}),
 \\
-&: \RR{\fomdim} \otimes \RR{k^n + 1} \rightarrow \RR{\fomdim}. 
+&: \RR{\fomdim} \otimes \RR{k^n + 1} \rightarrow \RR{\fomdim},
 \end{align*} 
-In the above, $k^n$ is the width of the multistep scheme at the $n$th time step and $\alpha^n_j,\beta^n_j$ are coefficients that define the type of multistep scheme at the $n$th time step.
+Here, $\alpha^n_j$, $\beta^n_j$, $j=0,\ldots,k^n$ are coefficients
+that define the linear multistep method at the $n$th time instance.
 %\begin{equation}\label{eq:coarse_implicit_euler_0}
 %\residLMS \frac{\stateFOMDiscreteArg{n} - \stateFOMDiscreteArg{n-1}  }{\Delta t} - \velocity(\stateFOMDiscreteArg{n}) = \mathbf{0}, \qquad n = 1,2,\ldots,N_t,
 %\end{equation}
@@ -576,7 +639,10 @@ In the above, $k^n$ is the width of the multistep scheme at the $n$th time step 
 %\frac{\stateFOMDiscreteArg{n} - \stateFOMDiscreteArg{n-1}  }{\Delta t} - \velocity(\stateFOMDiscreteArg{n}) = \mathbf{0}, \qquad n = 1,2,\ldots,N_t,
 %\end{equation}
 %where $\stateFOMDiscreteArg{n} \approx \stateFOM(t^n)$ denotes the discrete approximation to the state at the $n${th} time instance.
-The FOM O$\Delta$E solution will exactly satisfy~\eqref{eq:lms}; the ROM solution will not. The LSPG method minimizes the residual of the FOM O$\Delta$E~\eqref{eq:lms} within the trial subspace over each time step. %We define the discrete residual for the implicit Euler method at the $n$th time-instance as,
+
+\KTC{HERE}
+The LSPG method substitutes the \spatialAcronym\ trial subspace approximation
+minimizes the residual of the FOM O$\Delta$E~\eqref{eq:lms} within the trial subspace over each time step. %We define the discrete residual for the implicit Euler method at the $n$th time-instance as,
 %\begin{align*}
 %\resid_{\text{IE}} & \vcentcolon (\stateyDiscrete;\stateFOMDiscreteArg{n-1}) \mapsto \frac{\stateyDiscrete - \stateFOMDiscreteArg{n-1}  }{\Delta t} -  \velocity(\stateyDiscrete), \\
 %& \vcentcolon \RR{\fomdim} \times \RR{\fomdim} \rightarrow \RR{\fomdim}. 
