@@ -482,21 +482,20 @@ such that a unique solution exists. We now describe these two methods.
 
 \subsubsection{Galerkin projection}
 Galerkin projection reduces the number of equations in
-Eq.~\eqref{eq:g_truncation} by enforcing orthogonality of the associated
-residual to the trial subspace in the (semi-)inner product induced by the 
-positive (semi-)definite matrix $\stweightingMatArg{}\equiv \stweightingMatOneArg{ }^T
+Eq.~\eqref{eq:g_truncation} by enforcing orthogonality of the 
+residual to the spatial trial subspace in the (semi-)inner product induced by the 
+positive (semi-)definite $\fomdim\times\fomdim$ matrix $\stweightingMatArg{}\equiv \stweightingMatOneArg{ }^T
 \stweightingMatOneArg{ }$ (commonly set to
 $\stweightingMatArg{}=\mathbf{I}$), i.e.,
-\begin{equation*}\label{eq:g_truncation2}
+\begin{equation}\label{eq:g_truncation2}
 \frac{d\genstateGalerkin}{dt} = \massArgnt{n}^{-1} \basisspace^T \stweightingMatArg{n} \velocity(\basisspace
 \genstateGalerkin + \stateIntercept,t), \qquad \genstateGalerkin(0) = \genstateIC, \qquad t \in [0,T],
-\end{equation*}
+\end{equation}
 where $\massArgnt{ } \equiv \basisspace^T \stweightingMatArg{ } \basisspace$
-denotes a mass matrix.  Note that the Galerkin ODE~\eqref{eq:g_truncation2} is
-a system of $K$ equations in $K$ unknowns.
+denotes the $K\times K$ positive definite mass matrix.
 As demonstrated in Ref.~\cite{carlberg_lspg_v_galerkin}, Galerkin projection
 can be viewed alternatively as a residual-minimization
-method. In particular, the Galerkin ODE~\eqref{eq:g_truncation2} is equivalent
+method, as the Galerkin ODE~\eqref{eq:g_truncation2} is equivalent
 to
 \begin{equation}\label{eq:GalOptimal}
 \frac{d\genstateGalerkin}{dt} = \underset{ \genstateyDiscrete \in \RR{\romdim}
@@ -531,9 +530,10 @@ where $\|\mathbf{x}\|_{\stweightingMatArg{n}}\equiv
 %\frac{d}{dt}\genstateGalerkinArg{}{t} = \mass^{-1}\basisspace^T \stweightingMatArg{n} \velocity(\basisspace
 %\genstateGalerkinArg{}{t} + \stateIntercept).
 %\end{equation*}
-Thus, velocity $\frac{d\genstateGalerkin}{dt}(t)$ computed by Galerkin projection minimizes the
+Thus, the computed velocity $\frac{d\genstateGalerkin}{dt}(t)$ minimizes the
 time-instantaneous FOM ODE residual evaluated at the state $\basisspace
-\genstateGalerkin(t) + \stateIntercept$ and time $t$.
+\genstateGalerkin(t) + \stateIntercept$ and time $t$ over the spatial trial
+subspace $\trialspace$.
 %To perform dimension reduction, 
 %To perform dimension reduction, the governing equations are projected by a ``test" basis,
 %\begin{equation}\label{eq:g_truncation}
@@ -544,37 +544,44 @@ time-instantaneous FOM ODE residual evaluated at the state $\basisspace
 %\frac{d \genstate}{dt} = \basisspace^T \velocity(\basisspace \genstate + \state_0,t; \param ), \qquad t \in [0,T],
 %\end{equation}
 \subsubsection{Least-Squares Petrov--Galerkin projection}
-Despite its time-instantaneous optimality property expressed in
-Eq.~\eqref{eq:GalOptimal}, Galerkin projection can yield unstable and
-inaccurate trajectories, particularly if the velocity is not self-adjoint or
+Despite its time-instantaneous optimality property 
+\eqref{eq:GalOptimal}, Galerkin projection can yield inaccurate solutions,
+particularly if the velocity is not self-adjoint or
 is nonlinear. 
 Least-squares Petrov--Galerkin (LSPG)
 projection~\cite{carlberg_lspg_v_galerkin,carlberg_thesis,carlberg_gnat,bui_unsteady,bui_thesis}
-is an alternative approach that exhibits several advantages over Galerkin
+is an alternative projection method that exhibits several advantages over Galerkin
 projection.
 Rather than minimize the (time-continuous) FOM ODE residual as in Galerkin
-projection, LSPG minimizes
-the residual arising at a given time step after applying time discretization to the FOM ODE; we
-refer to the residual arising at the fully discrete level as the FOM O$\Delta$E residual.  
-We now describe LSPG projection when a linear multistep method is employed for
-time discretization; Ref.~\cite{carlberg_lspg_v_galerkin} derives LSPG projection for Runge--Kutta
-schemes as well. 
-\KTC{HERE}
-Defining a discretization
-of the continuous time domain $[0,T]$ into $N_t$ time instances $t^n = n\Delta
-t, n=1,2,\ldots,N_t$ with a constant time step $\Delta t = T/N_t$, temporal
-discretization via a linear multistep method yields the FOM O$\Delta$E,
+projection, at each time step, LSPG minimizes
+the FOM O$\Delta$E residual, i.e., the residual arising after applying time discretization to the FOM ODE.  
+We now describe LSPG projection in the case of linear multistep methods;
+Ref.~\cite{carlberg_lspg_v_galerkin} also presents LSPG projection for Runge--Kutta
+schemes. 
+
+To begin, and without loss of generality, we introduce a uniform time
+grid characterized by the time step $\Delta t$ and time instances
+$t^n = n\Delta
+t$, $n=1,\ldots,N_t$.
+Applying a linear multistep method to discretize the FOM ODE \eqref{eq:FOM}
+with this time grid
+yields the FOM O$\Delta$E, which computes the sequence of FOM O$\Delta$E
+solutions
+$\stateFOMDiscreteArg{n}( \approx \stateFOM(t^n))$, $n=1,\ldots,N_t$
+as the implicit solution to the system of algebraic equations
 \begin{equation}\label{eq:lms}
-\residLMSArg{n} (\stateFOMDiscreteArg{n};\stateFOMDiscreteArg{n-1},\ldots,\stateFOMDiscreteArg{n-k^n}) = \bz, \qquad n=1,\ldots,N_t, 
+\residLMSArg{n} (\stateFOMDiscreteArg{n};\stateFOMDiscreteArg{n-1},\ldots,\stateFOMDiscreteArg{n-k^n}) = \bz, 
 \end{equation}
-where $\stateFOMDiscreteArg{n} \approx \stateFOM(t^n)$ denotes the discrete approximation to the state at the $n${th} time instance and 
-$\residLMSArg{n}$ is the discrete linear multistep residual at the $n$th time step,
+where  $k^n$ denotes the number of steps employed by the scheme at the $n$th
+time instance and 
+$\residLMSArg{n}$ denotes the FOM O$\Delta$E residual, which is defined as
 \begin{align*}
 \residLMSArg{n} &: (\stateyDiscreteArgnt{n};\stateyDiscreteArgnt{n-1},\ldots,\stateyDiscreteArgnt{n-k^n}) \mapsto  \frac{1}{\Delta t} \sum_{j=0}^{k^n} \alpha^n_j \stateyDiscreteArgnt{n-j} -  \sum_{j=0}^{k^n} \beta^n_j \velocity(\stateyDiscreteArgnt{n-j},t^{n-j}),
 \\
-&: \RR{\fomdim} \otimes \RR{k^n + 1} \rightarrow \RR{\fomdim}. 
+&: \RR{\fomdim} \otimes \RR{k^n + 1} \rightarrow \RR{\fomdim},
 \end{align*} 
-In the above, $k^n$ is the width of the multistep scheme at the $n$th time step and $\alpha^n_j,\beta^n_j$ are coefficients that define the type of multistep scheme at the $n$th time step.
+Here, $\alpha^n_j$, $\beta^n_j$, $j=0,\ldots,k^n$ are coefficients
+that define the linear multistep method at the $n$th time instance.
 %\begin{equation}\label{eq:coarse_implicit_euler_0}
 %\residLMS \frac{\stateFOMDiscreteArg{n} - \stateFOMDiscreteArg{n-1}  }{\Delta t} - \velocity(\stateFOMDiscreteArg{n}) = \mathbf{0}, \qquad n = 1,2,\ldots,N_t,
 %\end{equation}
@@ -583,7 +590,10 @@ In the above, $k^n$ is the width of the multistep scheme at the $n$th time step 
 %\frac{\stateFOMDiscreteArg{n} - \stateFOMDiscreteArg{n-1}  }{\Delta t} - \velocity(\stateFOMDiscreteArg{n}) = \mathbf{0}, \qquad n = 1,2,\ldots,N_t,
 %\end{equation}
 %where $\stateFOMDiscreteArg{n} \approx \stateFOM(t^n)$ denotes the discrete approximation to the state at the $n${th} time instance.
-The FOM O$\Delta$E solution will exactly satisfy~\eqref{eq:lms}; the ROM solution will not. The LSPG method minimizes the residual of the FOM O$\Delta$E~\eqref{eq:lms} within the trial subspace over each time step. %We define the discrete residual for the implicit Euler method at the $n$th time-instance as,
+
+\KTC{HERE}
+The LSPG method substitutes the \spatialAcronym\ trial subspace approximation
+minimizes the residual of the FOM O$\Delta$E~\eqref{eq:lms} within the trial subspace over each time step. %We define the discrete residual for the implicit Euler method at the $n$th time-instance as,
 %\begin{align*}
 %\resid_{\text{IE}} & \vcentcolon (\stateyDiscrete;\stateFOMDiscreteArg{n-1}) \mapsto \frac{\stateyDiscrete - \stateFOMDiscreteArg{n-1}  }{\Delta t} -  \velocity(\stateyDiscrete), \\
 %& \vcentcolon \RR{\fomdim} \times \RR{\fomdim} \rightarrow \RR{\fomdim}. 
