@@ -1,4 +1,4 @@
-\subsection{\spatialAcronym: Direct Solution Approach}\label{sec:direct} 
+\subsection{\spatialAcronym: direct solution approach}\label{sec:direct} 
 Direct approaches solve~\eqref{eq:tclsrm} by
 ``transcribing" the infinite dimensional optimization problem into a finite
 dimensional one by discretizing the state and objective function in time.
@@ -53,7 +53,7 @@ other time-stepping methods (e.g., Runge--Kutta) follows closely.
 %%\timeWindowArg{n}{0} = \timeStartArg{n}, \timeWindowArg{n}{\nstepsArg{n}} =
 %%\timeEndArg{n}
 %\end{align*}
-\subsubsection{Linear Multistep Schemes}
+\subsubsection{Linear multistep schemes}
 Linear multistep schemes approximate the solution at time instance $\timeWindowArg{n}{i}$ using the previous $k$ time-instances.  
 %Discretizing the FOM ODE~\eqref{eq:FOM} with a linear $k$-step scheme at the $i$th time-instance over the $n$th time slab yields,
 %\begin{equation}\label{eq:kstep}
@@ -160,7 +160,7 @@ quadrature weights are used, \methodAcronym\ recovers LSPG.
 \end{remark} 
 %%%%%%%%%%%%%%%%COLLOCATION%%%%%%%
 \begin{comment}
-\subsubsection{Collocation (Runge--Kutta) Methods}
+\subsubsection{Collocation (Runge--Kutta) methods}
 Collocation methods comprise another popular technique for temporal discretization. 
 Collocation methods represent the FOM state over each time-step instance $[\timeWindowArg{n}{i-1},\timeWindowArg{n}{i}]$ as,
 \begin{equation}
@@ -287,7 +287,7 @@ linear multistep methods, can be obtained by modifying the representation of
 the state and the collocation points~\cite{ajams2015362}.
 \end{remark}
 \end{comment}
-\subsubsection{Solution to the Nonlinear Least-Squares Problem through the Gauss--Newton Method}
+\subsubsection{Solution to the nonlinear least-squares problem through the Gauss--Newton method}
 Discretization through linear multistep methods (as well as other techniques) 
 results in a nonlinear least-squares problem.
 A variety of algorithms exist for solving nonlinear  
@@ -393,7 +393,7 @@ $k\leftarrow k+1$
 
 %\input{direct_collocation}
 
-\subsection{Spatial Trial Space: Indirect Solution Approach}\label{sec:indirect}
+\subsection{Spatial trial space: indirect solution approach}\label{sec:indirect}
 In contrast to the direct approach,
 indirect methods ``indirectly" solve the minimization
 problem~\eqref{eq:tclsrm} by solving the Euler-Lagrange equations. The
@@ -497,7 +497,7 @@ $\genstate_i^{n} \leftarrow  \genstate_{i-1}^{n}$ \Comment{Reset state to value 
 }
 Return converged solution, $\genstateArgnt{n}= \genstateArgnt{n}_i$
 \end{algorithm}
-\subsubsection{Numerical Considerations for the Forward and Backwards Problems}
+\subsubsection{Numerical considerations for the forward and backward problems}
 The FBSM requires solving~\eqref{eq:lspg_continuous} and~\eqref{eq:lspg_adjoint}, both of which are defined at the time-continuous level. 
 The numerical implementation of the FBSM requires two main ingredients: (1.) temporal discretization schemes for the forward and backward problems and (2.) 
 an efficient method for computing action of the Jacobian transpose on a vector.  

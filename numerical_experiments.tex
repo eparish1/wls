@@ -1,7 +1,7 @@
-\section{Numerical Experiments}\label{sec:numerical_experiments}
+\section{Numerical experiments}\label{sec:numerical_experiments}
 This section analyzes the performance of \methodAcronymROMs\ leveraging \spatialAcronym\ trial subspaces on two benchmark problems: the Sod shock tube and compressible flow in a cavity. In each experiment, \methodAcronym\ is compared to the Galerkin and LSPG ROMs. Additionally, we assess the impact of the window size, time-step size, and time scheme on \methodAcronym. It is noted that both experiments are designed to test the \textit{reproductive} ability of the ROMs. Future state prediction and/or interpolation to new flow conditions is not considered as these problems introduce confounding factors (e.g., accuracy of the basis). 
  
-\subsection{Sod Shock Tube}
+\subsection{Sod shock tube}
 We first consider reduced-order models of the Sod shock tube problem. The system is governed by the compressible Euler equations in one dimension, 
 \begin{equation}\label{eq:euler_1D}
     \frac{\partial \boldsymbol u}{\partial t} + \frac{\partial \boldsymbol F}{\partial \mathsf{x}} = 0, \quad
@@ -34,11 +34,11 @@ u =
 \end{equation*}
 along with reflecting boundary conditions at $\mathsf{x}=0$ and $\mathsf{x}=1$. 
 
-\subsubsection{Description of FOM and Generation of Trial Space}
+\subsubsection{Description of FOM and generation of trial space}
 The 1D compressible Euler equations are solved using a finite volume method. The domain is partitioned into 500 cells of uniform width. The finite volume method uses the Rusanov flux~\cite{rusanov} at the cell interfaces. The FOM uses the Crank--Nicolson (CN) scheme, which is a linear multistep method defined by the coefficients $\alpha_0 = 1,\alpha_1 = -1, \beta_0 = \beta_1 = 1/2$, for temporal integration. The FOM is evolved for $t \in [0.0,1.0]$ at a time-step of $\Delta t = 0.002$. The \spatialAcronym\ trial subspace is constructed by executing Algorithm~\ref{alg:pod} with inputs $N_{\text{skip}}=2, \stateIntercept = \bz, K=46 $. The resulting trial subspace comprises $99.99\%$ of the snapshot matrix energy.
 %  The solution is saved every other time-step, resulting in 500 solutions snapshots. These snapshots are used to generate a trial basis for the reduced-order models through POD. The trial basis is selected to be of dimension $K = 46$, which corresponds to a $99.99\%$ energy criterion. No affine transformation is used in the construction of the trial subspace, i.e., $\stateIntercept = \bz$.
 
-\subsubsection{Description of Reduced-Order Models}
+\subsubsection{Description of reduced-order models}
 Reduced-order models based on the Galerkin, LSPG, and \methodAcronym\ approaches are considered. No hyper-reduction is considered 
 in this example, i.e., $\stweightingMatArg{} = \mathbf{I}$. Details on the implementation of the 
 different reduced-order models is as follows:
@@ -69,7 +69,7 @@ problem is solved via the Forward Backward Sweep Method. The action of the Jacob
 
 
 
-\subsubsection{Numerical Results}
+\subsubsection{Numerical results}
 The impact of the window size on \methodAcronymROMs\ is first assessed. A set of \methodAcronymROMs\ that minimize the residual over windows of constant size 
 $\DeltaSlabArg{n} \equiv \DeltaSlabArg{} =  .002$, $0.004$ ,$0.008$, $0.02$, $0.04$, $0.10$, $0.20$, $1.0$ are considered. The standard Galerkin and LSPG ROMs are additionally considered. Results are shown for the direct method with the CN time-discretization scheme; a comparison of different time-marching methods and direct/indirect solution techniques will be provided later in this section. 
 First, Figure~\ref{fig:sod_density} presents the density solutions predicted by the various ROMs at $t = \{0.5,1.0\}$. Figure~\ref{fig:sod_xt} shows 
@@ -251,7 +251,7 @@ are less than 6x the cost LSPG; despite the window sizes comprising up to 100 ti
 \end{figure}
 
 
-\subsubsection{Summary of Numerical Results for the Sod Shock Tube}
+\subsubsection{Summary of numerical results for the Sod shock tube}
 The key observations from the results of the first numerical example are: 
 \begin{enumerate}
 \item Increasing the window size over which the residual is minimized lead to more physically relevant solutions. Specifically, we observed that as the window size over which the residual was minimized grew, \methodAcronym\ lead to less oscillatory solutions.

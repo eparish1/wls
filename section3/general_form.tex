@@ -1,4 +1,4 @@
-\section{Windowed Least-Squares Formulation}\label{sec:tclspg} This section
+\section{Windowed residual minimization formulation}\label{sec:tclspg} This section
 outlines the proposed \methodNameLower\ 
 formulation (\methodAcronym). In contrast to (1.) the Galerkin method, which minimizes the 
 time-instantaneous residual, (2.) the LSPG method, which sequentially minimizes the discrete 
@@ -36,7 +36,7 @@ associated with the minimization problems.
 %objective is to find a ``controller" that minimizes the residual of the
 %Galerkin ROM. We now outline both of these (equivalent) formulations. 
 %
-\subsection{Residual Minimization Formulation} 
+\subsection{Residual minimization formulation} 
 We start by partitioning the
 temporal domain into a set of $\nslabs$ windows of size $\DeltaSlabArg{n}$. This partitioning is depicted in Fig.~\ref{fig:slab_fig}.
 \begin{figure} 
