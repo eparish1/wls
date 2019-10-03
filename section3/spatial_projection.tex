@@ -1,9 +1,13 @@
 \subsection{\spatialAcronym\ trial spaces}
 The \spatialAcronym\ trial subspace over the $n$th time window is given as, 
 \begin{equation}\label{eq:sttrialspace}
- \approxstateArgnt{n} \in \stspaceSArg{n} \defeq \trialspace \otimes \timeSpaceArg{n},
+ \approxstateArgnt{n} \in \stspaceSArg{n} \defeq 
+\trialspace \otimes \timeSpaceArg{n} +
+	\stateIntercept\otimes\onesFunction^n,\\ 
+%\trialspace \otimes \timeSpaceArg{n},
 \end{equation}
-where the spatial trial subspace, $\trialspace$, is as defined in~\eqref{eq:spatial_subspace2}-\eqref{eq:spatial_subspace3}.
+where the spatial trial subspace, $\trialspace$, is as defined in~\eqref{eq:spatial_subspace} and 
+$\onesFunction^n\in\timeSpaceArg{n}$ is defined as $\onesFunction:[\timeStartArg{n},\timeEndArg{n}]\rightarrow\{1\}.$
 % and  
 %$\approxstateArgnt{n}: [\timeStartArg{n},\timeEndArg{n}] \rightarrow  \trialspace$ is the \methodAcronym\ approximation to the state over the $n$th time slab.
 For simplicity, we study the case 
