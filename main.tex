@@ -21,27 +21,27 @@
 \begin{abstract}
 This work proposes a \methodNameLower\ (\methodAcronym) model-reduction
 	formulation for dynamical systems. The proposed approach sequentially minimizes the
-	time-continuous full-order-model residual over a low-dimensional trial
-	subspace across time windows. The approach comprises a generalization 
-of existing model reduction approaches; we show that various instances of
-  the method recover the Galerkin,
-  least-squares Petrov--Galerkin (LSPG), and space–time LSPG approaches. The approach further addresses key deficiencies in
-	existing model-reduction techniques, e.g., the dependence of (space--time) LSPG 
-on the time-discretization and the exponentially growing \textit{a
-	posteriori} error bounds present in Galerkin and
-	LSPG.
-We consider two types of trial subspaces
-	within the proposed framework:
-	one that reduces only the spatial dimension of the full-order model, and one that
-	reduces both the spatial and temporal dimensions of the full-order model.
-	For each type of trial subspaces, we consider two different solution
-	techniques: direct (i.e., discretize-then-optimize) and indirect (i.e.,
-	optimize-then-discretize). %Critically, we show that various instances of
-	%this framework yield existing model-reduction approaches, namely Galerkin,
-	%LSPG, and space–time LSPG projection. 
-  Numerical experiments are presented for trial subspaces with spatial dimension reduction, in where it is demonstrated that the \methodAcronym\ formulation can yield more
-	accurate and physically relevant solutions than Galerkin and
-	LSPG projection. 
+	time-continuous full-order-model residual over a low-dimensional space--time trial
+	subspace defined over an arbitrarily defined time window. The approach comprises a generalization 
+of existing model reduction approaches, as particular instances of
+  the methodology associate with Galerkin,
+	least-squares Petrov--Galerkin (LSPG), and space–time LSPG projection. In
+	addition, the approach
+	addresses key deficiencies in existing model-reduction
+	techniques, e.g., the dependence of (space--time) LSPG projection on the
+	time discretization and the exponential growth in time exhibited by \textit{a posteriori}
+	error bounds for Galerkin and LSPG projection.  We consider two types of
+	space--time trial
+	subspaces within the proposed framework: one that reduces only the spatial
+	dimension of the full-order model, and one that reduces both the spatial and
+	temporal dimensions of the full-order model.  For each type of trial
+	subspace, we consider two different solution techniques: direct (i.e.,
+	discretize-then-optimize) and indirect (i.e., optimize-then-discretize).
+	Numerical experiments conducted using the trial subspaces characterized by spatial
+	dimension reduction demonstrate that the \methodAcronym\
+	approach can yield more accurate and physically relevant solutions \KTC{What
+	does `physically relevant' mean? This is imprecise.} than
+	Galerkin and LSPG projection. 
 
 \begin{comment}
 This work proposes a \methodNameLower\ (\methodAcronym) model-reduction
@@ -100,12 +100,12 @@ Numerical experiments on the compressible Euler and Navier--Stokes equations dem
 %\maketitle
 \section{Introduction}
 
-Simulating parameterized dynamical systems underpins many applications across
-science and engineering, including engineering design, control, financial
-analysis, and epidemiology. In many contexts, executing a dynamical-system
+Simulating parameterized dynamical systems arises in many applications across
+science and engineering, including design, control, uncertainty
+quantification, and epidemiology, for example. In many contexts, executing a dynamical-system
 simulation at a single parameter instance---which entails the numerical
 integration of a system of ordinary differential equations (ODEs)---incurs an
-extremely large computational expense.  This occurs, for example, when the
+extremely large computational cost.  This occurs, for example, when the
 state-space dimension is large (e.g., due to fine spatial resolution when
 discretizing a partial differential equation) and/or when the number of time
 instances is large (e.g., due to time-step limitations incurred by stability
@@ -119,24 +119,27 @@ application tractable.
 
 Projection-based reduced-order models (ROMs) comprise one such approximation
 strategy. First, these techniques execute a computationally expensive
-\textit{offline} stage that computes a low-dimensional ``trial'' subspace on
+\textit{offline} stage that computes a low-dimensional \textit{trial subspace} on
 which the dynamical-system state can be well approximated (e.g., by computing
 state ``snapshots'' at different time and parameter instances, by solving
-Lyapunov equations, etc). Second, these methods execute an inexpensive
+Lyapunov equations). Second, these methods execute an inexpensive
 \textit{online} stage during which they compute approximations to the
 dynamical-system trajectory that reside on this trial subspace via a
 projection process.
  
-Model reduction for linear-time-invariant systems (and other strongly
-structured dynamical systems) is quite mature \cite{wilcox_benner_rev,moore,roberts,GugercinIRKA} as system-theoretic properties (e.g., controllability,
+Model reduction for linear-time-invariant systems (and other well structured
+dynamical systems) is quite mature
+\cite{wilcox_benner_rev,moore,roberts,GugercinIRKA}, as system-theoretic properties (e.g., controllability,
 observability, asymptotic stability, $\mathcal H_2$-optimality) can be readily
-quantified and accounted for in the projection process, which yields
-reduced-order models that inherit such properties.  The primary challenge for
+quantified and accounted for in the projection process; this often results in
+reduced-order models that inherit such important properties.  The primary
+challenge in
 developing reduced-order models for general nonlinear dynamical systems is
-that such properties are difficult to quantitatively assess. As a result, it
+that such properties are difficult to assess quantitatively. As a result, it
 is difficult to develop reduced-order models that preserve important
-dynamical-system properties, which often results in inaccurate or unstable
-methods.  To address this, researchers have pursued several directions that
+dynamical-system properties, which often results in methods that yield
+trajectories that are
+inaccurate, unstable, or violate physical properties.  To address this, researchers have pursued several directions that
 aim to imbue reduced-order models for nonlinear
 dynamical systems with properties that can improve robustness and accuracy.
 These
@@ -145,7 +148,8 @@ projection that equips the ROM solution with a notion of optimality~\cite{carlbe
 space--time
 projection that leads to error bounds that grow slowly in time~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC,benner_st};
 ``energy-based'' inner
-products that ensure non-increasing entropy in the ROM solution~\cite{rowley_pod_energyproj,Kalashnikova_sand2014};
+products that ensure non-increasing entropy in the ROM
+solution~\cite{rowley_pod_energyproj,Kalashnikova_sand2014,chan2019entropy};
 basis-adaptation methods that improve the ROM's accuracy \textit{a
 posteriori}~\cite{carlberg_hadaptation,adeim_peherstorfer,etter2019online}, stabilizing subspace rotations that account for truncated modes \textit{a priori}~\cite{basis_rotation}, structure-preserving
 methods that enforce conservation \cite{carlberg_conservative_rom} or
@@ -156,7 +160,7 @@ problem~\cite{san_iliescu_geostrophic,iliescu_pod_eddyviscosity,iliescu_vms_pod_
 We note that these techniques are often not mutually exclusive.
 %Residual-minimizing projection methods are the most relevant to the current work and comprise the focus of the following review.
 Residual-minimizing and space--time projection are the most relevant classes of
-methods to the current work and comprise the focus of the following review.
+methods for the current work and comprise the focus of the following review.
 
 %~\cite{legresley_1,legresley_2,legresley_3,bui_resmin_steady,rovas_thesis,carlberg_thesis,bui_thesis} and then extended to dynamical systems in Refs~\cite{bui_thesis,bui_unsteady,carlberg_thesis,carlberg_gnat,carlberg_lspg,carlberg_lspg_v_galerkin}. Specifically, Refs~\cite{bui_thesis,bui_unsteady,carlberg_thesis,carlberg_gnat,carlberg_lspg}
 
@@ -191,7 +195,8 @@ methods to the current work and comprise the focus of the following review.
 %\KTC{This is not an `advantage'. It is guaranteed to be inf--sup stable.}
 %over the more standard Galerkin discretization. 
 
-Residual minimization methods in model-order reduction comprise 
+\KTC{HERE, COFFEE BREAK}
+Residual minimization methods in model reduction comprise 
 computing a solution within a low-dimensional trial subspace that minimizes some residual norm of the system of interest. Researchers have developed such residual-minimizing
 model-reduction methods for both static systems (i.e., systems without
 time-dependence)
@@ -1467,7 +1472,7 @@ $$ \basisspace  \dot{\genstate}  -\velocity = \lambda$$
 \end{appendices}
 
 %\section*{References}
-\bibliographystyle{aiaa}
-\bibliography{refs}{}
+\bibliographystyle{siam}
+\bibliography{refs}
 \end{document}
 
