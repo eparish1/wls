@@ -45,8 +45,10 @@ associated with the associated residual-minimization problems.
 \subsection{Windowed least-squares for general space--time trial subspaces} 
 We begin by introducing a (nonuniform) partition of the time domain $[0,T]$
 into $\nslabs$ non-overlapping windows $[\timeStartArg{n} ,
-\timeEndArg{n}]\subseteq[0,T]$ of size $\DeltaSlabArg{n}\defeq\timeEndArg{n} -
-\timeStartArg{n}$ such that $\timeStartArg{n+1} = \timeEndArg{n}$,
+\timeEndArg{n}]\subseteq[0,T]$ of length $\DeltaSlabArg{n}\defeq\timeEndArg{n} -
+\timeStartArg{n}$, $n=1,\ldots,\nslabs$ such that 
+$\timeStartArg{1} = 0$, $\timeEndArg{\nslabs} = T$, and
+$\timeStartArg{n+1} = \timeEndArg{n}$,
 $n=1,\ldots,\nslabs-1$; Fig.~\ref{fig:slab_fig} depicts this partitioning.
 \begin{figure} 
 \begin{centering} 
@@ -60,11 +62,13 @@ the $n$th space--time trial subspace such that
 \begin{equation}
 \approxstate^n \in \stspace^n \subseteq \RR{N} \otimes \timeSpaceArg{n} , \qquad  n = 1,\ldots,\nslabs,
 \end{equation}
-where $\timeSpaceArg{n}$ denotes the set of real-valued functions acting on $[\timeStartArg{n},\timeEndArg{n}]$
+where $\timeSpaceArg{n}$ denotes the set of real-valued functions acting on
+$[\timeStartArg{n},\timeEndArg{n}]$ (i.e., $\timeSpaceArg{n} = \{f\,|\,f:[\timeStartArg{n},\timeEndArg{n}]\rightarrow\RR{}\}$)
 and
 $\approxstate^n \in\RR{\fomdim}\otimes\timeSpaceArg{n}$. 
+
 \KTC{HERE}
-Over each window, define the objective,
+Over the $n$th window, define the objective functional
 \begin{equation}\label{eq:obj}
 \begin{split} \mathcal{J}^n &\vcentcolon \statey \mapsto
 \frac{1}{2} \int_{\timeStartArg{n}}^{\timeEndArg{n}} \big[ \dot{\statey}(t)
@@ -73,22 +77,27 @@ Over each window, define the objective,
 %&\vcentcolon \RR{\fomdim} \times [\timeStartArg{n},\timeEndArg{n}] \rightarrow
 %\RR{}, \end{align}
 &\vcentcolon \RR{\fomdim}\otimes \timeSpaceArg{n}  \rightarrow
-\RR{}, 
+\RR{}_+, 
 \end{split}
 \end{equation}
 %\begin{align}\label{eq:obj} \mathcal{J}^n &\vcentcolon \state \mapsto
 %\frac{1}{2} \int_{\timeStartArg{n}}^{\timeEndArg{n}} \resid(\state)^T
 %\stweightingMat \resid(\state) d\tau \\ &\vcentcolon \RR{\fomdim} \times
 %[0,T] \rightarrow \RR{}.  \end{align}
-where $\stweightingMatArg{n} \equiv \stweightingMatOneArg{ }^T \stweightingMatOneArg{ } \in \RR{\fomdim \times \fomdim}$ is a
-symmetric positive semi-definite matrix that, e.g., enables hyper-reduction and/or modifies the norm. For simplicity, 
-it is assumed that the weighting matrix is the same for all time windows. 
+where $\stweightingMatArg{n} \equiv \stweightingMatOneArg{ }^T
+\stweightingMatOneArg{ } \in \RR{\fomdim \times \fomdim}$ denotes a
+symmetric positive semi-definite matrix that can enable hyper-reduction, for
+example. For notational simplicity, 
+we employ the same weighting matrix for all time windows. 
 
-\methodAcronym\ computes a sequence of approximate solutions $\approxstateArgnt{n}$, for $n=1,\ldots,\nslabs$, as the solution to the minimization problems,
+The \methodAcronym\ framework sequentially computes approximate solutions
+$\approxstateArgnt{n}\in\stspace^n$, $n=1,\ldots,\nslabs$, where 
+$\approxstateArgnt{n}$ is the solution to the
+minimization problem
 \begin{equation}\label{eq:tclsrm}
 \begin{split}
-      &\underset{\stateyArgnt{n} \in \stspace^n}{\text{minimize}} \; \mathcal{J}^n(\stateyArgnt{n}), \\
-      &\text{subject to } \;  \stateyArg{n}{\timeStartArg{n}} =
+      &\underset{\statey \in \stspace^n}{\text{minimize}} \; \mathcal{J}^n(\statey), \\
+			&\text{subject to } \;  \statey(\timeStartArg{n}) =
 \begin{cases}\mathbb{P}^n (\approxstateArgnt{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs \\
 \mathbb{P}^n( \stateFOMArgnt{1})(0)& n=1, \end{cases} 
 \end{split}
