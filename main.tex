@@ -617,7 +617,7 @@ space--time basis matrix comprises time-dependent \textit{functions}, while the 
 
 Substituting the approximation~\eqref{eq:stapprox1} into the FOM ODE~\eqref{eq:FOM},
 \begin{equation}\label{eq:st_fom}
-\frac{d }{dt} \stbasisArg{}{t} \stgenstate =  \velocity(\stbasisArg{}{t} \stgenstate + \stateIntercept,t) , \qquad \genstate(0) =\mathbb{P}(\stateFOM)(0), \qquad t \in [0,T],
+\stbasisDotArg{}{t} \stgenstate =  \velocity(\stbasisArg{}{t} \stgenstate + \stateIntercept,t) , \qquad \genstate(0) =\mathbb{P}(\stateFOM)(0), \qquad t \in [0,T],
 \end{equation}
 where $\mathbb{P} : \RR{N} \otimes \timeSpace \rightarrow \stspaceST$ is an orthogonal projection onto the trial subspace (e.g., $\elltwo$).
 Equation~\eqref{eq:st_fom} is an over-determined algebraic system for the $\stdim$ unknowns. We now outline the Space--Time Least-Squares Petrov--Galerkin method~\cite{choi_stlspg}. 
