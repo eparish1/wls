@@ -626,17 +626,17 @@ trajectory
 \begin{equation}\label{eq:sttrialspace_def}
  \stspaceST \defeq 
 	\Range{\stbasis} + 
-	\stateIntercept\otimes\onesFunction
+	\stateFOMIC\otimes\onesFunction
 	\subseteq \RR{N} \otimes \timeSpace
 \end{equation}
 and $\stbasis\in\RR{N \times \stdim}\otimes \timeSpace$ with 
-$\stbasis:\timeDummy\mapsto\stbasis(\timeDummy)$
+$\stbasis:\timeDummy\mapsto\stbasis(\timeDummy)$ and $\stbasis(0) =
+\boldsymbol 0$ 
 denotes the space--time trial basis.
-
 Thus, at any time instance $t\in[0,T]$, ROMs that employ the
 \spaceTimeAcronym\ trial subspace approximate the state as
 \begin{equation}\label{eq:stapprox1}
- \stateFOMArg{}{t} \approx \approxstateArg{}{t}  = \stbasisArg{}{t} \stgenstate + \stateInterceptArg{},
+ \stateFOMArg{}{t} \approx \approxstateArg{}{t}  = \stbasisArg{}{t} \stgenstate + \stateFOMIC,
 \end{equation}
 where $\stgenstateArg{} \in \RR{\stdim}$ denote the space--time generalized coordinates. 
 Critically, comparing the approximations arising from \spatialAcronym\ and
@@ -649,31 +649,18 @@ Substituting the approximation~\eqref{eq:stapprox1} into the FOM
 ODE~\eqref{eq:FOM} yields
 \begin{equation}\label{eq:st_fom}
 \stbasisDotArg{}{t} \stgenstate =  \velocity(\stbasisArg{}{t} \stgenstate +
-	\stateIntercept,t) , \qquad 
-	\stbasisArg{}{0} \stgenstate
-	=\mathbb{P}(\stateFOMIC)(0)-\stateIntercept, \qquad t \in [0,T],
-\end{equation}
-\begin{equation}\label{eq:st_fom}
-\stbasisDotArg{}{t} \stgenstate =  \velocity(\stbasisArg{}{t} \stgenstate +
-	\stateIntercept,t) , \qquad 
-	\stgenstate
-	=
-	\stbasisArg{}{0}^+ (\stateFOMIC-\stateIntercept), \qquad t \in [0,T],
+	\stateFOMIC,t) , \qquad t \in [0,T],
 \end{equation}
 where 
-$\stbasisDot\equiv d\stbasis/d\timeDummy$ and
-$\mathbb{P} : \RR{N} \rightarrow \stspaceST$ denotes the
-orthogonal $\ell^2$-projection onto the space--time trial subspace, i.e.,
-$$
-\mathbb{P}:\stateyDiscrete\mapsto\underset{\statey\in\stspaceST}{\text{arg\,min}}\int_0^T\|\stateyDiscrete
-- \statey( t)\|_2^2d t.
-$$
+$\stbasisDot\equiv d\stbasis/d\timeDummy$. We note that the initial conditions
+are automatically satisfied from the definition of the \spaceTimeAcronym\
+subspace.
+
 Space--time projection methods reduce the number of equations in
 \eqref{eq:st_fom} to ensure a unique solution exists.
 We now outline one such method: space--time least-squares Petrov--Galerkin (ST-LSPG)
 projection~\cite{choi_stlspg}. 
-While space--time Galerkin projection \KTC{add citations. See our ST-LSPG work
-where we have some of these} is another alternative, it does not
+While space--time Galerkin projection \cite{benner_st} is another alternative, it does not
 associate with any residual minimization principle, and thus we do not discuss
 it further.
 \subsubsection{Space--time LSPG projection}  
@@ -696,11 +683,11 @@ multistep methods as
 & \vcentcolon \RR{\fomdim} \otimes \RR{N_t+1} \rightarrow \RR{\fomdim N_t},
 \end{align*}
 and define the counterpart function acting on space--time generalized
-coordinates associated with the \spaceTimeAcronym\ subspace:
+coordinates:
 \begin{align*}
 \genresidST_{\text{}} & \vcentcolon (\stgenstatey ;\stateFOMIC) \mapsto \begin{bmatrix}
 %\frac{\stateyDiscreteArg{N_t} - \stateyDiscreteArg{N_t-1}  }{\Delta t} -  \velocity(\stateyDiscreteArg{N_t}) \\
-\residLMSArg{1}\bigg( \stbasisArg{}{t^1}\stgenstatey + \stateIntercept; \mathbb{P}(\stateFOMIC)(0) \bigg)
+\residLMSArg{1}\bigg( \stbasisArg{}{t^1}\stgenstatey + \stateIntercept; \stateFOMIC \bigg)
 \\ 
 \vdots \\
 \residLMSArg{N_t}\bigg( \stbasisArg{}{t^{N_t}}\stgenstatey + \stateIntercept; \stbasisArg{}{t^{N_t-1}}\stgenstatey + \stateIntercept ,\ldots,  \stbasisArg{}{t^{N_t-k^{N_t}}}\stgenstatey + \stateIntercept \bigg)  \\ 
