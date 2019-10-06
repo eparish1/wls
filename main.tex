@@ -13,6 +13,7 @@
 %\title{Model Reduction via \methodName}
 %\title{Windowed least--squares reduced-order models for dynamical systems}
 \title{Windowed least-squares model reduction for dynamical systems}
+%\title{The windowed least-squares framework for model reduction of dynamical systems}
 
 \author[a]{Eric J. Parish and Kevin T. Carlberg}
 %\ead{ejparis@sandia.gov}
@@ -250,79 +251,109 @@ and connected this formulation with optimal control; specifically it mentioned t
 optimize-then-discretize vs.\ discretize-then-optimize approaches. This work
 did not fully develop this approach, eschewing it 
 for 
-sequential residual minimization in time (i.e., LSPG). \KTC{HERE} The present work thus
-formally develops (and extends) several of the concepts put forth
-in~\cite{bui_thesis}. Next, Ref.~\cite{constantine_strom} developed a
+sequential residual minimization in time (i.e., LSPG). The present work thus
+formally develops and extends several of the concepts put forth
+in Ref.~\cite{bui_thesis}. Next, Ref.~\cite{constantine_strom} developed a
 space--time residual minimization formulation for model interpolation.  The
 present work distinguishes itself from Ref.~\cite{constantine_strom} in that
-(1) in addition to trial subspaces obtained via space--time projection, we
-consider trial subspaces obtained via spatial projection only (i.e., a classic
-spatial basis is employed, opposed to a space--time basis)% -- in which case
-%the generalized coordinates comprise a vector of functions
-, and (2) we
-minimize the time-continuous residual over space--time
-windows;~\cite{constantine_strom} considers the solution of a fully discrete
-optimization problem over the entire space--time domain. It is noted that,
-similar to the current work, a time-continuous residual-minimization
-formulation is used as a starting point in~\cite{constantine_strom}, and as
-such thematic similarities exist between~\cite{constantine_strom} and the
-present work. Lastly, Ref.~\cite{choi_stlspg} develops a space--time
-formulation of the least-squares Petrov--Galerkin approach. The formulation
-minimizes the \textit{fully discrete} residual over the entire space--time
-domain within a given space--time trial subspace. 
-The present work distinguishes itself from Ref.~\cite{choi_stlspg} in that
-(1) we perform model reduction of the time-continuous system, (2) we
-consider trial subspaces obtained via both spatial projection only and space--time projection,
- and (3) residual minimization is performed over time
-windows; Ref.~\cite{choi_stlspg} considers trial subspaces obtained via space--time projection and minimizes the
-fully-discrete residual over the entire time domain. 
-
+(1) this work also considers trial subspaces characterized by a reduction of
+the spatial dimension of the FOM only, and (2) we
+minimize the time-continuous FOM residual over arbitrary time
+windows. We note that,
+similar to the current work, Ref.~\cite{constantine_strom} employs
+minimization of the time-continuous FOM residual as a starting point; as such,
+this work shares some thematic similarities with
+Ref.~\cite{constantine_strom}.  Lastly, Ref.~\cite{choi_stlspg} develops a
+space--time extension of the LSPG approach that minimizes the time-discrete
+FOM residual over the entire time domain.  The present work distinguishes
+itself from Ref.~\cite{choi_stlspg} in that (1) this work minimizes the
+time-continuous FOM residual, (2) this work minimizes this residual over
+arbitrary time windows, and (3) this work considers trial subspaces
+characterized by a reduction of the spatial dimension of the FOM only.
 
 \begin{figure} 
 \begin{centering} 
 \includegraphics[trim={0.1cm 0cm 1cm 0cm},clip,width=0.99\textwidth]{diagram.pdf} 
 \caption{Relationship diagram for the \methodAcronym\ framework for model
-	reduction.} 
+	reduction. \KTC{Inconsistent capitalization. I recommend using (1)
+	``Limiting case'', (2) Space--time LSPG. Also, can we make this more specific? In particular, can
+	we write specific equations (e.g., ``$W = T$ in Eq.~(10)'') for the limiting
+	cases?}} 
 \label{fig:flowchart} 
 \end{centering} 
 \end{figure}
 
 
 
- The novel contributions and findings of the present work are:
+ In summary, specific contributions of this work include:
 \begin{enumerate}
 %\item The development of a time-continuous residual minimization framework for reduced-order models.
-\item The development of the \methodNameLower\ (\methodAcronym) approach for dynamical systems. The approach sequentially minimizes the time-continuous full-order model residual over time windows.
-\item The derivation of the stationary conditions for \methodAcronymROMs\ leveraging spatial and space--time dimension reduction trial subspaces. The case of spatial dimension reduction trial subspaces is of particular interest: the stationary conditions are derived via the Euler--Lagrange equations and comprise a coupled 
-two-point Hamiltonian boundary value problem containing a forward and backward system. The forward system, which is forced by an auxiliary costate, evolves the generalized coordinates of the ROM. The backwards system, which is forced by the FOM residual evaluated about the ROM state, governs the dynamics of the costate. 
-\item An exploration of the use of both direct (discretize then optimize) and indirect (optimize then discretize) solution techniques. Conditions under which \methodAcronym\ recovers Galerkin, LSPG, and space--time LSPG are presented.
-\item Error analysis of the \methodAcronym\ approach for trial subspaces with spatial dimension reduction. In particular, it is shown that the error in \methodAcronymROMs\ is bounded \textit{a priori} by a combination of the error at the start of the window and the integrated FOM ODE residual evaluated at the FOM state projected onto the trial subspace. 
-\item Numerical experiments for trial subspaces with spatial dimension reduction demonstrating two key findings:
+\item The \methodNameLower\ (\methodAcronym) framework for dynamical-system
+	model reduction. The approach sequentially minimizes the time-continuous
+		full-order model residual over arbitrary time windows.
+\item Support of two space--time trial subspaces: one that reduces the spatial
+	dimension of the FOM only, and one that reduces both the spatial and
+		temporal dimensions of the FOM. The former case is of particular
+		interest in the \methodAcronym\  contex, as the stationary conditions are
+		derived via the Euler--Lagrange equations and comprise a coupled two-point
+		Hamiltonian boundary value problem containing a forward and backward
+		system. The forward system, which is forced by an auxiliary costate,
+		evolves the (spatial) generalized coordinates of the ROM in time. The
+		backward system, which is forced by the time-continuous FOM residual
+		evaluated about the ROM state, governs the dynamics of the costate. 
+	\item Derivation of two solution techniques:
+		\textit{discretize-then-optimize} (i.e., direct) and
+		\textit{optimize-then-discretize} (i.e., indirect). 
+	\item Derivations of conditions under which the
+		\methodAcronym\ framework recovers Galerkin, LSPG, and space--time LSPG
+		projection.
+\item Error analysis of the \methodAcronym\ framework using
+	trial subspaces characterized by a reduction of
+the spatial dimension of the FOM only.
+	This analysis demonstrates that the \methodAcronymROMs\ error 
+		is bounded \textit{a priori} by a combination of the
+		error at the start of the window and the integrated FOM ODE residual
+		evaluated at the FOM state projected onto the trial subspace. As a result,
+		the error bound exhibits exponential growth in the number of time windows
+		(not total time instances), yielding smaller error-bound growth in thime than
+		Galerkin or LSPG projection. \KTC{Check this}
+\item Numerical experiments for 
+	trial subspaces characterized by a reduction of
+the spatial dimension of the FOM only, which demonstrate two key findings:
 \begin{itemize}
-\item Residual minimization over larger time windows leads to more stable and physically relevant solutions as well as lower space--time residuals. 
-\item Minimizing the residual over a larger time window does not necessarily lead to a more accurate solution in the $\elltwo$ norm. Residual 
-minimization over an intermediary-sized time-window leads to the lowest error in the $\elltwo$ norm.
+\item Minimizing the residual over a larger time window leads to more stable
+	and physically relevant solutions \KTC{What is `physically relevant'?} as
+		well as smaller space--time residual norms. 
+\item Minimizing the residual over a larger time window does not necessarily
+	lead to a more accurate trajectory (as measured in the space--time
+		$\elltwo$-norm of the solution). Instead, minimizing the residual over an
+		intermediate-sized time window leads to the smallest trajectory error.
 \end{itemize}
 \end{enumerate}
 
 The paper proceeds as follows: Section~\ref{sec:math}
 outlines the mathematical setting for the full-order model, along with the Galerkin, LSPG, and
-space--time LSPG ROMs; Section~\ref{sec:tclspg} outlines the proposed \methodAcronym\
-formulation; Section~\ref{sec:numerical_techniques}
+space--time LSPG projection. Section~\ref{sec:tclspg} outlines the proposed \methodAcronym\
+framework. Section~\ref{sec:numerical_techniques}
 outlines numerical techniques for solving \methodAcronymROMs, including both direct and
-indirect methods; Section~\ref{sec:analysis} provides
-equivalence conditions and error analysis for \methodAcronymROMs;
-Section~\ref{sec:numerical_experiments} presents numerical experiments;
+indirect methods. Section~\ref{sec:analysis} provides
+equivalence conditions and error analysis for \methodAcronymROMs.
+Section~\ref{sec:numerical_experiments} presents numerical experiments.
 Section~\ref{sec:conclude} provides conclusions and perspectives.
-We denote vector-valued functions with stylized bold text (i.e., $\boldsymbol
-x$), vectors with standard bold text (i.e., $\mathbf{x}$), 
-matrices with capital bold letters (i.e., $\mathbf{X} \equiv \begin{bmatrix}
+We denote vector-valued functions with italicized bold symbols (e.g., $\boldsymbol
+x$), vectors with standard bold symbols (e.g., $\mathbf{x}$), 
+matrices with capital bold symbols (e.g., $\mathbf{X} \equiv \begin{bmatrix}
 \mathbf{x}_1 & \cdots & \mathbf{x}_r\end{bmatrix}$), and spaces with
-calligraphic fonts (i.e., $\mathcal{X}$).
+calligraphic symbols (e.g., $\mathcal{X}$).
 %Model reduction of nonlinear dynamical systems is a growing research area.
 %The least-squares Petrov-Galerkin (LSPG) approach has gained popularity as a model reduction technique for nonlinear dynamical systems. Derived at the fully discrete level, the LSPG approach solves a least-squares problem that minimizes the fully discrete residual of the reduced-order model at each time-step. LSPG has been shown to be an effective formulation for nonlinear model reduction on complex problems of interest.
 %\begin{comment} 
-\section{Mathematical setting}\label{sec:math}
+\section{Mathematical formulation}\label{sec:math}
+	\KTC{HERE}
+	We begin by providing the formulation for the full-order model,
+	followed by a description of standard model-reduction methods
+	classified according to the type of trial subspace they employ.
+	\subsection{Full-order model}\label{sec;FOM}
 We consider the system of nonlinear ordinary differential equations (ODEs),
 \begin{equation}\label{eq:FOM}
  \stateFOMDotArg{t}  = \velocity(\stateFOMArg{}{t},t), \qquad \stateFOM(0) =
@@ -350,7 +381,7 @@ Directly solving initial value problem~\eqref{eq:FOM} is computationally
 	ODE~\eqref{eq:FOM}. Projection-based ROMs constitute one such promising
 	approach. 
 
-\subsection{Projection-based reduced-order models}
+\subsection{Reduced-order models}
 Projection-based ROMs generate approximate solutions to the FOM
 	ODE~\eqref{eq:FOM} by approximating the state in a low-dimensional trial
 	subspace. For dynamical 
@@ -368,7 +399,6 @@ Projection-based ROMs generate approximate solutions to the FOM
 \end{enumerate}
  We now describe these two types of trial subspaces and their application to 
 	Galerkin, LSPG, and space--time LSPG projection. 
-	\KTC{HERE}
 
 \subsection{\spatialAcronym\ trial subspaces}
 \spatialAcronym\ trial subspaces approximate the FOM ODE solution
@@ -678,15 +708,17 @@ The principle challenge encountered in the \methodAcronym\ formulation is the co
 \section{Acknowledgments}
 The authors thank Yukiko Shimizo and Patrick Blonigan for numerous conversations from which this work benefited. 
 E.\ Parish acknowledges an appointment to the Sandia National Laboratories'
-John von Neumann Postdoctoral Research Fellowship in Computational Science. This paper
-describes objective technical results and analysis. Any subjective views or
-opinions that might be expressed in the paper do not necessarily represent the
-views of the U.S.\ Department of Energy or the United States Government.
-Sandia National Laboratories is a multimission laboratory managed and operated
-by National Technology and Engineering Solutions of Sandia, LLC., a wholly
-owned subsidiary of Honeywell International, Inc., for the U.S.\  Department of
-Energy's National Nuclear Security Administration under contract
-DE-NA-0003525.
+John von Neumann Postdoctoral Research Fellowship in Computational Science. 
+This work was partially sponsored by Sandia's Advanced Simulation and
+Computing (ASC) Verification and Validation (V\&V) Project/Task
+\#103723/05.30.02.  This paper describes objective technical results and
+analysis. Any subjective views or opinions that might be expressed in the
+paper do not necessarily represent the views of the U.S.\ Department of Energy
+or the United States Government.  Sandia National Laboratories is a
+multimission laboratory managed and operated by National Technology and
+Engineering Solutions of Sandia, LLC., a wholly owned subsidiary of Honeywell
+International, Inc., for the U.S.\  Department of Energy's National Nuclear
+Security Administration under contract DE-NA-0003525.
 
 \begin{appendices}
 \section{Proper orthogonal decomposition}

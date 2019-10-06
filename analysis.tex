@@ -140,7 +140,8 @@ In the limit of $\zeta \rightarrow 0$ (and hence $\nslabs \rightarrow \infty$) t
 In the following,  $\stateFOMSolArg{n}$ is the state implicitly defined as the solution to full-order model, $\stateROMSolArg{n}$ is the state implicitly defined as the solution to the \methodAcronym-ROM, $\adjointROMSolArg{n}$ is the costate solution to the \methodAcronym-ROM, and the error is defined as,
 $$\errorArg{n} \defeq \stateFOMSolArg{n} - \stateROMSolArg{n}.$$
 Additionally, we denote $\stateFOMProjSolArg{n}$ to be the $L^2$ optimal solution,
-$$\stateFOMProjSolArg{n} = \underset{\statey \in \stspace^n}{\text{argmin } } \intSlabArg{n} \norm{ \statey(t) - \stateFOMSolArgt{n}{t} }^2.$$ 
+$$\stateFOMProjSolArg{n} = \underset{\statey \in
+\stspace^n}{\text{arg}\,\text{min } } \intSlabArg{n} \norm{ \statey(t) - \stateFOMSolArgt{n}{t} }^2.$$ 
 We begin by stating assumptions that will be used in the subsequent derivations.
 
 A1: We assume  Lipshitz continuity on the residual,
@@ -178,7 +179,8 @@ To obtain an error bound over the $n$th window, we must account for the
 fact that the initial conditions into the $n$th window can be incorrect. To this end, 
 we start by defining a new quantity, $\stateROMStarSolArg{n}$, to implicitly be the solution to the minimization problem with the correct initial conditions,
 \begin{align*}
-& \stateROMStarSolArg{n} \defeq \underset{\statey \in \stspace^n}{\text{argmin } } \objectiveArg{n}(\statey),\\
+	& \stateROMStarSolArg{n} \defeq \underset{\statey \in
+	\stspace^n}{\text{arg}\,\text{min } } \objectiveArg{n}(\statey),\\
 & \stateROMStarSolArgt{n}{\timeStartArg{n}} = \stateFOMSolArgt{n}{\timeStartArg{n}}.
 \end{align*}
 Additionally, define $\adjointROMStarSolArg{n}$ to be the associated costate solution.
