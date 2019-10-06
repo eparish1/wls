@@ -30,8 +30,8 @@ the generalized coordinates $\genstateArgnt{n}$, for $n = 1,\ldots,\nslabs$, as 
 
 \begin{equation}\label{eq:obj_gen_slab}
 \begin{split}
-      & \underset{\genstateyArgnt{n} \in \RR{\romdim}}{\text{minimize}}\; \mathcal{J}^n(\basisspace \genstateyArgnt{n} + \stateIntercept), \\ 
-      & \text{subject to }\; \genstateyArg{n}{\timeStartArg{n}} =
+      & \underset{\genstateyArgnt{} \in \RR{\romdim} \otimes \timeSpaceArg{n} }{\text{minimize}}\; \mathcal{J}^n(\basisspace \genstateyArgnt{} + \stateIntercept \otimes \onesFunction), \\ 
+      & \text{subject to }\; \genstateyArg{}{\timeStartArg{n}} =
 \begin{cases} \genstateArg{n-1}{\timeEndArg{n-1}} & n = 2,\ldots,\nslabs \\
 \genstateIC & n=1, \end{cases} 
 \end{split}
