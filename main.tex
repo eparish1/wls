@@ -40,8 +40,7 @@ of existing model reduction approaches, as particular instances of
 	discretize-then-optimize) and indirect (i.e., optimize-then-discretize).
 	Numerical experiments conducted using the trial subspaces characterized by spatial
 	dimension reduction demonstrate that the \methodAcronym\
-	approach can yield more accurate and physically relevant solutions \KTC{What
-	does `physically relevant' mean? This is imprecise.} than
+	approach can yield more accurate solutions that better satisfy the governing equations than
 	Galerkin and LSPG projection. 
 
 \begin{comment}
@@ -344,7 +343,8 @@ We denote vector-valued functions with italicized bold symbols (e.g., $\boldsymb
 x$), vectors with standard bold symbols (e.g., $\mathbf{x}$), 
 matrices with capital bold symbols (e.g., $\mathbf{X} \equiv \begin{bmatrix}
 \mathbf{x}_1 & \cdots & \mathbf{x}_r\end{bmatrix}$), and spaces with
-calligraphic symbols (e.g., $\mathcal{X}$).
+calligraphic symbols (e.g., $\mathcal{X}$). We additionally denote differentiation of a time-dependent 
+function with respect to time as $\stateDot \equiv \frac{d \state}{dt}$.
 %Model reduction of nonlinear dynamical systems is a growing research area.
 %The least-squares Petrov-Galerkin (LSPG) approach has gained popularity as a model reduction technique for nonlinear dynamical systems. Derived at the fully discrete level, the LSPG approach solves a least-squares problem that minimizes the fully discrete residual of the reduced-order model at each time-step. LSPG has been shown to be an effective formulation for nonlinear model reduction on complex problems of interest.
 %\begin{comment} 
@@ -368,8 +368,8 @@ $T \in \mathbb{R}^+$ denotes the final time, $\stateFOM \in \RR{\fomdim}
 	domain, 
  $\stateFOMIC \in \mathbb{R}^{\fomdim}$ denotes the initial condition,
 	and $\velocity: \mathbb{R}^{\fomdim} \times [0,T] \rightarrow
-	\mathbb{R}^{\fomdim}$ with $(\stateyDiscrete,t) \mapsto
-	\velocity(\stateyDiscrete,t)$ denotes the velocity, which is possibly
+	\mathbb{R}^{\fomdim}$ with $(\stateyDiscrete,\timeDumArg) \mapsto
+	\velocity(\stateyDiscrete,\timeDumArg)$ denotes the velocity, which is possibly
 	nonlinear in its first argument. We refer to Eq.~\eqref{eq:FOM} 
 	as the ``full-order model" (FOM) ODE.
 
@@ -439,7 +439,7 @@ coordinates. Substituting the approximation~\eqref{eq:affine_trialspace} into th
 $\elltwo$-projection of the initial condition onto the trial subspace yields
 the overdetermined system of ODEs
 \begin{equation}\label{eq:g_truncation}
-\basisspace \frac{d \genstate} {dt}(t)= \velocity(\basisspace
+\basisspace \genstateDotArg{}{t} = \velocity(\basisspace
 \genstateArg{}{t} + \stateIntercept,t ), \qquad \genstate(0) = \genstateIC, \qquad t \in [0,T].
 \end{equation}
 Because Eq.~\eqref{eq:g_truncation} is overdetermined, a solution may not
@@ -455,7 +455,7 @@ positive (semi-)definite $\fomdim\times\fomdim$ matrix $\stweightingMatArg{}\equ
 \stweightingMatOneArg{ }$ (commonly set to
 $\stweightingMatArg{}=\mathbf{I}$), i.e.,
 \begin{equation}\label{eq:g_truncation2}
-\frac{d\genstateGalerkin}{dt}(t)= \massArgnt{n}^{-1} \basisspace^T \stweightingMatArg{n} \velocity(\basisspace
+\genstateGalerkinDotArg{}{t} = \massArgnt{n}^{-1} \basisspace^T \stweightingMatArg{n} \velocity(\basisspace
 \genstateGalerkinArg{}{t} + \stateIntercept,t), \qquad \genstateGalerkin(0) = \genstateIC, \qquad t \in [0,T],
 \end{equation}
 where $\massArgnt{ } \equiv \basisspace^T \stweightingMatArg{ } \basisspace$
@@ -465,7 +465,7 @@ can be viewed alternatively as a residual-minimization
 method, as the Galerkin ODE~\eqref{eq:g_truncation2} is equivalent
 to
 \begin{equation}\label{eq:GalOptimal}
-\frac{d\genstateGalerkin}{dt}(t) = \underset{ \genstateyDiscrete \in \RR{\romdim}
+\genstateGalerkinDotArg{}{t} = \underset{ \genstateyDiscrete \in \RR{\romdim}
 	}{\text{arg\,min}} \| \basisspace \hat{\stateyDiscrete} -
 	\velocity(\basisspace \genstateGalerkinArg{}{t} + \stateIntercept,t)
 	\|_{\stweightingMatArg{n}}^2,
@@ -497,7 +497,7 @@ where $\|\mathbf{x}\|_{\stweightingMatArg{n}}\equiv
 %\frac{d}{dt}\genstateGalerkinArg{}{t} = \mass^{-1}\basisspace^T \stweightingMatArg{n} \velocity(\basisspace
 %\genstateGalerkinArg{}{t} + \stateIntercept).
 %\end{equation*}
-Thus, the computed velocity $\frac{d\genstateGalerkin}{dt}(t)$ minimizes the
+Thus, the computed velocity $\genstateGalerkinDotArg{}{t}$ minimizes the
 time-instantaneous FOM ODE residual evaluated at the state $\basisspace
 \genstateGalerkin(t) + \stateIntercept$ and time $t$ over the spatial trial
 subspace $\trialspace$.
@@ -779,12 +779,11 @@ This section details the derivation of the Euler Lagrange equations. To this end
 \begin{equation}\label{eq:el_gen}
 \mathcal{J}: (\statey,\stateyDot) \mapsto  \int_a^b \integrand(\statey(t),\stateyDot(t),t)  dt,
 \end{equation}
-where $\integrand: \RR{M} \times \RR{M} \times[a,b] \rightarrow  \RR{}$ (for arbitrary $M$) with $\integrand: (\stateyDiscrete,\stateyDotDiscrete,t) \mapsto \integrand(\stateyDiscrete,\stateyDotDiscrete,t)$.%, $\statez: [a,b] \rightarrow \RR{M}$ and $\statezDot: [a,b] \rightarrow \RR{M}$.
- We now introduce the function $\statez: [a,b] \rightarrow \RR{M}$ that is implicitly defined as an extremum of~\eqref{eq:el_gen} subject to the boundary condition $\statez(a) = \statez_a$. %To this end, we start by supposing that $\statez$ is a stationary point of $\mathcal{J}$ that satisfies the boundary conditions. 
+where $\integrand: \RR{M} \times \RR{M} \times[a,b] \rightarrow  \RR{}$ (for arbitrary $M$) with $\integrand: (\stateyDiscrete,\stateyDotDiscrete,t) \mapsto \integrand(\stateyDiscrete,\stateyDotDiscrete,t)$. We now introduce the function $\statez: [a,b] \rightarrow \RR{M}$ that is implicitly defined as an extremum of~\eqref{eq:el_gen} subject to the boundary condition $\statez(a) = \statez_a$. 
 We introduce an arbitrary function $\variation : [a,b] \rightarrow \RR{M}$ with the boundary condition $\variationArg{a} = \bz$ and define a variation from the extremal by,
 \begin{align*}
 \statezBar  &: (\tau;\delta) \mapsto \statez(\tau) + \delta \variation(\tau),\\
-&: \RR{} \times [a,b] \rightarrow \RR{M}.
+&: [a,b] \times \RR{} \rightarrow \RR{M}.
 \end{align*}
 We note that $\statezBar$ obeys the same boundary conditions as $\statez$ since $\variationArg{a} = \bz$.
 Evaluating the functional~\eqref{eq:el_gen} at $\statezBar(t,\epsilon)$,

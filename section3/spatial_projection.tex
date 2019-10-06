@@ -97,9 +97,9 @@ time window are given by,
 \begin{split}
 & \bigg[\frac{\partial
 \minintegrandArg{n}}{\partial
-\genstateyDiscrete}(\genstateArg{n}{t},\genstateDotArg{n}{t},t) \bigg]^T - \frac{d}{dt}
-\bigg[ \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDotArgnt{}}
-(\genstateArg{n}{t},\genstateDotArg{n}{t} ,t) \bigg]^T = \bz, \qquad t \in [\timeStartArg{n},\timeEndArg{n}],\\ 
+\genstateyDiscrete}\bigg]^T (\genstateArg{n}{t},\genstateDotArg{n}{t},t) - \frac{d}{dt}
+\bigg[ \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDotArgnt{}} \bigg]^T
+(\genstateArg{n}{t},\genstateDotArg{n}{t} ,t) = \bz, \qquad t \in [\timeStartArg{n},\timeEndArg{n}],\\ 
 &\genstate^n(\timeStartArg{n})  = \begin{cases} 
 \genstate^{n-1}(\timeEndArg{n-1}) &
 n=2,\ldots,\nslabs, \\ 
@@ -116,13 +116,20 @@ given by the second-order differential equation,
 %\bigg]^T \stweightingMat  +  \frac{d}{dt} \bigg] \bigg(  \basisspace^T
 %\stweightingMat \basisspace \dot{\genstate}   -  \basisspace^T
 %\stweightingMat \velocity \bigg) = 0,$$
+\EP{Working on this}
 \begin{equation}\label{eq:clspg_2ord}
 \begin{split} 
 &\bigg[\basisspace^T \bigg[\frac{\partial
 \velocity}{\partial \stateyDiscreteArgnt{}} (\basisspace \genstateArg{n}{t} +
 \stateIntercept,t)\bigg]^T \stweightingMatArgt{n}{t} + \basisspace^T
+\stweightingMatArgt{n}{t} \bigg] \bigg(  \basisspace
+\genstateDDotArg{n}{t}    -  \velocityDot(\basisspace \genstateArg{n}{t} + \stateIntercept,t) \bigg) = \bz, \qquad t \in  [\timeStartArg{n},\timeEndArg{n}],
+\\
+&\bigg[\basisspace^T \bigg[\frac{\partial
+\velocity}{\partial \stateyDiscreteArgnt{}} (\basisspace \genstateArg{n}{t} +
+\stateIntercept,t)\bigg]^T \stweightingMatArgt{n}{t} + \basisspace^T
 \stweightingMatArgt{n}{t} \frac{d}{dt} \bigg] \bigg(  \basisspace
-\frac{d}{dt}\genstateArg{n}{t}   -  \velocity(\veloargsromn) \bigg) = \bz, \qquad t \in  [\timeStartArg{n},\timeEndArg{n}],
+\genstateDotArgnt{n}    -  \velocity^*(\basisspace \genstateArgnt{n} + \stateIntercept,t) \bigg) = \bz, \qquad t \in  [\timeStartArg{n},\timeEndArg{n}],
 \\
 %& \genstateArg{n}{ \timeStartArg{n}} = \genstateArg{n-1}{\timeEndArg{n-1}},
 %\\
@@ -130,7 +137,7 @@ given by the second-order differential equation,
 \genstate^{n-1}(\timeEndArg{n-1}) & n=2,\ldots,\nslabs, \\
 \basisspace^T(\stateFOMIC - \stateIntercept) & n=1, \end{cases}\\ 
 & 
-\basisspace^T \stweightingMatArgt{n}{\timeEndArg{n}} \basisspace \frac{d}{dt}\genstateArg{n}{\timeEndArg{n}}  -
+\basisspace^T \stweightingMatArgt{n}{\timeEndArg{n}} \basisspace \genstateDotArg{n}{\timeEndArg{n}}  -
 \basisspace^T \stweightingMatArgt{n}{\timeEndArg{n}}
 \velocity(\basisspace \genstateArg{n}{\timeEndArg{n}} + \stateIntercept,\timeEndArg{n}) = \bz.  
 \end{split}
@@ -140,7 +147,7 @@ equations by introducing an auxiliary ``\adjointStr", or ``costate", variable. %
 Defining the costate over the $n$th window as, 
 \begin{equation}\label{eq:costate_def}
 \begin{split}
-\adjointArgnt{n} &: t \mapsto \frac{d}{dt}\genstateArg{n}{t}  -  \mass^{-1} \basisspace^T \stweightingMatArgt{n}{t}\velocity(\veloargsromn) ,\\
+\adjointArgnt{n} &: t \mapsto \genstateDotArg{n}{t}  -  \mass^{-1} \basisspace^T \stweightingMatArgt{n}{t}\velocity(\veloargsromn) ,\\
 &: [\timeStartArg{n},\timeEndArg{n}] \rightarrow \RR{K} ,
 \end{split}
 \end{equation}
@@ -158,17 +165,17 @@ we can manipulate the system~\eqref{eq:clspg_2ord} (see
 Appendix~\ref{appendix:vector_calc}) to obtain a coupled forward-backward
 system for $t \in  [\timeStartArg{n},\timeEndArg{n}]$,
 \begin{align}\label{eq:lspg_continuous} 
-&\mass  \frac{d}{dt} \genstateArg{n}{t}  -  \basisspace^T
+&\mass   \genstateDotArg{n}{t}  -  \basisspace^T
 \stweightingMatArgt{n}{t} \velocity(\veloargsromn) =  \mass \adjointArg{n}{t} , \\
 %\end{equation} \begin{equation}\label{eq:lspg_adjoint}
- &\mass \frac{d}{dt} \adjointArg{n}{t}  + \basisspace^T \bigg[\frac{\partial
+ &\mass  \adjointDotArg{n}{t}  + \basisspace^T \bigg[\frac{\partial
 \velocity}{\partial \stateyDiscrete} (\basisspace \genstateArg{n}{t} +
 \stateIntercept,t) \bigg]^T \stweightingMatArgt{n}{t} \basisspace
  \adjointArg{n}{t} = \nonumber \\ &-\basisspace^T \big[
 \frac{\partial \velocity}{\partial \stateyDiscrete}(\basisspace \genstateArg{n}{t} +
 \stateIntercept,t) \big]^T \stweightingMatArgt{n}{t} \bigg( \mathbf{I} -
 \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArgt{n}{t} \bigg)
- \bigg( \basisspace \frac{d}{dt}\genstateArg{n}{t}  -
+ \bigg( \basisspace \genstateDotArg{n}{t} -
 \velocity(\veloargsromn) \bigg), \label{eq:lspg_adjoint} \\ &
 \genstateArg{n}{\timeStartArg{n}} = \begin{cases}
 \genstate^{n-1}(\timeEndArg{n-1}) & n=2,\ldots,\nslabs, \label{eq:lspg_bcs1}\\
@@ -197,10 +204,10 @@ A simplification is obtained in the basic case %with no
 %hyper-reduction/weighting 
 where $\stweightingMat = \mathbf{I}$.
 The system becomes,
-\begin{align*}\label{eq:lspg_continuous_simle} & \frac{d}{dt} \genstateArg{n}{t}   -
+\begin{align*}\label{eq:lspg_continuous_simle} & \genstateDotArg{n}{t}  -
 \basisspace^T  \velocity(\veloargsromn) =  \adjointArg{n}{t} , \\
 %\end{equation} \begin{equation}\label{eq:lspg_adjoint}
- &\frac{d}{dt} \adjointArg{n}{t}  + \basisspace^T \bigg[\frac{\partial
+ &\adjointDotArg{n}{t}   + \basisspace^T \bigg[\frac{\partial
 \velocity}{\partial \stateyDiscrete}(\basisspace \genstateArg{n}{t} +
 \stateIntercept,t)\bigg]^T \basisspace \adjointArg{n}{t} = \basisspace^T \bigg[
 \frac{\partial \velocity}{\partial \stateyDiscrete} (\basisspace \genstateArg{n}{t} +
@@ -220,14 +227,14 @@ points could be a maximum, a saddle point, a local minimum, etc.
 Euler--Lagrange equations expose that~\eqref{eq:lspg_continuous}-\eqref{eq:lspg_bcs} can be alternatively formulated from as a Lagrange
 problem from optimal control. To this end, consider the Galerkin ROM over the $n$th window, 
 $$ \basisspace^T \stweightingMatArgt{n}{t} \basisspace
-\frac{d}{dt} \genstateGalerkinArg{n}{t} - \basisspace^T \stweightingMatArgt{n}{t}
+ \genstateGalerkinDotArg{n}{t} - \basisspace^T \stweightingMatArgt{n}{t}
 \velocity(\basisspace \genstateGalerkinArg{n}{t} + \stateIntercept,t) = \boldsymbol 0.$$
 We introduce now the controller, $\controllerArgnt{n} :  [\timeStartArg{n},\timeEndArg{n}] \rightarrow
 \RR{\romdim}$,
 and state that a residual minimizing controller exists such that \methodAcronym\ can be written as 
 \begin{equation}\label{eq:controlled_rom}
  \basisspace^T
-\stweightingMatArgt{n}{t} \basisspace \frac{d}{dt}\genstateArg{n}{t}  - \basisspace^T
+\stweightingMatArgt{n}{t} \basisspace \genstateDotArg{n}{t}  - \basisspace^T
 \stweightingMatArgt{n}{t}\velocity(\basisspace \genstateArg{n}{t} +
 \stateIntercept,t) = \controllerArg{n}{t}. 
  \end{equation}
@@ -276,7 +283,7 @@ We start by defining a \textit{Lagrangian} that measures the residual norm as a 
 \end{equation}
 where it is noted that, by~\eqref{eq:controlled_rom}, $
 [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n} \velocity(\basisspace \genstateArg{n}{t} + \stateIntercept ,t) +
-\mass^{-1}\controllerArg{n}{t}  = \frac{d}{dt}\genstateArg{n}{t}.$ 
+\mass^{-1}\controllerArg{n}{t}  = \genstateDotArg{n}{t}.$ 
 Hence~\eqref{eq:obj_controller} is a measure of the same residual as in~\eqref{eq:obj}.  The \methodAcronym\ method can be formulated as a minimization problem 
 that computes the controller $\controllerArgnt{n}$, for $n=1,\ldots,\nslabs$, as the solution to the minimization problem, 
 \begin{equation}\label{eq:tclspg_oc1a} 
@@ -287,7 +294,7 @@ that computes the controller $\controllerArgnt{n}$, for $n=1,\ldots,\nslabs$, as
  \\
 &\text{subject to } \;  \left\{\begin{array}{l} 
  \basisspace^T \stweightingMatArgt{n}{t}
-\basisspace \frac{d}{dt} \genstateArg{n}{t}  - \basisspace^T
+\basisspace  \genstateDotArg{n}{t}  - \basisspace^T
 \stweightingMatArgt{n}{t} \velocity(\basisspace \genstateArg{n}{t} +
 \stateIntercept,t) =\controllerDumArg{n}{t}, \\
  \genstateArg{n}{\timeStartArg{n}} =
@@ -337,8 +344,8 @@ $\adjointOCArgnt{n}: [\timeStartArg{n},\timeEndArg{n}] \mapsto \RR{\romdim}$ and
 The Pontryagin Maximum Principle states that, for a trajectory to be an extremal of~\eqref{eq:tclspg_oc1a} (with the dynamics constraints), it must satisfy the 
 following conditions over the $n$th window,
 \begin{align*}%\label{eq:hamiltonian_sys}
-&\frac{d}{dt}\genstateArg{n}{t} = \frac{\partial \hamiltonianArg{}}{\partial \adjointDiscreteDumArgnt{}{}}(\genstateArg{n}{t},\adjointOCArg{n}{t},\controllerArg{n}{t},t),\\% \qquad \genstate(t_0(n)) = \genstate^{n-1}(t_1(n-1))\\
-&\frac{d }{dt} \adjointOCArg{n}{t}= - \frac{\partial \hamiltonianArg{}}{\partial \genstateyDiscreteArgnt{}{}}(\genstateArg{n}{t},\adjointOCArg{n}{t},\controllerArg{n}{t},t),\\% \qquad \adjoint^n(t_1(n)) = 0\\
+&\genstateDotArg{n}{t} = \frac{\partial \hamiltonianArg{}}{\partial \adjointDiscreteDumArgnt{}{}}(\genstateArg{n}{t},\adjointOCArg{n}{t},\controllerArg{n}{t},t),\\% \qquad \genstate(t_0(n)) = \genstate^{n-1}(t_1(n-1))\\
+&\adjointOCDotArg{n}{t}= - \frac{\partial \hamiltonianArg{}}{\partial \genstateyDiscreteArgnt{}{}}(\genstateArg{n}{t},\adjointOCArg{n}{t},\controllerArg{n}{t},t),\\% \qquad \adjoint^n(t_1(n)) = 0\\
 &\frac{\partial \hamiltonianArg{}}{\partial \controllerDiscreteDumArgnt{}{}} (\genstateArg{n}{t},\adjointOCArg{n}{t},\controllerArg{n}{t},t) = \boldsymbol 0, \\
 & \genstateArg{n}{\timeStartArg{n}} =
 \begin{cases} \genstate^{n-1}(\timeEndArg{n-1} ) & n = 2,\ldots,\nslabs,
@@ -347,10 +354,10 @@ following conditions over the $n$th window,
 \end{align*}
 Evaluation of the required gradients (Appendix~\ref{appendix:optimal_control}) yields the system to be solved over the $n$th window for $t \in [\timeStartArg{n},\timeEndArg{n}]$,
 \begin{align}\label{eq:sys_oc1}
-&\mass \frac{d}{dt} \genstateArg{n}{t}  -  \basisspace^T \stweightingMatArgt{n}{t} \velocity(\veloargsromn) =  \controllerArg{n}{t} , \\
+&\mass  \genstateDotArg{n}{t}  -  \basisspace^T \stweightingMatArgt{n}{t} \velocity(\veloargsromn) =  \controllerArg{n}{t} , \\
 %\end{equation}
 %\begin{equation}\label{eq:lspg_adjoint}
- &\frac{d}{dt} \adjointOCArg{n}{t}  + \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} (\basisspace \genstateArg{n}{t} + \stateIntercept,t) \bigg]^T \stweightingMatArgt{n}{t} \basisspace [\massArgt{n}{t}]^{-1} \adjointOCArg{n}{t} = \nonumber \\
+ & \adjointOCDotArg{n}{t}  + \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} (\basisspace \genstateArg{n}{t} + \stateIntercept,t) \bigg]^T \stweightingMatArgt{n}{t} \basisspace [\massArgt{n}{t}]^{-1} \adjointOCArg{n}{t} = \nonumber \\
  & \qquad \basisspace^T \big[ \frac{\partial \velocity}{\partial \stateyDiscrete}(\basisspace \genstateArg{n}{t} + \stateIntercept,t) \big]^T \stweightingMatArgt{n}{t} \bigg( \mathbf{I} -   \basisspace [\massArgt{n}{t}]^{-1} \basisspace^T  \stweightingMatArgt{n}{t} \bigg)  \bigg( \basisspace \genstateDotArg{n}{t}  -   \velocity(\veloargsromn) \bigg) \label{eq:sys_oc2} \\
 &\controllerArg{n}{t} = -\adjointOCArg{n}{t} \label{eq:sys_oc3}, \\
 & \genstateArg{n}{\timeStartArg{n}} = 
