@@ -525,44 +525,48 @@ subspace $\trialspace$.
 %\frac{d \genstate}{dt} = \basisspace^T \velocity(\basisspace \genstate + \state_0,t; \param ), \qquad t \in [0,T],
 %\end{equation}
 \subsubsection{Least-squares Petrov--Galerkin projection}
-\KTC{HERE}
-Despite its time-instantaneous optimality property 
+Despite its time-instantaneous residual-minimization optimality property 
 \eqref{eq:GalOptimal}, Galerkin projection can yield inaccurate solutions,
 particularly if the velocity is not self-adjoint or
 is nonlinear. 
 Least-squares Petrov--Galerkin (LSPG)
 projection~\cite{carlberg_lspg_v_galerkin,carlberg_thesis,carlberg_gnat,bui_unsteady,bui_thesis}
-is an alternative projection method that exhibits several advantages over Galerkin
+was developed
+as an alternative projection method that exhibits several advantages over Galerkin
 projection.
-Rather than minimize the (time-continuous) FOM ODE residual as in Galerkin
-projection, at each time step, LSPG minimizes
-the FOM O$\Delta$E residual, i.e., the residual arising after applying time discretization to the FOM ODE.  
+Rather than minimize the (time-continuous) FOM ODE residual at a time instance as in Galerkin
+projection, LSPG minimizes
+the (time-discrete) FOM O$\Delta$E residual 
+(i.e., the residual arising after applying time discretization to the FOM ODE)
+over a time step.
 We now describe LSPG projection in the case of linear multistep methods;
 Ref.~\cite{carlberg_lspg_v_galerkin} also presents LSPG projection for Runge--Kutta
 schemes. 
 
-To begin, and without loss of generality, we introduce a uniform time
-grid characterized by the time step $\Delta t$ and time instances
+Without loss of generality, we introduce a uniform time
+grid characterized by time step $\Delta t$ and time instances
 $t^n = n\Delta
-t$, $n=1,\ldots,N_t$.
+t$, $n=0,\ldots,N_t$.
 Applying a linear multistep method to discretize the FOM ODE \eqref{eq:FOM}
 with this time grid
-yields the FOM O$\Delta$E, which computes the sequence of FOM O$\Delta$E
+yields the FOM O$\Delta$E, which computes the sequence of discrete
 solutions
 $\stateFOMDiscreteArg{n}( \approx \stateFOM(t^n))$, $n=1,\ldots,N_t$
 as the implicit solution to the system of algebraic equations
 \begin{equation}\label{eq:lms}
-\residLMSArg{n} (\stateFOMDiscreteArg{n};\stateFOMDiscreteArg{n-1},\ldots,\stateFOMDiscreteArg{n-k^n}) = \bz, 
+\residLMSArg{n}
+	(\stateFOMDiscreteArg{n};\stateFOMDiscreteArg{n-1},\ldots,\stateFOMDiscreteArg{n-k^n})
+	= \bz,\qquad n=1,\ldots,N_t,
 \end{equation}
 where  $k^n$ denotes the number of steps employed by the scheme at the $n$th
 time instance and 
-$\residLMSArg{n}$ denotes the FOM O$\Delta$E residual, which is defined as
+$\residLMSArg{n}$ denotes the FOM O$\Delta$E residual defined as
 \begin{align*}
 \residLMSArg{n} &: (\stateyDiscreteArgnt{n};\stateyDiscreteArgnt{n-1},\ldots,\stateyDiscreteArgnt{n-k^n}) \mapsto  \frac{1}{\Delta t} \sum_{j=0}^{k^n} \alpha^n_j \stateyDiscreteArgnt{n-j} -  \sum_{j=0}^{k^n} \beta^n_j \velocity(\stateyDiscreteArgnt{n-j},t^{n-j}),
 \\
 &: \RR{\fomdim} \otimes \RR{k^n + 1} \rightarrow \RR{\fomdim},
 \end{align*} 
-Here, $\alpha^n_j$, $\beta^n_j$, $j=0,\ldots,k^n$ are coefficients
+Here, $\alpha^n_j,\beta^n_j\in\RR{}$, $j=0,\ldots,k^n$ are coefficients
 that define the linear multistep method at the $n$th time instance.
 %\begin{equation}\label{eq:coarse_implicit_euler_0}
 %\residLMS \frac{\stateFOMDiscreteArg{n} - \stateFOMDiscreteArg{n-1}  }{\Delta t} - \velocity(\stateFOMDiscreteArg{n}) = \mathbf{0}, \qquad n = 1,2,\ldots,N_t,
