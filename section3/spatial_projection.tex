@@ -95,10 +95,10 @@ Appendix~\ref{appendix:eulerlagrange} for the derivation) over the $n$th
 time window are given by, 
 \begin{equation}\label{eq:el1} 
 \begin{split}
-& \bigg[\frac{\partial
+& \frac{\partial
 \minintegrandArg{n}}{\partial
-\genstateyDiscrete}\bigg]^T (\genstateArg{n}{t},\genstateDotArg{n}{t},t) - \frac{d}{dt}
-\bigg[ \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDotArgnt{}} \bigg]^T
+\genstateyDiscrete}(\genstateArg{n}{t},\genstateDotArg{n}{t},t) - \frac{d}{dt}
+ \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDotArgnt{}} 
 (\genstateArg{n}{t},\genstateDotArg{n}{t} ,t) = \bz, \qquad t \in [\timeStartArg{n},\timeEndArg{n}],\\ 
 &\genstate^n(\timeStartArg{n})  = \begin{cases} 
 \genstate^{n-1}(\timeEndArg{n-1}) &
