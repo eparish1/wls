@@ -30,8 +30,8 @@ the generalized coordinates $\genstateArgnt{n}$, for $n = 1,\ldots,\nslabs$, as 
 
 \begin{equation}\label{eq:obj_gen_slab}
 \begin{split}
-      & \underset{\genstateyArgnt{n} \in \RR{\romdim}}{\text{minimize}}\; \mathcal{J}^n(\basisspace \genstateyArgnt{n} + \stateIntercept), \\ 
-      & \text{subject to }\; \genstateyArg{n}{\timeStartArg{n}} =
+      & \underset{\genstateyArgnt{} \in \RR{\romdim} \otimes \timeSpaceArg{n} }{\text{minimize}}\; \mathcal{J}^n(\basisspace \genstateyArgnt{} + \stateIntercept \otimes \onesFunction), \\ 
+      & \text{subject to }\; \genstateyArg{}{\timeStartArg{n}} =
 \begin{cases} \genstateArg{n-1}{\timeEndArg{n-1}} & n = 2,\ldots,\nslabs \\
 \genstateIC & n=1, \end{cases} 
 \end{split}
@@ -77,11 +77,11 @@ coordinates) as,
 \begin{equation}\label{eq:integrand}
 \begin{split}
  \minintegrandArg{n} & \vcentcolon
-(\genstateyDiscreteArgnt{}, \genstateyDiscreteDotArgnt{},t) \mapsto \frac{1}{2} \big[
+(\genstateyDiscreteArgnt{}, \genstateyDiscreteDotArgnt{},\timeDummy) \mapsto \frac{1}{2} \big[
 \basisspace \genstateyDiscreteDotArgnt{} - \velocity(\basisspace \genstateyDiscreteArgnt{}
-+ \stateIntercept,t) \big]^T \stweightingMatArgt{n}{t} \big[
++ \stateIntercept,\timeDummy ) \big]^T \stweightingMatArgt{n}{t} \big[
 \basisspace \genstateyDiscreteDotArgnt{}  - \velocity(\basisspace \genstateyDiscreteArgnt{} +
-\stateIntercept,t) \big], \\ & \vcentcolon \RR{\romdim} \times \RR{\romdim} \times [0,T]
+\stateIntercept,\timeDummy) \big], \\ & \vcentcolon \RR{\romdim} \times \RR{\romdim} \times [0,T]
  \rightarrow \RR{} .  
 \end{split}
 \end{equation}
@@ -95,11 +95,11 @@ Appendix~\ref{appendix:eulerlagrange} for the derivation) over the $n$th
 time window are given by, 
 \begin{equation}\label{eq:el1} 
 \begin{split}
-& \bigg[\frac{\partial
+& \frac{\partial
 \minintegrandArg{n}}{\partial
-\genstateyDiscrete}\bigg]^T (\genstateArg{n}{t},\genstateDotArg{n}{t},t) - \frac{d}{dt}
-\bigg[ \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDotArgnt{}} \bigg]^T
-(\genstateArg{n}{t},\genstateDotArg{n}{t} ,t) = \bz, \qquad t \in [\timeStartArg{n},\timeEndArg{n}],\\ 
+\genstateyDiscrete}(\genstateArg{n}{t},\genstateDotArg{n}{t},t) - \frac{d}{dt} \bigg(
+ \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDotArgnt{}} 
+(\genstateArg{n}{t},\genstateDotArg{n}{t} ,t) \bigg) = \bz, \qquad t \in [\timeStartArg{n},\timeEndArg{n}],\\ 
 &\genstate^n(\timeStartArg{n})  = \begin{cases} 
 \genstate^{n-1}(\timeEndArg{n-1}) &
 n=2,\ldots,\nslabs, \\ 
