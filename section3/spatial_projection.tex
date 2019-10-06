@@ -97,6 +97,11 @@ time window are given by,
 \begin{split}
 & \frac{\partial
 \minintegrandArg{n}}{\partial
+\genstateyDiscrete}(\genstateArg{n}{t},\genstateDotArg{n}{t},t) - \frac{d}{d\timeDummy } \bigg(
+ \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDotArgnt{}} 
+(\genstateArg{n}{\timeDummy},\genstateDotArg{n}{\timeDummy} ,\timeDummy ) \bigg)(t) = \bz, \qquad t \in [\timeStartArg{n},\timeEndArg{n}],\\ 
+& \frac{\partial
+\minintegrandArg{n}}{\partial
 \genstateyDiscrete}(\genstateArg{n}{t},\genstateDotArg{n}{t},t) - \frac{d}{dt} \bigg(
  \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDotArgnt{}} 
 (\genstateArg{n}{t},\genstateDotArg{n}{t} ,t) \bigg) = \bz, \qquad t \in [\timeStartArg{n},\timeEndArg{n}],\\ 
@@ -110,7 +115,10 @@ n=2,\ldots,\nslabs, \\
 \end{equation}
 Evaluating the terms in~\eqref{eq:el1} is an exercise in
 vector calculus, and the step-by-step process is given in
-Appendix~\ref{appendix:vector_calc}. The resulting system of equations is
+Appendix~\ref{appendix:vector_calc}. The resulting system can be written as the 
+coupled forward-backward system for $t \in [\timeStartArg{n},\timeEndArg{n} ]$,
+\begin{comment}
+The resulting system of equations is
 given by the second-order differential equation,
 %$$ \bigg[\basisspace^T \bigg[\frac{\partial \velocity}{\partial \state}
 %\bigg]^T \stweightingMat  +  \frac{d}{dt} \bigg] \bigg(  \basisspace^T
@@ -164,6 +172,8 @@ mass matrix,
 we can manipulate the system~\eqref{eq:clspg_2ord} (see
 Appendix~\ref{appendix:vector_calc}) to obtain a coupled forward-backward
 system for $t \in  [\timeStartArg{n},\timeEndArg{n}]$,
+\end{comment}
+
 \begin{align}\label{eq:lspg_continuous} 
 &\mass   \genstateDotArg{n}{t}  -  \basisspace^T
 \stweightingMatArgt{n}{t} \velocity(\veloargsromn) =  \mass \adjointArg{n}{t} , \\
@@ -180,8 +190,16 @@ system for $t \in  [\timeStartArg{n},\timeEndArg{n}]$,
 \genstateArg{n}{\timeStartArg{n}} = \begin{cases}
 \genstate^{n-1}(\timeEndArg{n-1}) & n=2,\ldots,\nslabs, \label{eq:lspg_bcs1}\\
 \basisspace^T(\stateFOMIC - \stateIntercept) & n=1, \end{cases}\\ &
-\adjointArg{n}{\timeEndArg{n}} = \boldsymbol 0. \label{eq:lspg_bcs} 
-\end{align} 
+\adjointArg{n}{\timeEndArg{n}} = \boldsymbol 0, \label{eq:lspg_bcs} 
+\end{align}
+where 
+\begin{equation}\label{eq:costate_def}
+\begin{split}
+\adjointArgnt{n} &: \timeDummy \mapsto \genstateDotArg{n}{\timeDummy}  -  \mass^{-1} \basisspace^T \stweightingMatArgt{n}{\timeDummy}\velocity(\basisspace \genstateArg{n}{\timeDummy} + \stateIntercept , \timeDummy ) ,\\
+&: [\timeStartArg{n},\timeEndArg{n}] \rightarrow \RR{K} ,
+\end{split}
+\end{equation}
+is the adjoint, or ``costate" variable. 
 %where
 %$\massArgnt{n}= \basisspace^T \stweightingMatArgt{n}{t} \basisspace$ is the
 %mass matrix.
