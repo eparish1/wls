@@ -645,11 +645,12 @@ highlights that the former approximation associates with a time-dependent
 generalized coordinates, while the latter approximation associates with a
 time-dependent basis matrix.
 
-\KTC{HERE}
 Substituting the approximation~\eqref{eq:stapprox1} into the FOM
 ODE~\eqref{eq:FOM} yields
 \begin{equation}\label{eq:st_fom}
-\stbasisDotArg{}{t} \stgenstate =  \velocity(\stbasisArg{}{t} \stgenstate + \stateIntercept,t) , \qquad \genstate(0) =\mathbb{P}(\stateFOM)(0), \qquad t \in [0,T],
+\stbasisDotArg{}{t} \stgenstate =  \velocity(\stbasisArg{}{t} \stgenstate +
+	\stateIntercept,t) , \qquad \genstate(0) =\mathbb{P}(\stateFOM(0)\otimes
+	\timeSpace)(0), \qquad t \in [0,T],
 \end{equation}
 where 
 $\stbasisDot\equiv d\stbasis/d\timeDummy$,
