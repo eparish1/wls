@@ -7,7 +7,8 @@ The \spatialAcronym\ trial subspace over the $n$th time window is given as,
 %\trialspace \otimes \timeSpaceArg{n},
 \end{equation}
 where the spatial trial subspace, $\trialspace$, is as defined in~\eqref{eq:spatial_subspace} and 
-$\onesFunction^n\in\timeSpaceArg{n}$ is defined as $\onesFunction:[\timeStartArg{n},\timeEndArg{n}]\rightarrow\{1\}.$
+$\onesFunction^n\in\timeSpaceArg{n}$ is defined as
+$\onesFunction^n:\timeDummy\mapsto 1.$
 % and  
 %$\approxstateArgnt{n}: [\timeStartArg{n},\timeEndArg{n}] \rightarrow  \trialspace$ is the \methodAcronym\ approximation to the state over the $n$th time slab.
 For simplicity, we study the case 
@@ -30,7 +31,9 @@ the generalized coordinates $\genstateArgnt{n}$, for $n = 1,\ldots,\nslabs$, as 
 
 \begin{equation}\label{eq:obj_gen_slab}
 \begin{split}
-      & \underset{\genstateyArgnt{} \in \RR{\romdim} \otimes \timeSpaceArg{n} }{\text{minimize}}\; \mathcal{J}^n(\basisspace \genstateyArgnt{} + \stateIntercept \otimes \onesFunction), \\ 
+      & \underset{\genstateyArgnt{} \in \RR{\romdim} \otimes \timeSpaceArg{n}
+			}{\text{minimize}}\; \mathcal{J}^n(\basisspace \genstateyArgnt{} +
+			\stateIntercept \otimes \onesFunction^n), \\ 
       & \text{subject to }\; \genstateyArg{}{\timeStartArg{n}} =
 \begin{cases} \genstateArg{n-1}{\timeEndArg{n-1}} & n = 2,\ldots,\nslabs \\
 \genstateIC & n=1, \end{cases} 
