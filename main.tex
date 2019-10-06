@@ -693,7 +693,7 @@ coordinates associated with the \spaceTimeAcronym\ subspace:
 \begin{align*}
 \genresidST_{\text{}} & \vcentcolon (\stgenstatey ;\stateFOMIC) \mapsto \begin{bmatrix}
 %\frac{\stateyDiscreteArg{N_t} - \stateyDiscreteArg{N_t-1}  }{\Delta t} -  \velocity(\stateyDiscreteArg{N_t}) \\
-\residLMSArg{1}\bigg( \stbasisArg{}{t^1}\stgenstatey + \stateIntercept; \stateFOMIC \bigg)
+\residLMSArg{1}\bigg( \stbasisArg{}{t^1}\stgenstatey + \stateIntercept; \mathbb{P}(\stateFOMIC)(0) \bigg)
 \\ 
 \vdots \\
 \residLMSArg{N_t}\bigg( \stbasisArg{}{t^{N_t}}\stgenstatey + \stateIntercept; \stbasisArg{}{t^{N_t-1}}\stgenstatey + \stateIntercept ,\ldots,  \stbasisArg{}{t^{N_t-k^{N_t}}}\stgenstatey + \stateIntercept \bigg)  \\ 
