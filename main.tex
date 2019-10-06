@@ -653,6 +653,13 @@ ODE~\eqref{eq:FOM} yields
 	\stbasisArg{}{0} \stgenstate
 	=\mathbb{P}(\stateFOMIC)(0)-\stateIntercept, \qquad t \in [0,T],
 \end{equation}
+\begin{equation}\label{eq:st_fom}
+\stbasisDotArg{}{t} \stgenstate =  \velocity(\stbasisArg{}{t} \stgenstate +
+	\stateIntercept,t) , \qquad 
+	\stgenstate
+	=
+	\stbasisArg{}{0}^+ (\stateFOMIC-\stateIntercept), \qquad t \in [0,T],
+\end{equation}
 where 
 $\stbasisDot\equiv d\stbasis/d\timeDummy$ and
 $\mathbb{P} : \RR{N} \rightarrow \stspaceST$ denotes the
