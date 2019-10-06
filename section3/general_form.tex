@@ -98,8 +98,8 @@ minimization problem
 \begin{split}
       &\underset{\statey \in \stspace^n}{\text{minimize}} \; \mathcal{J}^n(\statey), \\
 			&\text{subject to } \;  \statey(\timeStartArg{n}) =
-\begin{cases}\mathbb{P}^n (\approxstateArgnt{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs \\
-\mathbb{P}^n( \stateFOMArgnt{1})(0)& n=1, \end{cases} 
+\begin{cases}\mathbb{P}^n (\approxstateArgnt{n-1}(\timeEndArg{n-1})) & n = 2,\ldots,\nslabs \\
+\mathbb{P}^n( \stateFOMIC)& n=1, \end{cases} 
 \end{split}
 \end{equation}
 %\methodAcronym\ computes a sequence of approximate solutions $\approxstateArgnt{n}$ as the solution to the minimization problem,
@@ -111,8 +111,10 @@ minimization problem
 %\mathbb{P}^n( \stateFOMArgnt{1})(0)& n=1, \end{cases} 
 %\end{split}
 %\end{equation}
-where $\mathbb{P}^n: \RR{N} \otimes \timeSpaceArg{n} \rightarrow \stspaceArg{n}$ is an orthogonal projection onto the 
-trial subspace (e.g., $\elltwo$).
+where 
+$\mathbb{P}^n (\statey) = XXX$ \KTC{EP TODO} for \spatialAcronym\ subspaces
+and
+$\mathbb{P}^n (\statey) = \statey$ for \spaceTimeAcronym\ subspaces.
 %\methodAcronym\ generates approximations to~\eqref{eq:FOM} by sequentially minimizing
 %the FOM ODE residual over the trial space for each time slab.
 %\methodAcronym\ is defined as follows,
@@ -126,6 +128,7 @@ trial subspace (e.g., $\elltwo$).
 %\mathbb{P}^n \stateFOMIC & n=1, \end{cases} \end{equation*}
 %where $\mathbb{P}^n: \RR{N} \rightarrow \stspaceArg{n}$ projects onto the 
 %trial space (e.g., an $L^2$ projector).
+	\KTC{Remove next remark?}
 \begin{remark}
 It is possible to construct the trial subspaces such that they have continuous support between time windows through the 
 use of, e.g., affine transformations.
