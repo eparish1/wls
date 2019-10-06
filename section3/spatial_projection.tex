@@ -94,8 +94,8 @@ We make the following definitions:
 \begin{equation}
 \begin{split}
 \dIdV^n  & \vcentcolon
-\timeDummy \mapsto \frac{\partial \minintegrand}{\partial \genstateyDiscreteDot} (\genstateArg{n}{\timeDummy}, \genstateDotArg{n}{\timeDummy},\timeDummy), \\ 
-& \vcentcolon  [0,T]
+(\genstatey , \genstateyDot, \timeDummy) \mapsto \frac{\partial \minintegrand}{\partial \genstateyDiscreteDot} (\genstateyArg{n}{\timeDummy}, \genstateyDotArg{n}{\timeDummy},\timeDummy), \\ 
+& \vcentcolon  \RR{\romdim} \otimes \timeSpaceArg{n} \times \RR{\romdim} \otimes \timeSpaceArg{n} \times [\timeStartArg{n},\timeEndArg{n}]
  \rightarrow \RR{\romdim} ,
 \end{split}
 \end{equation}
@@ -128,7 +128,7 @@ n=2,\ldots,\nslabs, \\
 &\dIdV (\timeEndArg{n}) = \bz.
 \end{split} 
 \end{equation}
-Evaluating the terms in~\eqref{eq:el1} is an exercise in
+Evaluating the terms in system~\eqref{eq:el1} is an exercise in
 vector calculus, and the step-by-step process is given in
 Appendix~\ref{appendix:vector_calc}. The resulting system can be written as the 
 coupled forward-backward system for $t \in [\timeStartArg{n},\timeEndArg{n} ]$,
