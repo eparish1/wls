@@ -90,28 +90,43 @@ coordinates) as,
 %\velocity(\decoder(\genstate)) \big]^T \stweightingMat(t) \big[\frac{\partial
 %\decoder}{\partial \genstate} \dot{\genstate} -
 %\velocity(\decoder(\genstate)) \big].$$
+We make the following definitions:
+\begin{equation}
+\begin{split}
+\dIdV^n  & \vcentcolon
+\timeDummy \mapsto \frac{\partial \minintegrand}{\partial \genstateyDiscreteDot} (\genstateArg{n}{\timeDummy}, \genstateDotArg{n}{\timeDummy},\timeDummy), \\ 
+& \vcentcolon  [0,T]
+ \rightarrow \RR{\romdim} ,
+\end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+\dIdY^n  & \vcentcolon
+\timeDummy \mapsto \frac{\partial \minintegrand}{\partial \genstateyDiscrete} (\genstateArg{n}{\timeDummy}, \genstateDotArg{n}{\timeDummy},\timeDummy), \\ 
+& \vcentcolon  [0,T]
+ \rightarrow \RR{\romdim} .  
+\end{split}
+\end{equation}
 Using this notation, the Euler--Lagrange equations (see
 Appendix~\ref{appendix:eulerlagrange} for the derivation) over the $n$th
 time window are given by, 
 \begin{equation}\label{eq:el1} 
 \begin{split}
-& \frac{\partial
-\minintegrandArg{n}}{\partial
-\genstateyDiscrete}(\genstateArg{n}{t},\genstateDotArg{n}{t},t) - \frac{d}{d\timeDummy } \bigg(
- \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDotArgnt{}} 
-(\genstateArg{n}{\timeDummy},\genstateDotArg{n}{\timeDummy} ,\timeDummy ) \bigg)(t) = \bz, \qquad t \in [\timeStartArg{n},\timeEndArg{n}],\\ 
-& \frac{\partial
-\minintegrandArg{n}}{\partial
-\genstateyDiscrete}(\genstateArg{n}{t},\genstateDotArg{n}{t},t) - \frac{d}{dt} \bigg(
- \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDotArgnt{}} 
-(\genstateArg{n}{t},\genstateDotArg{n}{t} ,t) \bigg) = \bz, \qquad t \in [\timeStartArg{n},\timeEndArg{n}],\\ 
+& \dIdY^n(t) - \dIdVDot^n(t )  = \bz, \qquad t \in [\timeStartArg{n},\timeEndArg{n}],\\ 
+%& \dIdY(\genstateArg{n}{t},\genstateDotArg{n}{t},t) - \dIdVDot(\genstateArg{n}{t},\genstateDotArg{n}{t} ,t )  = \bz, \qquad t \in [\timeStartArg{n},\timeEndArg{n}],\\ 
+%& \frac{\partial
+%\minintegrandArg{n}}{\partial
+%\genstateyDiscrete}(\genstateArg{n}{t},\genstateDotArg{n}{t},t) - \frac{d}{dt} \bigg(
+% \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDotArgnt{}} 
+%(\genstateArg{n}{t},\genstateDotArg{n}{t} ,t) \bigg) = \bz, \qquad t \in [\timeStartArg{n},\timeEndArg{n}],\\ 
 &\genstate^n(\timeStartArg{n})  = \begin{cases} 
 \genstate^{n-1}(\timeEndArg{n-1}) &
 n=2,\ldots,\nslabs, \\ 
 \basisspace^T(\stateFOMIC - \stateIntercept) & n=1,
 \end{cases}\\ 
-&\bigg[ \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDotArgnt{}}(\genstateArg{n}{\timeEndArg{n}},\genstateDotArg{n}{\timeEndArg{n}},\timeEndArg{n})\bigg]^T =
-\bz.\end{split} 
+%&\dIdV (\genstateArg{n}{\timeEndArg{n}},\genstateDotArg{n}{\timeEndArg{n}},\timeEndArg{n}) = \bz.
+&\dIdV (\timeEndArg{n}) = \bz.
+\end{split} 
 \end{equation}
 Evaluating the terms in~\eqref{eq:el1} is an exercise in
 vector calculus, and the step-by-step process is given in
