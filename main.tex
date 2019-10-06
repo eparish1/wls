@@ -349,12 +349,12 @@ calligraphic symbols (e.g., $\mathcal{X}$).
 %The least-squares Petrov-Galerkin (LSPG) approach has gained popularity as a model reduction technique for nonlinear dynamical systems. Derived at the fully discrete level, the LSPG approach solves a least-squares problem that minimizes the fully discrete residual of the reduced-order model at each time-step. LSPG has been shown to be an effective formulation for nonlinear model reduction on complex problems of interest.
 %\begin{comment} 
 \section{Mathematical formulation}\label{sec:math}
-	\KTC{HERE}
 	We begin by providing the formulation for the full-order model,
 	followed by a description of standard model-reduction methods
 	classified according to the type of trial subspace they employ.
 	\subsection{Full-order model}\label{sec;FOM}
-We consider the system of nonlinear ordinary differential equations (ODEs),
+We consider the full-order model to be a dynamical system expressed as a
+	system of ordinary differential equations (ODEs)
 \begin{equation}\label{eq:FOM}
  \stateFOMDotArg{t}  = \velocity(\stateFOMArg{}{t},t), \qquad \stateFOM(0) =
 	\stateFOMIC,\qquad t \in [0,T]
