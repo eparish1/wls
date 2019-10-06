@@ -649,21 +649,28 @@ Substituting the approximation~\eqref{eq:stapprox1} into the FOM
 ODE~\eqref{eq:FOM} yields
 \begin{equation}\label{eq:st_fom}
 \stbasisDotArg{}{t} \stgenstate =  \velocity(\stbasisArg{}{t} \stgenstate +
-	\stateIntercept,t) , \qquad \genstate(0) =\mathbb{P}(\stateFOM(0)\otimes
-	\onesFunction)(0), \qquad t \in [0,T],
+	\stateIntercept,t) , \qquad \genstate(0) =\mathbb{P}(\stateFOM(0))(0), \qquad t \in [0,T],
 \end{equation}
 where 
-$\stbasisDot\equiv d\stbasis/d\timeDummy$,
-$\mathbb{P} : \RR{N} \otimes \timeSpace \rightarrow \stspaceST$ is an orthogonal projection onto the trial subspace (e.g., $\elltwo$).
-Equation~\eqref{eq:st_fom} is an over-determined algebraic system for the $\stdim$ unknowns. We now outline the Space--Time Least-Squares Petrov--Galerkin method~\cite{choi_stlspg}. 
-The space--time Galerkin method is noted to additionally be a possibility for model reduction. As the space--time Galerkin method does not associate with any residual minimization 
-principle, however, we do not outline it here.
+$\stbasisDot\equiv d\stbasis/d\timeDummy$ and
+$\mathbb{P} : \RR{N} \rightarrow \stspaceST$ denotes the
+orthogonal $\ell^2$-projection onto the space--time trial subspace, i.e.,
+$$
+\mathbb{P}:\stateyDiscrete\mapsto\underset{\statey\in\stspaceST}{\text{arg\,min}}\int_0^T\|\stateyDiscrete
+- \statey( t)\|_2^2d t.
+$$
+Space--time projection methods reduce the number of equations in
+\eqref{eq:st_fom} to ensure a unique solution exists.
+We now outline one such method: space--time least-squares Petrov--Galerkin (ST-LSPG)
+projection~\cite{choi_stlspg}. 
+While space--time Galerkin projection \KTC{add citations. See our ST-LSPG work
+where we have some of these} is another alternative, it does not
+associate with any residual minimization principle, and thus we do not discuss
+it further.
 \subsubsection{Space--Time LSPG projection}  
-As in LSPG, Space--Time LSPG (ST-LSPG)~\cite{choi_stlspg} minimizes the fully discrete residual, with the key difference being that ST-LSPG minimizes the residual over the entire time domain. For brevity, ST-LSPG is outlined only for linear multistep methods.
-%As ST-LSPG acts on the discrete solution, we first note that the discrete FOM solution lives in $\RR{N} \otimes \RR{N_t}$. ST-LSPG then seeks solutions in the trial space,
-%$$\stspaceDiscrete \defeq \spaceTrialSpace \otimes \timeTrialSpaceDiscrete \subseteq \RR{N} \otimes \RR{N_t},$$
-%where $\timeTrialSpaceDiscrete$ is the discrete temporal trial space. It is noted that this trial space is a specific instance of the trial space~\ref{eq:sttrialspace_def} 
-%As before, we define a discretization of the continuous time-domain $[0,T]$ into $N_t$ time instances $t^n = n\Delta t, n=1,2,\ldots,N_t$ with a constant time-step $\Delta t = T/N_t$. We define now the space--time discrete residual for the implicit Euler method as,
+Analogously to LSPG projection, space--time LSPG projection~\cite{choi_stlspg}
+minimizes the (time-discrete) FOM O$\Delta$E residual, but does so over the
+entire time domain. 
 We first define the space--time discrete residual for linear multistep methods,
 \begin{align*}
 \residST_{} & \vcentcolon (\stateyDiscreteArg{N_t}, \ldots ,\stateyDiscreteArg{1};\stateFOMIC) \mapsto \begin{bmatrix}
