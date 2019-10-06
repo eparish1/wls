@@ -649,7 +649,9 @@ Substituting the approximation~\eqref{eq:stapprox1} into the FOM
 ODE~\eqref{eq:FOM} yields
 \begin{equation}\label{eq:st_fom}
 \stbasisDotArg{}{t} \stgenstate =  \velocity(\stbasisArg{}{t} \stgenstate +
-	\stateIntercept,t) , \qquad \genstate(0) =\mathbb{P}(\stateFOMIC)(0), \qquad t \in [0,T],
+	\stateIntercept,t) , \qquad 
+	\stbasisArg{}{0} \stgenstate
+	=\mathbb{P}(\stateFOMIC)(0)-\stateIntercept, \qquad t \in [0,T],
 \end{equation}
 where 
 $\stbasisDot\equiv d\stbasis/d\timeDummy$ and
