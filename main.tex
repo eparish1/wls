@@ -344,7 +344,7 @@ x$), vectors with standard bold symbols (e.g., $\mathbf{x}$),
 matrices with capital bold symbols (e.g., $\mathbf{X} \equiv \begin{bmatrix}
 \mathbf{x}_1 & \cdots & \mathbf{x}_r\end{bmatrix}$), and spaces with
 calligraphic symbols (e.g., $\mathcal{X}$). We additionally denote differentiation of a time-dependent 
-function with respect to time as $\stateDot \equiv \frac{d \state}{dt}$.
+function with respect to with the $\dot\ $ operator.
 %Model reduction of nonlinear dynamical systems is a growing research area.
 %The least-squares Petrov-Galerkin (LSPG) approach has gained popularity as a model reduction technique for nonlinear dynamical systems. Derived at the fully discrete level, the LSPG approach solves a least-squares problem that minimizes the fully discrete residual of the reduced-order model at each time-step. LSPG has been shown to be an effective formulation for nonlinear model reduction on complex problems of interest.
 %\begin{comment} 
@@ -359,89 +359,102 @@ We consider the full-order model to be a dynamical system expressed as a
  \stateFOMDotArg{t}  = \velocity(\stateFOMArg{}{t},t), \qquad \stateFOM(0) =
 	\stateFOMIC,\qquad t \in [0,T]
 \end{equation}
-where $\stateFOMDot \equiv \frac{d \stateFOM}{dt}$, 
-$T \in \mathbb{R}^+$ denotes the final time, $\stateFOM \in \RR{\fomdim}
-	\otimes \timeSpace $ with $\stateFOM: [0,T] \rightarrow  \RR{\fomdim}$
+where  $\stateFOM: [0,T]
+	\rightarrow  \RR{\fomdim}$ with $\stateFOM: \timeDummy \mapsto
+	\stateFOM(\timeDummy) $ and $\stateFOMDot \equiv {d \stateFOM}/{d\tau}$
 	denotes the state implicitly defined as the solution to initial value
 	problem~\eqref{eq:FOM}, 
-	$\timeSpace$ denotes the set of real-valued functions acting on the time
-	domain, 
+$T \in \mathbb{R}^+$ denotes the final time, 
  $\stateFOMIC \in \mathbb{R}^{\fomdim}$ denotes the initial condition,
 	and $\velocity: \mathbb{R}^{\fomdim} \times [0,T] \rightarrow
-	\mathbb{R}^{\fomdim}$ with $(\stateyDiscrete,\timeDumArg) \mapsto
-	\velocity(\stateyDiscrete,\timeDumArg)$ denotes the velocity, which is possibly
-	nonlinear in its first argument. We refer to Eq.~\eqref{eq:FOM} 
-	as the ``full-order model" (FOM) ODE.
+	\mathbb{R}^{\fomdim}$ with $(\stateyDiscrete,\timeDummy) \mapsto
+	\velocity(\stateyDiscrete,\timeDummy)$ denotes the velocity, which is possibly
+	nonlinear in its first argument. For subsequent exposition, we introduce
+	$\timeSpace$ to denote the set of real-valued functions acting on the time
+	domain (i.e., $\timeSpace = \{f\,|\,f:[0,T]\rightarrow\RR{}\}$); the
+	state can be expressed equivalently as $\stateFOM \in \RR{\fomdim} \otimes
+	\timeSpace $.  We refer to the initial value problem defined in
+	Eq.~\eqref{eq:FOM} as the ``full-order model" (FOM) ODE. We note that
+	although the problem of interest described in the introduction corresponds
+	to a parameterized dynamical system, we suppress dependence of the FOM ODE
+	\eqref{eq:FOM} on such parameters for notational convenience, as this work
+	focuses on devising a projection applicable to a specific parameter instance.
 
-Directly solving initial value problem~\eqref{eq:FOM} is computationally
-	expensive if either the state-space dimension $\fomdim$ is large, or if the
-	time-interval length $T$ is large relative to the time step required to
-	numerically integrate Eq.~\eqref{eq:FOM}. For time-critical or many-query
-	applications, it is essential to employ an approximation in lieu of the FOM
-	ODE~\eqref{eq:FOM}. Projection-based ROMs constitute one such promising
-	approach. 
+Directly solving the FOM ODE~\eqref{eq:FOM} is computationally expensive if
+	either the state-space dimension $\fomdim$ is large, or if the time-interval
+	length $T$ is large relative to the time step required to numerically
+	integrate Eq.~\eqref{eq:FOM}. For time-critical or many-query applications,
+	it is essential to relplace the FOM ODE~\eqref{eq:FOM} with a strategy that
+	enables an approximate trajectory to be computed at lower computational
+	cost. Projection-based ROMs constitute one such promising approach. 
 
 \subsection{Reduced-order models}
 Projection-based ROMs generate approximate solutions to the FOM
 	ODE~\eqref{eq:FOM} by approximating the state in a low-dimensional trial
-	subspace. For dynamical 
-	systems, two distinct types of space--time trial subspaces are commonly used: 
+	subspace. Two types of space--time trial subspaces are commonly used for
+	this purpose: 
 \begin{enumerate} 
-	\item \textit{Space–time trial subspaces with spatial dimension reduction (\spatialAcronym)}. These 
-	trial subspaces reduce only the spatial dimension of the FOM, and are commonly used
+	\item \textit{Subspaces that reduce only the spatial dimension of the full-order
+		model (\spatialAcronym)}. These 
+	trial subspaces are commonly used
 		in model-reduction methods based on spatial projection followed by time
-		integration (e.g., Galerkin projection, LSPG projection.)
-	\item \textit{Space–time trial subspaces with spatial and temporal dimension reduction (\spaceTimeAcronym)}. These 
-	trial subspaces reduce both the spatial and temporal dimensions of the FOM,
-		and are commonly employed 
-		employed in model-reduction methods based on space--time projection (e.g.,
-		space--time LSPG projection).
+		integration (e.g., Galerkin projection, LSPG projection).
+	\item \textit{Subspaces that reduce both the spatial and temporal dimensions of the full-order
+		model (\spaceTimeAcronym)}. These trial subspaces are commonly employed in
+		model-reduction methods based on space--time projection (e.g., space--time
+		LSPG projection).
 \end{enumerate}
- We now describe these two types of trial subspaces and their application to 
-	Galerkin, LSPG, and space--time LSPG projection. 
+ We now describe these two types of space--time trial subspaces and their
+	application to Galerkin, LSPG, and space--time LSPG projection. 
 
 \subsection{\spatialAcronym\ trial subspaces}
 \spatialAcronym\ trial subspaces approximate the FOM ODE solution
-	$\stateFOM$ with an approximation $\approxstate$ that resides in an
+	$\stateFOM(t)$, $t\in[0,T]$ with an approximation $\approxstate(t)$, $t\in[0,T]$ that resides in an
 	affine space--time trial subspace of dimension $K\ll\fomdim$, i.e., 
+	$\approxstate\in \stspaceS$, where
 \begin{equation}\label{eq:spatial_subspace}
 \begin{split}
 & \stspaceS \defeq \trialspace \otimes \timeSpace +
-	\stateIntercept\otimes\onesFunction,\\ 
-& \trialspace \defeq \text{Range}(\basismat),  \\%\label{eq:spatial_subspace2}  \\
-&\basismat \defeq \begin{bmatrix}  \basisvec_1  & \cdots &  \basisvec_K \end{bmatrix}, %\label{eq:spatial_subspace3} 
+	\stateIntercept\otimes\onesFunction.\\ 
 \end{split}
 \end{equation}
-where 
+Here, $\trialspace\subseteq\RR{\fomdim}$ with $\dim(\trialspace) = K$ denotes
+the spatial trial subspace spanned by an orthogonal basis such that
+$ \trialspace= \Range{\basismat}$
+with 
+$ \basismat \equiv \begin{bmatrix}  \basisvec_1  & \cdots &  \basisvec_K \end{bmatrix}
+	\in \RRStar{\romdim}{\fomdim}$, where $\RRStar{\romdim}{\fomdim}$ denotes the compact Stiefel manifold (i.e.,  $
+	\RRStar{\romdim}{\fomdim}\defeq
+	\{ \mathbf{X} \in \RR{\fomdim
+	\times \romdim}\, \big|\, \mathbf{X}^T \mathbf{X} = \mathbf{I} \}$).
 %	$\timeSpace$ denotes the set of real-valued functions acting on the time
 %	domain
 %	$[0,T]$, 
-$\onesFunction\in\timeSpace$ is defined as $\onesFunction:[0,T]\rightarrow\{1\}$,
-	$\basismat \in \RRStar{\romdim}{\fomdim}$ denotes the spatial trial subspace with
-	$\RRStar{\romdim}{\fomdim}$ denoting the compact Stiefel manifold (i.e.,  $
-	\RRStar{\romdim}{\fomdim}\defeq
-	\{ \mathbf{X} \in \RR{\fomdim
-	\times \romdim}\, \big|\, \mathbf{X}^T \mathbf{X} = \mathbf{I} \}$),
-	$\trialspace\subseteq\RR{\fomdim}$ denotes the spatial trial subspace, and
-	$\stateIntercept \in \mathbb{R}^{\fomdim}$ denotes the reference state that
+We have also introduced $\onesFunction\in\timeSpace$ as the function $\onesFunction:\timeDummy\mapsto 1$
+and
+	$\stateIntercept \in \mathbb{R}^{\fomdim}$ as the reference state, which
 	is often taken to be the initial condition (i.e., $\stateIntercept = \stateFOMIC$). 
 %where $\basisvec_i \in \mathbb{R}^N$ are orthonormal basis vectors and $\stateIntercept \in \mathbb{R}^{\fomdim}$ the ``intercept''.
 %We refer to $\basismat \in \RRStar{\fomdim \times \romdim}$, with $\RRStar{p \times q}$ denoting the set of orthogonal $q$ frames in $p$, as the spatial trial basis, and $\trialspace$ as the spatial trial space. 
 The basis vectors $\basisvec_i$, $i=1,\ldots,K$ are typically constructed
 using state snapshots, e.g., via
-proper orthogonal decomposition (POD)~\cite{berkooz_turbulence_pod} or the reduced-basis method~\cite{rb_1,rb_2,rb_3,NgocCuong2005,Rozza2008}. 
+proper orthogonal decomposition (POD)~\cite{berkooz_turbulence_pod}, the reduced-basis method~\cite{rb_1,rb_2,rb_3,NgocCuong2005,Rozza2008}. 
 At any time instance $t\in[0,T]$, ROMs that employ the  \spatialAcronym\ trial subspace approximate the state as
 \begin{equation}\label{eq:affine_trialspace}
 \stateFOMArg{}{t} \approx \approxstate(t) = \basisspace \genstateArg{}{t} + \stateIntercept,
 \end{equation}
-where $\genstate \in \RR{\romdim} \otimes \timeSpace$ denotes the generalized
+where $\genstate \in \RR{\romdim} \otimes \timeSpace$ with
+$\genstate:\timeDummy\mapsto\genstate(\timeDummy)$
+denotes the generalized
 coordinates. Substituting the approximation~\eqref{eq:affine_trialspace} into the FOM ODE~\eqref{eq:FOM} and performing orthogonal
 $\elltwo$-projection of the initial condition onto the trial subspace yields
 the overdetermined system of ODEs
 \begin{equation}\label{eq:g_truncation}
 \basisspace \genstateDotArg{}{t} = \velocity(\basisspace
-\genstateArg{}{t} + \stateIntercept,t ), \qquad \genstate(0) = \genstateIC, \qquad t \in [0,T].
+\genstateArg{}{t} + \stateIntercept,t ), \qquad \genstate(0) = \genstateIC,
+	\qquad t \in [0,T],
 \end{equation}
+where $\genstateDot\equiv {d \genstate}/{d\tau}$.
 Because Eq.~\eqref{eq:g_truncation} is overdetermined, a solution may not
 exist. Typically, either \textit{Galerkin projection} or \textit{least-squares
 Petrov--Galerkin projection} is employed to reduce the number of equations
@@ -468,7 +481,8 @@ to
 \genstateGalerkinDotArg{}{t} = \underset{ \genstateyDiscrete \in \RR{\romdim}
 	}{\text{arg\,min}} \| \basisspace \hat{\stateyDiscrete} -
 	\velocity(\basisspace \genstateGalerkinArg{}{t} + \stateIntercept,t)
-	\|_{\stweightingMatArg{n}}^2,
+	\|_{\stweightingMatArg{n}}^2, \qquad \genstate(0) = \genstateIC,
+	\qquad t \in [0,T],
 %\hat{\mathbf{v}}, %\qquad \genstateGalerkin(0) = \basisspace^T(\stateFOMIC -\stateIntercept), \qquad t \in [0,T].
 \end{equation}
 where $\|\mathbf{x}\|_{\stweightingMatArg{n}}\equiv
@@ -498,8 +512,8 @@ where $\|\mathbf{x}\|_{\stweightingMatArg{n}}\equiv
 %\genstateGalerkinArg{}{t} + \stateIntercept).
 %\end{equation*}
 Thus, the computed velocity $\genstateGalerkinDotArg{}{t}$ minimizes the
-time-instantaneous FOM ODE residual evaluated at the state $\basisspace
-\genstateGalerkin(t) + \stateIntercept$ and time $t$ over the spatial trial
+FOM ODE residual evaluated at the state $\basisspace
+\genstateGalerkin(t) + \stateIntercept$ and time instance $t$ over the spatial trial
 subspace $\trialspace$.
 %To perform dimension reduction, 
 %To perform dimension reduction, the governing equations are projected by a ``test" basis,
@@ -510,7 +524,8 @@ subspace $\trialspace$.
 %\begin{equation}\label{eq:g_truncation}
 %\frac{d \genstate}{dt} = \basisspace^T \velocity(\basisspace \genstate + \state_0,t; \param ), \qquad t \in [0,T],
 %\end{equation}
-\subsubsection{Least-Squares Petrov--Galerkin projection}
+\subsubsection{Least-squares Petrov--Galerkin projection}
+\KTC{HERE}
 Despite its time-instantaneous optimality property 
 \eqref{eq:GalOptimal}, Galerkin projection can yield inaccurate solutions,
 particularly if the velocity is not self-adjoint or
@@ -604,7 +619,7 @@ and the space--time trial basis \textit{functions},
  &: [0,T] \rightarrow  \RR{N \times \stdim} ,%\spaceTrialSpace , \\
 %&  \in \RR{N \times \stdim} \otimes \timeTrialSpaceArg{},  
 \end{align*}
-with $\text{Range}(\stbasis) + \stateInterceptArg{} \equiv \stspaceST$ and where $\stdim$ is the dimension of the space--time generalized coordinates.
+with $\Range{\stbasis} + \stateInterceptArg{} \equiv \stspaceST$ and where $\stdim$ is the dimension of the space--time generalized coordinates.
 %with $\mathbb{V}_{\stdim}( \RR{N} )$ denoting the set of orthogonal $\stdim$ frames in $\RR{N}$ (e.g., an $N \times \stdim$ matrix with orthogonal column vectors).
 The state is approximated by,
 \begin{equation}\label{eq:stapprox1}
