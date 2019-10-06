@@ -649,7 +649,7 @@ Substituting the approximation~\eqref{eq:stapprox1} into the FOM
 ODE~\eqref{eq:FOM} yields
 \begin{equation}\label{eq:st_fom}
 \stbasisDotArg{}{t} \stgenstate =  \velocity(\stbasisArg{}{t} \stgenstate +
-	\stateIntercept,t) , \qquad \genstate(0) =\mathbb{P}(\stateFOM(0))(0), \qquad t \in [0,T],
+	\stateIntercept,t) , \qquad \genstate(0) =\mathbb{P}(\stateFOMIC)(0), \qquad t \in [0,T],
 \end{equation}
 where 
 $\stbasisDot\equiv d\stbasis/d\timeDummy$ and
@@ -667,29 +667,34 @@ While space--time Galerkin projection \KTC{add citations. See our ST-LSPG work
 where we have some of these} is another alternative, it does not
 associate with any residual minimization principle, and thus we do not discuss
 it further.
-\subsubsection{Space--Time LSPG projection}  
+\subsubsection{Space--time LSPG projection}  
 Analogously to LSPG projection, space--time LSPG projection~\cite{choi_stlspg}
-minimizes the (time-discrete) FOM O$\Delta$E residual, but does so over the
-entire time domain. 
-We first define the space--time discrete residual for linear multistep methods,
+minimizes the (time-discrete) FOM O$\Delta$E residual, but does so
+using the \spaceTimeAcronym\ subspace and simultaneously minimizes this
+residual over all $N_t$ time instances.
+We first introduce the full space--time FOM O$\Delta$E residual for linear
+multistep methods as
 \begin{align*}
-\residST_{} & \vcentcolon (\stateyDiscreteArg{N_t}, \ldots ,\stateyDiscreteArg{1};\stateFOMIC) \mapsto \begin{bmatrix}
+\residST_{} & \vcentcolon (\stateyDiscreteArg{1}, \ldots
+	,\stateyDiscreteArg{N_t};\stateFOMIC) \mapsto \begin{bmatrix}
+\residLMSArg{1}(\stateyDiscreteArg{1}; \stateFOMIC) 
 %\frac{\stateyDiscreteArg{N_t} - \stateyDiscreteArg{N_t-1}  }{\Delta t} -  \velocity(\stateyDiscreteArg{N_t}) \\
-\residLMSArg{N_t}(\stateyDiscreteArg{N_t};\stateyDiscreteArg{N_t-1},\ldots,\stateyDiscreteArg{N_t - k^{N_t}}) \\ 
+\\ 
 %\frac{\stateyDiscreteArg{N_t-1} - \stateFOMDiscreteArg{N_t-2}  }{\Delta t} -  \velocity(\stateyDiscreteArg{N_t-1}) \\
 \vdots \\
 %\frac{\stateyDiscreteArg{1} - \stateFOMIC }{\Delta t} -  \velocity(\stateyDiscreteArg{1}) \\
-\residLMSArg{1}(\stateyDiscreteArg{1}; \stateFOMIC) 
-\end{bmatrix}  \\
-& \vcentcolon \RR{\fomdim} \otimes \RR{N_t+1} \rightarrow \RR{\fomdim N_t}. 
+\residLMSArg{N_t}(\stateyDiscreteArg{N_t};\stateyDiscreteArg{N_t-1},\ldots,\stateyDiscreteArg{N_t - k^{N_t}}) \end{bmatrix}  \\
+& \vcentcolon \RR{\fomdim} \otimes \RR{N_t+1} \rightarrow \RR{\fomdim N_t},
 \end{align*}
-For convenience we define the same residual with the generalized coordinates as the inputs,
+and define the counterpart function acting on space--time generalized
+coordinates associated with the \spaceTimeAcronym\ subspace:
 \begin{align*}
 \genresidST_{\text{}} & \vcentcolon (\stgenstatey ;\stateFOMIC) \mapsto \begin{bmatrix}
 %\frac{\stateyDiscreteArg{N_t} - \stateyDiscreteArg{N_t-1}  }{\Delta t} -  \velocity(\stateyDiscreteArg{N_t}) \\
-\residLMSArg{n}\bigg( \stbasisArg{}{t^{N_t}}\stgenstatey + \stateIntercept; \stbasisArg{}{t^{N_t-1}}\stgenstatey + \stateIntercept ,\ldots,  \stbasisArg{}{t^{N_t-k^{N_t}}}\stgenstatey + \stateIntercept \bigg) \\ 
+\residLMSArg{1}\bigg( \stbasisArg{}{t^1}\stgenstatey + \stateIntercept; \stateFOMIC \bigg)
+\\ 
 \vdots \\
-\residLMSArg{n}\bigg( \stbasisArg{}{t^1}\stgenstatey + \stateIntercept; \stateFOMIC \bigg) \\ 
+\residLMSArg{N_t}\bigg( \stbasisArg{}{t^{N_t}}\stgenstatey + \stateIntercept; \stbasisArg{}{t^{N_t-1}}\stgenstatey + \stateIntercept ,\ldots,  \stbasisArg{}{t^{N_t-k^{N_t}}}\stgenstatey + \stateIntercept \bigg)  \\ 
 \end{bmatrix}  \\
 & \vcentcolon \RR{\stdim} \times \RR{N} \rightarrow \RR{\fomdim N_t}. 
 \end{align*}
