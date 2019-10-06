@@ -694,19 +694,40 @@ coordinates:
 \end{bmatrix}  \\
 & \vcentcolon \RR{\stdim} \times \RR{N} \rightarrow \RR{\fomdim N_t}. 
 \end{align*}
-ST-LSPG is defined as,
-\begin{equation*}
-\stgenstate = \underset{ \stgenstatey }{\text{arg\,min}}|| \lspgWeightingSTArg{\stgenstatey}  \genresidST_{\text{}}(\stgenstatey;\stateFOMIC) ||_2^2, 
-\end{equation*}
-where $\lspgWeightingSTArg{\cdot} \in \RR{n_{st} \times N N_t}$, with $\stdim \le n_{st} \le N N_t$, is a space--time weighting matrix.
+ST-LSPG projection computes the space--time generalized coordinates that
+minimize the space--time FOM O$\Delta$ E residual:
+\begin{equation}\label{eq:stlspg}
+	\stgenstate_\text{ST-LSPG} = \underset{ \stgenstatey\in\RR{\stdim} }{\text{arg\,min}}|| \lspgWeightingSTArg{\stgenstatey}  \genresidST_{\text{}}(\stgenstatey;\stateFOMIC) ||_2^2, 
+\end{equation}
+where $\lspgWeightingSTArg{\cdot} \in \RR{\stdim \times N N_t}$, with $\stdim
+\le n_{st} \le N N_t$, is a space--time weighting matrix that can be chosen,
+e.g., to enable hyper-reduction.
 
-
-ST-LSPG is appealing in that it (1) allows for both spatial and temporal dimension reduction and (2) minimizes the residual over the \textit{entire} space--time domain (as opposed to a single time-step instance as in LSPG). As a result, ST-LSPG can potentially be more efficient than standard LSPG and is equipped with more favorable error bounds~\cite{choi_stlspg}. ST-LSPG, however, is subject to several practical challenges.  Most importantly, ST-LSPG can be computationally 
-intensive as it involves (1.) computing space--time basis vectors and (2.) minimizing the entire space--time residual. For high-dimensional systems, these tasks may be intractable. Another challenge associated with ST-LSPG is that, as it requires a pre-defined temporal basis, it is unclear how it can be used, e.g., to perform future state prediction.
+ST-LSPG overcomes two of the primary shortcomings of LSPG. In particular, it
+leads to error bounds that grow sub-quadratically in time rather than
+exponentially in time, and it generates entire trajectories that associate
+with an optimality property over the entire time domain \cite{choi_stlspg}.
+However, it is subject to several challenges. First, the computational cost of
+solving Eq.~\eqref{eq:stlspg} scales cubically with the number of space--time
+degrees of freedom $\stdim$, because---by performing projection in time---it
+leads to dense systems that do not expose any natural mechanism for exploiting
+the sequential nature of time evolution. Second, it is unclear how these
+methods can be employed for future state prediction, as the space--time trial
+basis $\stbasis$ must be defined over the entire time interval of interest
+$[0,T]$. Third, ST-LSPG is still strongly tied to the time discretization
+employed for the full-order model, as it minimizes the (time-discrete) FOM
+O$\Delta$E residual over all time instance.
   
 \subsection{Outstanding challenges}
-This work seeks to overcome the limitations of existing reduced-order modeling approaches. Specifically, 
-we look to overcome LSPG's time-step and time-scheme dependence, the stability challenges of both Galerkin and LSPG, and the potential computational cost of ST-LSPG. To this end, we now outline the \methodNameLower\ formulation. 
+This work seeks to overcome the limitations of existing residual-minimizing
+model-reduction methods, and to provide a unifying framework from which
+exisiting methods can be assessed. Specifically, we look to overcome the
+complex dependence of LSPG projection on the time discretization,
+exponential time growth of the error bounds for Galerkin and LSPG projection,
+the cubic dependence of the computational cost of ST-LSPG on the number of
+degrees of freedom, and the lack of ability for ST-LSPG to perform predictions
+in time. We now describe the proposed \methodNameLower\ framework for this
+purpose. 
 %\end{comment}
 %\input{formulation_3}
 
