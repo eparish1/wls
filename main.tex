@@ -408,18 +408,19 @@ Projection-based ROMs generate approximate solutions to the FOM
 	application to Galerkin, LSPG, and space--time LSPG projection. 
 
 \subsection{\spatialAcronym\ trial subspaces}
+At a given time instance 
+$t\in[0,T]$,
 \spatialAcronym\ trial subspaces approximate the FOM ODE solution
-	$\stateFOM(t)$, $t\in[0,T]$ with an approximation $\approxstate(t)$, $t\in[0,T]$ that resides in an
-	affine space--time trial subspace of dimension $K\ll\fomdim$, i.e., 
-	$\approxstate\in \stspaceS$, where
-\begin{equation}\label{eq:spatial_subspace}
-\begin{split}
-& \stspaceS \defeq \trialspace \otimes \timeSpace +
-	\stateIntercept\otimes\onesFunction.\\ 
-\end{split}
-\end{equation}
-Here, $\trialspace\subseteq\RR{\fomdim}$ with $\dim(\trialspace) = K$ denotes
-the spatial trial subspace spanned by an orthogonal basis such that
+	as $\approxstate(t)\approx\stateFOM(t)$, which is enforced to reside in an
+	affine spatial trial subspace of dimension $K\ll\fomdim$ such that
+	$\approxstate(t)\in
+	\stateIntercept+\trialspace
+\subseteq\RR{\fomdim}$, where $\dim(\trialspace) = K$
+and $\stateIntercept \in \mathbb{R}^{\fomdim}$ denotes the reference state, which
+	is often taken to be the initial condition (i.e., $\stateIntercept = \stateFOMIC$).
+Here, the trial subspace
+$\trialspace$ 
+is spanned by an orthogonal basis such that
 $ \trialspace= \Range{\basismat}$
 with 
 $ \basismat \equiv \begin{bmatrix}  \basisvec_1  & \cdots &  \basisvec_K \end{bmatrix}
@@ -427,26 +428,33 @@ $ \basismat \equiv \begin{bmatrix}  \basisvec_1  & \cdots &  \basisvec_K \end{bm
 	\RRStar{\romdim}{\fomdim}\defeq
 	\{ \mathbf{X} \in \RR{\fomdim
 	\times \romdim}\, \big|\, \mathbf{X}^T \mathbf{X} = \mathbf{I} \}$).
-%	$\timeSpace$ denotes the set of real-valued functions acting on the time
-%	domain
-%	$[0,T]$, 
-We have also introduced $\onesFunction\in\timeSpace$ as the function $\onesFunction:\timeDummy\mapsto 1$
-and
-	$\stateIntercept \in \mathbb{R}^{\fomdim}$ as the reference state, which
-	is often taken to be the initial condition (i.e., $\stateIntercept = \stateFOMIC$). 
-%where $\basisvec_i \in \mathbb{R}^N$ are orthonormal basis vectors and $\stateIntercept \in \mathbb{R}^{\fomdim}$ the ``intercept''.
-%We refer to $\basismat \in \RRStar{\fomdim \times \romdim}$, with $\RRStar{p \times q}$ denoting the set of orthogonal $q$ frames in $p$, as the spatial trial basis, and $\trialspace$ as the spatial trial space. 
 The basis vectors $\basisvec_i$, $i=1,\ldots,K$ are typically constructed
 using state snapshots, e.g., via
 proper orthogonal decomposition (POD)~\cite{berkooz_turbulence_pod}, the reduced-basis method~\cite{rb_1,rb_2,rb_3,NgocCuong2005,Rozza2008}. 
-At any time instance $t\in[0,T]$, ROMs that employ the  \spatialAcronym\ trial subspace approximate the state as
+Thus, at any time instance $t\in[0,T]$, ROMs that employ the  \spatialAcronym\ trial subspace approximate the state as
 \begin{equation}\label{eq:affine_trialspace}
 \stateFOMArg{}{t} \approx \approxstate(t) = \basisspace \genstateArg{}{t} + \stateIntercept,
 \end{equation}
 where $\genstate \in \RR{\romdim} \otimes \timeSpace$ with
 $\genstate:\timeDummy\mapsto\genstate(\timeDummy)$
 denotes the generalized
-coordinates. Substituting the approximation~\eqref{eq:affine_trialspace} into the FOM ODE~\eqref{eq:FOM} and performing orthogonal
+coordinates. 
+
+	From the space--time perspective, this is equivalent to approximating the
+	FOM ODE solution trajectory $\stateFOM\in\RR{N}\otimes\timeSpace$ with 
+	$\approxstate\in \stspaceS$, where
+\begin{equation}\label{eq:spatial_subspace}
+\begin{split}
+& \stspaceS \defeq \trialspace \otimes \timeSpace +
+	\stateIntercept\otimes\onesFunction\subseteq\RR{N}\otimes\timeSpace
+\end{split}
+\end{equation}
+with
+	$\dim(\stspaceS) = K\ntimeSteps$
+and $\onesFunction\in\timeSpace$ defined as
+$\onesFunction:\timeDummy\mapsto 1$.
+	 
+Substituting the approximation~\eqref{eq:affine_trialspace} into the FOM ODE~\eqref{eq:FOM} and performing orthogonal
 $\elltwo$-projection of the initial condition onto the trial subspace yields
 the overdetermined system of ODEs
 \begin{equation}\label{eq:g_truncation}
@@ -577,68 +585,75 @@ that define the linear multistep method at the $n$th time instance.
 %\end{equation}
 %where $\stateFOMDiscreteArg{n} \approx \stateFOM(t^n)$ denotes the discrete approximation to the state at the $n${th} time instance.
 
-\KTC{HERE}
-The LSPG method substitutes the \spatialAcronym\ trial subspace approximation
-minimizes the residual of the FOM O$\Delta$E~\eqref{eq:lms} within the trial subspace over each time step. %We define the discrete residual for the implicit Euler method at the $n$th time-instance as,
-%\begin{align*}
-%\resid_{\text{IE}} & \vcentcolon (\stateyDiscrete;\stateFOMDiscreteArg{n-1}) \mapsto \frac{\stateyDiscrete - \stateFOMDiscreteArg{n-1}  }{\Delta t} -  \velocity(\stateyDiscrete), \\
-%& \vcentcolon \RR{\fomdim} \times \RR{\fomdim} \rightarrow \RR{\fomdim}. 
-%\end{align*}
-The LSPG method is defined as follows,
+At each time instance on the time grid, the LSPG method substitutes the \spatialAcronym\ trial subspace approximation
+\eqref{eq:affine_trialspace} into the FOM O$\Delta$E~\eqref{eq:lms} and
+minimizes the residual, i.e., LSPG sequentially computes the solutions
+$\approxstateLSPG^n \approx \stateFOMDiscreteArg{n}$, $n=1,\ldots,
+\ntimeSteps$ that satisfy
 \begin{equation*}
-\approxstateLSPG^n = \underset{\stateyDiscrete \in \trialspace  }{\text{arg\,min}}|| \lspgWeightingArg{\stateyDiscrete}\residLMSArg{n} (\stateyDiscrete; \approxstateLSPG^{n-1},\ldots,\approxstateLSPG^{n-k^n}) ||_2^2, \qquad n = 1,2,\hdots,\ntimeSteps,
+\approxstateLSPG^n = \underset{\stateyDiscrete \in \trialspace  }{\text{arg\,min}}|| \lspgWeightingArg{\stateyDiscrete}\residLMSArg{n} (\stateyDiscrete; \approxstateLSPG^{n-1},\ldots,\approxstateLSPG^{n-k^n}) ||_2, \qquad n = 1,\ldots,\ntimeSteps,
 \end{equation*}
-where $\approxstateLSPG^n \approx \stateFOMDiscreteArg{n}$ denotes the LSPG approximation to the state at $n$th time-step instance and 
-$\lspgWeightingArg{\cdot} \in \RR{\nsamples \times \fomdim}$, with $\romdim \le \nsamples \le \fomdim$, is a weighting matrix that can be used, e.g., for hyper-reduction. 
-Although illustrated for linear multistep methods, LSPG can be 
-formulated for \textit{any} type of time-marching scheme (see Ref.~\cite{carlberg_lspg_v_galerkin} for, e.g., Runge--Kutta schemes). 
+where 
+$\lspgWeightingArg{\cdot} \in \RR{\nsamples \times \fomdim}$, with $\romdim
+\le \nsamples \le \fomdim$, is a weighting matrix that can be used, e.g., to
+enable hyper-reduction by requiring it to have a small number of nonzero
+columns. 
 
-In general, the LSPG approach has been observed to be more stable and accurate than the 
-Galerkin approach~\cite{carlberg_lspg_v_galerkin,carlberg_thesis,carlberg_gnat}. The common interpretation of the improved performance of the LSPG method over the Galerkin method is that LSPG minimizes the residual over a finite-sized time window, while Galerkin minimizes only the instantaneous residual~\cite{carlberg_lspg_v_galerkin}.  
-However, for general non-self-adjoint and nonlinear problems, LSPG, lacks \textit{a priori} guarantees of stability, accuracy, and convergence. Further, 
-LSPG is sensitive to the time step: changing the time step changes the window over which the residual is minimized 
-\textit{as well as} the temporal discretization error. As a result, optimal results are obtained at an intermediary time-step. 
-For too small a time-step, the accuracy and stability of LSPG is similar to Galerkin; in the 
-limiting case of $\Delta t \rightarrow 0$, LSPG recovers Galerkin~\cite{carlberg_lspg_v_galerkin}. 
-For too large a time-step, the accuracy of LSPG degrades~\cite{carlberg_lspg_v_galerkin,parish_apg}. The 
-precise reason for this degradation in accuracy is difficult to discern as increasing the time-step changes both the error incurred by 
-temporal discretization and the window the residual is being minimized over. Lastly, LSPG is sensitive to the time-marching scheme: changing the 
-time-marching scheme modifies the minimization problem. For example, LSPG reverts to a Galerkin approach 
-when used with an explicit time-marching scheme. It is emphasized that, despite these challenges, 
-LSPG is arguably the most popular reduced-order modeling technique for general nonlinear systems.
+As described in the introduction, although numerical experiments have
+demonstrated that LSPG projection often yields more accurate and stable
+solutions than Galerkin
+projection~\cite{bui_thesis,carlberg_lspg_v_galerkin,carlberg_gnat,carlberg_thesis,parish_apg},
+LSPG still suffers from several shortcomings, in particular its complex
+dependence on the time discretization, exponentially growing error bounds, and
+a lack of optimality for the trajectory defined over the entire time domain.
 
 \subsection{\spaceTimeAcronym\ trial spaces and space--time ROMs}
-Recent work has investigated space--time reduced-order models~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC,benner_st,bui_thesis}. Space--time methods 
-are advantageous in that they allow for both spatial \textit{and} temporal dimension reduction. Further, space--time 
-methods are often equipped with more favorable error bounds than non-space--time methods. The approach proposed in this work displays commonalities 
-with space--time methods and, as such, we briefly outline \spaceTimeAcronym\ trial subspaces and space--time LSPG.
 
-Space--time methods leverage the \spaceTimeAcronym\ trial subspace $\stspaceST$,
+Space--time projection methods that employ \spaceTimeAcronym\ trial
+spaces~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC,benner_st,bui_thesis}
+aim to overcome the latter two shortcomings of LSPG projection, which are
+shared by all model-reduction methods based on spatial projection followed by
+time integration.  Because these methods employ \spaceTimeAcronym\ trial
+spaces, they reduce both the spatial and temporal dimensions of the full-order
+model; further, they yield error bounds that grow more slowly in time and
+their trajectories exhibit an optimality property over the entire time domain. 
+
+\spaceTimeAcronym\ trial subspaces approximate the FOM ODE solution
+trajectory
+	$\stateFOM\in\RR{N}\otimes \timeSpace$ with an approximation that resides in an
+	affine space--time trial subspace of dimension $\stdim\ll\fomdim$, i.e., 
+	$\approxstate\in \stspaceST$ with $\dim(\stspaceST) =\stdim $, where
 \begin{equation}\label{eq:sttrialspace_def}
- \approxstateArgnt{} \in  \stspaceST \subseteq \RR{N} \otimes \timeSpace,
+ \stspaceST \defeq 
+	\Range{\stbasis} + 
+	\stateIntercept\otimes\onesFunction
+	\subseteq \RR{N} \otimes \timeSpace
 \end{equation}
-and the space--time trial basis \textit{functions},
-\begin{align*}
-\stbasisArgnt{} &: t \mapsto \stbasis(t) \\
- &: [0,T] \rightarrow  \RR{N \times \stdim} ,%\spaceTrialSpace , \\
-%&  \in \RR{N \times \stdim} \otimes \timeTrialSpaceArg{},  
-\end{align*}
-with $\Range{\stbasis} + \stateInterceptArg{} \equiv \stspaceST$ and where $\stdim$ is the dimension of the space--time generalized coordinates.
-%with $\mathbb{V}_{\stdim}( \RR{N} )$ denoting the set of orthogonal $\stdim$ frames in $\RR{N}$ (e.g., an $N \times \stdim$ matrix with orthogonal column vectors).
-The state is approximated by,
+and $\stbasis\in\RR{N \times \stdim}\otimes \timeSpace$ with 
+$\stbasis:\timeDummy\mapsto\stbasis(\timeDummy)$
+denotes the space--time trial basis.
+
+Thus, at any time instance $t\in[0,T]$, ROMs that employ the
+\spaceTimeAcronym\ trial subspace approximate the state as
 \begin{equation}\label{eq:stapprox1}
  \stateFOMArg{}{t} \approx \approxstateArg{}{t}  = \stbasisArg{}{t} \stgenstate + \stateInterceptArg{},
 \end{equation}
-%where $\stbasisArgnt{} : \RR{\stdim} \rightarrow \spaceTrialSpace \otimes \timeTrialSpaceArg{}$ with $ \stbasisArgnt{n} \in \RR{N \times \stdim} \otimes \timeTrialSpaceArg{n}$ is the space--time trial basis, 
-where $\stgenstateArg{} \in \RR{\stdim}$ are the space--time generalized coordinates. Critically, the 
-space--time basis matrix comprises time-dependent \textit{functions}, while the generalized coordinates are a stationary vector. This is fundamentally different than  
-\spatialAcronym\ trial subspaces, in where the generalized coordinates are time-dependent functions while the basis matrix is stationary.  
+where $\stgenstateArg{} \in \RR{\stdim}$ denote the space--time generalized coordinates. 
+Critically, comparing the approximations arising from \spatialAcronym\ and
+\spaceTimeAcronym\ subspaces in Eqs.~\eqref{eq:affine_trialspace} and \eqref{eq:stapprox1}, respectively,
+highlights that the former approximation associates with a time-dependent
+generalized coordinates, while the latter approximation associates with a
+time-dependent basis matrix.
 
-Substituting the approximation~\eqref{eq:stapprox1} into the FOM ODE~\eqref{eq:FOM},
+\KTC{HERE}
+Substituting the approximation~\eqref{eq:stapprox1} into the FOM
+ODE~\eqref{eq:FOM} yields
 \begin{equation}\label{eq:st_fom}
 \stbasisDotArg{}{t} \stgenstate =  \velocity(\stbasisArg{}{t} \stgenstate + \stateIntercept,t) , \qquad \genstate(0) =\mathbb{P}(\stateFOM)(0), \qquad t \in [0,T],
 \end{equation}
-where $\mathbb{P} : \RR{N} \otimes \timeSpace \rightarrow \stspaceST$ is an orthogonal projection onto the trial subspace (e.g., $\elltwo$).
+where 
+$\stbasisDot\equiv d\stbasis/d\timeDummy$,
+$\mathbb{P} : \RR{N} \otimes \timeSpace \rightarrow \stspaceST$ is an orthogonal projection onto the trial subspace (e.g., $\elltwo$).
 Equation~\eqref{eq:st_fom} is an over-determined algebraic system for the $\stdim$ unknowns. We now outline the Space--Time Least-Squares Petrov--Galerkin method~\cite{choi_stlspg}. 
 The space--time Galerkin method is noted to additionally be a possibility for model reduction. As the space--time Galerkin method does not associate with any residual minimization 
 principle, however, we do not outline it here.
