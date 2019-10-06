@@ -1,15 +1,21 @@
-\section{Windowed residual minimization formulation}\label{sec:tclspg} This section
+\section{Windowed least-squares framework}\label{sec:tclspg} 
+This section
 outlines the proposed \methodNameLower\ 
-formulation (\methodAcronym). In contrast to (1) the Galerkin method, which minimizes the 
-time-instantaneous residual, (2) the LSPG method, which sequentially minimizes the discrete 
-residual over a single time step, and (3) the ST-LSPG method, which minimizes the discrete 
-space--time residual, the proposed \methodAcronym\ method sequentially minimizes the 
-time-continuous FOM ODE residual over a series of
+(\methodAcronym) framework. In contrast to (1) Galerkin projection, 
+which minimizes (time-continuous) FOM ODE residual at a time instance, 
+(2) LSPG projection, 
+which minimizes
+the (time-discrete) FOM O$\Delta$E residual 
+over a time step, and (3) ST-LSPG projection, 
+which minimizes
+the  FOM O$\Delta$E residual 
+over the entire time interval, the proposed \methodAcronym\ method sequentially minimizes the 
+time-continuous FOM ODE residual over a series of arbitrarily defined
 \textit{time windows}. The formulation is compatible with both \spatialAcronym\ and \spaceTimeAcronym\ trial subspaces. 
 In this section, we start by outlining the \methodAcronym\ formulation  
-for a general trial subspace. We then examine the \spatialAcronym\ 
+for a general space--time trial subspace. We then examine the \spatialAcronym\ 
 trial subspace, followed by the \spaceTimeAcronym\ trial subspace. In each case, we derive the stationary conditions 
-associated with the minimization problems.
+associated with the associated residual-minimization problems.
  %The proposed method can be formulated equivalently from
 %two viewpoints. The first formulation corresponds to a sequence of
 %minimization problems for the generalized coordinates that minimize the FOM
@@ -36,26 +42,29 @@ associated with the minimization problems.
 %objective is to find a ``controller" that minimizes the residual of the
 %Galerkin ROM. We now outline both of these (equivalent) formulations. 
 %
-\subsection{Residual minimization formulation} 
-We start by partitioning the
-temporal domain into a set of $\nslabs$ windows of size $\DeltaSlabArg{n}$. This partitioning is depicted in Fig.~\ref{fig:slab_fig}.
+\subsection{Windowed least-squares for general space--time trial subspaces} 
+We begin by introducing a (nonuniform) partition of the time domain $[0,T]$
+into $\nslabs$ non-overlapping windows $[\timeStartArg{n} ,
+\timeEndArg{n}]\subseteq[0,T]$ of size $\DeltaSlabArg{n}\defeq\timeEndArg{n} -
+\timeStartArg{n}$ such that $\timeStartArg{n+1} = \timeEndArg{n}$,
+$n=1,\ldots,\nslabs-1$; Fig.~\ref{fig:slab_fig} depicts this partitioning.
 \begin{figure} 
 \begin{centering} 
 \includegraphics[trim={0.0cm 5cm 0cm 3cm},clip,width=1.0\textwidth]{figs/time_grid.pdf} \caption{Decomposition of time
 domain into time windows.} \label{fig:slab_fig} \end{centering} 
 \end{figure}
-Over each time window, we introduce the space--time trial subspace,
-$$\approxstate^n \in \stspace^n \subseteq \RR{N} \otimes \timeSpaceArg{n} , \qquad  n = 1,\ldots,\nslabs,$$ 
-where $\approxstate^n :  [\timeStartArg{n} , \timeEndArg{n}] \rightarrow
-\RR{\fomdim}$
-is the \methodAcronym\ approximation to the state over the $n$th time window, $\timeSpaceArg{n}$ is the set of real-valued functions acting on $[\timeStartArg{n},\timeEndArg{n}]$, and  
-$\timeStartArg{n}$ and $\timeEndArg{n}$ are the beginning and end of the $n$th
-time window, respectively. Over each window, define the objective,
-%\begin{equation}\label{eq:obj} \mathcal{J}^n(\stateArg{}{t}) = \frac{1}{2}
-%\int_{\timeStartArg{n}}^{\timeEndArg{n}} \big[ \dot{\state}(\tau) -
-%\velocity(\stateArg{}{\tau}) \big]^T \stweightingMatArg{n}(\tau) \big[
-%\dot{\state}(\tau) - \velocity(\stateArg{}{\tau}) \big] d \tau,
-%\end{equation}
+Over the $n$th time window, we approximate the FOM ODE solution as 
+$\approxstate^n(t)\approx \stateFOM(t)$,
+$t\in[\timeStartArg{n},\timeEndArg{n}]$, which is enforced to reside in 
+the $n$th space--time trial subspace such that
+\begin{equation}
+\approxstate^n \in \stspace^n \subseteq \RR{N} \otimes \timeSpaceArg{n} , \qquad  n = 1,\ldots,\nslabs,
+\end{equation}
+where $\timeSpaceArg{n}$ denotes the set of real-valued functions acting on $[\timeStartArg{n},\timeEndArg{n}]$
+and
+$\approxstate^n \in\RR{\fomdim}\otimes\timeSpaceArg{n}$. 
+\KTC{HERE}
+Over each window, define the objective,
 \begin{equation}\label{eq:obj}
 \begin{split} \mathcal{J}^n &\vcentcolon \statey \mapsto
 \frac{1}{2} \int_{\timeStartArg{n}}^{\timeEndArg{n}} \big[ \dot{\statey}(t)
