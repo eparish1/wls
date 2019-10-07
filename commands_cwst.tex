@@ -268,8 +268,8 @@
 \newcommand{\collocOrder}{p}
 \newcommand{\collocOrderArg}[2]{p^{#1,#2}}
 
-%\newcommand{\minintegrandArg}[1]{\minintegrand^{#1}}
-\newcommand{\minintegrandArg}[1]{\minintegrand}
+\newcommand{\minintegrandArg}[1]{\minintegrand^{#1}}
+%\newcommand{\minintegrandArg}[1]{\minintegrand}
 \newcommand{\minintegrandCollocArg}[1]{\minintegrandColloc^{#1}}
 \newcommand{\dIdV}{\minintegrand_{ \genstateyDiscreteDot}}
 \newcommand{\dIdVDot}{\dot{\minintegrand}_{ \genstateyDiscreteDot}}
@@ -384,7 +384,7 @@
 
 \newcommand{\statey}{\boldsymbol y}
 \newcommand{\stateIntercept}{\mathbf{x}_\text{ref}}
-\newcommand{\stateInterceptArg}[1]{\stateIntercept^{}}
+\newcommand{\stateInterceptArg}[1]{\stateIntercept^{#1}}
 
 \newcommand{\stateInterceptMat}{{\stateMat_*}^{n,i}}
 
@@ -428,7 +428,8 @@
 %\newcommand{\timeEndArg}[1]{t_f(#1)}
 \newcommand{\timeEndArg}[1]{t_f^{#1}}
 \newcommand{\trialspace}{\mathcal{V } } 
-\newcommand{\trialspaceArg}[1]{\trialspace^{}} 
+%\newcommand{\trialspaceArg}[1]{\trialspace^{#1}} 
+\newcommand{\trialspaceArg}[1]{\trialspace^{#1}} 
 
 \newcommand{\stspace}{\mathcal{ ST } } 
 \newcommand{\stspaceS}{\mathcal{ ST }_{\text{S}} } 
@@ -447,18 +448,22 @@
 \newcommand{\stbasisDotArgnt}[1]{\stbasisDot^{#1}}
 
 \newcommand{\genstateIC}{ \basisspace^T( \stateFOMIC - \stateIntercept) }
+\newcommand{\genstateICOne}{ [\basisspaceArg{1}]^T( \stateFOMIC -
+\stateInterceptArg{1}) }
 
 \newcommand{\elltwo}{\ell^2}
 %dimensions
 \newcommand{\romdim}{K}
+\newcommand{\romdimArg}[1]{K^{#1}}
 \newcommand{\fomdim}{N}
 
 %basis
 \newcommand{\basisspace}{\basismat}
+\newcommand{\basisspaceArg}[1]{\basismat^{#1}}
 \newcommand{\basismat}{\mathbf {V}}
 \newcommand{\basisvec}{\mathbf{v}}
-\newcommand{\basismatArg}[1]{\basismat^{}}
-\newcommand{\basisvecArg}[1]{\basisvec^{}}
+\newcommand{\basismatArg}[1]{\basismat^{#1}}
+\newcommand{\basisvecArg}[1]{\basisvec^{#1}}
 
 \newcommand{\minintegrand}{\mathcal{I}}
 \newcommand{\minintegrandColloc}{\mathcal{I}_c}
