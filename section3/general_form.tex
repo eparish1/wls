@@ -1,12 +1,12 @@
 \section{Windowed least-squares framework}\label{sec:tclspg} 
 This section
 outlines the proposed \methodNameLower\ 
-(\methodAcronym) framework. In contrast to (1) Galerkin projection, 
-which minimizes (time-continuous) FOM ODE residual at a time instance, 
-(2) LSPG projection, 
+(\methodAcronym) framework. In contrast to (1) the Galerkin approach, 
+which minimizes the (time-continuous) FOM ODE residual at a time instance, 
+(2) the LSPG approach, 
 which minimizes
 the (time-discrete) FOM O$\Delta$E residual 
-over a time step, and (3) ST-LSPG projection, 
+over a time step, and (3) the ST-LSPG approach,  
 which minimizes
 the  FOM O$\Delta$E residual 
 over the entire time interval, the proposed \methodAcronym\ method sequentially minimizes the 
@@ -52,8 +52,11 @@ $\timeStartArg{n+1} = \timeEndArg{n}$,
 $n=1,\ldots,\nslabs-1$; Fig.~\ref{fig:slab_fig} depicts this partitioning.
 \begin{figure} 
 \begin{centering} 
-\includegraphics[trim={0.0cm 5cm 0cm 3cm},clip,width=1.0\textwidth]{figs/time_grid.pdf} \caption{Decomposition of time
-domain into time windows.} \label{fig:slab_fig} \end{centering} 
+\includegraphics[trim={0.0cm 5cm 0cm 3cm},clip,width=1.0\textwidth]{figs/time_grid.pdf} 
+\caption{Partitioning of the time
+domain into time windows.} 
+\label{fig:slab_fig} 
+\end{centering} 
 \end{figure}
 Over the $n$th time window, we approximate the FOM ODE solution as 
 $\approxstate^n(t)\approx \stateFOM(t)$,
@@ -62,12 +65,15 @@ the $n$th space--time trial subspace such that
 \begin{equation}
 \approxstate^n \in \stspace^n \subseteq \RR{N} \otimes \timeSpaceArg{n} , \qquad  n = 1,\ldots,\nslabs,
 \end{equation}
-where $\timeSpaceArg{n}$ denotes the set of real-valued functions acting on
+where $\stspaceArg{n}$ is the space--time trial subspace over the $n$th window, $\timeSpaceArg{n}$ denotes the set of real-valued functions acting on
 $[\timeStartArg{n},\timeEndArg{n}]$ (i.e., $\timeSpaceArg{n} = \{f\,|\,f:[\timeStartArg{n},\timeEndArg{n}]\rightarrow\RR{}\}$)
 and
-$\approxstate^n \in\RR{\fomdim}\otimes\timeSpaceArg{n}$. 
-
-Over the $n$th window, define the objective functional
+$\approxstate^n \in\RR{\fomdim}\otimes\timeSpaceArg{n}$. For notational purposes, we additionally define the (spatial) trial subspaces at the start of each window as
+$$\approxstateArg{n}{\timeStartArg{n}} \in \stspaceBoundStartArg{n} \subset \stspaceArg{n}, \qquad n=1,\ldots,\nslabs. 
+%, \qquad 
+%\approxstateArg{n}{\timeEndArg{n}} \in \stspaceBoundEndArg{n} \subset \stspaceArg{n}.
+$$ 
+To outline \methodAcronym, we now define the objective functional over the $n$th window:
 \begin{equation}\label{eq:obj}
 \begin{split} \mathcal{J}^n &\vcentcolon \statey \mapsto
 \frac{1}{2} \int_{\timeStartArg{n}}^{\timeEndArg{n}} \big[ \dot{\statey}(t)
@@ -110,12 +116,12 @@ minimization problem
 %\mathbb{P}^n( \stateFOMArgnt{1})(0)& n=1, \end{cases} 
 %\end{split}
 %\end{equation}
-where 
-$\mathbb{P}^n (\stateyDiscrete) = XXX$ \KTC{EP TODO. Not trivila because
-haven't introduced how you're going to use a \spatialAcronym\ subspace in this
-context yet.} for \spatialAcronym\ subspaces
-and
-$\mathbb{P}^n (\stateyDiscrete) = \stateyDiscrete$ for \spaceTimeAcronym\ subspaces.
+where $\projectorArg{n} : \RR{\fomdim} \rightarrow \stspaceBoundStartArg{n}$ 
+is a (spatial) projector onto the start of the $n$th trial space (e.g., $\elltwo$).
+
+%for \spatialAcronym\ subspaces
+%and
+%$\mathbb{P}^n (\stateyDiscrete) = \stateyDiscrete$ for \spaceTimeAcronym\ subspaces.
 %\methodAcronym\ generates approximations to~\eqref{eq:FOM} by sequentially minimizing
 %the FOM ODE residual over the trial space for each time slab.
 %\methodAcronym\ is defined as follows,

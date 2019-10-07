@@ -540,7 +540,7 @@ minimizes the residual, i.e., LSPG sequentially computes the solutions
 $\approxstateLSPG^n \approx \stateFOMDiscreteArg{n}$, $n=1,\ldots,
 \ntimeSteps$ that satisfy
 \begin{equation*}
-\approxstateLSPG^n = \underset{\stateyDiscrete \in \trialspace  }{\text{arg\,min}}|| \lspgWeightingArg{\stateyDiscrete}\residLMSArg{n} (\stateyDiscrete; \approxstateLSPG^{n-1},\ldots,\approxstateLSPG^{n-k^n}) ||_2, \qquad n = 1,\ldots,\ntimeSteps,
+\approxstateLSPG^n = \underset{\stateyDiscrete \in \trialspace  }{\text{arg\,min}}|| \lspgWeightingArg{\stateyDiscrete}\residLMSArg{n} (\stateyDiscrete; \approxstateLSPG^{n-1},\ldots,\approxstateLSPG^{n-k^n}) ||_2^2, \qquad n = 1,\ldots,\ntimeSteps,
 \end{equation*}
 where 
 $\lspgWeightingArg{\cdot} \in \RR{\nsamples \times \fomdim}$, with $\romdim
@@ -607,12 +607,12 @@ trial subspace.
 Space--time methods reduce the number of equations in
 \eqref{eq:st_fom} to ensure a unique solution exists.
 We now outline one such method: space--time least-squares Petrov--Galerkin (ST-LSPG)
-projection~\cite{choi_stlspg}. 
-While space--time Galerkin projection \cite{benner_st} is another alternative, it does not
+~\cite{choi_stlspg}. 
+While the space--time Galerkin method~\cite{benner_st} is another alternative, it does not
 associate with any residual minimization principle, and thus we do not discuss
 it further.
 \subsubsection{Space--time LSPG projection}  
-Analogously to LSPG projection, space--time LSPG projection~\cite{choi_stlspg}
+Analogously to LSPG, space--time LSPG~\cite{choi_stlspg}
 minimizes the (time-discrete) FOM O$\Delta$E residual, but does so
 using the \spaceTimeAcronym\ subspace and simultaneously minimizes this
 residual over all $N_t$ time instances.
@@ -642,7 +642,7 @@ coordinates:
 \end{bmatrix}  \\
 & \vcentcolon \RR{\stdim} \times \RR{N} \rightarrow \RR{\fomdim N_t}. 
 \end{align*}
-ST-LSPG projection computes the space--time generalized coordinates that
+ST-LSPG computes the space--time generalized coordinates that
 minimize the space--time FOM O$\Delta$E residual:
 \begin{equation}\label{eq:stlspg}
 	\stgenstate_\text{ST-LSPG} = \underset{ \stgenstatey\in\RR{\stdim} }{\text{arg\,min}}|| \lspgWeightingSTArg{\stgenstatey}  \genresidST_{\text{}}(\stgenstatey;\stateFOMIC) ||_2^2, 
@@ -657,8 +657,8 @@ exponentially in time, and it generates entire trajectories that associate
 with an optimality property over the entire time domain \cite{choi_stlspg}.
 However, it is subject to several challenges. First, the computational cost of
 solving Eq.~\eqref{eq:stlspg} scales cubically with the number of space--time
-degrees of freedom $\stdim$, because it
-leads to dense systems that do not expose any natural mechanism for exploiting
+degrees of freedom $\stdim$. This cost is due to the fact that ST-LSPG yields 
+a dense systems that do not expose any natural mechanism for exploiting
 the sequential nature of time evolution. Second, it is unclear how these
 methods can be employed for future state prediction, as the space--time trial
 basis $\stbasis$ must be defined over the entire time interval of interest
