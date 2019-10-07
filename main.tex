@@ -549,20 +549,19 @@ enable hyper-reduction by requiring it to have a small number of nonzero
 columns. 
 
 As described in the introduction, although numerical experiments have
-demonstrated that LSPG projection often yields more accurate and stable
-solutions than Galerkin
-projection~\cite{bui_thesis,carlberg_lspg_v_galerkin,carlberg_gnat,carlberg_thesis,parish_apg},
-LSPG still suffers from several shortcomings, in particular its complex
+demonstrated that LSPG often yields more accurate and stable
+solutions than Galerkin~\cite{bui_thesis,carlberg_lspg_v_galerkin,carlberg_gnat,carlberg_thesis,parish_apg},
+LSPG still suffers from several shortcomings. In particular, LSPG suffers from its complex
 dependence on the time discretization, exponentially growing error bounds, and
-a lack of optimality for the trajectory defined over the entire time domain.
+lack of optimality for the trajectory defined over the entire time domain.
 
 \subsection{\spaceTimeAcronym\ trial spaces and space--time ROMs}
 
 Space--time projection methods that employ \spaceTimeAcronym\ trial
 spaces~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC,benner_st,bui_thesis}
-aim to overcome the latter two shortcomings of LSPG projection, which are
+aim to overcome the latter two shortcomings of LSPG, which are
 shared by all model-reduction methods based on spatial projection followed by
-time integration.  Because these methods employ \spaceTimeAcronym\ trial
+time integration. \EP{This is misleading, going to delete} Because these methods employ \spaceTimeAcronym\ trial
 spaces, they reduce both the spatial and temporal dimensions of the full-order
 model; further, they yield error bounds that grow more slowly in time and
 their trajectories exhibit an optimality property over the entire time domain. 
@@ -580,8 +579,8 @@ trajectory
 \end{equation}
 and $\stbasis\in\RR{N \times \stdim}\otimes \timeSpace$ with 
 $\stbasis:\timeDummy\mapsto\stbasis(\timeDummy)$ and $\stbasis(0) =
-\boldsymbol 0$ 
-denotes the space--time trial basis.
+\boldsymbol 0$
+denotes the space--time trial basis.\footnote{For simplicity, we consider the case where the trial space is homogeneous on the boundary.} 
 Thus, at any time instance $t\in[0,T]$, ROMs that employ the
 \spaceTimeAcronym\ trial subspace approximate the state as
 \begin{equation}\label{eq:stapprox1}
@@ -589,8 +588,8 @@ Thus, at any time instance $t\in[0,T]$, ROMs that employ the
 \end{equation}
 where $\stgenstateArg{} \in \RR{\stdim}$ denote the space--time generalized coordinates. 
 Critically, comparing the approximations arising from \spatialAcronym\ and
-\spaceTimeAcronym\ subspaces in Eqs.~\eqref{eq:affine_trialspace} and \eqref{eq:stapprox1}, respectively,
-highlights that the former approximation associates with a time-dependent
+\spaceTimeAcronym\ trial subspaces in Eqs.~\eqref{eq:affine_trialspace} and \eqref{eq:stapprox1}, respectively,
+highlights that the former approximation associates with time-dependent
 generalized coordinates, while the latter approximation associates with a
 time-dependent basis matrix.
 
@@ -603,9 +602,9 @@ ODE~\eqref{eq:FOM} yields
 where 
 $\stbasisDot\equiv d\stbasis/d\timeDummy$. We note that the initial conditions
 are automatically satisfied from the definition of the \spaceTimeAcronym\
-subspace.
+trial subspace.
 
-Space--time projection methods reduce the number of equations in
+Space--time methods reduce the number of equations in
 \eqref{eq:st_fom} to ensure a unique solution exists.
 We now outline one such method: space--time least-squares Petrov--Galerkin (ST-LSPG)
 projection~\cite{choi_stlspg}. 
