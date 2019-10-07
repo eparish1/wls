@@ -3,6 +3,7 @@
 %\newcommand{\methodAcronymROMs}{WLS-ROMs}
 %
 %\newcommand{\methodName}{Windowed Least-Squares}
+\newcommand{\directMethodAcronym}{direct-WLS}
 \newcommand{\methodAcronym}{WLS}
 \newcommand{\methodAcronymROM}{WLS-ROM}
 \newcommand{\methodAcronymROMs}{WLS-ROMs}
@@ -195,8 +196,12 @@
 %\newcommand{\massArgnt}[1]{\mass^{#1}}
 \newcommand{\massArgnt}[1]{\mass}
 \newcommand{\massArgt}[2]{\mass}
-\newcommand{\genstateyDotArg}[2]{\dot{\genstatey}^{#1}(#2)}
-\newcommand{\genstateyDot}{\dot{\genstatey}}
+%\newcommand{\genstateyDotArg}[2]{\dot{\genstatey}^{#1}(#2)}
+%\newcommand{\genstateyDot}{\dot{\genstatey}}
+\newcommand{\genstateyDot}{\hat{\boldsymbol v}}
+\newcommand{\genstateyDotArg}[2]{\genstateyDot^{#1}(#2)}
+
+
 %\newcommand{\genstateyDiscreteDot}{\dot{\genstateyDiscrete}}
 \newcommand{\genstateyDiscreteDot}{\hat{\mathbf{v}}}
 %\newcommand{\genstateyDiscreteDotArgnt}[1]{\dot{\genstateyDiscrete}^{#1}}
@@ -361,6 +366,7 @@
 
 \newcommand{\timeSpace}{\mathcal{T}}
 \newcommand{\onesFunction}{\mathcal{O}}
+\newcommand{\onesFunctionArg}[1]{\mathcal{O}^{#1}}
 
 \newcommand{\timeSpaceArg}[1]{\timeSpace^{#1}}
 
@@ -461,6 +467,9 @@
 \newcommand{\stspaceSTArg}[1]{\stspaceST^{#1}} 
 \newcommand{\stspaceSArg}[1]{\stspaceS^{#1}} 
 \newcommand{\stbasis}{\boldsymbol \Pi}
+\newcommand{\stbasisVec}{\boldsymbol \pi}
+\newcommand{\stbasisVecArg}[2]{\boldsymbol \pi^{#1}_{#2}}
+
 \newcommand{\stbasisArg}[2]{\stbasis^{#1}(#2)}
 \newcommand{\stbasisArgnt}[1]{\stbasis^{#1}}
 \newcommand{\stbasisDot}{\dot{\boldsymbol \Pi}}

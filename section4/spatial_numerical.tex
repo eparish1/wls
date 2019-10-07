@@ -2,49 +2,49 @@
 \KTC{Does the time grid definted in this section have any relationship to the
 time grid used for time discretization? Haven't gotten past HERE below, but
 wanted to check (maybe it's made clear later).}
+\EP{This time grid becomes the time discretization over each window. At this point in the paper, 
+there is no notion of a time grid for \methodAcronym}
+
 Direct approaches solve~\eqref{eq:tclsrm} by
 ``transcribing" the infinite dimensional optimization problem into a finite
 dimensional one by discretizing the state and objective function in time.
-\KTC{Passive voice:} The minimization problem is then reformulated as a nonlinear programming, or
+\KTC{Passive voice:} \EP{I think this reads clearly} The minimization problem is then reformulated as a nonlinear programming, or
 optimization, problem. A variety of direct solution approaches exist, 
-including collocation approaches, orthogonal polynomial \KTC{is this a
-spectral method, or the spectral method? clarify} (spectral  method) 
+including collocation approaches, orthogonal polynomial (spectral  method) 
 approaches, and genetic algorithms.  
+\KTC{is this a
+spectral method, or the spectral method? clarify} \EP{I don't understand what you mean. What is ``the" spectral method} 
 
-In the present context, the most straightforward direct solution approach consists of the 
-following steps: \KTC{Keep this inline. Don't see a benefit to multi-lining a
-two-step algorithm}
-\begin{enumerate}
-\item Numerically discretize the FOM ODE (and hence the \textit{integrand} of~\eqref{eq:obj_gen_slab}).
-\item Select a numerical quadrature rule to evaluate the \textit{integral}
-in~\eqref{eq:obj_gen_slab}.
-\end{enumerate}
-To achieve this agenda \KTC{agenda? odd way to say it.}, first define a discrete temporal grid 
-by \KTC{you can't devide (i.e., decompose) a window into instances. you can divide a window into
+\KTC{you can't devide (i.e., decompose) a window into instances. you can divide a window into
 sub-windows. you can also simply define a set of time instances in the window.
 no need to emphasize `strictly increasing', as any set of points in the window
-will by necessity be ordered.} dividing each time window $[\timeStartArg{n},\timeEndArg{n}]$ into
-$\nstepsArg{n}$ strictly increasing time-step instances described by
-$\{\timeWindowArg{n}{i}\}_{i=0}^{\nstepsArg{n}}$ with  \KTC{use cdots, not
-hdots or ldots. Don't use $\defeq$ for the first and last times; these are
-just equalities, i.e., you happen to set them equal to those values, but they
-aren't identically the same:}
+will by necessity be ordered.}
+ 
+In the present context, the most straightforward direct solution approach consists of the 
+following steps: (1) numerically discretize the FOM ODE (and hence the \textit{integrand} of~\eqref{eq:obj_gen_slab}) and 
+(2) select a numerical quadrature rule to evaluate the \textit{integral} in~\eqref{eq:obj_gen_slab}.
+To achieve this agenda, first define a discrete temporal grid 
+by defining
+$\nstepsArg{n}+1$ strictly increasing time instances described by
+$\{\timeWindowArg{n}{i}\}_{i=0}^{\nstepsArg{n}}$ with
+%\KTC{use cdots, not
+%hdots or ldots. Don't use $\defeq$ for the first and last times; these are
+%just equalities, i.e., you happen to set them equal to those values, but they
+%aren't identically the same:}
 \begin{align}
 &\timeWindowArg{n}{0} \le \ldots \le \timeWindowArg{n}{\nstepsArg{n}} , \label{eq:timegrid1} \;
-\timeWindowArg{n}{0} \defeq \timeStartArg{n},\;
-\timeWindowArg{n}{\nstepsArg{n}} \defeq \timeEndArg{n} . 
+\timeWindowArg{n}{0} = \timeStartArg{n},\;
+\timeWindowArg{n}{\nstepsArg{n}} = \timeEndArg{n} . 
 %\timeWindowArg{n}{0} = \timeStartArg{n}, \timeWindowArg{n}{\nstepsArg{n}} =
 %\timeEndArg{n}
 \end{align}
-\KTC{Passive voice:} This discretization is depicted in Figure~\ref{fig:slab_fig2}.
+Figure~\ref{fig:slab_fig2} depicts this discretization.
 We now outline the direct solution approach for linear-multistep schemes; we note that the formulation for
 other time-stepping methods (e.g., Runge--Kutta) follows closely. 
 \begin{figure} 
 \begin{centering} 
 \includegraphics[trim={0.0cm 5cm 0cm 3cm},clip,width=1.0\textwidth]{figs/time_grid_timesteps.pdf} 
-	\caption{Decomposition of time windows into time-step instances. \KTC{You
-	can't decompose a time interval into time instances. You can define time
-	instances on that interval.} \KTC{Don't call them `time-step instances'.
+	\caption{Partitioning of time windows into time-step instances. \KTC{Don't call them `time-step instances'.
 	This woudl be an instance of a time step. These are `time instances',
 	correct? If so, fix this terminology everywhere.}} 
 \label{fig:slab_fig2} 
@@ -109,8 +109,8 @@ For simplicity, we assume the linear multistep method employs time-step instance
 Employing a linear multistep method allows the objective \textit{functional}~\eqref{eq:obj} to be replaced with an objective \textit{function},
 \begin{equation}\label{eq:obj_lms}
 \begin{split} 
-\objectiveArgLMS{n} &\vcentcolon (\stateyDiscreteArgnt{n,0},\ldots,\stateyDiscreteArgnt{n,\nstepsArg{n}}) \mapsto
-\frac{1}{2} \sum_{i=1}^{\nstepsArg{n}} \quadWeightsLMSScalarArg{n}{i} [\residArg{n,i}(\stateyDiscreteArgnt{n,i},\ldots, \stateyDiscreteArgnt{n,i-k(n)})]^T  \stweightingMatArgt{n}{\timeWindowArg{n}{i}} \residArg{n,i}(\stateyDiscreteArgnt{n,i},\ldots, \stateyDiscreteArgnt{n,i-k(n)}), \\
+\objectiveArgLMS{n} &\vcentcolon (\stateyDiscreteArgnt{0},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto
+\frac{1}{2} \sum_{i=1}^{\nstepsArg{n}} \quadWeightsLMSScalarArg{n}{i} [\residArg{n,i}(\stateyDiscreteArgnt{i},\ldots, \stateyDiscreteArgnt{i-k^n(i)})]^T  \stweightingMatArgt{n}{\timeWindowArg{n}{i}} \residArg{n,i}(\stateyDiscreteArgnt{i},\ldots, \stateyDiscreteArgnt{i-k^n(i)}), \\
 &\vcentcolon \RR{\fomdim} \otimes \RR{\nstepsArg{n}+1} \rightarrow
 \RR{}, 
 \end{split}
@@ -123,13 +123,13 @@ Employing a linear multistep method allows the objective \textit{functional}~\eq
 %\end{align*} 
 %is the discrete residual resulting from the linear multistep scheme and 
 where $\quadWeightsLMSScalarArg{n}{i} \in \RR{}$ are quadrature weights. 
-Over each window, \methodAcronym\ computes the generalized coordinates $\approxstateDiscreteArg{n,0},\ldots,\approxstateDiscreteArg{n,\nstepsArg{n}}$, for $n=1,\ldots,\nslabs$, as the solution to the minimization problems,
+Over each window, \directMethodAcronym\ computes the generalized coordinates $\approxstateDiscreteArg{n,0},\ldots,\approxstateDiscreteArg{n,\nstepsArg{n}}$, for $n=1,\ldots,\nslabs$, as the solution to the minimization problems,
 \begin{align*}
-&\underset{\stateyDiscreteArgnt{n,0},\ldots,\stateyDiscreteArgnt{n,\nstepsArg{n}} \in \trialspace}{\text{minimize } }
-\objectiveArgLMS{n} (\stateyDiscreteArgnt{n,0},\ldots,\stateyDiscreteArgnt{n,\nstepsArg{n}}) \\
-& \text{subject to} \hspace{0.2 in}  \stateyDiscreteArg{n,0} =
-\begin{cases} \approxstateDiscreteArg{n-1,\nstepsArg{n-1}} & n = 2,\ldots,\nslabs,\\
-\approxstateIC & n=1. \end{cases} \end{align*}
+&\underset{\stateyDiscreteArgnt{0},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}} \in \trialspace}{\text{minimize } }
+\objectiveArgLMS{n} (\stateyDiscreteArgnt{0},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \\
+& \text{subject to} \hspace{0.2 in}  \stateyDiscreteArg{0} =
+\begin{cases} \spatialIC & n = 2,\ldots,\nslabs,\\
+\genstateICOne & n=1. \end{cases} \end{align*}
 %\methodAcronym\ solves the minimization problem over each time window, 
 %\begin{align*}
 %&\approxstateDiscreteArg{n,0},\ldots,\approxstateDiscreteArg{n,\nstepsArg{n}} = \underset{\stateyDiscreteArgnt{n,0},\ldots,\stateyDiscreteArgnt{n,\nstepsArg{n}} \in \trialspace}{\text{arg\,min } }
@@ -137,16 +137,16 @@ Over each window, \methodAcronym\ computes the generalized coordinates $\approxs
 %& \text{subject to} \hspace{0.2 in}  \approxstateDiscreteArg{n,0} =
 %\begin{cases} \approxstateDiscreteArg{n-1,\nstepsArg{n-1}} & n = 2,\ldots,\nslabs,\\
 %\approxstateIC & n=1. \end{cases} \end{align*}
-Defining $\genstateDiscreteArg{n,i} \in \RR{\romdim}$ to be the discrete approximation to the generalized coordinates at the $i$th time-step instance over the $n$th window, 
+Defining $\genstateDiscreteArg{n,i} \in \RR{\romdim}$ to be the discrete approximation to the generalized coordinates at the $i$th time instance over the $n$th window, 
 the minimization problem can be written equivalently as,
 \begin{equation}\label{eq:obj_gen_lms_final}
 \begin{split}
-& \underset{\genstateyDiscreteArg{n,0},\ldots,\genstateyDiscreteArg{n,\nstepsArg{n}}}{\text{minimize } }
-\objectiveArgLMS{n} (\basisspace \genstateyDiscreteArg{n,0} + \stateIntercept,\ldots,\basisspace \genstateyDiscreteArg{n,\nstepsArg{n}} + \stateIntercept) \\ 
+& \underset{\genstateyDiscreteArg{0},\ldots,\genstateyDiscreteArg{\nstepsArg{n}}}{\text{minimize } }
+\objectiveArgLMS{n} (\basisspaceArg{n} \genstateyDiscreteArg{0} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateyDiscreteArg{\nstepsArg{n}} + \stateInterceptArg{n}) \\ 
 & \text{subject to} \hspace{0.2 in}
-\genstateyDiscreteArg{n,0} =
-\begin{cases} \genstateDiscreteArg{n-1, \nstepsArg{n-1}} & n = 2,\ldots,\nslabs \\
-\basisspace^T(\stateFOMIC - \stateIntercept)& n=1. \end{cases} 
+\genstateyDiscreteArg{0} =
+\begin{cases} \spatialIC & n = 2,\ldots,\nslabs \\
+\genstateICOne& n=1. \end{cases} 
 \end{split}
 \end{equation}
 %\begin{equation}\label{eq:obj_gen_lms_final}
@@ -272,8 +272,8 @@ Defining  $\genCollocMatArg{n}{i} \in \RR{\romdim \times \collocOrderArg{n}{i}}$
 the objective function can be equivalently written as,
  \begin{equation*}
 \genCollocMatArg{n}{1},\ldots,\genCollocMatArg{n}{\nstepsArg{n}} 
- = \underset{\genCollocMatyArg{n}{1},\ldots,\genCollocMatyArg{n}{\nstepsArg{n}} }{\text{argmin } }
-\objectiveArgC{n} (\basisspace \genCollocMatyArg{n}{1} + \stateInterceptMat,\ldots,\basisspace \genCollocMatyArg{n}{\nstepsArg{n}} + \stateInterceptMat) \qquad \text{ for } n = 1,2,...,\nslabs,
+ = \underset{\genCollocMatyArg{}{1},\ldots,\genCollocMatyArg{}{\nstepsArg{n}} }{\text{argmin } }
+\objectiveArgC{n} (\basisspaceArg{n} \genCollocMatyArg{}{1} + \stateInterceptMat,\ldots,\basisspaceArg{n} \genCollocMatyArg{}{\nstepsArg{n}} + \stateInterceptMat) \qquad \text{ for } n = 1,2,...,\nslabs,
 \end{equation*}
 subject to the boundary and continuity conditions,
 \begin{equation*}
@@ -281,7 +281,7 @@ subject to the boundary and continuity conditions,
 \begin{cases}
 \genCollocMatArg{n}{i-1}\collocBasisArg{n}{i-1}(\timeWindowArg{n}{i-1}) & n = 2,\ldots,\nslabs, \; i=2,\ldots,\nstepsArg{n} \\ 
 \genCollocMatArg{n-1}{\nstepsArg{n-1}}\collocBasisArg{n-1}{\nstepsArg{n-1}}(\timeWindowArg{n-1}{\nstepsArg{n-1}}) & n = 2,\ldots,\nslabs, \; i=1  \\
-\basisspace^T (\approxstateIC - \stateIntercept)& n=1, \;  i=1,
+\basisspaceTArg{n} (\approxstateIC - \stateIntercept)& n=1, \;  i=1,
 \end{cases}
 \end{equation*}
 with $\stateInterceptMat \defeq \begin{bmatrix} \stateIntercept & \ldots & \stateIntercept \end{bmatrix} \in \RR{\fomdim \times \collocOrderArg{n}{i} }$.
@@ -319,20 +319,20 @@ a concatenated vector,
 for arbitrary $p$ and $m$. The stacked vector of generalized coordinates over the $n$th time window are then defined as, 
 \begin{equation*}
 \genstatecollocMatSlabArg{n} \defeq 
-\unroll (\genstateDiscreteArg{n,0},\ldots,\genstateDiscreteArg{n,\nstepsArg{n}} ).
+\unroll (\genstateDiscreteArg{n,1},\ldots,\genstateDiscreteArg{n,\nstepsArg{n}} ).
 \end{equation*}
 Now, define the weighted space--time residual over the entire window as
 \begin{equation*}
-\residLMSSlabArg{n} : \genstatecollocMatySlabArg{n} \mapsto \begin{bmatrix}
- \sqrt{\quadWeightsLMSScalarArg{n}{1} } \stweightingMatOneArg{n,1} \residLMSArg{n,1}( \basisspace \genstateyDiscreteArgnt{n,1} + \stateIntercept, \ldots,\basisspace \genstateyDiscreteArgnt{n,1 - k^n(1) }  + \stateIntercept) \\
+\residLMSSlabArg{n} : \genstatecollocMatySlabArg{} \mapsto \begin{bmatrix}
+ \sqrt{\quadWeightsLMSScalarArg{n}{1} } \stweightingMatOneArg{n,1} \residLMSArg{n,1}( \basisspaceArg{n} \genstateyDiscreteArgnt{1} + \stateInterceptArg{n},  \basisspaceArg{n} \genstateyDiscreteArgnt{0} + \stateInterceptArg{n},) \\
 \vdots \\
- \sqrt{\quadWeightsLMSScalarArg{n}{\nstepsArg{n}} } \stweightingMatOneArg{n,\nstepsArg{n}} \residLMSArg{n,\nstepsArg{n}}( \basisspace \genstateyDiscreteArgnt{n,\nstepsArg{n}} + \stateIntercept, \ldots,\basisspace \genstateyDiscreteArgnt{n,\nstepsArg{n} - k^n(\nstepsArg{n}) } + \stateIntercept) \\
+ \sqrt{\quadWeightsLMSScalarArg{n}{\nstepsArg{n}} } \stweightingMatOneArg{n,\nstepsArg{n}} \residLMSArg{n,\nstepsArg{n}}( \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n}} + \stateInterceptArg{n}, \ldots,\basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n} - k^n(\nstepsArg{n}) } + \stateInterceptArg{n}) \\
 \end{bmatrix},
 \end{equation*}
-where $\genstatecollocMatySlabArg{n} \defeq \unroll (\genstateyDiscreteArg{n,0},\ldots,\genstateyDiscreteArg{n,\nstepsArg{n}} ).$
+where $\genstatecollocMatySlabArg{} \defeq \unroll (\genstateyDiscreteArg{0},\ldots,\genstateyDiscreteArg{\nstepsArg{n}} ).$
 It is worth noting that, by design,
 \begin{equation*}
-\objectiveArgLMS{n} \bigg( \basisspace \genstateDiscreteArg{n,0} + \stateIntercept,\ldots,\basisspace \genstateDiscreteArg{n,\nstepsArg{n}} + \stateIntercept \ \bigg) 
+\objectiveArgLMS{n} \bigg( \basisspaceArg{n} \genstateDiscreteArg{n,0} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateDiscreteArg{n,\nstepsArg{n}} + \stateInterceptArg{n} \ \bigg) 
 \equiv
 \bigg[\residLMSSlabArg{n}  (\genstatecollocMatSlabArg{n}) \bigg]^T \bigg[ \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n}) \bigg].
 \end{equation*} 
@@ -341,7 +341,7 @@ Using these definitions, Algorithm~\ref{alg:colloc_gn} presents the standard Gau
 The practical implementation of the Gauss--Newton algorithm requires an efficient method for computing the time window residual-Jacobians. In particular, it is important to note that for linear multistep methods (and many other time marching schemes) the time window residual Jacobian will (almost) be a block-diagonal 
 sparse matrix with the sparsity pattern,
 \begin{equation*}
-\frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{n}}(\genstatecollocMatSlabArg{n})  =
+\frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{}}(\genstatecollocMatSlabArg{n})  =
  \begin{bmatrix*}[l]
 \matshapeb & \\%[-5pt]
  \matshapea & \matshapea & \\%[-5pt]
@@ -373,14 +373,12 @@ reducing this computational burden exist; Jacobian-free Newton-Krylov methods~\c
 \caption{\spatialAcronym\ trial subspace: algorithm for the direct solution technique with the Gauss--Newton method and a linear multistep method over the $n$th window}
 \label{alg:colloc_gn}
 \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
-\Input{tolerance, $tol$; initial guess, $\genstateGuessDiscreteArg{n,0}{0},\ldots,\genstateGuessDiscreteArg{n,\nstepsArg{n}}{0}$}
+\Input{tolerance, $\text{tol}$; initial guess, $\genstateGuessDiscreteArg{n,1}{0},\ldots,\genstateGuessDiscreteArg{n,\nstepsArg{n}}{0}$; initial condition $\genstateDiscreteArg{n,0}$}
 \Output{Solution to least squares problem, $\genstatecollocMatSlabArg{n}$} 
 \textbf{Online Steps}: \\
-%\While{ $tol \le \frac{1}{2} \sum_{i=1}^{\nstepsArg{n}} \sum_{j=1}^{\ncollocArg{n}{i}} \big[ \dot{\state}
-%(\collocPointArg{n}{i}{j})  - \velocity(\stateArg{}{\collocPointArg{n}{i}{j}}) \big]^T \stweightingMatArg{n}(\collocPointArg{n}{i}{j}) \big[ \dot{\state}(\collocPointArg{n}{i}{j}) - \velocity(\stateArg{}{\collocPointArg{n}{i}{j}}) \big] \int_{\timeStartArg{n}}^{\timeEndArg{n}}   \lagrangeBasisScalarArg{n}{i}{j}(t) d \tau$}
 $\text{converged} \leftarrow \text{false}$ \Comment{Set convergence checker} \\
 $k \leftarrow 0$ \Comment{Set counter}\\
-$\genstatecollocMatSlabArg{n}_k \leftarrow \unroll(\genstateGuessDiscreteArg{n,0}{0},\ldots,\genstateGuessDiscreteArg{n,\nstepsArg{n}}{0})$ \Comment{Assemble generalized coordinates over window} \\
+$\genstatecollocMatSlabArg{n}_k \leftarrow \unroll(\genstateDiscreteArg{n,0},\genstateGuessDiscreteArg{n,1}{0},\ldots,\genstateGuessDiscreteArg{n,\nstepsArg{n}}{0})$ \Comment{Assemble generalized coordinates over window} \\
 \While{\text{converged} == \text{false}}
 {
 %\For{$i=1,\hdots,\nstepsArg{n}$}{
@@ -392,7 +390,7 @@ $\genstatecollocMatSlabArg{n}_k \leftarrow \unroll(\genstateGuessDiscreteArg{n,0
 %}
 $\mathbf{r} \leftarrow \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n}_k)$ \Comment{Compute weighted residual over window} \\
 $\mathbf{J} \leftarrow  
-\frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{n}}(\genstatecollocMatSlabArg{n}_k) 
+\frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{}}(\genstatecollocMatSlabArg{n}_k) 
 $ \Comment{Compute weighted residual-Jacobian over window} \\
 %Compute: $[\jacobianSlabArg{n}]^T \jacobianSlabArg{n}$ \Comment{Compute system matrix for the normal equations} \\
 %Compute: $[\jacobianSlabArg{n}]^T \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n}_k)$ \Comment{compute RHS for normal equations} \\

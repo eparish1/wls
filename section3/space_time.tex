@@ -1,12 +1,26 @@
 \subsection{\spaceTimeAcronym\ trial spaces}
-We now briefly consider \spaceTimeAcronym\ trial subspaces. 
 \KTC{Error in first equation. This is the approximate solution not the real
 one. Use parallel language to hwo this was done in the last section for
 S-reduction trial subspaces. Also make sure the basis is zero at the beginning
 of the interval and the affine transformation is taken to be the solution at
 the end of the last window. This will not be too trivial, as the solution on
 the previous slab enters the trial subspace definition.}
-Over 
+
+We now briefly consider \spaceTimeAcronym\ trial subspaces. 
+The \spaceTimeAcronym\ trial subspace over the $n$th time window approximates
+the FOM ODE solution trajectory $\stateFOM\in\RR{N}\otimes\timeSpace$
+with $\approxstateArgnt{n} \in \stspaceSTArg{n}$, where
+\begin{equation}\label{eq:st_sttrialspace}
+ \stspaceSTArg{n} \defeq
+ \Range{\stbasisArgnt{n}} + \stateInterceptArg{n}\otimes \onesFunctionArg{n} .
+\end{equation}
+Here $\stbasisArgnt{n} \in \RR{\fomdim \times \stdimArg{n}} \otimes \timeSpaceArg{n}$, $n=1,\ldots,\nslabs$, with $\stbasisArgnt{n}: \timeDummy \mapsto \stbasisArgnt{n}(\timeDummy)$ and $\stbasisArg{n}{0} = \bz$ is the space--time trial basis matrix \textit{function}. At any time instance $t \in [\timeStartArg{n},\timeEndArg{n}]$, the \spaceTimeAcronym\ trial subspace approximates the FOM ODE solution as,
+ \begin{equation}\label{eq:stapprox}
+ \stateFOMArg{n}{t} \approx \approxstateArg{n}{t}  = \stbasisArg{n}{t} \stgenstateArg{n} + \stateInterceptArg{n},
+\end{equation}
+where $\stgenstateArg{n} \in \RR{\stdimArg{n}}$ are the space--time generalized coordinates over the $n$th window.
+
+\begin{comment}
 each window, we introduce the space--time trial subspace
 $$ \stateArgnt{n} \in \stspaceSTArg{n} \subseteq \RR{N} \otimes \timeSpaceArg{n},$$
 along with the space--time trial basis matrix \textit{function}, 
@@ -27,9 +41,9 @@ The state over each window is approximated by,
 %\begin{equation}\label{eq:stapprox}
 % \stateArg{n}{t} \approx \approxstateArg{n}{t}  = \stbasisArg{n}{t} \stgenstate + \stateInterceptArg{n},
 %\end{equation}
-where $\stgenstateArg{n} \in \RR{\stdimArg{n}}$ are the space--time generalized coordinates over the $n$th window.
+%where $\stgenstateArg{n} \in \RR{\stdimArg{n}}$ are the space--time generalized coordinates over the $n$th window.
 
-
+\end{comment}
 \KTC{Next sentence, use parallel language to the last section. It's subtly
 different but I think written better there.} Substituting the approximation~\eqref{eq:stapprox} into the minimization problem~\eqref{eq:tclsrm}, \methodAcronym\ with 
 the \spaceTimeAcronym\ trial subspace computes the sequence of generalized coordinates $\stgenstateArg{n}$, for $n=1,\ldots,\nslabs$, as the solution to the minimization problems,
@@ -38,8 +52,8 @@ the \spaceTimeAcronym\ trial subspace computes the sequence of generalized coord
 &\underset{\stgenstateyArg{n} \in \RR{\stdim}}{\text{minimize}}\; \mathcal{J}^n( \stbasisArgnt{n} \stgenstateyArg{n} + \stateInterceptArg{n} ), \\ 
       &\text{subject to }\;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateyArg{n}  =
   \begin{cases} 
-\mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1})  & n = 2,\ldots,\nslabs, \\ 
-\mathbb{P}^n(\stateFOMArgnt{1})(0)
+\mathbb{P}^n(\stbasisArgnt{n-1}(\timeEndArg{n-1})\stgenstateArg{n-1})  & n = 2,\ldots,\nslabs, \\ 
+\mathbb{P}^n(\stateFOMIC)
  & n=1. \end{cases}
 %\begin{cases} \genstateyArg{n-1}{\timeEndArg{n-1}} & n = 2,\ldots,\nslabs \\
 %\genstateIC & n=1, \end{cases} 
