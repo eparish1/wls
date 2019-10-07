@@ -43,7 +43,7 @@ associated with the associated residual-minimization problems.
 %Galerkin ROM. We now outline both of these (equivalent) formulations. 
 %
 \subsection{Windowed least-squares for general space--time trial subspaces} 
-We begin by introducing a (nonuniform) partition of the time domain $[0,T]$
+We begin by introducing a (potentially nonuniform) partition of the time domain $[0,T]$
 into $\nslabs$ non-overlapping windows $[\timeStartArg{n} ,
 \timeEndArg{n}]\subseteq[0,T]$ of length $\DeltaSlabArg{n}\defeq\timeEndArg{n} -
 \timeStartArg{n}$, $n=1,\ldots,\nslabs$ such that 
@@ -83,11 +83,11 @@ Over the $n$th window, define the objective functional
 %\frac{1}{2} \int_{\timeStartArg{n}}^{\timeEndArg{n}} \resid(\state)^T
 %\stweightingMat \resid(\state) d\tau \\ &\vcentcolon \RR{\fomdim} \times
 %[0,T] \rightarrow \RR{}.  \end{align}
-where $\stweightingMatArg{n} \equiv \stweightingMatOneArg{ }^T
-\stweightingMatOneArg{ } \in \RR{\fomdim \times \fomdim}$ denotes a
+where $\stweightingMatArg{n} \equiv \stweightingMatOneTArg{n}
+\stweightingMatOneArg{n} \in \RR{\fomdim \times \fomdim}$ denotes a
 symmetric positive semi-definite matrix that can enable hyper-reduction, for
-example. For notational simplicity, 
-we employ the same weighting matrix for all time windows. 
+example. 
+%For notational simplicity, we employ the same weighting matrix for all time windows. 
 
 The \methodAcronym\ framework sequentially computes approximate solutions
 $\approxstateArgnt{n}\in\stspace^n$, $n=1,\ldots,\nslabs$, where 

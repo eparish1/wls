@@ -384,7 +384,7 @@ Directly solving the FOM ODE~\eqref{eq:FOM} is computationally expensive if
 	either the state-space dimension $\fomdim$ is large, or if the time-interval
 	length $T$ is large relative to the time step required to numerically
 	integrate Eq.~\eqref{eq:FOM}. For time-critical or many-query applications,
-	it is essential to relplace the FOM ODE~\eqref{eq:FOM} with a strategy that
+	it is essential to replace the FOM ODE~\eqref{eq:FOM} with a strategy that
 	enables an approximate trajectory to be computed at lower computational
 	cost. Projection-based ROMs constitute one such promising approach. 
 
@@ -438,9 +438,7 @@ Thus, at any time instance $t\in[0,T]$, ROMs that employ the  \spatialAcronym\ t
 where $\genstate \in \RR{\romdim} \otimes \timeSpace$ with
 $\genstate:\timeDummy\mapsto\genstate(\timeDummy)$
 denotes the generalized
-coordinates. 
-
-	From the space--time perspective, this is equivalent to approximating the
+coordinates. From the space--time perspective, this is equivalent to approximating the
 	FOM ODE solution trajectory $\stateFOM\in\RR{N}\otimes\timeSpace$ with 
 	$\approxstate\in \stspaceS$, where
 \begin{equation}\label{eq:spatial_subspace}
@@ -449,9 +447,7 @@ coordinates.
 	\stateIntercept\otimes\onesFunction\subseteq\RR{N}\otimes\timeSpace
 \end{split}
 \end{equation}
-with
-	$\dim(\stspaceS) = K\ntimeSteps$
-and $\onesFunction\in\timeSpace$ defined as
+with $\onesFunction\in\timeSpace$ defined as
 $\onesFunction:\timeDummy\mapsto 1$.
 	 
 Substituting the approximation~\eqref{eq:affine_trialspace} into the FOM ODE~\eqref{eq:FOM} and performing orthogonal
@@ -472,7 +468,7 @@ such that a unique solution exists. We now describe these two methods.
 Galerkin projection reduces the number of equations in
 Eq.~\eqref{eq:g_truncation} by enforcing orthogonality of the 
 residual to the spatial trial subspace in the (semi-)inner product induced by the 
-positive (semi-)definite $\fomdim\times\fomdim$ matrix $\stweightingMatArg{}\equiv \stweightingMatOneArg{ }^T
+positive (semi-)definite $\fomdim\times\fomdim$ matrix $\stweightingMatArg{}\equiv \stweightingMatOneTArg{ }
 \stweightingMatOneArg{ }$ (commonly set to
 $\stweightingMatArg{}=\mathbf{I}$), i.e.,
 \begin{equation}\label{eq:g_truncation2}
@@ -489,12 +485,12 @@ to
 \genstateGalerkinDotArg{}{t} = \underset{ \genstateyDiscrete \in \RR{\romdim}
 	}{\text{arg\,min}} \| \basisspace \hat{\stateyDiscrete} -
 	\velocity(\basisspace \genstateGalerkinArg{}{t} + \stateIntercept,t)
-	\|_{\stweightingMatArg{n}}^2, \qquad \genstate(0) = \genstateIC,
+	\|_{\stweightingMatArg{}}^2, \qquad \genstate(0) = \genstateIC,
 	\qquad t \in [0,T],
 %\hat{\mathbf{v}}, %\qquad \genstateGalerkin(0) = \basisspace^T(\stateFOMIC -\stateIntercept), \qquad t \in [0,T].
 \end{equation}
-where $\|\mathbf{x}\|_{\stweightingMatArg{n}}\equiv
-\sqrt{\mathbf{x}^T\stweightingMatArg{n}\mathbf{x}}$.
+where $\|\mathbf{x}\|_{\stweightingMatArg{}}\equiv
+\sqrt{\mathbf{x}^T\stweightingMatArg{}\mathbf{x}}$.
 %where
 %$$\hat{ \mathbf{v}} = \underset{\hat{ \stateyDiscrete}  }{\text{arg min}} || \basisspace \hat{\stateyDiscrete} -  \velocity(\basisspace \genstateGalerkinArg{}{t} + \stateIntercept) ||_{\stweightingMatArg{n}}^2.$$
 %The minimization problem has the solution,
@@ -695,7 +691,7 @@ coordinates:
 & \vcentcolon \RR{\stdim} \times \RR{N} \rightarrow \RR{\fomdim N_t}. 
 \end{align*}
 ST-LSPG projection computes the space--time generalized coordinates that
-minimize the space--time FOM O$\Delta$ E residual:
+minimize the space--time FOM O$\Delta$E residual:
 \begin{equation}\label{eq:stlspg}
 	\stgenstate_\text{ST-LSPG} = \underset{ \stgenstatey\in\RR{\stdim} }{\text{arg\,min}}|| \lspgWeightingSTArg{\stgenstatey}  \genresidST_{\text{}}(\stgenstatey;\stateFOMIC) ||_2^2, 
 \end{equation}
@@ -709,7 +705,7 @@ exponentially in time, and it generates entire trajectories that associate
 with an optimality property over the entire time domain \cite{choi_stlspg}.
 However, it is subject to several challenges. First, the computational cost of
 solving Eq.~\eqref{eq:stlspg} scales cubically with the number of space--time
-degrees of freedom $\stdim$, because---by performing projection in time---it
+degrees of freedom $\stdim$, because it
 leads to dense systems that do not expose any natural mechanism for exploiting
 the sequential nature of time evolution. Second, it is unclear how these
 methods can be employed for future state prediction, as the space--time trial
@@ -816,7 +812,7 @@ mesh concept~\cite{carlberg_gnat}. Algorithm~\ref{alg:qdeim} outlines the steps 
 \label{alg:qdeim}
 Input: Number of time-steps between snapshots $N_{\text{skip}}$, number of primal sampling points, $n_s$ \; 
 %\newline
-Output: Weighting matrix $\stweightingMatArg{} \equiv \stweightingMatOneArg{}^T \stweightingMatOneArg{} \in \{0,1\}^{N \times N}$ \;
+Output: Weighting matrix $\stweightingMatArg{} \equiv \stweightingMatOneTArg{} \stweightingMatOneArg{} \in \{0,1\}^{N \times N}$ \;
 %\newline
 Steps:
 \begin{enumerate}
@@ -829,7 +825,7 @@ $$\mathbf{F}(N_{\text{skip}}) \defeq \begin{bmatrix} \velocity (\stateFOMDiscret
         \mathbf{U}^T \mathbf{P}^* = \mathbf{QR}
     \end{equation*}
     with $\mathbf{P}^* \equiv \begin{bmatrix} \mathbf{p}_1 & \cdots & \mathbf{p}_{\text{floor}(N_t/N_{\text{skip}})} \end{bmatrix}$, $\mathbf{p}_i \in \{0,1\}^N$. 
-    \item Select the first $n_s$ columns of $\mathbf{P}^*$ to form the sampling point matrix $\stweightingMatOneArg{}^T \in \{0,1\}^{N \times n_s}$. 
+    \item Select the first $n_s$ columns of $\mathbf{P}^*$ to form the sampling point matrix $\stweightingMatOneTArg{} \in \{0,1\}^{N \times n_s}$. 
     \item Augment the sampling point matrix, $\stweightingMatOneArg{}$, with additional columns such that all unknowns are computed at the mesh cells selected by Step 3. For the second numerical experiment, these additional unknowns correspond to each conserved variable and quadrature point in the selected cells. 
 \end{enumerate}
 

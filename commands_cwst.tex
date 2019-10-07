@@ -44,7 +44,8 @@
 \newcommand{\timeDummy}{\tau}
 \newcommand{\fbsmGrowth}{\psi_1}
 \newcommand{\fbsmDecay}{\psi_2}
-
+\newcommand{\projector}{\mathbb{P}}
+\newcommand{\projectorArg}[1]{\projector^{#1}}
 \newcommand{\veloargsromy}{\basisspace \genstateyDiscreteArgnt{} + \stateIntercept,t}
 \newcommand{\quadWeightsVecArg}[1]{\boldsymbol \alpha^{#1}}
 \newcommand{\minIntegrandFull}{\frac{1}{2} \big[\frac{\partial \decoder}{\partial \genstate} \dot{\genstate} - \velocity(\decoder(\genstate)) \big]^T \stweightingMat(t) \big[\frac{\partial \decoder}{\partial \genstate} \dot{\genstate} - \velocity(\decoder(\genstate)) \big]}
@@ -57,12 +58,13 @@
 \newcommand{\stweightingMat}{ \mathbf{A}}
 
 \newcommand{\stweightingMatOne}{ \mathbf{W}}
-\newcommand{\stweightingMatOneArg}[1]{\stweightingMatOne}
+\newcommand{\stweightingMatOneArg}[1]{\stweightingMatOne^{#1}}
+\newcommand{\stweightingMatOneTArg}[1]{[\stweightingMatOne^{#1}]^T}
 
 %\newcommand{\stweightingMatArg}[1]{\stweightingMat^{#1}}
 %\newcommand{\stweightingMatArgt}[2]{\stweightingMat^{#1}(#2)}
-\newcommand{\stweightingMatArg}[1]{\stweightingMat}
-\newcommand{\stweightingMatArgt}[2]{\stweightingMat}
+\newcommand{\stweightingMatArg}[1]{\stweightingMat^{#1}}
+\newcommand{\stweightingMatArgt}[2]{\stweightingMat^{#1}}
 \newcommand{\DeltaSlabArg}[1]{\Delta T^{#1}}
 \newcommand{\lagrangeBasis}{\boldsymbol \ell}
 \newcommand{\lagrangeBasisArg}[2]{\boldsymbol \ell^{#1,#2}}
@@ -184,9 +186,12 @@
 \newcommand{\genCollocModes}{\overline{\collocModes}}
 \newcommand{\genCollocModesArg}[1]{\overline{\collocModes}^{#1}}
 
+\newcommand{\spatialIC}{\basisspaceTArg{n}(\basisspaceArg{n-1} \genstate^{n-1}(\timeEndArg{n-1} )  - \stateInterceptArg{n} )}
 
 \newcommand{\defeq}{\vcentcolon=}
 \newcommand{\mass}{\mathbf{M}}
+\newcommand{\massArg}[1]{\mass^{#1}}
+
 %\newcommand{\massArgnt}[1]{\mass^{#1}}
 \newcommand{\massArgnt}[1]{\mass}
 \newcommand{\massArgt}[2]{\mass}
@@ -274,6 +279,11 @@
 \newcommand{\dIdV}{\minintegrand_{ \genstateyDiscreteDot}}
 \newcommand{\dIdVDot}{\dot{\minintegrand}_{ \genstateyDiscreteDot}}
 \newcommand{\dIdY}{\minintegrand_{ \genstateyDiscrete}}
+
+
+\newcommand{\dIdVArg}[1]{\dIdV^{#1}}
+\newcommand{\dIdYArg}[1]{\dIdY^{#1}}
+\newcommand{\dIdVDotArg}[1]{\dIdVDot^{#1}}
 
 \newcommand{\minintegrandDiscrete}{\minintegrand_c}
 \newcommand{\minintegrandDiscreteArg}[1]{\minintegrand_c^{#1}}
@@ -417,7 +427,9 @@
 \newcommand{\RR}[1]{\mathbb{R}^{#1}}
 \newcommand{\RRStar}[2]{\mathbb{V}_{#1}(\RR{#2})}
 %velocity args
-\newcommand{\veloargsromn}{\basisspace \genstateArg{n}{t} + \stateIntercept,t}
+\newcommand{\veloargsromn}{\basisspaceArg{n} \genstateArg{n}{t} + \stateInterceptArg{n},t}
+%\newcommand{\veloargsromnArg}[1]{\basisspaceArg{#1} \genstateArg{#1}{t} + \stateInterceptArg{#1},t}
+
 \newcommand{\veloargsromnt}{\basisspace \genstateArgnt{n} + \stateIntercept,t}
 \newcommand{\veloargsromntArg}[1]{\basisspace \genstateArgnt{n}_{#1} + \stateIntercept,t}
 
@@ -447,7 +459,7 @@
 \newcommand{\stbasisDotArg}[2]{\stbasisDot^{#1}(#2)}
 \newcommand{\stbasisDotArgnt}[1]{\stbasisDot^{#1}}
 
-\newcommand{\genstateIC}{ \basisspace^T( \stateFOMIC - \stateIntercept) }
+\newcommand{\genstateIC}{ \basisspaceTArg{n}( \stateFOMIC - \stateInterceptArg{1}) }
 \newcommand{\genstateICOne}{ [\basisspaceArg{1}]^T( \stateFOMIC -
 \stateInterceptArg{1}) }
 
@@ -460,6 +472,8 @@
 %basis
 \newcommand{\basisspace}{\basismat}
 \newcommand{\basisspaceArg}[1]{\basismat^{#1}}
+\newcommand{\basisspaceTArg}[1]{[\basismat^{#1}]^T}
+
 \newcommand{\basismat}{\mathbf {V}}
 \newcommand{\basisvec}{\mathbf{v}}
 \newcommand{\basismatArg}[1]{\basismat^{#1}}
