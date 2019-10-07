@@ -1,4 +1,4 @@
-\subsection{\spaceTimeAcronym\ trial spaces}
+\subsection{\spaceTimeAcronym\ trial spaces}\label{sec:wls_spacetime}
 \KTC{Error in first equation. This is the approximate solution not the real
 one. Use parallel language to hwo this was done in the last section for
 S-reduction trial subspaces. Also make sure the basis is zero at the beginning
@@ -14,7 +14,7 @@ with $\approxstateArgnt{n} \in \stspaceSTArg{n}$, where
  \stspaceSTArg{n} \defeq
  \Range{\stbasisArgnt{n}} + \stateInterceptArg{n}\otimes \onesFunctionArg{n} .
 \end{equation}
-Here $\stbasisArgnt{n} \in \RR{\fomdim \times \stdimArg{n}} \otimes \timeSpaceArg{n}$, $n=1,\ldots,\nslabs$, with $\stbasisArgnt{n}: \timeDummy \mapsto \stbasisArgnt{n}(\timeDummy)$ and $\stbasisArg{n}{0} = \bz$ is the space--time trial basis matrix \textit{function}. At any time instance $t \in [\timeStartArg{n},\timeEndArg{n}]$, the \spaceTimeAcronym\ trial subspace approximates the FOM ODE solution as,
+Here $\stbasisArg{n}{t} \in \RR{\fomdim \times \stdimArg{n}}$, $n=1,\ldots,\nslabs$, with $\stbasisArgnt{n}: \timeDummy \mapsto \stbasisArgnt{n}(\timeDummy)$ and $\stbasisArg{n}{0} = \bz$ is the space--time trial basis matrix \textit{function}. At any time instance $t \in [\timeStartArg{n},\timeEndArg{n}]$, the \spaceTimeAcronym\ trial subspace approximates the FOM ODE solution as,
  \begin{equation}\label{eq:stapprox}
  \stateFOMArg{n}{t} \approx \approxstateArg{n}{t}  = \stbasisArg{n}{t} \stgenstateArg{n} + \stateInterceptArg{n},
 \end{equation}

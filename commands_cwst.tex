@@ -187,7 +187,7 @@
 \newcommand{\genCollocModes}{\overline{\collocModes}}
 \newcommand{\genCollocModesArg}[1]{\overline{\collocModes}^{#1}}
 
-\newcommand{\spatialIC}{\basisspaceTArg{n}(\basisspaceArg{n-1} \genstate^{n-1}(\timeEndArg{n-1} )  - \stateInterceptArg{n} )}
+\newcommand{\spatialIC}{\basisspaceTArg{n}(\basisspaceArg{n-1} \genstate^{n-1}(\timeEndArg{n-1} )  + \stateInterceptArg{n-1} - \stateInterceptArg{n} )}
 
 \newcommand{\defeq}{\vcentcolon=}
 \newcommand{\mass}{\mathbf{M}}
@@ -436,8 +436,8 @@
 \newcommand{\veloargsromn}{\basisspaceArg{n} \genstateArg{n}{t} + \stateInterceptArg{n},t}
 %\newcommand{\veloargsromnArg}[1]{\basisspaceArg{#1} \genstateArg{#1}{t} + \stateInterceptArg{#1},t}
 
-\newcommand{\veloargsromnt}{\basisspace \genstateArgnt{n} + \stateIntercept,t}
-\newcommand{\veloargsromntArg}[1]{\basisspace \genstateArgnt{n}_{#1} + \stateIntercept,t}
+\newcommand{\veloargsromnt}{\basisspace \genstateArgnt{n} + \stateInterceptArg{n},t}
+\newcommand{\veloargsromntArg}[1]{\basisspace \genstateArgnt{n}_{#1} + \stateInterceptArg{n},t}
 
 \newcommand{\veloargs}{\stateArg{}{t}}
 

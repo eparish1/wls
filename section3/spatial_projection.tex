@@ -59,31 +59,6 @@ $\genstateArgnt{n}$, $n = 1,\ldots,\nslabs$ that satisfy
 \genstateICOne & n=1. \end{cases} 
 \end{split}
 \end{equation}
-%\begin{equation}\label{eq:obj_gen_slab}
-%\begin{split}
-%      &\genstateArgnt{n} =   \underset{\genstatey \in \RR{\romdim}}{\text{arg\,min}}\; \mathcal{J}^n(\basisspace \genstatey + \stateIntercept),\\ 
-%      &\text{subject to }\; \genstateArg{n}{\timeStartArg{n}} =
-%\begin{cases} \genstateArg{n-1}{\timeEndArg{n-1}} & n = 2,\ldots,\nslabs \\
-%\genstateIC & n=1, \end{cases} 
-%\end{split}
-%\end{equation}
-%
-%Substituting the approximation~\eqref{eq:affine_trialspace_tclsrm} into the minimization problem~\eqref{eq:tclsrm}, the
-%constrained minimization problem over the $n$th time slab can be re-written as,
-%\begin{equation}\label{eq:obj_gen_slab} \genstate^n =
-%\underset{\genstatey}{\text{arg min }} \mathcal{J}^n \bigg( \basisspace
-%\genstatey + \stateIntercept \bigg) , \end{equation}
-%%\begin{equation}\label{eq:obj_gen_slab} \genstate^n(t) =
-%%\underset{\genstatey}{\text{argmin }} \mathcal{J}^n
-%%\bigg(\decoder\big(\genstatey(\tau)\big) \bigg) , \end{equation}
-%subject to the boundary conditions 
-%\begin{equation}\label{eq:bcs}
-%\genstate^n(\timeStartArg{n}) = \begin{cases} \genstate^{n-1}(\timeEndArg{n-1}
-%) & n = 2,\ldots,\nslabs, \\ \basisspace^T(\stateFOMIC - \stateIntercept) &
-%n=1, \end{cases} \end{equation}
-%$\genstate^n(\timeStartArg{n}) = \genstate^{n-1}(\timeEndArg{n-1} )$. 
-%In the above, $\genstate^n : [\timeStartArg{n} ,
-%\timeEndArg{n} ] \rightarrow \RR{\romdim}$ are the generalized coordinates over the $n$th time slab.
 We emphasize that problem~\eqref{eq:obj_gen_slab} aims to compute the
 \textit{function} $\genstate^n$ that minimizes the \textit{functional}
 	$\objectiveArg{n}$. 	%corresponds to
@@ -218,8 +193,8 @@ system for $t \in  [\timeStartArg{n},\timeEndArg{n}]$,
 %\end{equation} \begin{equation}\label{eq:lspg_adjoint}
  &\massArg{n}  \adjointDotArg{n}{t}  + [\basisspaceArg{n}]^T \bigg[\frac{\partial
 \velocity}{\partial \stateyDiscrete} (\veloargsromn) \bigg]^T \stweightingMatArgt{n}{t} \basisspaceArg{n}
- \adjointArg{n}{t} = \nonumber \\ &-[\basisspaceArg{n}]^T \big[
-\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \big]^T \stweightingMatArgt{n}{t} \bigg( \mathbf{I} -
+ \adjointArg{n}{t} = -[\basisspaceArg{n}]^T \big[
+\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \big]^T \\& \hspace{1.5 in} \stweightingMatArgt{n}{t} \bigg( \mathbf{I} -
 \basisspaceArg{n} [\massArg{n}]^{-1} [\basisspaceArg{n}]^T \stweightingMatArgt{n}{t} \bigg)
  \bigg( \basisspaceArg{n} \genstateDotArg{n}{t} -
 \velocity(\veloargsromn) \bigg), \label{eq:lspg_adjoint} \\ &
@@ -231,7 +206,7 @@ system for $t \in  [\timeStartArg{n},\timeEndArg{n}]$,
 where 
 \begin{equation}\label{eq:costate_def}
 \begin{split}
-\adjointArgnt{n} &: \timeDummy \mapsto \genstateDotArg{n}{\timeDummy}  -  [\massArg{n}]^{-1} [\basisspaceArg{n}]^T \stweightingMatArgt{n}{\timeDummy}\velocity(\basisspaceArg{n} \genstateArg{n}{\timeDummy} + \stateIntercept , \timeDummy ) ,\\
+\adjointArgnt{n} &: \timeDummy \mapsto \genstateDotArg{n}{\timeDummy}  -  [\massArg{n}]^{-1} [\basisspaceArg{n}]^T \stweightingMatArgt{n}{\timeDummy}\velocity(\basisspaceArg{n} \genstateArg{n}{\timeDummy} + \stateInterceptArg{n} , \timeDummy ) ,\\
 &: [\timeStartArg{n},\timeEndArg{n}] \rightarrow \RR{\romdimArg{n}} ,
 \end{split}
 \end{equation}
@@ -348,7 +323,7 @@ that computes the controller $\controllerArgnt{n}$, for $n=1,\ldots,\nslabs$, as
 \basisspaceArg{n}  \genstateDotArg{n}{t}  - \basisspaceTArg{n}
 \stweightingMatArgt{n}{t} \velocity(\veloargsromn) =\controllerDumArg{n}{t}, \\
  \genstateArg{n}{\timeStartArg{n}} =
-\begin{cases} \basisspaceTArg{n}(\basisspaceArg{n-1}\genstate^{n-1}(\timeEndArg{n-1} ) - \stateInterceptArg{n} )& n = 2,\ldots,\nslabs,
+\begin{cases} \spatialIC `& n = 2,\ldots,\nslabs,
  \\ \genstateICOne & n=1. \end{cases} \end{array} \right.
 % \genstateArg{n-1}{\timeEndArg{n-1}}.
 \end{split}
@@ -388,7 +363,7 @@ $\adjointOCArgnt{n} \in \RR{\romdim} \otimes \timeSpaceArg{n}$ and define the Ha
 &: \; \RR{\romdimArg{n}} \times \RR{\romdimArg{n}} \times \RR{\romdimArg{n}} \times [\timeStartArg{n},\timeEndArg{n}] \rightarrow \RR{}.
 \end{split}
 \end{equation} 
-The Pontryagin Maximum Principle states that, for a trajectory to be an extremal of~\eqref{eq:tclspg_oc1a} (with the dynamics constraints), it must satisfy the 
+The Pontryagin Maximum Principle states that solutions of the optimization problem~\eqref{eq:tclspg_oc1a} must satisfy the 
 following conditions over the $n$th window,
 \begin{align*}%\label{eq:hamiltonian_sys}
 &\genstateDotArg{n}{t} = \frac{\partial \hamiltonianArg{n}}{\partial \adjointDiscreteDumArgnt{}{}}(\genstateArg{n}{t},\adjointOCArg{n}{t},\controllerArg{n}{t},t),\\% \qquad \genstate(t_0(n)) = \genstate^{n-1}(t_1(n-1))\\
@@ -400,22 +375,24 @@ following conditions over the $n$th window,
 &\adjointOCArg{n}{\timeEndArg{n}}= \bz.
 \end{align*}
 Evaluation of the required gradients (Appendix~\ref{appendix:optimal_control}) yields the system to be solved over the $n$th window for $t \in [\timeStartArg{n},\timeEndArg{n}]$,
-\begin{align}\label{eq:sys_oc1}
+\begin{equation}\label{eq:sys_oc1}
+\begin{split}
 &\massArg{n}  \genstateDotArg{n}{t}  -  \basisspaceTArg{n} \stweightingMatArgt{n}{t} \velocity(\veloargsromn) =  \controllerArg{n}{t} , \\
 %\end{equation}
 %\begin{equation}\label{eq:lspg_adjoint}
- & \adjointOCDotArg{n}{t}  + \basisspaceTArg{n} \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn) \bigg]^T \stweightingMatArgt{n}{t} \basisspaceArg{n} [\massArg{n}]^{-1} \adjointOCArg{n}{t} = \nonumber \\
- & \qquad \basisspaceTArg{n} \big[ \frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \big]^T \stweightingMatArgt{n}{t} \bigg( \mathbf{I} -   \basisspaceArg{n} [\massArg{n}]^{-1} \basisspaceTArg{n}  \stweightingMatArgt{n}{t} \bigg)  \bigg( \basisspaceArg{n}\genstateDotArg{n}{t}  -   \velocity(\veloargsromn) \bigg) \label{eq:sys_oc2} \\
-&\controllerArg{n}{t} = -\adjointOCArg{n}{t} \label{eq:sys_oc3}, \\
+ & \adjointOCDotArg{n}{t}  + \basisspaceTArg{n} \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn) \bigg]^T \stweightingMatArgt{n}{t} \basisspaceArg{n} [\massArg{n}]^{-1} \adjointOCArg{n}{t} =  \basisspaceTArg{n} \big[ \frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \big]^T \\
+& \hspace{1.5in} \stweightingMatArgt{n}{t} \bigg( \mathbf{I} -   \basisspaceArg{n} [\massArg{n}]^{-1} \basisspaceTArg{n}  \stweightingMatArgt{n}{t} \bigg)  \bigg( \basisspaceArg{n}\genstateDotArg{n}{t}  -   \velocity(\veloargsromn) \bigg) \\%\label{eq:sys_oc2} \\
+&\controllerArg{n}{t} = -\adjointOCArg{n}{t} \\%\label{eq:sys_oc3}, \\
 & \genstateArg{n}{\timeStartArg{n}} = 
 \begin{cases}
 \spatialIC& n=2,\ldots,\nslabs, \\
 \genstateICOne & n=1,  
-\end{cases} \label{eq:sys_oc4} \\
-& \adjointOCArg{n}{\timeEndArg{n}} = \boldsymbol 0 \label{eq:sys_oc5}.
-\end{align}
-The system defined by~\eqref{eq:sys_oc1}-\eqref{eq:sys_oc5} is seen to be equivalent to that defined by the system~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs} (perform 
-the change of variables $\controllerArgnt{n} = \massArg{n} \adjointArgnt{n}$ in~\eqref{eq:sys_oc1} and $\adjointOCArgnt{n} = -\massArg{n} \adjointArgnt{n}$ in~\eqref{eq:sys_oc2}). 
+\end{cases} \\%\label{eq:sys_oc4} \\
+& \adjointOCArg{n}{\timeEndArg{n}} = \boldsymbol 0. \\%\label{eq:sys_oc5}.
+\end{split}
+\end{equation}
+The system~\eqref{eq:sys_oc1} is seen to be equivalent to that defined by the system~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs} (perform 
+the change of variables $\controllerArgnt{n} = \massArg{n} \adjointArgnt{n}$ and $\adjointOCArgnt{n} = -\massArg{n} \adjointArgnt{n}$) 
 Thus, \methodAcronym\ with \spatialAcronym\ trial subspaces can be formulated as an optimal control problem: \methodAcronym\ finds a controller that modifies the Galerkin ROM such that the residual minimization objective is achieved. In addition to commonalities with optimal control problems, this second formulation displays commonalities with subgrid-scale modeling techniques, in where an additional term is added to the reduced-order model to account for the impact of the truncated modes. \methodAcronym\ can thus be interpreted as a subgrid-scale modeling technique, in where a residual minimizing subgrid-scale model is constructed.
 
 \begin{remark}
