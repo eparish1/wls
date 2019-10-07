@@ -1,4 +1,6 @@
 \subsection{\spatialAcronym\ trial spaces}
+\KTC{Make sure that $\trialspace$ and $\stateIntercept$ depend on $n$.}
+\KTC{HERE}
 The \spatialAcronym\ trial subspace over the $n$th time window is given as, 
 \begin{equation}\label{eq:sttrialspace}
  \approxstateArgnt{n} \in \stspaceSArg{n} \defeq 
@@ -6,13 +8,13 @@ The \spatialAcronym\ trial subspace over the $n$th time window is given as,
 	\stateIntercept\otimes\onesFunction^n,\\ 
 %\trialspace \otimes \timeSpaceArg{n},
 \end{equation}
+\KTC{Rewrite this to account for $n$ dependence:}
 where the spatial trial subspace, $\trialspace$, is as defined in~\eqref{eq:spatial_subspace} and 
 $\onesFunction^n\in\timeSpaceArg{n}$ is defined as
 $\onesFunction^n:\timeDummy\mapsto 1.$
 % and  
 %$\approxstateArgnt{n}: [\timeStartArg{n},\timeEndArg{n}] \rightarrow  \trialspace$ is the \methodAcronym\ approximation to the state over the $n$th time slab.
-For simplicity, we study the case 
-where the spatial trial subspace is equivalent over each time window. Over the $n$th time window, the state is approximated within the trial subspace as, 
+Over the $n$th time window, the state is approximated within the trial subspace as, 
 \begin{equation}\label{eq:affine_trialspace_tclsrm}
 \stateFOMArg{n}{t} \approx \approxstateArgnt{n}(t) \defeq \basisspace \genstateArg{n}{t} + \stateIntercept,
 \end{equation}
