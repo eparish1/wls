@@ -25,13 +25,13 @@ This work proposes a \methodNameLower\ (\methodAcronym) approach for model-reduc
 	time-continuous full-order-model residual within a low-dimensional space--time trial
 	subspace over time windows. The approach comprises a generalization 
 of existing model reduction approaches, as particular instances of
-  the methodology recover the Galerkin,
-	least-squares Petrov--Galerkin (LSPG), and space–time LSPG approaches. In
+  the methodology recover Galerkin,
+	least-squares Petrov--Galerkin (LSPG), and space–time LSPG projection. In
 	addition, the approach
 	addresses key deficiencies in existing model-reduction
-	techniques, e.g., the dependence of the (space--time) LSPG approach on the
+	techniques, e.g., the dependence of (space--time) LSPG projection on the
 	time discretization and the exponential growth in time exhibited by \textit{a posteriori}
-	error bounds for both the Galerkin and LSPG approaches.  We consider two types of
+	error bounds for both Galerkin and LSPG projection.  We consider two types of
 	space--time trial
 	subspaces within the proposed approach: one that reduces only the spatial dimension of the full-order model, and one that reduces both the spatial and temporal dimensions of the full-order model. For each type of trial
 	subspace, we consider two different solution techniques: direct (i.e.,
@@ -39,7 +39,7 @@ of existing model reduction approaches, as particular instances of
 	Numerical experiments conducted using trial subspaces characterized by spatial
 	dimension reduction demonstrate that the \methodAcronym\
 	approach can yield more accurate solutions with lower space--time residuals than
-	the Galerkin and LSPG approaches. 
+	Galerkin and LSPG projection. 
 
 \end{abstract}
 \end{frontmatter}
@@ -121,11 +121,11 @@ sequentially minimizing the \textit{time-discrete} full-order-model residual
 instance on the time-discretization grid. This formulation is often referred
 to as the \textit{least--squares Petrov--Galerkin} (LSPG) method.
 Ref.~\cite{carlberg_lspg_v_galerkin} performed detailed analyses of this
-formulation and examined its connections with the Galerkin approach. Critically,
+formulation and examined its connections with Galerkin projection. Critically,
 this work demonstrated that (1) under certain conditions, LSPG can be cast as a 
-Petrov--Galerkin approach applied to the time-continuous
-full-order-model residual, and (2) the LSPG and Galerkin approaches are equivalent
-in the limit as the time step goes to zero (i.e., the Galerkin approach 
+Petrov--Galerkin projection applied to the time-continuous
+full-order-model residual, and (2) the LSPG and Galerkin projection are equivalent
+in the limit as the time step goes to zero (i.e., Galerkin projection 
 minimizes the time-instantaneous full-order-model residual). Numerous
 numerical experiments have demonstrated that LSPG often yields more
 accurate and stable solutions than Galerkin
@@ -141,7 +141,7 @@ particular, changing
 the time step ($\Delta t$) modifies both the
 time window over which LSPG minimizes the residual as well as the
 time-discretization error of the full-order model on which LSPG is based. 
-As LSPG and Galerkin are equivalent in the
+As LSPG and Galerkin projection are equivalent in the
 limit of $\Delta t \rightarrow 0$, the accuracy of LSPG approaches the (sometimes poor)
 accuracy of Galerkin as the time step shrinks.
 For too-large a time step the accuracy of LSPG also degrades. It is unclear if this is due to the time-discretization error associated with enlarging the time step, or rather if it is due to the size of the window the residual is being minimized over.
@@ -162,7 +162,7 @@ Researchers have pursued the development of space--time
 residual-minimization approaches~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC} to
 address the issues incurred by sequential residual minimization in time.
 Existing space--time approaches differ from the classic LSPG and Galerkin approaches in (1) the definition of the space--time trial subspace and (2) the definition of the residual minimization problem. First, space--time approaches leverage a space--time trial 
-subspace that associates with a space--time projection; classic ``spatial" model reduction approaches such as LSPG and Galerkin leverage a space--time trial subspace that can be associated with spatial projection only. Second, space--time residual minimization approaches compute the entire space--time trajectory of the state (within the low-dimensional space--time trial subspace) that minimizes the full-order-model residual over the entire time domain; Galerkin and LSPG sequentially compute instances of the state that either minimize the full-order model instantaneously (Galerkin) or over a time-step instance (LSPG). 
+subspace that associates with a space--time projection operator; classic ``spatial" model reduction approaches such as LSPG and Galerkin leverage a space--time trial subspace that can be associated with a spatial projection operator only. Second, space--time residual minimization approaches compute the entire space--time trajectory of the state (within the low-dimensional space--time trial subspace) that minimizes the full-order-model residual over the entire time domain; Galerkin and LSPG sequentially compute instances of the state that either minimize the full-order model instantaneously (Galerkin) or over a time-step instance (LSPG). 
 The result of these differences is that space--time approaches yield an algebraic system of equations defined
 over all space and time, whose solution comprises a \text{fixed} vector of
 (space--time) generalized coordinates; on the other hand, spatial projection only approaches 
@@ -215,8 +215,8 @@ simulations.
 
 The objectives of this work are to overcome the shortcomings of existing
 residual-minimizing methods, and to provide a unifying framework from which
-existing methods can be assessed. In essence, the proposed  \textit{\methodNameLower\
-(\methodAcronym)} method sequentially minimizes the FOM
+existing methods can be assessed. In essence, the proposed \textit{\methodNameLower\
+(\methodAcronym)} \approachKwd\ sequentially minimizes the FOM
 residual over a sequence of arbitrarily defined
 time windows. The method is characterized by three notable aspects.  First, the method
 minimizes the \textit{time-continuous}  residual (i.e., that associated with
@@ -236,7 +236,7 @@ Finally, \methodAcronym\ is formulated for two kinds of space--time trial
 subspaces: one that associates with spatial projection only (as employed by traditional spatial-projection-based methods), and one that associates with space--time projection (as employed by space--time methods).
 The above attributes allow the \methodAcronym\ approach to be viewed as a
 generalization of existing model-reduction methods, as 
-Galerkin, LSPG, and space--time LSPG correspond to specific
+Galerkin, LSPG, and space--time LSPG projection correspond to specific
 instances of the formulation.
 Figure~\ref{fig:flowchart} depicts how the proposed \methodAcronym\ method
 provides a unifying framework from which these existing approaches can be derived.
@@ -260,7 +260,7 @@ similar to the current work, Ref.~\cite{constantine_strom} employs
 minimization of the time-continuous FOM residual as a starting point; as such,
 this work shares some thematic similarities with
 Ref.~\cite{constantine_strom}.  Lastly, Ref.~\cite{choi_stlspg} develops a
-space--time extension of the LSPG approach that minimizes the time-discrete
+space--time extension of LSPG projection that minimizes the time-discrete
 FOM residual over the entire time domain.  The present work distinguishes
 itself from Ref.~\cite{choi_stlspg} in that (1) this work minimizes the
 time-continuous FOM residual, (2) this work minimizes this residual over
@@ -328,9 +328,9 @@ with lower space--time residuals norms.
 \end{enumerate}
 
 The paper proceeds as follows: Section~\ref{sec:math}
-outlines the mathematical setting for the full-order model, along with the Galerkin, LSPG, and
-space--time LSPG approaches. Section~\ref{sec:tclspg} outlines the proposed \methodAcronym\
-approach. Section~\ref{sec:numerical_techniques}
+outlines the mathematical setting for the full-order model, along with Galerkin, LSPG, and
+space--time LSPG projection. Section~\ref{sec:tclspg} outlines the proposed \methodAcronym\
+\approachKwd. Section~\ref{sec:numerical_techniques}
 outlines numerical techniques for solving \methodAcronymROMs, including both direct and
 indirect methods. Section~\ref{sec:analysis} provides
 equivalence conditions and error analysis for \methodAcronymROMs.
@@ -392,13 +392,13 @@ Projection-based ROMs generate approximate solutions to the FOM
 	this purpose:\footnote{For both spatial and space--time ROMs of dynamical systems, all trial subspaces are, strictly speaking, space--time subspaces.} 
 \begin{enumerate} 
 	\item \textit{Subspaces that reduce only the spatial dimension of the full-order
-		model (\spatialAcronym)}. These trial subspaces are characterized by a \textit{spatial projection} and are employed in classic model reduction approaches, e.g., Galerkin and LSPG. %These 
+		model (\spatialAcronym)}. These trial subspaces are characterized by a \textit{spatial projection operator} and are employed in classic model reduction approaches, e.g., Galerkin and LSPG. %These 
 %	trial subspaces are commonly used
 %		in model-reduction methods based on spatial projection followed by time
 %		integration (e.g., the Galerkin and LSPG approaches).
 	\item \textit{Subspaces that reduce both the spatial and temporal dimensions of the full-order
 		model (\spaceTimeAcronym)}.
-These trial subspaces are characterized by a \textit{space--time} projection and are employed in space--time 
+These trial subspaces are characterized by a \textit{space--time projection operator} and are employed in space--time 
 model reduction approaches (e.g., space--time Galerkin~\cite{benner_st}, space--time LSPG~\cite{choi_stlspg}). 
 % These trial subspaces are commonly employed in
 %		model-reduction methods based on space--time projection (e.g., space--time
@@ -464,7 +464,7 @@ exist. Typically, either the \textit{Galerkin} or \textit{least-squares
 Petrov--Galerkin} approach is employed to reduce the number of equations
 such that a unique solution exists. We now describe these two methods.
 
-\subsubsection{Galerkin approach}
+\subsubsection{Galerkin projection}
 The Galerkin approach reduces the number of equations in
 Eq.~\eqref{eq:g_truncation} by enforcing orthogonality of the 
 residual to the spatial trial subspace in the (semi-)inner product induced by the 
@@ -504,7 +504,7 @@ subspace $\trialspace$.
 %\begin{equation}\label{eq:g_truncation}
 %\frac{d \genstate}{dt} = \basisspace^T \velocity(\basisspace \genstate + \state_0,t; \param ), \qquad t \in [0,T],
 %\end{equation}
-\subsubsection{The least-squares Petrov--Galerkin approach}
+\subsubsection{Least-squares Petrov--Galerkin projection}
 Despite its time-instantaneous residual-minimization optimality property 
 \eqref{eq:GalOptimal}, the Galerkin approach can yield inaccurate solutions,
 particularly if the velocity is not self-adjoint or
@@ -630,7 +630,7 @@ We now outline one such method: space--time least-squares Petrov--Galerkin (ST-L
 While the space--time Galerkin method~\cite{benner_st} is another alternative, it does not
 associate with any residual minimization principle, and thus we do not discuss
 it further.
-\subsubsection{The space--time LSPG approach}  
+\subsubsection{Space--time LSPG projection} 
 Analogously to LSPG, space--time LSPG~\cite{choi_stlspg}
 minimizes the (time-discrete) FOM O$\Delta$E residual, but does so
 using the \spaceTimeAcronym\ subspace and simultaneously minimizes this
