@@ -1,25 +1,26 @@
 \subsection{\spaceTimeAcronym\ trial spaces}\label{sec:wls_spacetime}
-\KTC{Error in first equation. This is the approximate solution not the real
-one. Use parallel language to hwo this was done in the last section for
-S-reduction trial subspaces. Also make sure the basis is zero at the beginning
-of the interval and the affine transformation is taken to be the solution at
-the end of the last window. This will not be too trivial, as the solution on
-the previous slab enters the trial subspace definition.}
+%\KTC{Error in first equation. This is the approximate solution not the real
+%one. Use parallel language to hwo this was done in the last section for
+%S-reduction trial subspaces. Also make sure the basis is zero at the beginning
+%of the interval and the affine transformation is taken to be the solution at
+%the end of the last window. This will not be too trivial, as the solution on
+%the previous slab enters the trial subspace definition.}
 
-We now briefly consider \spaceTimeAcronym\ trial subspaces. 
+%We now briefly consider \spaceTimeAcronym\ trial subspaces. 
 The \spaceTimeAcronym\ trial subspace over the $n$th time window approximates
 the FOM ODE solution trajectory $\stateFOM\in\RR{N}\otimes\timeSpace$
 with $\approxstateArgnt{n} \in \stspaceSTArg{n}$, where
 \begin{equation}\label{eq:st_sttrialspace}
  \stspaceSTArg{n} \defeq
- \Range{\stbasisArgnt{n}} + \stateInterceptArg{n}\otimes \onesFunctionArg{n} .
+ \Range{\stbasisArgnt{n}} + \stateInterceptSTArg{n}\otimes \onesFunctionArg{n} .
 \end{equation}
-Here $\stbasisArg{n}{t} \in \RR{\fomdim \times \stdimArg{n}}$, $n=1,\ldots,\nslabs$, with $\stbasisArgnt{n}: \timeDummy \mapsto \stbasisArgnt{n}(\timeDummy)$ and $\stbasisArg{n}{0} = \bz$ is the space--time trial basis matrix \textit{function}. At any time instance $t \in [\timeStartArg{n},\timeEndArg{n}]$, the \spaceTimeAcronym\ trial subspace approximates the FOM ODE solution as,
+Here $\stbasisArg{n}{t} \in \RR{\fomdim \times \stdimArg{n}}$, $n=1,\ldots,\nslabs$, with $\stbasisArgnt{n}: \timeDummy \mapsto \stbasisArgnt{n}(\timeDummy)$ and $\stbasisArg{n}{0} = \bz$ is the space--time trial basis matrix \textit{function} and $\stateInterceptSTArg{n} \in \RR{\fomdim}$ provides the affine transformation. 
+For \spaceTimeAcronym\ trial subspaces, we take the affine transformation to be $\stateInterceptSTArg{n} = \approxstateArg{n-1}{\timeEndArg{n-1}}$ for $n=2,\ldots,\nslabs$ and $\stateInterceptSTArg{1} = \stateFOMIC$; this definition of the trial subspace automatically satisfies the boundary conditions.
+At any time instance $t \in [\timeStartArg{n},\timeEndArg{n}]$, the \spaceTimeAcronym\ trial subspace approximates the FOM ODE solution as,
  \begin{equation}\label{eq:stapprox}
- \stateFOMArg{n}{t} \approx \approxstateArg{n}{t}  = \stbasisArg{n}{t} \stgenstateArg{n} + \stateInterceptArg{n},
+ \stateFOMArg{n}{t} \approx \approxstateArg{n}{t}  = \stbasisArg{n}{t} \stgenstateArg{n} + \stateInterceptSTArg{n},
 \end{equation}
-where $\stgenstateArg{n} \in \RR{\stdimArg{n}}$ are the space--time generalized coordinates over the $n$th window.
-
+where $\stgenstateArg{n} \in \RR{\stdimArg{n}}$ are the space--time generalized coordinates over the $n$th window. 
 \begin{comment}
 each window, we introduce the space--time trial subspace
 $$ \stateArgnt{n} \in \stspaceSTArg{n} \subseteq \RR{N} \otimes \timeSpaceArg{n},$$
@@ -29,13 +30,13 @@ along with the space--time trial basis matrix \textit{function},
  &: [\timeStartArg{n},\timeEndArg{n}] \rightarrow  \RR{N \times \stdimArg{n}}  ,%\spaceTrialSpace , \\
 \end{align*}
 \KTC{shouldn't be $\equiv$. Look earlier for this. the right hand side should
-be on the left with $\defeq$.} with $\Range{\stbasisArgnt{n}} + \stateInterceptArg{} \equiv \stspaceSTArg{n} $ and where $\stdimArg{n}$ is the number of space--time generalized coordinates over the $n$th window. 
+be on the left with $\defeq$.} with $\Range{\stbasisArgnt{n}} + \stateInterceptSTArg{} \equiv \stspaceSTArg{n} $ and where $\stdimArg{n}$ is the number of space--time generalized coordinates over the $n$th window. 
 For simplicity we assume the reference state to be equivalent for each time window, although no such requirement is necessary. 
 \KTC{Remove all commas before equations unless it makes sense gramatically.
 Add the $n$ superscript to $x_{ref}$}
 The state over each window is approximated by,
 \begin{equation}\label{eq:stapprox}
- \stateFOMArg{n}{t} \approx \approxstateArg{n}{t}  = \stbasisArg{n}{t} \stgenstateArg{n} + \stateInterceptArg{},
+ \stateFOMArg{n}{t} \approx \approxstateArg{n}{t}  = \stbasisArg{n}{t} \stgenstateArg{n} + \stateInterceptSTArg{},
 \end{equation}
 %and the state is then approximated by,
 %\begin{equation}\label{eq:stapprox}
@@ -44,24 +45,19 @@ The state over each window is approximated by,
 %where $\stgenstateArg{n} \in \RR{\stdimArg{n}}$ are the space--time generalized coordinates over the $n$th window.
 
 \end{comment}
-\KTC{Next sentence, use parallel language to the last section. It's subtly
-different but I think written better there.} Substituting the approximation~\eqref{eq:stapprox} into the minimization problem~\eqref{eq:tclsrm}, \methodAcronym\ with 
-the \spaceTimeAcronym\ trial subspace computes the sequence of generalized coordinates $\stgenstateArg{n}$, for $n=1,\ldots,\nslabs$, as the solution to the minimization problems,
+Substituting the approximation~\eqref{eq:stapprox} into the minimization problem~\eqref{eq:tclsrm} implies that \methodAcronym\ with \spaceTimeAcronym\ trial subspaces sequentially computes solutions $\stgenstateArg{n}$, $n = 1,\ldots,\nslabs$ that satisfy
 \begin{align}\label{eq:obj_gen_slab_spacetime}
 \begin{split}
-&\underset{\stgenstateyArg{n} \in \RR{\stdim}}{\text{minimize}}\; \mathcal{J}^n( \stbasisArgnt{n} \stgenstateyArg{n} + \stateInterceptArg{n} ), \\ 
-      &\text{subject to }\;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateyArg{n}  =
-  \begin{cases} 
-\mathbb{P}^n(\stbasisArgnt{n-1}(\timeEndArg{n-1})\stgenstateArg{n-1})  & n = 2,\ldots,\nslabs, \\ 
-\mathbb{P}^n(\stateFOMIC)
- & n=1. \end{cases}
-%\begin{cases} \genstateyArg{n-1}{\timeEndArg{n-1}} & n = 2,\ldots,\nslabs \\
+&\underset{\stgenstateyArg{n} \in \RR{\stdim}}{\text{minimize}}\; \mathcal{J}^n( \stbasisArgnt{n} \stgenstateyArg{n} + \stateInterceptSTArg{n} \otimes \onesFunctionArg{n} ).% \\ 
+%      &\text{subject to }\;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateyArg{n}  =0
+%  \begin{cases} 
+%\mathbb{P}^n(\stbasisArgnt{n-1}(\timeEndArg{n-1})\stgenstateArg{n-1})  & n = 2,\ldots,\nslabs, \\ 
+%\mathbb{P}^n(\stateFOMIC)
+% & n=1. \end{cases}
+%%\begin{cases} \genstateyArg{n-1}{\timeEndArg{n-1}} & n = 2,\ldots,\nslabs \\
 %\genstateIC & n=1, \end{cases} 
 \end{split}
 \end{align}
-\KTC{In prior equation, remove projection and align properly with ST-LSPG
-stuff before.}
-
 %\begin{align}\label{eq:obj_gen_slab_spacetime}
 %\begin{split}
 %&\stgenstateArg{n} = \underset{\stgenstatey \in \RR{\stdim}}{\text{arg\,min}}\; \mathcal{J}^n( \stbasisArgnt{n} \stgenstatey + \stateInterceptArg{n} ), \\ 
@@ -93,12 +89,11 @@ The key difference between \spaceTimeAcronym\ and \spatialAcronym\ trial subspac
 Thus, in the \spaceTimeAcronym\ case the optimization problem is no longer minimizing a functional with respect to a function, but now is minimizing a function with 
 respect to vector.  As such, the first-order optimality conditions can be
 	derived using standard calculus. Differentiating the objective with respect
-	to $\stgenstatey$ and setting equal to zero yields \KTC{Make sure that xref
-	is replaced with the last solution at the previous time step}
+	to $\stgenstatey$ and setting equal to zero yields 
 \begin{equation}\label{eq:st_stationary}
  \intSlabArg{n} \bigg[ \stbasisDotArg{n}{t}^T  - \stbasisArg{n}{t}^T \bigg[\frac{\partial
 \velocity}{\partial \stateyDiscrete} (\stbasisDotArg{n}{t} \stgenstateArg{n} +                    
-\stateInterceptArg{n},t)\bigg]^T  \bigg] \stweightingMatArg{n} \bigg( \stbasisDotArg{n}{t} \stgenstateArg{n}  - \velocity (\stbasisArg{n}{t} \stgenstateArg{n} + \stateInterceptArg{n},t) \bigg) dt = \bz.\end{equation}
+\stateInterceptSTArg{n},t)\bigg]^T  \bigg] \stweightingMatArg{n} \bigg( \stbasisDotArg{n}{t} \stgenstateArg{n}  - \velocity (\stbasisArg{n}{t} \stgenstateArg{n} + \stateInterceptSTArg{n},t) \bigg) dt = \bz.\end{equation}
 %subject to the boundary conditions 
 %\begin{equation}\label{eq:bcs_spacetime}
 %\stbasisArg{n}{\timeStartArg{n}}\stgenstateArg{n} = \begin{cases} 

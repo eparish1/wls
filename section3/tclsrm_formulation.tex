@@ -3,12 +3,18 @@
 \input{section3/space_time}
 
 \subsection{\methodAcronym\ summary}
-This section outlined the \methodAcronym\ method for model reduction. In summary, \methodAcronym\ sequentially minimizes the time continuous FOM ODE residual over the range of a space--time trial subspace for a series of time windows: \methodAcronym\  
-\KTC{Here, use the same language as earlier regarding sequential computation
-of these coordinates that satisfy...} computes the generalized coordinates
-$\genstateArgnt{n}$, for $n = 1,\ldots,\nslabs$, as the solution to the
-minimization problems, \KTC{remove superscript from optimizaton variable
-everywhere}
+This section outlined the \methodAcronym\ method for model reduction. In summary, \methodAcronym\ sequentially minimizes the time continuous FOM ODE residual over the range of a space--time trial subspace for a series of time windows; i.e.,  
+%\methodAcronym\  
+%computes the generalized coordinates
+%$\genstateArgnt{n}$, for $n = 1,\ldots,\nslabs$, as the solution to the
+%minimization problems, 
+\methodAcronym\ sequentially computes approximate solutions
+$\approxstateArgnt{n}\in\stspace^n$, $n=1,\ldots,\nslabs$, where 
+$\approxstateArgnt{n}$ is the solution to the
+minimization problem
+
+
+
 \begin{equation*}
 \underset{\stateyArgnt{} \in \stspace^n}{\text{minimize } }
 \mathcal{J}^n(\stateyArgnt{}), \qquad n = 1,\ldots,\nslabs,
@@ -22,7 +28,7 @@ where,
 &\vcentcolon \RR{\fomdim}\otimes \timeSpaceArg{n} \rightarrow
 \RR{},
 \end{align*}
-subject to the boundary and continuity conditions. For the \spatialAcronym\ trial subspaces, the stationary conditions for the residual minimization problem can be derived via the Euler--Lagrange equations and yield the system over the $n$th window for $t \in [\timeStartArg{n},\timeEndArg{n}]$,
+subject to the boundary conditions. For the \spatialAcronym\ trial subspaces, the stationary conditions for the residual minimization problem can be derived via the Euler--Lagrange equations and yield the system over the $n$th window for $t \in [\timeStartArg{n},\timeEndArg{n}]$,
 \begin{align*}\
 &\massArg{n}  \genstateDotArg{n}{t}  -  \basisspaceTArg{n}
 \stweightingMatArgt{n}{t} \velocity(\veloargsromn) =  \massArg{n} \adjointArg{n}{t} , \\
@@ -39,8 +45,7 @@ subject to the boundary and continuity conditions. For the \spatialAcronym\ tria
 %\basisspace^T(\approxstate_0 - \stateIntercept) & n=1, \end{cases}\\ &
 %\adjointArg{n}{\timeEndArg{n}} = \boldsymbol 0.
 \end{align*} 
-subject to the boundary conditions~\eqref{eq:lspg_bcs1}--\eqref{eq:lspg_bcs}. The Euler-Lagrange equations expose the fact that, for \spatialAcronym\
+subject to the boundary conditions~\eqref{eq:lspg_bcs1}--\eqref{eq:lspg_bcs}. The Euler--Lagrange equations expose the fact that, for \spatialAcronym\
 trial subspaces, \methodAcronym\ can be alternatively interpreted as a Lagrange problem from optimal control: the Galerkin method is forced by a 
 controller that enforces the residual minimization property. 
-
 Section~\ref{sec:wls_spacetime} additionally considered \spaceTimeAcronym\ trial subspaces. For \spaceTimeAcronym\ trial subspaces, in where the generalized coordinates are no longer functions, the stationary conditions correspond to an algebraic system of equations.

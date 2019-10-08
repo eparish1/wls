@@ -34,8 +34,8 @@ $ denotes the generalized coordinates over the $n$th time window.
 
 Substituting the approximation~\eqref{eq:affine_trialspace_tclsrm} into the
 \methodAcronym\ minimization problem~\eqref{eq:tclsrm} and using $\elltwo$ projection of the 
-initial conditions implies that the
-\methodAcronym\ method with this choice of space--time trial subspace
+initial conditions implies that 
+\methodAcronym\ with \spatialAcronym\ space--time trial subspaces
 sequentially computes solutions
 $\genstateArgnt{n}$, $n = 1,\ldots,\nslabs$ that satisfy
 %For notational purposes, we define the ``decoder", or ``lifting operator",
@@ -186,18 +186,21 @@ we can manipulate the system~\eqref{eq:clspg_2ord} (see
 Appendix~\ref{appendix:vector_calc}) to obtain a coupled forward-backward
 system for $t \in  [\timeStartArg{n},\timeEndArg{n}]$,
 \end{comment}
-
+%%% HERE
 \begin{align}\label{eq:lspg_continuous} 
 &\massArg{n}   \genstateDotArg{n}{t}  -  [\basisspaceArg{n}]^T
 \stweightingMatArgt{n}{t} \velocity(\veloargsromn) =  \massArg{n} \adjointArg{n}{t} , \\
 %\end{equation} \begin{equation}\label{eq:lspg_adjoint}
+\begin{split}
  &\massArg{n}  \adjointDotArg{n}{t}  + [\basisspaceArg{n}]^T \bigg[\frac{\partial
 \velocity}{\partial \stateyDiscrete} (\veloargsromn) \bigg]^T \stweightingMatArgt{n}{t} \basisspaceArg{n}
  \adjointArg{n}{t} = -[\basisspaceArg{n}]^T \big[
 \frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \big]^T \\& \hspace{1.5 in} \stweightingMatArgt{n}{t} \bigg( \mathbf{I} -
 \basisspaceArg{n} [\massArg{n}]^{-1} [\basisspaceArg{n}]^T \stweightingMatArgt{n}{t} \bigg)
  \bigg( \basisspaceArg{n} \genstateDotArg{n}{t} -
-\velocity(\veloargsromn) \bigg), \label{eq:lspg_adjoint} \\ &
+\velocity(\veloargsromn) \bigg), \label{eq:lspg_adjoint}
+\end{split}
+ \\ &
 \genstateArg{n}{\timeStartArg{n}} = \begin{cases}
 \spatialIC & n=2,\ldots,\nslabs, \label{eq:lspg_bcs1}\\
 \genstateICOne & n=1, \end{cases}\\ &
@@ -232,7 +235,7 @@ residual condition.
 A simplification is obtained in the basic case %with no
 %hyper-reduction/weighting 
 where $\stweightingMat = \mathbf{I}$.
-The system becomes,
+The system becomes
 \begin{align*}\label{eq:lspg_continuous_simle} & \genstateDotArg{n}{t}  -
 \basisspaceTArg{n}  \velocity(\veloargsromn) =  \adjointArg{n}{t} , \\
 %\end{equation} \begin{equation}\label{eq:lspg_adjoint}

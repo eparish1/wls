@@ -1,10 +1,8 @@
 \section{Numerical solution techniques}\label{sec:numerical_techniques}
 The discussion to this point has outlined the formulation of the \methodAcronym\ method. We now consider numerical solution techniques. 
-\EP{I think passive voice is fine in this instance, it reads easier}
-As \methodAcronym\ displays commonalities with optimal
-control problems, a large existing body of work can be leveraged. This section
-discuses a variety of such techniques and outlines how they can be used to
-solve the \methodAcronym\ system. We focus primarily on 
+\methodAcronym\ displays commonalities with optimal
+control problems, and as such a large existing body of work can be leveraged. In this section we 
+outline a variety of such techniques. We focus primarily on 
 %\KTC{earlier we kept
 %saying 
 %direct (i.e.,
@@ -17,25 +15,20 @@ and then briefly outline direct and indirect methods for \spaceTimeAcronym\ tria
 Numerical techniques to
 solve optimal control problems can be classified as either
 \textit{direct} or \textit{indirect}
-methods~\cite{conway_optimalcontrolreview}.  Direct methods eschew the first order optimality conditions
-~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs} and, instead, ``directly" solve the optimization problem~\eqref{eq:tclsrm} by first
+methods~\cite{conway_optimalcontrolreview}. Rather than working with the first order optimality conditions~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs}, direct methods ``directly" solve the optimization problem~\eqref{eq:tclsrm} by first
 numerically discretizing the system and objective functional and ``transcribing"
 the infinite dimensional problem into a finite-dimensional nonlinear
-programming (optimization) problem. Direct approaches thus ``discretize then optimize."
-Indirect methods, on the other hand, leverage the calculus of variations to
-derive the Euler--Lagrange equations, which comprise the first-order
-optimality conditions~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs} associated with the objective 
-functional. Indirect methods then solve (numerically) the Euler--Lagrange equations. Thus, indirect methods ``optimize then discretize," and 
-solve the optimization problem
+programming (optimization) problem. Direct approaches thus ``discretize-then-optimize."
+Indirect methods, on the other hand, compute solutions to the Euler--Lagrange equations~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs} (which comprise the first order optimality conditions of the objective functional). Thus, indirect methods ``optimize-then-discretize," and solve the optimization problem
 ``indirectly". A variety of discretization/solution techniques are possible for both direct and indirect methods. Collocation methods,
 finite elements, spectral methods, shooting methods, etc., are all examples of
 plausible solution techniques.  
 
 In the present context, we investigate both direct and indirect methods to solve \methodAcronym\ with \spatialAcronym\ trial
 subspaces. We consider: 
-\begin{itemize} \item \textit{Direct Methods (discretize-then-optimize)}: Discretize and then optimize approaches are outlined for linear multistep methods. 
-\item \textit{Indirect methods (optimize-then-discretize)}: An indirect method leveraging the forward-backward sweep algorithm is outlined 
-to solve~\eqref{eq:lspg_continuous}-\eqref{eq:lspg_bcs}. 
+\begin{itemize} \item \textit{Direct methods (discretize-then-optimize)}: A direct approach leveraging linear multistep methods to directly solve the optimization problem~\eqref{eq:tclsrm}.
+\item \textit{Indirect methods (optimize-then-discretize)}: An indirect approach leveraging the forward-backward sweep algorithm to solve the Euler--Lagrange equations~\eqref{eq:lspg_continuous}-\eqref{eq:lspg_bcs}.
+
 \end{itemize} 
 We emphasize that a variety of other approaches exist. Future work will comprise a detailed exploration
 of additional approaches.
