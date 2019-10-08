@@ -9,15 +9,10 @@ This section outlined the \methodAcronym\ method for model reduction. In summary
 %$\genstateArgnt{n}$, for $n = 1,\ldots,\nslabs$, as the solution to the
 %minimization problems, 
 \methodAcronym\ sequentially computes approximate solutions
-$\approxstateArgnt{n}\in\stspace^n$, $n=1,\ldots,\nslabs$, where 
-$\approxstateArgnt{n}$ is the solution to the
-minimization problem
-
-
-
+$\approxstateArgnt{n}\in\stspace^n$, $n=1,\ldots,\nslabs$ that satisfy
 \begin{equation*}
 \underset{\stateyArgnt{} \in \stspace^n}{\text{minimize } }
-\mathcal{J}^n(\stateyArgnt{}), \qquad n = 1,\ldots,\nslabs,
+\mathcal{J}^n(\stateyArgnt{}),
 \end{equation*}
 where,
 \begin{align*}
@@ -26,7 +21,7 @@ where,
 - \velocity(\stateyArg{}{t},t) \big]^T \stweightingMatArg{n} \big[
 \dot{\statey}(t) - \velocity(\stateyArg{}{t},t) \big] d t \\
 &\vcentcolon \RR{\fomdim}\otimes \timeSpaceArg{n} \rightarrow
-\RR{},
+\RRplus,
 \end{align*}
 subject to the boundary conditions. For the \spatialAcronym\ trial subspaces, the stationary conditions for the residual minimization problem can be derived via the Euler--Lagrange equations and yield the system over the $n$th window for $t \in [\timeStartArg{n},\timeEndArg{n}]$,
 \begin{align*}\
@@ -36,10 +31,10 @@ subject to the boundary conditions. For the \spatialAcronym\ trial subspaces, th
 \velocity}{\partial \statey} (\veloargsromn) \bigg]^T \stweightingMatArgt{n}{t} \basisspaceArg{n}
  \adjointArg{n}{t} = \nonumber \\ 
 &-\basisspaceTArg{n} \big[
-\frac{\partial \velocity}{\partial \statey}(\veloargsromn) \big]^T \stweightingMatArgt{n}{t} \bigg( \mathbf{I} -
-\basisspaceArg{n} [\massArg{n}]^{-1} \basisspaceTArg{n} \stweightingMatArgt{n}{t} \bigg)
- \bigg( \basisspace \genstateDotArg{n}{t}  -
-\velocity(\veloargsromn) \bigg),  &
+\frac{\partial \velocity}{\partial \statey}(\veloargsromn) \big]^T \stweightingMatArgt{n}{t} \big( \mathbf{I} -
+\basisspaceArg{n} [\massArg{n}]^{-1} \basisspaceTArg{n} \stweightingMatArgt{n}{t} \big)
+ \big( \basisspace \genstateDotArg{n}{t}  -
+\velocity(\veloargsromn) \big),  &
 %\genstateArg{n}{\timeStartArg{n}} = \begin{cases}
 %\genstate^{n-1}(\timeEndArg{n-1}) & n=2,\ldots,\nslabs, \\
 %\basisspace^T(\approxstate_0 - \stateIntercept) & n=1, \end{cases}\\ &

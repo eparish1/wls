@@ -12,9 +12,9 @@ the FOM ODE solution trajectory $\stateFOM\in\RR{N}\otimes\timeSpace$
 with $\approxstateArgnt{n} \in \stspaceSTArg{n}$, where
 \begin{equation}\label{eq:st_sttrialspace}
  \stspaceSTArg{n} \defeq
- \Range{\stbasisArgnt{n}} + \stateInterceptSTArg{n}\otimes \onesFunctionArg{n} .
+ \Range{\stbasisArgnt{n}} + \stateInterceptSTArg{n}\otimes \onesFunctionArg{n} \subseteq \RR{\fomdim} \otimes \timeSpaceArg{n}.
 \end{equation}
-Here $\stbasisArg{n}{t} \in \RR{\fomdim \times \stdimArg{n}}$, $n=1,\ldots,\nslabs$, with $\stbasisArgnt{n}: \timeDummy \mapsto \stbasisArgnt{n}(\timeDummy)$ and $\stbasisArg{n}{0} = \bz$ is the space--time trial basis matrix \textit{function} and $\stateInterceptSTArg{n} \in \RR{\fomdim}$ provides the affine transformation. 
+Here $\stbasisArg{n}{t} \in \RR{\fomdim \times \stdimArg{n}}$, $n=1,\ldots,\nslabs$, with $\stbasisArgnt{n}: \timeDummy \mapsto \stbasisArgnt{n}(\timeDummy)$ and $\stbasisArg{n}{\timeStartArg{n}} = \bz$ is the space--time trial basis matrix \textit{function} and $\stateInterceptSTArg{n} \in \RR{\fomdim}$ provides the affine transformation. 
 For \spaceTimeAcronym\ trial subspaces, we take the affine transformation to be $\stateInterceptSTArg{n} = \approxstateArg{n-1}{\timeEndArg{n-1}}$ for $n=2,\ldots,\nslabs$ and $\stateInterceptSTArg{1} = \stateFOMIC$; this definition of the trial subspace automatically satisfies the boundary conditions.
 At any time instance $t \in [\timeStartArg{n},\timeEndArg{n}]$, the \spaceTimeAcronym\ trial subspace approximates the FOM ODE solution as,
  \begin{equation}\label{eq:stapprox}
@@ -85,7 +85,7 @@ Substituting the approximation~\eqref{eq:stapprox} into the minimization problem
 %\mathbb{P}^n \stateFOMIC
 % & n=1. \end{cases} \end{equation}
 \subsubsection{Stationary conditions} 
-The key difference between \spaceTimeAcronym\ and \spatialAcronym\ trial subspaces is as follows: in \spaceTimeAcronym\ trial subspaces the generalized coordinates comprise a vector in $\RR{\stdimArg{n}}$, while in the \spatialAcronym\ trial subspaces the generalized coordinates comprise a \textit{vector of functions}, i.e., the generalized coordinates live in $\RR{\romdim} \otimes \timeSpaceArg{n}$. 
+The key difference between \spaceTimeAcronym\ and \spatialAcronym\ trial subspaces is as follows: in \spaceTimeAcronym\ trial subspaces the generalized coordinates comprise a vector in $\RR{\stdimArg{n}}$, while in the \spatialAcronym\ trial subspaces the generalized coordinates comprise a \textit{vector of functions}, i.e., the generalized coordinates live in $\RR{\romdimArg{n}} \otimes \timeSpaceArg{n}$. 
 Thus, in the \spaceTimeAcronym\ case the optimization problem is no longer minimizing a functional with respect to a function, but now is minimizing a function with 
 respect to vector.  As such, the first-order optimality conditions can be
 	derived using standard calculus. Differentiating the objective with respect
@@ -100,4 +100,4 @@ respect to vector.  As such, the first-order optimality conditions can be
 %\mathbb{P}^n\stbasisArg{n-1}{\timeEndArg{n-1}}\stgenstateArg{n-1}  & n = 2,\ldots,\nslabs, \\ 
 %\mathbb{P}^n \stateFOMIC &
 %n=1. \end{cases} \end{equation}
-For \spaceTimeAcronym\ trial subspaces, the stationary conditions comprise an algebraic system of integral equations, as opposed to a system of differential equations.
+For \spaceTimeAcronym\ trial subspaces, the stationary conditions comprise an algebraic system of equations, as opposed to a system of differential equations.

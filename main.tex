@@ -33,12 +33,11 @@ of existing model reduction approaches, as particular instances of
 	time discretization and the exponential growth in time exhibited by \textit{a posteriori}
 	error bounds for both the Galerkin and LSPG approaches.  We consider two types of
 	space--time trial
-	subspaces within the proposed approach: one that associates with spatial projection only, and one that 
-  associates with space--time projection. For each type of trial
+	subspaces within the proposed approach: one that reduces only the spatial dimension of the full-order model, and one that reduces both the spatial and temporal dimensions of the full-order model. For each type of trial
 	subspace, we consider two different solution techniques: direct (i.e.,
 	discretize-then-optimize) and indirect (i.e., optimize-then-discretize).
 	Numerical experiments conducted using trial subspaces characterized by spatial
-	projection only demonstrate that the \methodAcronym\
+	dimension reduction demonstrate that the \methodAcronym\
 	approach can yield more accurate solutions with lower space--time residuals than
 	the Galerkin and LSPG approaches. 
 
@@ -71,7 +70,7 @@ state ``snapshots'' at different time and parameter instances, by solving
 Lyapunov equations). Second, these methods execute an inexpensive
 \textit{online} stage during which they compute approximations to the
 dynamical-system trajectory that reside on this trial subspace via, e.g., 
-residual minimization. 
+projection of the full-order model or residual minimization. 
  
 Model reduction for linear-time-invariant systems (and other well structured
 dynamical systems) is quite mature
@@ -342,7 +341,7 @@ x$), vectors with standard bold symbols (e.g., $\mathbf{x}$),
 matrices with capital bold symbols (e.g., $\mathbf{X} \equiv \begin{bmatrix}
 \mathbf{x}_1 & \cdots & \mathbf{x}_r\end{bmatrix}$), and spaces with
 calligraphic symbols (e.g., $\mathcal{X}$). We additionally denote differentiation of a time-dependent 
-function with respect to with the $\dot\ $ operator.
+function with respect to time with the $\dot\ $ operator.
 %Model reduction of nonlinear dynamical systems is a growing research area.
 %The least-squares Petrov-Galerkin (LSPG) approach has gained popularity as a model reduction technique for nonlinear dynamical systems. Derived at the fully discrete level, the LSPG approach solves a least-squares problem that minimizes the fully discrete residual of the reduced-order model at each time-step. LSPG has been shown to be an effective formulation for nonlinear model reduction on complex problems of interest.
 %\begin{comment} 
@@ -355,20 +354,20 @@ We consider the full-order model to be a dynamical system expressed as a
 	system of ordinary differential equations (ODEs)
 \begin{equation}\label{eq:FOM}
  \stateFOMDotArg{t}  = \velocity(\stateFOMArg{}{t},t), \qquad \stateFOM(0) =
-	\stateFOMIC,\qquad t \in [0,T]
+	\stateFOMIC,\qquad t \in [0,T],
 \end{equation}
 where  $\stateFOM: [0,T]
 	\rightarrow  \RR{\fomdim}$ with $\stateFOM: \timeDummy \mapsto
 	\stateFOM(\timeDummy) $ and $\stateFOMDot \equiv {d \stateFOM}/{d\tau}$
 	denotes the state implicitly defined as the solution to initial value
 	problem~\eqref{eq:FOM}, 
-$T \in \mathbb{R}^+$ denotes the final time, 
+$T \in \RRplus$ denotes the final time, 
  $\stateFOMIC \in \mathbb{R}^{\fomdim}$ denotes the initial condition,
 	and $\velocity: \mathbb{R}^{\fomdim} \times [0,T] \rightarrow
 	\mathbb{R}^{\fomdim}$ with $(\stateyDiscrete,\timeDummy) \mapsto
 	\velocity(\stateyDiscrete,\timeDummy)$ denotes the velocity, which is possibly
 	nonlinear in its first argument. For subsequent exposition, we introduce
-	$\timeSpace$ to denote the set of real-valued functions acting on the time
+	$\timeSpace$ to denote the set of (sufficiently smooth) real-valued functions acting on the time
 	domain (i.e., $\timeSpace = \{f\,|\,f:[0,T]\rightarrow\RR{}\}$); the
 	state can be expressed equivalently as $\stateFOM \in \RR{\fomdim} \otimes
 	\timeSpace $.  We refer to the initial value problem defined in
@@ -390,18 +389,20 @@ Directly solving the FOM ODE~\eqref{eq:FOM} is computationally expensive if
 Projection-based ROMs generate approximate solutions to the FOM
 	ODE~\eqref{eq:FOM} by approximating the state in a low-dimensional trial
 	subspace. Two types of space--time trial subspaces are commonly used for
-	this purpose: 
+	this purpose:\footnote{For both spatial and space--time ROMs of dynamical systems, all trial subspaces are, strictly speaking, space--time subspaces.} 
 \begin{enumerate} 
 	\item \textit{Subspaces that reduce only the spatial dimension of the full-order
-		model (\spatialAcronym)}. These trial spaces are characterized by a \textit{spatial projection} process and are employed in classic model reduction approaches, e.g., Galerkin and LSPG. %These 
+		model (\spatialAcronym)}. These trial subspaces are characterized by a \textit{spatial projection} and are employed in classic model reduction approaches, e.g., Galerkin and LSPG. %These 
 %	trial subspaces are commonly used
 %		in model-reduction methods based on spatial projection followed by time
 %		integration (e.g., the Galerkin and LSPG approaches).
 	\item \textit{Subspaces that reduce both the spatial and temporal dimensions of the full-order
-		model (\spaceTimeAcronym)}. 
- These trial subspaces are commonly employed in
-		model-reduction methods based on space--time projection (e.g., space--time
-		LSPG).
+		model (\spaceTimeAcronym)}.
+These trial subspaces are characterized by a \textit{space--time} projection and are employed in space--time 
+model reduction approaches (e.g., space--time Galerkin~\cite{benner_st}, space--time LSPG~\cite{choi_stlspg}). 
+% These trial subspaces are commonly employed in
+%		model-reduction methods based on space--time projection (e.g., space--time
+%		LSPG).
 \end{enumerate}
  We now describe these two types of space--time trial subspaces and their
 	application to the Galerkin, LSPG, and space--time LSPG approaches. 
@@ -503,7 +504,7 @@ subspace $\trialspace$.
 %\begin{equation}\label{eq:g_truncation}
 %\frac{d \genstate}{dt} = \basisspace^T \velocity(\basisspace \genstate + \state_0,t; \param ), \qquad t \in [0,T],
 %\end{equation}
-\subsubsection{The Least-squares Petrov--Galerkin approach}
+\subsubsection{The least-squares Petrov--Galerkin approach}
 Despite its time-instantaneous residual-minimization optimality property 
 \eqref{eq:GalOptimal}, the Galerkin approach can yield inaccurate solutions,
 particularly if the velocity is not self-adjoint or
@@ -541,7 +542,7 @@ $\residLMSArg{n}$ denotes the FOM O$\Delta$E residual defined as
 \begin{align*}
 \residLMSArg{n} &: (\stateyDiscreteArgnt{n};\stateyDiscreteArgnt{n-1},\ldots,\stateyDiscreteArgnt{n-k^n}) \mapsto  \frac{1}{\Delta t} \sum_{j=0}^{k^n} \alpha^n_j \stateyDiscreteArgnt{n-j} -  \sum_{j=0}^{k^n} \beta^n_j \velocity(\stateyDiscreteArgnt{n-j},t^{n-j}),
 \\
-&: \RR{\fomdim} \otimes \RR{k^n + 1} \rightarrow \RR{\fomdim},
+&: \RR{\fomdim} \otimes \RR{k^n + 1} \rightarrow \RR{\fomdim}.
 \end{align*} 
 Here, $\alpha^n_j,\beta^n_j\in\RR{}$, $j=0,\ldots,k^n$ are coefficients
 that define the linear multistep method at the $n$th time instance.
@@ -595,16 +596,16 @@ trajectory
 	\stateFOMIC\otimes\onesFunction
 	\subseteq \RR{N} \otimes \timeSpace
 \end{equation}
-and $\stbasis\in\RR{N \times \stdim}\otimes \timeSpace$ with 
-$\stbasis:\timeDummy\mapsto\stbasis(\timeDummy)$ and $\stbasis(0) =
+%and $\stbasis\in\RR{N \times \stdim}\otimes \timeSpace$ with 
+and $\stbasis:\timeDummy\mapsto\stbasis(\timeDummy)$ with $\stbasis(0) =
 \boldsymbol 0$
-denotes the space--time trial basis.\footnote{For simplicity, we consider the case where the trial space is homogeneous on the boundary.} 
+denotes the space--time trial basis. 
 Thus, at any time instance $t\in[0,T]$, ROMs that employ the
 \spaceTimeAcronym\ trial subspace approximate the state as
 \begin{equation}\label{eq:stapprox1}
  \stateFOMArg{}{t} \approx \approxstateArg{}{t}  = \stbasisArg{}{t} \stgenstate + \stateFOMIC,
 \end{equation}
-where $\stgenstateArg{} \in \RR{\stdim}$ denote the space--time generalized coordinates. 
+where $\stgenstateArg{} \in \RR{\stdim}$ denotes the space--time generalized coordinates. 
 Critically, comparing the approximations arising from \spatialAcronym\ and
 \spaceTimeAcronym\ trial subspaces in Eqs.~\eqref{eq:affine_trialspace} and \eqref{eq:stapprox1}, respectively,
 highlights that the former approximation associates with time-dependent
@@ -629,7 +630,7 @@ We now outline one such method: space--time least-squares Petrov--Galerkin (ST-L
 While the space--time Galerkin method~\cite{benner_st} is another alternative, it does not
 associate with any residual minimization principle, and thus we do not discuss
 it further.
-\subsubsection{Space--time LSPG projection}  
+\subsubsection{The space--time LSPG approach}  
 Analogously to LSPG, space--time LSPG~\cite{choi_stlspg}
 minimizes the (time-discrete) FOM O$\Delta$E residual, but does so
 using the \spaceTimeAcronym\ subspace and simultaneously minimizes this
@@ -665,7 +666,7 @@ minimize the space--time FOM O$\Delta$E residual:
 \begin{equation}\label{eq:stlspg}
 	\stgenstate_\text{ST-LSPG} = \underset{ \stgenstatey\in\RR{\stdim} }{\text{arg\,min}}|| \lspgWeightingSTArg{\stgenstatey}  \genresidST_{\text{}}(\stgenstatey;\stateFOMIC) ||_2^2, 
 \end{equation}
-where $\lspgWeightingSTArg{\cdot} \in \RR{\stdim \times N N_t}$, with $\stdim
+where $\lspgWeightingSTArg{\cdot} \in \RR{n_{st} \times N N_t}$, with $\stdim
 \le n_{st} \le N N_t$, is a space--time weighting matrix that can be chosen,
 e.g., to enable hyper-reduction.
 
@@ -676,23 +677,23 @@ with an optimality property over the entire time domain \cite{choi_stlspg}.
 However, it is subject to several challenges. First, the computational cost of
 solving Eq.~\eqref{eq:stlspg} scales cubically with the number of space--time
 degrees of freedom $\stdim$. This cost is due to the fact that ST-LSPG yields 
-a dense systems that do not expose any natural mechanism for exploiting
+dense systems that do not expose any natural mechanism for exploiting
 the sequential nature of time evolution. Second, it is unclear how these
 methods can be employed for future state prediction, as the space--time trial
 basis $\stbasis$ must be defined over the entire time interval of interest
 $[0,T]$. Third, ST-LSPG is still strongly tied to the time discretization
 employed for the full-order model, as it minimizes the (time-discrete) FOM
-O$\Delta$E residual over all time instance.
+O$\Delta$E residual over all time instances.
   
 \subsection{Outstanding challenges}
 This work seeks to overcome the limitations of existing residual-minimizing
 model-reduction methods, and to provide a unifying framework from which
 exisiting methods can be assessed. Specifically, we look to overcome the
-complex dependence of LSPG projection on the time discretization,
-exponential time growth of the error bounds for Galerkin and LSPG projection,
+complex dependence of LSPG on the time discretization,
+exponential time growth of the error bounds for Galerkin and LSPG,
 the cubic dependence of the computational cost of ST-LSPG on the number of
-degrees of freedom, and the lack of ability for ST-LSPG to perform predictions
-in time. We now describe the proposed \methodNameLower\ framework for this
+degrees of freedom, and the lack of ability for ST-LSPG to perform prediction
+in time. We now describe the proposed \methodNameLower\ \approachKwd\ for this
 purpose. 
 %\end{comment}
 %\input{formulation_3}

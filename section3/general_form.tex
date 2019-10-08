@@ -1,7 +1,7 @@
-\section{Windowed least-squares framework}\label{sec:tclspg} 
+\section{Windowed least-squares approach}\label{sec:tclspg} 
 This section
 outlines the proposed \methodNameLower\ 
-(\methodAcronym) framework. In contrast to (1) the Galerkin approach, 
+(\methodAcronym) \approachKwd. In contrast to (1) the Galerkin approach, 
 which minimizes the (time-continuous) FOM ODE residual at a time instance, 
 (2) the LSPG approach, 
 which minimizes
@@ -65,10 +65,11 @@ the $n$th space--time trial subspace such that
 \begin{equation}
 \approxstate^n \in \stspace^n \subseteq \RR{N} \otimes \timeSpaceArg{n} , \qquad  n = 1,\ldots,\nslabs,
 \end{equation}
-where $\stspaceArg{n}$ is the space--time trial subspace over the $n$th window, $\timeSpaceArg{n}$ denotes the set of real-valued functions acting on
+where $\stspaceArg{n}$ is the space--time trial subspace over the $n$th window and $\timeSpaceArg{n}$ denotes the set of real-valued functions acting on
 $[\timeStartArg{n},\timeEndArg{n}]$ (i.e., $\timeSpaceArg{n} = \{f\,|\,f:[\timeStartArg{n},\timeEndArg{n}]\rightarrow\RR{}\}$)
-and
-$\approxstate^n \in\RR{\fomdim}\otimes\timeSpaceArg{n}$. For notational purposes, we additionally define the (spatial) trial subspaces at the start of each window as
+%and
+%$\approxstate^n \in\RR{\fomdim}\otimes\timeSpaceArg{n}$. 
+For notational purposes, we additionally define the (spatial) trial subspaces at the start of each window as
 $$\approxstateArg{n}{\timeStartArg{n}} \in \stspaceBoundStartArg{n} \subset \stspaceArg{n}, \qquad n=1,\ldots,\nslabs. 
 %, \qquad 
 %\approxstateArg{n}{\timeEndArg{n}} \in \stspaceBoundEndArg{n} \subset \stspaceArg{n}.
@@ -82,7 +83,7 @@ To outline \methodAcronym, we now define the objective functional over the $n$th
 %&\vcentcolon \RR{\fomdim} \times [\timeStartArg{n},\timeEndArg{n}] \rightarrow
 %\RR{}, \end{align}
 &\vcentcolon \RR{\fomdim}\otimes \timeSpaceArg{n}  \rightarrow
-\RR{}_+, 
+\RRplus, 
 \end{split}
 \end{equation}
 %\begin{align}\label{eq:obj} \mathcal{J}^n &\vcentcolon \state \mapsto
@@ -98,7 +99,7 @@ example.
 The \methodAcronym\ framework sequentially computes approximate solutions
 $\approxstateArgnt{n}\in\stspace^n$, $n=1,\ldots,\nslabs$, where 
 $\approxstateArgnt{n}$ is the solution to the
-minimization problems
+minimization problem
 \begin{equation}\label{eq:tclsrm}
 \begin{split}
       &\underset{\statey \in \stspace^n}{\text{minimize}} \; \mathcal{J}^n(\statey), \\
