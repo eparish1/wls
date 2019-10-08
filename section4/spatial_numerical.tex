@@ -329,7 +329,7 @@ enough value of $\rho$, the algorithm will converge.
 
 \begin{algorithm} \caption{\spatialAcronym\ trial subspace: algorithm for the FBSM over the $n$th window.} \label{alg:st_iter} 
 \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
-\Input{tolerance, $tol$; damping factor, $\rho$; growth factor, $\fbsmGrowth$; decay
+\Input{tolerance, $\epsilon$; damping factor, $\rho$; growth factor, $\fbsmGrowth$; decay
 factor, $\fbsmDecay$} 
 \Output{Stationary point, $\genstateArgnt{n}$ }
 \textbf{Online Steps:}\\ 
@@ -347,7 +347,7 @@ controller}\\
 %$\objectiveArg{n}({\genstate_1^n(t)})$
 %\Comment{Evaluate objective function}\\
 $i \leftarrow 1$ \Comment{Set counter}\\
-\While{$tol \le \int_{\timeStartArg{n}}^{\timeEndArg{n}} \norm{\genstate^n_{i}(t) - \genstate^n_{i-1}(t) }dt $}{
+\While{$\epsilon \le \int_{\timeStartArg{n}}^{\timeEndArg{n}} \norm{\genstate^n_{i}(t) - \genstate^n_{i-1}(t) }dt $}{
 \small{
 \begin{multline*}
 \adjointArgnt{n} \underset{\text{solve}}{\leftarrow} 
