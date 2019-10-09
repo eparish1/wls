@@ -116,14 +116,14 @@ Appendix~\ref{appendix:eulerlagrange} for the derivation) over the $n$th
 time window are given by, 
 \begin{equation}\label{eq:el1} 
 \begin{split}
-& \dIdYArg{n}(\genstateArg{n}{t},\genstateDotArg{n}{t},t) - \dIdVDotArg{n}(\genstateArg{n}{t},\genstateDotArg{n}{t}, t )  = \bz, \\ 
+& \dIdYArg{n}(\genstateArgnt{n},\genstateDotArgnt{n},t) - \dIdVDotArg{n}(\genstateArgnt{n},\genstateDotArgnt{n}, t )  = \bz, \\ 
 &\genstate^n(\timeStartArg{n})  = \begin{cases} 
 \spatialIC &
 n=2,\ldots,\nslabs, \\ 
 \genstateICOne & n=1,
 \end{cases}\\ 
 %&\dIdV (\genstateArg{n}{\timeEndArg{n}},\genstateDotArg{n}{\timeEndArg{n}},\timeEndArg{n}) = \bz.
-&\dIdVArg{n}(\genstateArg{n}{\timeEndArg{n}},\genstateDotArg{n}{\timeEndArg{n}},\timeEndArg{n})  = \bz.
+&\dIdVArg{n}(\genstateArgnt{n},\genstateDotArgnt{n},\timeEndArg{n})  = \bz.
 \end{split} 
 \end{equation}
 Evaluating the terms in system~\eqref{eq:el1} is an exercise in
