@@ -1,4 +1,4 @@
-\subsection{Cavity Flow}
+\subsection{Cavity flow}
 The next numerical example considers hyper-reduced ROMs of a viscous, compressible flow in a two-dimensional cavity. 
 The flow is described by the two-dimensional compressible Navier-Stokes equations,
 \begin{equation}\label{eq:compressible_ns}
@@ -31,7 +31,7 @@ Figure~\ref{fig:cav_fig} depicts the domain $\Omega$ and flow conditions. Free-s
 are used at the inlet, outlet, and top wall of the cavity. No-slip boundary conditions are enforced 
 on the bottom wall of the cavity. 
 
-\subsubsection{Description of FOM and Generation of Trial Space}
+\subsubsection{Description of FOM and generation of \spatialAcronym\ trial subspace}
 The full-order model comprises a discontinuous-Galerkin discretization. The discretization 
 is obtained by partitioning the domain into $100$ elements in the flow direction and $40$ elements 
 in the wall-normal direction. The solution is represented to third order over each element using tensor product polynomials of order $p=2$, 
@@ -70,19 +70,19 @@ Basis \# & Trial Basis Dimension ($K$) &  Energy Criterion & Sample Points ($n_S
 \end{centering}
 \end{table}
 
-\subsubsection{Description of Reduced-Order Models}
+\subsubsection{Description of reduced-order models}
 Hyper-reduced ROMs based on the Galerkin, collocated Least--Squares Petrov--Galerkin, and \methodAcronym\ approaches are 
 again considered. Details on the implementation of the methods is as follows:
 \begin{itemize}
-\item \textbf{Galerkin ROM with Collocation}: The Galerkin ROM with collocation is obtained through Galerkin projection of the FOM. Unless 
+\item \textit{Galerkin ROM with collocation}: The Galerkin ROM with collocation is obtained through Galerkin projection of the FOM. Unless 
 otherwise noted, the  Galerkin ROM is evolved in time with the Crank--Nicolson time scheme at a time step of $\Delta t =0.1$.
 
-\item \textbf{LSPG ROM with Collocation}: The LSPG ROM with collocation is built on top of the FOM discretization using the Crank--Nicolson scheme for temporal 
+\item \textit{LSPG ROM with collocation}: The LSPG ROM with collocation is built on top of the FOM discretization using the Crank--Nicolson scheme for temporal 
 discretization. Unless otherwise noted, the time step for the LSPG ROM is $\Delta t  = 0.1$. As in the previous example, 
 the Gauss--Newton method is used to solve the non-linear least-squares problem arising at each time instance. The Gauss--Newton 
 algorithm is deemed converged when the gradient norm is less than $1e-4$. All Jacobians are again computed via automatic differentiation.
  
-\item \textbf{\methodAcronymROMs\ with Collocation}: \methodAcronymROMs\ are solved via the direct method. The ROMs use the Crank--Nicolson time-discretization with a time-step size of 
+\item \textit{\methodAcronymROMs\ with collocation}: \methodAcronymROMs\ are solved via the direct method. The ROMs use the Crank--Nicolson time-discretization with a time-step size of 
 $\Delta t = 0.1$. The Gauss--Newton algorithm is deemed converged when the gradient norm is less than $1e-4$. All Jacobians are computed via automatic differentiation. Uniform quadrature 
 weights are used for evaluating the integral in~\eqref{eq:obj_gen_slab}. 
  
@@ -152,7 +152,7 @@ weights are used for evaluating the integral in~\eqref{eq:obj_gen_slab}.
 \end{figure}
 
 
-\subsubsection{Numerical Results}
+\subsubsection{Numerical results}
 We first assess the performance of \methodAcronymROMs\ with varying window sizes. To this end, we consider \methodAcronymROMs\ with uniform window 
 sizes of $\Delta T^n \equiv \Delta T = 0.2,0.5,1.0,$ and $2.0$, along with the Galerkin and LSPG ROMs. Results are first considered for basis \#1 as described in 
 Table~\ref{tab:rom_basis_details}. For all ROMs, we evolve 

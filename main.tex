@@ -774,7 +774,7 @@ $$\mathbf{S}(N_{\text{skip}}) \defeq \begin{bmatrix} \stateFOMDiscreteArg{0} - \
 \end{algorithm}
 
 
-\section{Selection of Sampling Points}
+\section{Selection of sampling points}
 To construct the sampling point matrix used for hyper-reduction in the second numerical experiment, we employ q-sampling~\cite{qdeim_drmac} and the sample 
 mesh concept~\cite{carlberg_gnat}. Algorithm~\ref{alg:qdeim} outlines the steps used in the second numerical experiment to compute the sampling points.
 
@@ -805,18 +805,18 @@ $$\mathbf{F}(N_{\text{skip}}) \defeq \begin{bmatrix} \velocity (\stateFOMDiscret
 
 
 
-\section{Derivation of the Euler--Lagrange Equations}\label{appendix:eulerlagrange}
-This section details the derivation of the Euler Lagrange equations. To this end, we consider the generic functional of the form,
+\section{Derivation of the Euler--Lagrange equations}\label{appendix:eulerlagrange}
+This section details the derivation of the Euler--Lagrange equations. To this end, we consider the generic functional of the form,
 \begin{equation}\label{eq:el_gen}
-\mathcal{J}: (\statey,\stateyDot) \mapsto  \int_a^b \integrand(\statey(t),\stateyDot(t),t)  dt,
+\mathcal{J}: (\statey,\stateyDot) \mapsto  \int_0^T \integrand(\statey(t),\stateyDot(t),t)  dt,
 \end{equation}
-where $\integrand: \RR{M} \times \RR{M} \times[a,b] \rightarrow  \RRplus$ (for arbitrary $M$) with $\integrand: (\stateyDiscrete,\stateyDotDiscrete,\timeDummy) \mapsto \integrand(\stateyDiscrete,\stateyDotDiscrete,\timeDummy)$. We now introduce the function $\statez: [a,b] \rightarrow \RR{M}$ that is implicitly defined as an extremum of~\eqref{eq:el_gen} subject to the boundary condition $\statez(a) = \statez_a$. 
-We introduce an arbitrary function $\variation : [a,b] \rightarrow \RR{M}$ with the boundary condition $\variationArg{a} = \bz$ and define a variation from the extremal by,
+where $\integrand: \RR{M} \otimes \timeSpaceArg{} \times \RR{M} \otimes \timeSpaceArg{} \times[0,T] \rightarrow  \RRplus$ (for arbitrary $M$) with $\integrand: (\stateyDiscrete,\stateyDotDiscrete,\timeDummy) \mapsto \integrand(\stateyDiscrete,\stateyDotDiscrete,\timeDummy)$. We now introduce the function $\statez: [0,T] \rightarrow \RR{M}$ that is implicitly defined as an extremum of~\eqref{eq:el_gen} subject to the boundary condition $\statez(0) = \statez_0$. 
+We introduce an arbitrary function $\variation : [0,T] \rightarrow \RR{M}$ with the boundary condition $\variationArg{0} = \bz$ and define a variation from the extremal by,
 \begin{align*}
 \statezBar  &: (\tau,\delta) \mapsto \statez(\tau) + \delta \variation(\tau),\\
 &: [a,b] \times \RR{} \rightarrow \RR{M}.
 \end{align*}
-We note that $\statezBar$ satisfies the same boundary condition $\statez$ since $\variationArg{a} = \bz$.
+We note that $\statezBar$ satisfies the same boundary condition $\statez$ since $\variationArg{0} = \bz$.
 We define a new function that is equivalent to~\eqref{eq:el_gen} evaluated at $\statezBar$ in the first argument and 
 $\statezDotBar \equiv d\statezBar / d\timeDummy$ in the second argument,
 $$
@@ -844,7 +844,7 @@ $$
 Using the chain rule,
 $$ 
 \frac{d}{d\delta} \big( \mathcal{J}_{\delta} \big)(\epsilon)= 
-\int_a^b \bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t\big) \frac{\partial \statezBar }{\partial \delta}(t,\epsilon)  + \frac{\partial \integrand}{\partial \stateyDotDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \frac{\partial \statezDotBar}{\partial \delta} (t,\epsilon)\bigg]dt . $$
+\int_0^T \bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t\big) \frac{\partial \statezBar }{\partial \delta}(t,\epsilon)  + \frac{\partial \integrand}{\partial \stateyDotDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \frac{\partial \statezDotBar}{\partial \delta} (t,\epsilon)\bigg]dt . $$
 %$$\int_a^b \bigg[ \frac{\partial \integrand  }{\partial \statezBar } \frac{\partial \statezBar }{\partial \epsilon}\big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) \big)  + \frac{\partial \integrand}{\partial \statezDotBar }\frac{\partial \statezDotBar}{\partial \epsilon} \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) \big)\bigg]dt = 0. $$
 %Setting $\epsilon = 0$,
 %$$\int_a^b \bigg[ \frac{\partial \integrand  }{\partial \statezBar } \frac{\partial \statezBar }{\partial \epsilon}\big(\statezBar(t,0),\statezDotBar(t,0) \big)  + \frac{\partial \integrand}{\partial \statezDotBar }\frac{\partial \statezDotBar}{\partial \epsilon} \big(\statezBar(t,0),\statezDotBar(t,0) \big)\bigg]dt = 0. $$
@@ -855,27 +855,27 @@ we have
 $$
 %\int_a^b \frac{d}{d\epsilon}\bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t \big) \bigg] dt 
 \frac{d}{d\delta} \big( \mathcal{J}_{\delta} \big)(\epsilon)
-= \int_a^b \bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \variation(t)  + \frac{\partial \integrand}{\partial \stateyDotDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \variationDot(t) \bigg]dt. $$
+= \int_0^T \bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \variation(t)  + \frac{\partial \integrand}{\partial \stateyDotDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \variationDot(t) \bigg]dt. $$
 %$$\int_a^b \bigg[\frac{\partial \integrand  }{\partial \overline{\genstate}} \variation + \frac{\partial \integrand}{\partial {\overline{\genstateDot}}}\variationDot \bigg]_{\epsilon = 0}dt = 0.$$
 We integrate the second term by parts,
 \begin{multline*}
 \frac{d}{d\delta} \big( \mathcal{J}_{\delta} \big)(\epsilon)
 %\int_a^b \frac{d}{d\epsilon}\bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t \big) \bigg] dt 
-=  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \bigg) \variation(t) \bigg]dt + \\ \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(b,\epsilon),\statezDotBar(b,\epsilon) ,b \big) \variation(b)  - \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(a,\epsilon),\statezDotBar(a,\epsilon) ,a\big) \variation(a) .
+=  \int_0^T  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \bigg) \variation(t) \bigg]dt + \\ \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(T,\epsilon),\statezDotBar(T,\epsilon) ,T \big) \variation(T)  - \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(0,\epsilon),\statezDotBar(0,\epsilon) ,0\big) \variation(0) .
 \end{multline*}
-Noting that $\variationArg{a} = \bz$,
+Noting that $\variationArg{0} = \bz$,
 \begin{multline*}
 %\int_a^b \frac{d}{d\epsilon}\bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon),t \big) \bigg] dt 
 \frac{d}{d\delta} \big( \mathcal{J}_{\delta} \big)(\epsilon)
-=  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) , t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \bigg) \variation(t) \bigg]dt + \\ \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(b,\epsilon),\statezDotBar(b,\epsilon) ,b \big) \variation(b) . 
+=  \int_0^T  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) , t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \bigg) \variation(t) \bigg]dt + \\ \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(T,\epsilon),\statezDotBar(T,\epsilon) ,T \big) \variation(T) . 
 \end{multline*}
 Setting equal to zero to find the stationary points,
 $$
-  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \bigg) \variation(t) \bigg]dt + \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(b,\epsilon),\statezDotBar(b;\epsilon),b \big) \variation(b)  = 0. 
+  \int_0^T  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \bigg) \variation(t) \bigg]dt + \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(T,\epsilon),\statezDotBar(T,\epsilon),T \big) \variation(T)  = 0. 
 $$
 By definition, we know $\statez(\cdot) \equiv \statezBar(\cdot;0)$ is a stationary point. Thus, setting $\epsilon = 0$,
  $$
-  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statez(t),\statezDot(t),t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statez(t),\statezDot(t),t \big) \bigg) \variation(t) \bigg]dt + \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statez(b),\statezDot(b) ,b\big) \variation(b)  = 0. 
+  \int_0^T  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statez(t),\statezDot(t),t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statez(t),\statezDot(t),t \big) \bigg) \variation(t) \bigg]dt + \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statez(T),\statezDot(T) ,T\big) \variation(T)  = 0. 
 $$
 %$$  \int_a^b \bigg[\frac{\partial \integrand  }{\partial \overline{\genstate}} \variation  - \frac{d}{dt}\frac{\partial \integrand}{\partial {\overline{\genstateDot}}}\variation \bigg]_{\epsilon = 0}dt + \bigg[\bigg[ \frac{\partial \integrand}{\partial {\overline{\genstateDot}}} \variation \bigg]_a^b\bigg]_{\epsilon = 0} = 0. $$
 %At $\epsilon = 0$ we have $\overline{\genstate} = \genstate$ and, as $\variationArg{a} = 0$, we obtain,
@@ -885,7 +885,7 @@ As $\variation$ is an arbitrary function, in order for the equality to hold we m
 %\bigg[ \frac{\partial \integrand  }{\partial \genstate} \bigg]^T  - \bigg[\frac{\partial \integrand}{\partial {\genstateDot}}\bigg]^T = \boldsymbol 0, 
 %\end{equation}
 \begin{equation}\label{eq:euler_lagrange_appendix}
-\bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statez(t),\statezDot(t) ,t\big) \bigg]^T - \bigg[ \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statez(t),\statezDot(t) \big) \bigg) \bigg]^T = \bz  
+\bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statez(t),\statezDot(t) ,t\big) \bigg]^T - \bigg[ \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statez(t),\statezDot(t),t \big) \bigg) \bigg]^T = \bz  
 \end{equation}
 subject to,
 $$
@@ -894,9 +894,9 @@ $$
 $$
 Equation~\eqref{eq:euler_lagrange_appendix} is known as the Euler--Lagrange equation. It states that, if $\statez$ is an extremal of $\mathcal{J}$, then it must satisfy~\eqref{eq:euler_lagrange_appendix}. It is emphasized that~\eqref{eq:euler_lagrange_appendix} is a necessary condition on $\statez$ to make $\mathcal{J}$ stationary, but it is not a sufficient condition. It is additionally noted that~\eqref{eq:euler_lagrange_appendix} provides a stationary point of $\mathcal{J}$, but the resulting stationary point can be either a maximum or a minimum.
 
-\section{Evaluation of gradients in the Euler--Lagrange Equations for \methodAcronym\ with \spatialAcronym\ trial subspaces}\label{appendix:vector_calc}
+\section{Evaluation of gradients in the Euler--Lagrange equations for \methodAcronym\ with \spatialAcronym\ trial subspaces}\label{appendix:vector_calc}
 We now derive the specific form of the Euler--Lagrange equations for the \methodAcronym\ formulation with \spatialAcronym\ trial subspaces. Without loss of generality, we present the derivation for a single window $t \in [0,T]$ with a constant basis $\basisspace$ and weighting matrix $\stweightingMat$.  
-To obtain the specific form of the Euler--Lagrange equations for the \methodAcronym\ formulation, we need to evaluate the gradients in~\eqref{eq:el1} for the integrand,
+To obtain the specific form of the Euler--Lagrange equations for the \methodAcronym\ formulation, we need to evaluate the gradients in~\eqref{eq:euler_lagrange_appendix} for the integrand,
 \begin{align*}\label{eq:integrand_apx}
  \minintegrand & \vcentcolon
 (\genstateyDiscreteArgnt{}, \genstateyDiscreteDotArgnt{} ,\timeDummy) \mapsto \frac{1}{2} \big[
@@ -934,8 +934,10 @@ where it is noted that $\mathcal{I}_1$ only depends on $\genstateyDiscreteDot$. 
 &= - \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{} \frac{\partial}{\partial \genstateyDiscreteArgnt{}} \bigg( \big[ \velocity(\veloargsromy) \big]  \bigg)\\
  &= -\big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{}   \frac{\partial \velocity}{\partial \stateyDiscrete}\frac{\partial \stateyDiscrete}{\partial \genstateyDiscrete} \\
 & = - \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{}  \frac{\partial \velocity}{\partial \stateyDiscrete}\basisspace \\
-&= -[\genstateyDiscreteDotArgnt{}]^T \basisspace^T \stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete}  \basisspace.
+&= -[\genstateyDiscreteDotArgnt{}]^T \basisspace^T \stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete}  \basisspace,
 \end{align*}
+where we have suppressed the arguments of the Jacobian for simplicity; e.g., formally 
+$$\frac{\partial \velocity}{\partial \stateyDiscrete} : (\statewDiscrete,\timeDummy) \mapsto \frac{ \partial \velocity }{ \partial \stateyDiscrete} (\statewDiscrete, \timeDummy).$$ 
 For $\minintegrand_3$,
 \begin{align}\label{eq:i3sol}
 \frac{\partial  \minintegrand_3}{\partial \genstateyDiscrete}  &= \frac{1}{2} \frac{\partial }{\partial \genstateyDiscrete} \bigg( \big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{}\big[ \velocity(\veloargsromy) \big] \bigg) \\  
@@ -966,262 +968,267 @@ Finally, for the last term,
 \end{align*}
 where it is noted that $\mathcal{I}_3$ only depends on $\genstateyDiscrete$. We thus have,
 $$\frac{\partial \minintegrand}{\partial \genstateyDiscreteDot } =   [\genstateyDiscreteDotArgnt{}]^T \basisspace^T \stweightingMatArg{} \basisspace -  [\velocity(\veloargsromy ) ]^T \stweightingMatArg{} \basisspace.$$
-\EP{Here}
-Combining all terms, the Euler--Lagrange equation reads,
+Combining all terms and evaluating at $(\genstateArg{}{t},\genstateDotArg{}{t},t)$,
 \begin{multline*}
- \frac{\partial \minintegrand}{\partial \genstateyDiscrete}(\genstateArg{n}{t},\genstateDotArg{n}{t},t)  - \frac{d}{dt} \bigg[ \frac{\partial \minintegrand}{\partial \genstateyDiscreteDotArgnt{}} (\genstateArg{n}{t},\genstateDotArg{n}{t},t) \bigg] =  - \big[ \basisspace \genstateDotArg{n}{t}  \big]^T \stweightingMatArg{n} \big[  \frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn) \big] \basisspace \\ + [\velocity(\veloargsromn) ]^T \stweightingMatArg{n} \big[ \frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn) \big] \basisspace - \frac{d}{dt} \bigg[  [\genstateDotArg{n}{t} ]^T  \basisspace^T \stweightingMatArg{n} \basisspace - [\velocity(\veloargsromn) ]^T \stweightingMatArg{n} \basisspace \bigg]  = \boldsymbol 0.
+ \frac{\partial \minintegrand}{\partial \genstateyDiscrete}(\genstateArg{}{t},\genstateDotArg{}{t},t)  - \frac{d}{dt} \bigg[ \frac{\partial \minintegrand}{\partial \genstateyDiscreteDotArgnt{}} (\genstateArg{}{t},\genstateDotArg{}{t},t) \bigg] =  - \big[ \basisspace \genstateDotArg{}{t}  \big]^T \stweightingMatArg{} \big[  \frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsrom) \big] \basisspace + \\  [\velocity(\veloargsrom) ]^T \stweightingMatArg{} \big[ \frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsrom) \big] \basisspace - \frac{d}{dt} \bigg[  [\genstateDotArg{}{t} ]^T  \basisspace^T \stweightingMatArg{} \basisspace - [\velocity(\veloargsrom) ]^T \stweightingMatArg{} \basisspace \bigg]  = \boldsymbol 0.
 \end{multline*}
 To put this in a more recognizable form, we can pull out the common factor in the first two terms,
-$$ - \bigg( \big[ \basisspace \genstateDotArg{n}{t} \big]^T  -  [\velocity(\veloargsromn)] ^T \bigg) \stweightingMatArg{n}
- \frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \basisspace - \frac{d}{dt} \bigg[  [\genstateDotArg{n}{t}]^T \basisspace^T \stweightingMatArg{n} \basisspace -  
-[\velocity(\veloargsromn) ]^T \stweightingMatArg{n} \basisspace  \bigg] = \boldsymbol 0.$$
+\begin{multline*}
+- \bigg( \big[ \basisspace \genstateDotArg{}{t} \big]^T  -  [\velocity(\veloargsrom)] ^T \bigg) \stweightingMatArg{}
+ \frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsrom) \basisspace -  \\
+\frac{d}{dt} \bigg[  [\genstateDotArg{}{t}]^T \basisspace^T \stweightingMatArg{} \basisspace -  
+[\velocity(\veloargsrom) ]^T \stweightingMatArg{} \basisspace  \bigg] = \boldsymbol 0.
+\end{multline*}
 Taking the transpose to put into the common column major format,
-$$ -  \basisspace^T \big[ \frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn)  \big]^T \stweightingMatArg{n} \bigg( \big[ \basisspace \genstateDotArg{n}{t}\big]  -  \velocity(\veloargsromn)  \bigg) -  \frac{d}{dt} \bigg[  \basisspace^T \stweightingMatArg{n} \basisspace \genstateDotArg{n}{t}  - \basisspace^T \stweightingMatArg{n} \velocity(\veloargsromn)   \bigg] = \bz.
+$$ -  \basisspace^T \big[ \frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsrom)  \big]^T \stweightingMatArg{} \bigg( \big[ \basisspace \genstateDotArg{}{t}\big]  -  \velocity(\veloargsrom)  \bigg) -  \frac{d}{dt} \bigg[  \basisspace^T \stweightingMatArg{} \basisspace \genstateDotArg{}{t}  - \basisspace^T \stweightingMatArg{} \velocity(\veloargsrom)   \bigg] = \bz.
  $$
 We now factor the second term,
-$$ -  \basisspace^T \big[ \frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn)  \big]^T \stweightingMatArg{n} \bigg(  \basisspace \genstateDotArg{n}{t}  -  \velocity(\veloargsromn) \bigg) -  \basisspace^T \stweightingMatArg{n} \frac{d}{dt} \bigg[   \basisspace \genstateDotArg{n}{t}  - \velocity(\veloargsromn) \bigg] = \bz. $$
-Gathering terms and multiplying by negative one, the final form of the Euler Lagrange equations are obtained,
-$$ \bigg[\basisspace^T \big[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \big]^T \stweightingMatArg{n} + \basisspace^T \stweightingMatArg{n} \frac{d}{dt} \bigg] \bigg(  \basisspace \genstateDotArg{n}{t} -  \velocity(\veloargsromn) \bigg) = \bz. $$
-This is the \methodAcronym-ROM. Note that this is a second order equation and can be written as two separate first order equations. Equation~\ref{eq:clspg_2ord} can be written equivalently as two first order equations by introducing an auxiliary ``costate" variable. Defining the costate as,
+$$ -  \basisspace^T \big[ \frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsrom)  \big]^T \stweightingMatArg{ } \bigg(  \basisspace \genstateDotArg{ }{t}  -  \velocity(\veloargsrom) \bigg) -  \basisspace^T \stweightingMatArg{ } \frac{d}{dt} \bigg[   \basisspace \genstateDotArg{}{t}  - \velocity(\veloargsrom) \bigg] = \bz. $$
+Gathering terms and multiplying by negative one, the final form of the Euler--Lagrange equations are obtained,
+\begin{equation}\label{eq:el_secondorder}
+ \bigg[\basisspace^T \big[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsrom) \big]^T \stweightingMatArg{} + \basisspace^T \stweightingMatArg{} \frac{d}{dt} \bigg] \bigg(  \basisspace \genstateDotArg{}{t} -  \velocity(\veloargsrom) \bigg) = \bz.
+\end{equation} 
+This is the \methodAcronym-ROM. Note that this is a second order equation and can be written as two separate first order equations. Defining the ``costate" as,
 \begin{equation*}
 %\adjoint^n(t) \defeq \basisspace^T \stweightingMatArg{n} \basisspace \genstateDotArg{n}{t}  -  \basisspace^T \stweightingMatArg{n} \velocity(\veloargsromn) ,
-\adjoint^n(t) \defeq  \genstateDotArg{n}{t}  -  \mass^{-1} \basisspace^T \stweightingMatArg{n} \velocity(\veloargsromn) ,
+\adjointArg{}{\timeDummy}  : \timeDummy \mapsto \genstateDotArg{}{\timeDummy}  -  \mass^{-1} \basisspace^T \stweightingMatArg{} \velocity(\basisspace \genstateArg{}{t} + \stateIntercept, \timeDummy) ,
 \end{equation*}
-we can manipulate Eq.~\ref{eq:clspg_2ord} as follows: %First, to enable hyper-reduction later on, we leverage the fact that $\stweightingMat^2 = \stweightingMat$,
+we can manipulate Eq.~\eqref{eq:el_secondorder} as follows: %First, to enable hyper-reduction later on, we leverage the fact that $\stweightingMat^2 = \stweightingMat$,
 %$$
 % \bigg[\basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn)\bigg]^T \stweightingMat^n \stweightingMat^n + \basisspace^T \stweightingMat^n \frac{d}{dt} \bigg] \bigg(  \basisspace \dot{\genstate}^n   -  \velocity(\veloargsromn) \bigg) = \bz.
 %$$
 First, we add and subtract the first term multiplied by $\basisspace [\massArgnt{n}]^{-1}\basisspace^T \stweightingMat$, 
-$$
- \bigg[\basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \bigg]^T \stweightingMatArg{n} \bigg( \mathbf{I} - \basisspace [\massArgnt{n}]^{-1} \basisspace^T\stweightingMatArg{n} + \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \bigg)  + \basisspace^T \stweightingMatArg{n}  \frac{d}{dt} \bigg] \bigg(  \basisspace \dot{\genstate}^n   -  \velocity(\veloargsromn) \bigg) = \bz.
-$$
-Pulling out the term multiplied by the positive portion of $\basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}$,
 \begin{multline*} 
-\bigg[\basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} ( \veloargsromn) \bigg]^T \stweightingMatArg{n}\bigg( \mathbf{I} - \basisspace [\massArgnt{n}]^{-1}  \basisspace^T  \stweightingMatArg{n} \bigg)  + \\ \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn) \bigg]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}  \basisspace^T \stweightingMatArg{n} +   \basisspace^T \stweightingMatArg{n} \frac{d}{dt} \bigg] \bigg(  \basisspace \genstateDotArg{n}{t}   -  \velocity(\veloargsromn) \bigg) = \bz.
+\bigg[\basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsrom) \bigg]^T \stweightingMatArg{} \bigg( \mathbf{I} - \basisspace [\massArgnt{}]^{-1} \basisspace^T\stweightingMatArg{} + \basisspace [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{} \bigg)  + \basisspace^T \stweightingMatArg{}  \frac{d}{dt} \bigg] \\ 
+\bigg(  \basisspace \genstateDotArg{}{t}   -  \velocity(\veloargsrom) \bigg) = \bz.
+\end{multline*}
+Pulling out the term multiplied by the positive portion of $\basisspace [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{}$,
+\begin{multline*} 
+\bigg[\basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} ( \veloargsrom) \bigg]^T \stweightingMatArg{}\bigg( \mathbf{I} - \basisspace [\massArgnt{}]^{-1}  \basisspace^T  \stweightingMatArg{} \bigg)  + \\ \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsrom) \bigg]^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1}  \basisspace^T \stweightingMatArg{} +   \basisspace^T \stweightingMatArg{} \frac{d}{dt} \bigg] \bigg(  \basisspace \genstateDotArg{}{t}   -  \velocity(\veloargsrom) \bigg) = \bz.
 \end{multline*}
 Splitting into two separate terms, 
 \begin{multline*}
-\basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \bigg]^T \stweightingMatArg{n}\bigg( \mathbf{I} - \basisspace [\massArgnt{n}]^{-1}  \basisspace^T \stweightingMatArg{n} \bigg)  \bigg(  \basisspace \genstateDotArg{n}{t}   -  \velocity(\veloargsromn) \bigg)  + \\  
-\bigg[ \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \bigg]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} +   \basisspace^T \stweightingMatArg{n} \frac{d}{dt} \bigg] \bigg(  \basisspace \genstateDotArg{n}{t}  -  \velocity(\veloargsromn) \bigg) = \bz.
+\basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsrom) \bigg]^T \stweightingMatArg{}\bigg( \mathbf{I} - \basisspace [\massArgnt{}]^{-1}  \basisspace^T \stweightingMatArg{} \bigg)  \bigg(  \basisspace \genstateDotArg{}{t}   -  \velocity(\veloargsrom) \bigg)  + \\  
+\bigg[ \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsrom) \bigg]^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{} +   \basisspace^T \stweightingMatArg{} \frac{d}{dt} \bigg] \bigg(  \basisspace \genstateDotArg{}{t}  -  \velocity(\veloargsrom) \bigg) = \bz.
 \end{multline*}
-Pulling $\mass^{-1} \basisspace^T \stweightingMatArg{n}$ inside the parenthesis on the second term,
+Pulling $\mass^{-1} \basisspace^T \stweightingMatArg{}$ inside the parenthesis on the second term,
 \begin{multline*}
-\basisspace^T \bigg[\frac{\partial \velocity}{\partial \state^n}(\veloargsromn) \bigg]^T \stweightingMatArg{n}\bigg( \mathbf{I} - \basisspace[\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \bigg)  \bigg(  \basisspace \genstateDotArg{n}{t}   -  \velocity(\veloargsromn) \bigg)  + \\  
-\bigg[ \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \bigg]^T \stweightingMatArg{n} \basisspace  +   \mass \frac{d}{dt} \bigg] \bigg( \genstateDotArg{n}{t}  - \mass^{-1} \basisspace^T \stweightingMatArg{n}  \velocity(\veloargsromn) \bigg) = \bz.
+\basisspace^T \bigg[\frac{\partial \velocity}{\partial \state^n}(\veloargsrom) \bigg]^T \stweightingMatArg{}\bigg( \mathbf{I} - \basisspace[\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{} \bigg)  \bigg(  \basisspace \genstateDotArg{}{t}   -  \velocity(\veloargsrom) \bigg)  + \\  
+\bigg[ \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsrom) \bigg]^T \stweightingMatArg{} \basisspace  +   \mass \frac{d}{dt} \bigg] \bigg( \genstateDotArg{}{t}  - \mass^{-1} \basisspace^T \stweightingMatArg{}  \velocity(\veloargsrom) \bigg) = \bz.
 \end{multline*}
-By definition, the term inside the parenthesis of the second term is $\adjointArg{n}{t}$,
+By definition, the term inside the parenthesis of the second term is $\adjointArg{}{t}$,
 \begin{multline*}
-\basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \bigg]^T \stweightingMatArg{n}\bigg( \mathbf{I} - \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \bigg)  \bigg(  \basisspace \genstateDotArg{n}{t}    -  \velocity(\veloargsromn) \bigg)  +   \\ \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \bigg]^T \stweightingMatArg{n} \basisspace \adjointArg{n}{t}  +  \massArgnt{n} \frac{d}{dt} \adjointArg{n}{t}= \bz.
+\basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsrom) \bigg]^T \stweightingMatArg{}\bigg( \mathbf{I} - \basisspace [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{} \bigg)  \bigg(  \basisspace \genstateDotArg{}{t}    -  \velocity(\veloargsrom) \bigg)  +   \\ \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsrom) \bigg]^T \stweightingMatArg{} \basisspace \adjointArg{}{t}  +  \massArgnt{} \frac{d}{dt} \adjointArg{}{t}= \bz.
 \end{multline*}
 Re-arranging,
 \begin{multline*}
-\mass \frac{d }{dt}\adjointArg{n}{t} + \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} ( \veloargsromn ) \bigg]^T \stweightingMatArg{n} \basisspace  \adjointArg{n}{t}  \\
-= - \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn)\bigg]^T \stweightingMatArg{n}\bigg( \mathbf{I} - \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \bigg)  \bigg(  \basisspace \genstateDotArg{n}{t}   -  \velocity(\veloargsromn) \bigg).
+\mass \frac{d }{dt}\adjointArg{}{t} + \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} ( \veloargsrom ) \bigg]^T \stweightingMatArg{} \basisspace  \adjointArg{}{t}  \\
+= - \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsrom)\bigg]^T \stweightingMatArg{}\bigg( \mathbf{I} - \basisspace [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{} \bigg)  \bigg(  \basisspace \genstateDotArg{}{t}   -  \velocity(\veloargsrom) \bigg).
 \end{multline*}
 We thus get the splitting,
 %Eq.~\ref{eq:clspg_2ord} can be split as,
 %\begin{equation}
 \begin{align*}\label{eq:lspg_continuous_appendix}
-& \mass \frac{d}{dt}\genstateArg{n}{t}  -  \basisspace^T \stweightingMatArg{n} \velocity(\veloargsromn) =  \mass \adjointArg{n}{t},\\
-&\mass \frac{d}{dt} \adjointArg{n}{t}  + \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn) \bigg]^T \stweightingMatArg{n} \basisspace \adjointArg{n}{t} = \\
-& -\basisspace^T \big[ \frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \big] ^T \stweightingMatArg{n}  \bigg( \mathbf{I} -   \basisspace [\massArgnt{n}]^{-1} \basisspace^T   \stweightingMatArg{n} \bigg)\bigg( \basisspace \genstateDotArg{n}{t}   -   \velocity(\veloargsromn) \bigg) . 
+& \mass \frac{d}{dt}\genstateArg{}{t}  -  \basisspace^T \stweightingMatArg{} \velocity(\veloargsrom) =  \mass \adjointArg{}{t},\\
+&\mass \frac{d}{dt} \adjointArg{}{t}  + \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsrom) \bigg]^T \stweightingMatArg{} \basisspace \adjointArg{}{t} = \\
+& -\basisspace^T \big[ \frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsrom) \big] ^T \stweightingMatArg{}  \bigg( \mathbf{I} -   \basisspace [\massArgnt{}]^{-1} \basisspace^T   \stweightingMatArg{} \bigg)\bigg( \basisspace \genstateDotArg{}{t}   -   \velocity(\veloargsrom) \bigg) . 
 \end{align*}
-\section{Evaluation of Gradients for Optimal Control Formulation}\label{appendix:optimal_control}
+\section{Evaluation of gradients for optimal control formulation}\label{appendix:optimal_control}
 When formulated as an optimal control problem of Lagrange type, the gradients of the Hamiltonian with respect to the state, controller, and costate 
 need to be evaluated. This section details this evaluation.
 
 The Pontryagin Maximum Principle leverages the following Hamiltonian,
 \begin{align*}
-\hamiltonian^n \; &: \;  (\genstateyDiscreteArgnt{},\adjointDiscreteDumArgnt{},\controllerDiscreteDumArgnt{},t) \mapsto 
- \adjointDiscreteDumArgnt{T} \bigg[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\veloargsromy) + [\massArgnt{n}]^{-1}\controllerDiscreteDumArgnt{} \bigg] +  \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},t) \\
+\hamiltonian^n \; &: \;  (\genstateyDiscreteArgnt{},\adjointDiscreteDumArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \mapsto 
+ \adjointDiscreteDumArgnt{T} \bigg[  [\massArgnt{}]^{-1}\basisspace^T \stweightingMatArg{}\velocity(\veloargsromy) + [\massArgnt{}]^{-1}\controllerDiscreteDumArgnt{} \bigg] +  \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \\
 &: \; \RR{\romdim} \times \RR{\romdim} \times \RR{\romdim} \times [0,T] \rightarrow \RR{},
 \end{align*} 
 where,
 \begin{align*}
- \objectiveControlArg{} &:  (\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},t)
-\mapsto \frac{1}{2} \bigg[ \basisspace \bigg(  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n}  \velocity(\veloargsromy) + [\massArgnt{n}]^{-1}\controllerDiscreteDumArgnt{} \bigg) -
+ \objectiveControlArg{} &:  (\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy)
+\mapsto \frac{1}{2} \bigg[ \basisspace \bigg(  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{}  \velocity(\veloargsromy) + [\massArgnt{}]^{-1}\controllerDiscreteDumArgnt{} \bigg) -
 \velocity(\veloargsromy) \bigg]^T
-\stweightingMatArg{n}  \\ & \hspace{1.5 in}\bigg[ \basisspace \bigg(
-[\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\veloargsromy) + [\massArgnt{n}]^{-1}\controllerDiscreteDumArgnt{}
+\stweightingMatArg{}  \\ & \hspace{1.5 in}\bigg[ \basisspace \bigg(
+[\massArgnt{}]^{-1}\basisspace^T \stweightingMatArg{}\velocity(\veloargsromy) + [\massArgnt{}]^{-1}\controllerDiscreteDumArgnt{}
 \bigg) - \velocity( \veloargsromy ) \bigg]
 , \nonumber \\ & : \RR{\romdim} \times \RR{\romdim} \times [0,T] \rightarrow \RR{}.
 \end{align*} 
 As described in Section~\ref{sec:optimal_control}, to derive the stationary conditions of the \methodAcronym\ objective function, we require evaluating the following gradients,
-$ \frac{\partial \hamiltonianArg{n}}{\partial \adjointDiscreteDumArgnt{}{}}, \;   \frac{\partial \hamiltonianArg{n}}{\partial \genstateyDiscreteArgnt{}{}}$, and $\frac{\partial \hamiltonianArg{n}}{\partial \controllerDiscreteDumArgnt{}{}}.$  Starting with $\frac{\partial \hamiltonianArg{n}}{\partial \adjointDiscreteDumArgnt{}{}}$, we have,
+$ \frac{\partial \hamiltonianArg{}}{\partial \adjointDiscreteDumArgnt{}{}}, \;   \frac{\partial \hamiltonianArg{}}{\partial \genstateyDiscreteArgnt{}{}}$, and $\frac{\partial \hamiltonianArg{}}{\partial \controllerDiscreteDumArgnt{}{}}.$  Starting with $\frac{\partial \hamiltonianArg{}}{\partial \adjointDiscreteDumArgnt{}{}}$, we have,
 $$
-\bigg[\frac{\partial \hamiltonianArg{n}}{\partial \adjointDiscreteDumArgnt{}{}}\bigg]^T = [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\veloargsromy) + [\massArgnt{n}]^{-1}\controllerDiscreteDumArgnt{} .
+\bigg[\frac{\partial \hamiltonianArg{}}{\partial \adjointDiscreteDumArgnt{}{}}\bigg]^T = [\massArgnt{}]^{-1}\basisspace^T \stweightingMatArg{}\velocity(\veloargsromy) + [\massArgnt{}]^{-1}\controllerDiscreteDumArgnt{} .
 $$
-Next, we address $ \frac{\partial \hamiltonianArg{n}}{\partial \genstateyArgnt{}{}}$. 
+Next, we address $ \frac{\partial \hamiltonianArg{}}{\partial \genstateyArgnt{}{}}$. 
 \begin{align*}
-  \frac{\partial \hamiltonianArg{n}}{\partial \genstateyDiscreteArgnt{}{}} &= \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}} \bigg[  \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\veloargsromy) + [\massArgnt{n}]^{-1}\controllerDiscreteDumArgnt{} \big] +  \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \bigg] \\
- &= \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}} \bigg[  \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\veloargsromy
-) + [\massArgnt{n}]^{-1}\controllerDiscreteDumArgnt{} \big] \bigg]+  \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \bigg] \\
- &=   \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}  \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}} \bigg( \velocity(\veloargsromy)\bigg) \big] +  \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \bigg] \\
- &=   \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}  \frac{\partial \velocity}{\partial \stateyDiscrete} \frac{\partial \stateyDiscreteArgnt{}{}}{\partial  \genstateyDiscreteArgnt{}{} } \big] +  \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \bigg] \\
- &=   \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}  \frac{\partial \velocity}{\partial \stateyDiscrete}\basisspace  \big] +  \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \bigg]. 
+  \frac{\partial \hamiltonianArg{}}{\partial \genstateyDiscreteArgnt{}{}} &= \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}} \bigg[  \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{}]^{-1}\basisspace^T \stweightingMatArg{}\velocity(\veloargsromy) + [\massArgnt{}]^{-1}\controllerDiscreteDumArgnt{} \big] +  \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \bigg] \\
+ &= \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}} \bigg[  \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{}]^{-1}\basisspace^T \stweightingMatArg{}\velocity(\veloargsromy
+) + [\massArgnt{}]^{-1}\controllerDiscreteDumArgnt{} \big] \bigg]+  \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \bigg] \\
+ &=   \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{}]^{-1}\basisspace^T \stweightingMatArg{}  \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}} \bigg( \velocity(\veloargsromy)\bigg) \big] +  \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \bigg] \\
+ &=   \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{}]^{-1}\basisspace^T \stweightingMatArg{}  \frac{\partial \velocity}{\partial \stateyDiscrete} \frac{\partial \stateyDiscreteArgnt{}{}}{\partial  \genstateyDiscreteArgnt{}{} } \big] +  \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \bigg] \\
+ &=   \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{}]^{-1}\basisspace^T \stweightingMatArg{}  \frac{\partial \velocity}{\partial \stateyDiscrete}\basisspace  \big] +  \frac{\partial}{\partial \genstateyDiscreteArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \bigg]. 
 \end{align*}
-To evaluate $\frac{\partial}{\partial \genstateyDiscreteArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \bigg]$, we leverage the previous result~\eqref{eq:int_expand} and insert $\genstateyDiscreteDotArgnt{} =  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n}  \velocity(\veloargsromy) + [\massArgnt{n}]^{-1}\controllerDiscreteDumArg{}{t} .$ This leads to the expression for the expanded Lagrangian,
+To evaluate $\frac{\partial}{\partial \genstateyDiscreteArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \bigg]$, we leverage the previous result~\eqref{eq:int_expand} and insert $\genstateyDiscreteDotArgnt{} =  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{}  \velocity(\veloargsromy) + [\massArgnt{}]^{-1}\controllerDiscreteDumArg{}{t} .$ This leads to the expression for the expanded Lagrangian,
 \begin{multline*}
- \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) = \frac{1}{2}\big[\basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n}  \velocity(\veloargsromy)   + \basisspace [\massArgnt{n}]^{-1}\controllerDiscreteDumArg{}{t} \big]^T  \stweightingMatArg{n}  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n}  \velocity(\veloargsromy)   + \basisspace [\massArgnt{n}]^{-1}\controllerDiscreteDumArg{}{t}\big] \\  -  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n}  \velocity(\veloargsromy)  + \basisspace [\massArgnt{n}]^{-1}\controllerDiscreteDumArg{}{t} \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  + \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big].
+ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) = \frac{1}{2}\big[\basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{}  \velocity(\veloargsromy)   + \basisspace [\massArgnt{}]^{-1}\controllerDiscreteDumArg{}{t} \big]^T  \stweightingMatArg{}  \big[ \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{}  \velocity(\veloargsromy)   + \basisspace [\massArgnt{}]^{-1}\controllerDiscreteDumArg{}{t}\big] \\  -  \big[ \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{}  \velocity(\veloargsromy)  + \basisspace [\massArgnt{}]^{-1}\controllerDiscreteDumArg{}{t} \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big]  + \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big].
 \end{multline*}
 Again for notational purposes, we split this into three terms,
 $$
-\objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg)  = 
-\objectiveControlArg{}_1(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg)  + 
-\objectiveControlArg{}_2(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg)  + 
-\objectiveControlArg{}_3(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) ,$$
+\objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy)  = 
+\objectiveControlArg{}_1(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy)  + 
+\objectiveControlArg{}_2(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy)  + 
+\objectiveControlArg{}_3(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) ,$$
 where
 \begin{align*}
-& \objectiveControlArg{}_1(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \equiv  \frac{1}{2}\big[\basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n}  \velocity(\veloargsromy)  + \basisspace [\massArgnt{n}]^{-1}\controllerDiscreteDumArg{}{t}  \big]^T  \stweightingMatArg{n}  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n}  \velocity(\veloargsromy)   +  \basisspace [\massArgnt{n}]^{-1}\controllerDiscreteDumArg{}{t} \big],\\
-& \objectiveControlArg{}_2(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \defeq -  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n}  \velocity(\veloargsromy)  + \basisspace [\massArgnt{n}]^{-1} \controllerDiscreteDumArgnt{n}\big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big] ,\\
-& \objectiveControlArg{}_3(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \defeq \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big] .
+& \objectiveControlArg{}_1(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) =  \frac{1}{2}\big[\basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{}  \velocity(\veloargsromy)  + \basisspace [\massArgnt{}]^{-1}\controllerDiscreteDumArgnt{}{}  \big]^T  \stweightingMatArg{}  \big[ \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{}  \velocity(\veloargsromy)   +  \basisspace [\massArgnt{}]^{-1}\controllerDiscreteDumArgnt{}{} \big],\\
+& \objectiveControlArg{}_2(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) = -  \big[ \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{}  \velocity(\veloargsromy)  + \basisspace [\massArgnt{}]^{-1} \controllerDiscreteDumArgnt{}\big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big] ,\\
+& \objectiveControlArg{}_3(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) = \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big] .
 \end{align*}
 Evaluating the first term,
 \begin{align*}
 \frac{\partial  \objectiveControlArg{}_1 }{\partial \genstateyDiscreteArgnt{}{}} &= 
-\frac{1}{2} \frac{\partial }{\partial \genstateyDiscreteArgnt{}{}} \bigg( [\velocity(\veloargsromy)]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n}  \velocity(\veloargsromy) \big] \bigg) +  \\
-& \qquad \frac{\partial }{\partial \genstateyDiscreteArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{n}]^T [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n}  \velocity(\veloargsromy) \big] \bigg) + \\
-& \qquad \frac{1}{2} \frac{\partial }{\partial \genstateyDiscreteArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{}]^T [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \controllerDiscreteDumArgnt{}\bigg) 
+\frac{1}{2} \frac{\partial }{\partial \genstateyDiscreteArgnt{}{}} \bigg( [\velocity(\veloargsromy)]^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{}  \big[ \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{}  \velocity(\veloargsromy) \big] \bigg) +  \\
+& \qquad \frac{\partial }{\partial \genstateyDiscreteArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{}]^T [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{}  \big[ \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{}  \velocity(\veloargsromy) \big] \bigg) + \\
+& \qquad \frac{1}{2} \frac{\partial }{\partial \genstateyDiscreteArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{}]^T [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1} \controllerDiscreteDumArgnt{}\bigg) 
 ,\\ 
 &= 
-[\velocity(\veloargsromy)]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}  \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n}  \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace + 
-[\controllerDumArgnt{n}]^T [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}   \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n} \frac{\partial \velocity}{\partial \statey} \basisspace , \\ 
+[\velocity(\veloargsromy)]^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{}  \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{}  \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace + 
+[\controllerDumArgnt{}]^T [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{}   \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{} \frac{\partial \velocity}{\partial \statey} \basisspace , \\ 
 %&= 
 %[\velocity(\basisspace \genstateyArgnt{} + \stateIntercept)]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}  
 % \frac{\partial \velocity}{\partial \statey} \basisspace + 
 %[\controllerArgnt{n}]^T [\massArgnt{n}]^{-1} \stweightingMatArg{n}   \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
 %\stweightingMatArg{n} \frac{\partial \velocity}{\partial \statey} \basisspace , \\  
 &= 
-\bigg( [\velocity(\veloargsromy)]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}  + [\controllerDiscreteDumArgnt{}]^T [\massArgnt{}]^{-1} \bigg)\basisspace^T  \stweightingMatArg{n}   \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace ,\\
+\bigg( [\velocity(\veloargsromy)]^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1}  + [\controllerDiscreteDumArgnt{}]^T [\massArgnt{}]^{-1} \bigg)\basisspace^T  \stweightingMatArg{}   \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace ,\\
 &= 
-[\genstateyDiscreteDotArgnt{} ]^T \basisspace^T  \stweightingMatArg{n}   \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace , \\
+[\genstateyDiscreteDotArgnt{} ]^T \basisspace^T  \stweightingMatArg{}   \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace , \\
 &= 
-[\basisspace \genstateyDiscreteDotArgnt{} ]^T   \stweightingMatArg{n}   \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace .
+[\basisspace \genstateyDiscreteDotArgnt{} ]^T   \stweightingMatArg{}   \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace .
 \end{align*}
 Now evaluating the second term,
 \begin{align*}
 \frac{\partial  \objectiveControlArg{}_2 }{\partial \genstateyDiscreteArgnt{}{}} &= 
--\frac{\partial  }{\partial \genstateyDiscreteArgnt{}{}}   \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n}  \velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  - \frac{\partial  }{\partial \genstateyDiscreteArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{}]^T[\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  \bigg)  \\&= 
--\frac{\partial  }{\partial \genstateyDiscreteArgnt{}{}}    [\velocity(\veloargsromy)]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T 
- \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  - 
-  [\controllerDiscreteDumArgnt{}]^T[\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace 
+-\frac{\partial  }{\partial \genstateyDiscreteArgnt{}{}}   \big[ \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{}  \velocity(\veloargsromy) \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big]  - \frac{\partial  }{\partial \genstateyDiscreteArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{}]^T[\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big]  \bigg)  \\&= 
+-\frac{\partial  }{\partial \genstateyDiscreteArgnt{}{}}    [\velocity(\veloargsromy)]^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1} \basisspace^T 
+ \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big]  - 
+  [\controllerDiscreteDumArgnt{}]^T[\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace 
 \\
 &= 
-- 2[\velocity(\veloargsromy)]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}  
+- 2[\velocity(\veloargsromy)]^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{}  
  \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace - 
- [\controllerDiscreteDumArgnt{}]^T[\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace, \\
-&= - \bigg[ 2[\velocity(\veloargsromy)]^T  \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}  + [\controllerDiscreteDumArgnt{}]^T  [\massArgnt{n}]^{-1} \bigg] \basisspace^T \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace ,\\
-&= -\bigg( \big[ \basisspace \genstateyDiscreteDotArgnt{} ]^T  + \velocity(\veloargsromy)^T  \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T \bigg) \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace. 
+ [\controllerDiscreteDumArgnt{}]^T[\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace, \\
+&= - \bigg[ 2[\velocity(\veloargsromy)]^T  \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1}  + [\controllerDiscreteDumArgnt{}]^T  [\massArgnt{}]^{-1} \bigg] \basisspace^T \stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace ,\\
+&= -\bigg( \big[ \basisspace \genstateyDiscreteDotArgnt{} ]^T  + \velocity(\veloargsromy)^T  \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1} \basisspace^T \bigg) \stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace. 
 \end{align*}
 Next, we can use the result~\eqref{eq:i3sol} to have,
 $$ \frac{\partial  \objectiveControlArg{}_3 }{\partial \genstateyDiscreteArgnt{}{}} =
-  [\velocity(\veloargsromy) ]^T  \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace.
+  [\velocity(\veloargsromy) ]^T  \stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace.
 $$
 Thus we have,
 \begin{align*}
 \frac{\partial \objectiveControlArg{}}{\partial \genstateyDiscreteArgnt{}} &= 
-[\basisspace \genstateyDiscreteDotArgnt{} ]^T   \stweightingMatArg{n}   \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace -
-\bigg( \big[ \basisspace \genstateyDiscreteDotArgnt{} ]^T  + \velocity(\veloargsromy)]^T  \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T  \bigg) \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace + 
- [\velocity(\veloargsromy) ]^T  \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace, \\
+[\basisspace \genstateyDiscreteDotArgnt{} ]^T   \stweightingMatArg{}   \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace -
+\bigg( \big[ \basisspace \genstateyDiscreteDotArgnt{} ]^T  + \velocity(\veloargsromy)]^T  \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1} \basisspace^T  \bigg) \stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace + 
+ [\velocity(\veloargsromy) ]^T  \stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace, \\
 &= 
-\bigg( [\basisspace \genstateyDiscreteDotArgnt{} ]^T - \velocity(\veloargsromy)^T \bigg)  \stweightingMatArg{n}   \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace -
-\bigg( [\basisspace \genstateyDiscreteDotArgnt{} ]^T - \velocity(\veloargsromy)^T \bigg)  \stweightingMatArg{n}
+\bigg( [\basisspace \genstateyDiscreteDotArgnt{} ]^T - \velocity(\veloargsromy)^T \bigg)  \stweightingMatArg{}   \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace -
+\bigg( [\basisspace \genstateyDiscreteDotArgnt{} ]^T - \velocity(\veloargsromy)^T \bigg)  \stweightingMatArg{}
 \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace \\ 
 &= 
-\bigg( [\basisspace \genstateyDiscreteDotArgnt{} ]^T - \velocity(\veloargsromy)^T \bigg)   \bigg( \stweightingMatArg{n} \basisspace  [\massArgnt{n}]^{-1}\basisspace^T - \mathbf{I} \bigg)
-\stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace, 
+\bigg( [\basisspace \genstateyDiscreteDotArgnt{} ]^T - \velocity(\veloargsromy)^T \bigg)   \bigg( \stweightingMatArg{} \basisspace  [\massArgnt{}]^{-1}\basisspace^T - \mathbf{I} \bigg)
+\stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace, 
 \end{align*}
 such that,
 \begin{equation*}
-\frac{\partial \hamiltonianArg{n}}{\partial \genstateyDiscreteArgnt{}{}} = 
-  \adjointDumArgnt{T} \big[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}  \frac{\partial \velocity}{\partial \stateyDiscrete}\basisspace  \big]  + 
-\bigg( [\basisspace \genstateyDiscreteDotArgnt{} ]^T - \velocity(\veloargsromy)^T \bigg)   \bigg( \stweightingMatArg{n} \basisspace  [\massArgnt{n}]^{-1}\basisspace^T - \mathbf{I} \bigg)
-\stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace.
+\frac{\partial \hamiltonianArg{}}{\partial \genstateyDiscreteArgnt{}{}} = 
+  \adjointDumArgnt{T} \big[  [\massArgnt{}]^{-1}\basisspace^T \stweightingMatArg{}  \frac{\partial \velocity}{\partial \stateyDiscrete}\basisspace  \big]  + 
+\bigg( [\basisspace \genstateyDiscreteDotArgnt{} ]^T - \velocity(\veloargsromy)^T \bigg)   \bigg( \stweightingMatArg{} \basisspace  [\massArgnt{}]^{-1}\basisspace^T - \mathbf{I} \bigg)
+\stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace.
 \end{equation*}
 Or, equivalently,
 \begin{equation*}
-\bigg[ \frac{\partial \hamiltonianArg{n}}{\partial \genstateyDiscreteArgnt{}{}} \bigg]^T =  \basisspace^T \big[  \frac{\partial \velocity}{\partial \stateyDiscrete} \big]^T \stweightingMatArg{n}  \basisspace [\massArgnt{n}]^{-1}  \adjointDiscreteDumArgnt{} + 
+\bigg[ \frac{\partial \hamiltonianArg{}}{\partial \genstateyDiscreteArgnt{}{}} \bigg]^T =  \basisspace^T \big[  \frac{\partial \velocity}{\partial \stateyDiscrete} \big]^T \stweightingMatArg{}  \basisspace [\massArgnt{}]^{-1}  \adjointDiscreteDumArgnt{} + 
  \basisspace^T \big[  \frac{\partial \velocity}{\partial \stateyDiscrete} \big]^T 
-  \stweightingMatArg{n} \bigg(  \basisspace  [\massArgnt{n}]^{-1}\basisspace^T  \stweightingMatArg{n}- \mathbf{I} \bigg)
+  \stweightingMatArg{} \bigg(  \basisspace  [\massArgnt{}]^{-1}\basisspace^T  \stweightingMatArg{}- \mathbf{I} \bigg)
  \bigg( \basisspace \genstateyDiscreteDotArgnt{} - \velocity(\veloargsromy) \bigg) 
 \end{equation*}
-Next, we evaluate $\frac{\partial \hamiltonianArg{n}}{\partial \controllerDumArgnt{}}$:
+Next, we evaluate $\frac{\partial \hamiltonianArg{}}{\partial \controllerDumArgnt{}}$:
 \begin{align}
-  \frac{\partial \hamiltonianArg{n}}{\partial \controllerDumArgnt{}{}} &= \frac{\partial}{\partial \controllerDumArgnt{}{}} \bigg[  \adjointDumArgnt{T} \big[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\veloargsromy) + [\massArgnt{n}]^{-1}\controllerDumArgnt{} \big] +  \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},t) \bigg] \\
- &= \frac{\partial}{\partial \controllerDiscreteDumArgnt{}{}} \bigg[  \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\veloargsromy) + [\massArgnt{n}]^{-1}\controllerDiscreteDumArgnt{} \big] \bigg]+  \frac{\partial}{\partial \controllerDiscreteDumArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \bigg] \\
- &= [\adjointDiscreteDumArgnt{}]^T[\massArgnt{n}]^{-1} + \frac{\partial}{\partial \controllerDiscreteDumArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},t) \bigg]. 
+  \frac{\partial \hamiltonianArg{}}{\partial \controllerDumArgnt{}{}} &= \frac{\partial}{\partial \controllerDumArgnt{}{}} \bigg[  \adjointDumArgnt{T} \big[  [\massArgnt{}]^{-1}\basisspace^T \stweightingMatArg{}\velocity(\veloargsromy) + [\massArgnt{}]^{-1}\controllerDumArgnt{} \big] +  \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \bigg] \\
+ &= \frac{\partial}{\partial \controllerDiscreteDumArgnt{}{}} \bigg[  \adjointDiscreteDumArgnt{T} \big[  [\massArgnt{}]^{-1}\basisspace^T \stweightingMatArg{}\velocity(\veloargsromy) + [\massArgnt{}]^{-1}\controllerDiscreteDumArgnt{} \big] \bigg]+  \frac{\partial}{\partial \controllerDiscreteDumArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \bigg] \\
+ &= [\adjointDiscreteDumArgnt{}]^T[\massArgnt{}]^{-1} + \frac{\partial}{\partial \controllerDiscreteDumArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \bigg]. 
 \end{align}
-To evaluate $\frac{\partial}{\partial \controllerDiscreteDumArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDumArg) \bigg]$, we again 
+To evaluate $\frac{\partial}{\partial \controllerDiscreteDumArgnt{}{}}  \bigg[ \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \bigg]$, we again 
 go term by term. Starting with the first term,
 \begin{align*}
 \frac{\partial  \objectiveControlArg{}_1 }{\partial \genstateyDiscreteArgnt{}{}} &= 
-\frac{1}{2} \frac{\partial }{\partial \controllerDiscreteDumArgnt{}} \bigg( [\velocity(\veloargsromy)]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n}  \velocity(\veloargsromy) \big] \bigg) + \\
-& \qquad \frac{\partial }{\partial \controllerDiscreteDumArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{n}]^T [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n}  \velocity(\veloargsromy) \big] \bigg) + \\
-& \qquad \frac{1}{2} \frac{\partial }{\partial \controllerDiscreteDumArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{}]^T [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \controllerDiscreteDumArgnt{}\bigg) \\
-&= \bigg(  [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n}  \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T                      
-\stweightingMatArg{n}  \velocity(\veloargsromy) \big] \bigg)^T +   [\controllerDiscreteDumArgnt{}]^T [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} \\
-&= \big[ \velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}\basisspace^T  \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} +   [\controllerDiscreteDumArgnt{}]^T [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}. 
+\frac{1}{2} \frac{\partial }{\partial \controllerDiscreteDumArgnt{}} \bigg( [\velocity(\veloargsromy)]^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{}  \big[ \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{}  \velocity(\veloargsromy) \big] \bigg) + \\
+& \qquad \frac{\partial }{\partial \controllerDiscreteDumArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{}]^T [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{}  \big[ \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{}  \velocity(\veloargsromy) \big] \bigg) + \\
+& \qquad \frac{1}{2} \frac{\partial }{\partial \controllerDiscreteDumArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{}]^T [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1} \controllerDiscreteDumArgnt{}\bigg) \\
+&= \bigg(  [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{}  \big[ \basisspace  [\massArgnt{}]^{-1}\basisspace^T                      
+\stweightingMatArg{}  \velocity(\veloargsromy) \big] \bigg)^T +   [\controllerDiscreteDumArgnt{}]^T [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1} \\
+&= \big[ \velocity(\veloargsromy) \big]^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1}\basisspace^T  \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1} +   [\controllerDiscreteDumArgnt{}]^T [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1}. 
 \end{align*}
 Moving on to the second term,
 \begin{align*}
 \frac{\partial  \objectiveControlArg{}_2 }{\partial \controllerDiscreteDumArgnt{}{}} &= 
--\frac{\partial  }{\partial \controllerDiscreteDumArgnt{}{}}   \big[ \basisspace  [\massArgnt{n}]^{-1}\basisspace^T
-\stweightingMatArg{n}  \velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  - \frac{\partial  }{\partial \controllerDiscreteDumArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{}]^T[\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  \bigg)  \\
-&=- \bigg[ [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \velocity(\basisspace \genstateyDiscrete + \stateIntercept) \bigg]^T \\
-&= - [\velocity(\veloargsromy) ]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}. 
+-\frac{\partial  }{\partial \controllerDiscreteDumArgnt{}{}}   \big[ \basisspace  [\massArgnt{}]^{-1}\basisspace^T
+\stweightingMatArg{}  \velocity(\veloargsromy) \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big]  - \frac{\partial  }{\partial \controllerDiscreteDumArgnt{}{}} \bigg( [\controllerDiscreteDumArgnt{}]^T[\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big]  \bigg)  \\
+&=- \bigg[ [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{} \velocity(\basisspace \genstateyDiscrete + \stateIntercept) \bigg]^T \\
+&= - [\velocity(\veloargsromy) ]^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1}. 
 \end{align*}
 For the third term we have simply,
 $$ \frac{\partial  \objectiveControlArg{}_3 }{\partial \controllerDiscreteDumArgnt{}{}} = \bz .$$
 Thus,
 \begin{align*}
-\frac{\partial \hamiltonianArg{n}}{\partial \controllerDiscreteDumArgnt{}} &= 
-[\adjointDiscreteDumArgnt{}]^T[\massArgnt{n}]^{-1}  +  \big[ \velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}\basisspace^T  \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} + \\
-& \qquad   [\controllerDiscreteDumArgnt{}]^T [\massArgnt{n}]^{-1} \basisspace^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1} - [\velocity(\veloargsromy) ]^T \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}, \\
-& = \bigg( [\adjointDiscreteDumArgnt{}]^T - [\velocity(\veloargsromy) ]^T \stweightingMatArg{n} \basisspace \bigg) [\massArgnt{n}]^{-1}  + \bigg(  \big[ \velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \basisspace + [\controllerDiscreteDumArgnt{}]^T   \bigg) [\massArgnt{n}]^{-1}\basisspace^T  \stweightingMatArg{n} \basisspace [\massArgnt{n}]^{-1}  \\
-& = \bigg( [\adjointDiscreteDumArgnt{}]^T - [\velocity(\veloargsromy) ]^T \stweightingMatArg{n} \basisspace \bigg) [\massArgnt{n}]^{-1}  + \bigg(  \big[ \velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \basisspace + [\controllerDiscreteDumArgnt{}]^T   \bigg) [\massArgnt{n}]^{-1}  \\
-& =  [\adjointDiscreteDumArgnt{}]^T  [\massArgnt{n}]^{-1}  +  [\controllerDiscreteDumArgnt{}]^T   [\massArgnt{n}]^{-1}  
+\frac{\partial \hamiltonianArg{}}{\partial \controllerDiscreteDumArgnt{}} &= 
+[\adjointDiscreteDumArgnt{}]^T[\massArgnt{}]^{-1}  +  \big[ \velocity(\veloargsromy) \big]^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1}\basisspace^T  \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1} + \\
+& \qquad   [\controllerDiscreteDumArgnt{}]^T [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1} - [\velocity(\veloargsromy) ]^T \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1}, \\
+& = \bigg( [\adjointDiscreteDumArgnt{}]^T - [\velocity(\veloargsromy) ]^T \stweightingMatArg{} \basisspace \bigg) [\massArgnt{}]^{-1}  + \bigg(  \big[ \velocity(\veloargsromy) \big]^T \stweightingMatArg{} \basisspace + [\controllerDiscreteDumArgnt{}]^T   \bigg) [\massArgnt{}]^{-1}\basisspace^T  \stweightingMatArg{} \basisspace [\massArgnt{}]^{-1}  \\
+& = \bigg( [\adjointDiscreteDumArgnt{}]^T - [\velocity(\veloargsromy) ]^T \stweightingMatArg{} \basisspace \bigg) [\massArgnt{}]^{-1}  + \bigg(  \big[ \velocity(\veloargsromy) \big]^T \stweightingMatArg{} \basisspace + [\controllerDiscreteDumArgnt{}]^T   \bigg) [\massArgnt{}]^{-1}  \\
+& =  [\adjointDiscreteDumArgnt{}]^T  [\massArgnt{}]^{-1}  +  [\controllerDiscreteDumArgnt{}]^T   [\massArgnt{}]^{-1}  
 \end{align*}
 Or, equivalently,
 \begin{equation*}
-\frac{\partial \hamiltonianArg{n}}{\partial \controllerDiscreteDumArgnt{}} = 
-  [\massArgnt{n}]^{-1} [\adjointDiscreteDumArgnt{} +  \controllerDiscreteDumArgnt{}]. 
+\frac{\partial \hamiltonianArg{}}{\partial \controllerDiscreteDumArgnt{}} = 
+  [\massArgnt{}]^{-1} [\adjointDiscreteDumArgnt{} +  \controllerDiscreteDumArgnt{}]. 
 \end{equation*}
-Thus, the conditions stated via the Pontryagin Maximum Principle are,
+Evaluating at $(\genstateArg{}{t},\genstateDotArg{}{t},t$), the gradients in the Pontryagin Maximum Principle yield
 \begin{align*}%\label{eq:hamiltonian_sysa}
-&\frac{d}{dt}\genstateArg{n}{t} =  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\veloargsromn) + [\massArgnt{n}]^{-1}\controllerArg{n}{t}\\ 
-&\frac{d }{dt} \adjointArg{n}{t}  + \basisspace^T \big[  \frac{\partial \velocity}{\partial \statey} \big]^T \stweightingMatArg{n}  \basisspace [\massArgnt{n}]^{-1}  \adjointArg{n}{t} = 
- - \basisspace^T \big[  \frac{\partial \velocity}{\partial \statey} \big]^T \stweightingMatArg{n} 
-\bigg(  \basisspace  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n} - \mathbf{I} \bigg)
- \bigg( \basisspace \genstateDotArg{n}{t} - \velocity(\basisspace \genstateArg{n}{t} + \stateIntercept) \bigg) \\ 
-& \adjointArg{n}{t}= -\controllerArg{n}{t}.
+&\frac{d}{dt}\genstateArg{}{t} =  [\massArgnt{}]^{-1}\basisspace^T \stweightingMatArg{}\velocity(\veloargsrom) + [\massArgnt{}]^{-1}\controllerArg{}{t}\\ 
+&\frac{d }{dt} \adjointArg{}{t}  + \basisspace^T \big[  \frac{\partial \velocity}{\partial \statey} \big]^T \stweightingMatArg{}  \basisspace [\massArgnt{}]^{-1}  \adjointArg{}{t} = 
+ - \basisspace^T \big[  \frac{\partial \velocity}{\partial \statey} \big]^T \stweightingMatArg{} 
+\bigg(  \basisspace  [\massArgnt{}]^{-1}\basisspace^T \stweightingMatArg{} - \mathbf{I} \bigg)
+ \bigg( \basisspace \genstateDotArg{}{t} - \velocity(\basisspace \genstateArg{}{t} + \stateIntercept) \bigg) \\ 
+& \adjointArg{}{t}= -\controllerArg{}{t}.
 \end{align*}
-Equivalently,
+This can be written equivalently as
 \begin{align*}%\label{eq:hamiltonian_sys}
-&\frac{d}{dt}\genstateArg{n}{t} =  [\massArgnt{n}]^{-1}\basisspace^T \stweightingMatArg{n}\velocity(\basisspace \genstateArg{n}{t} + \stateIntercept) + [\massArgnt{n}]^{-1}\controllerArg{n}{t} \\ 
-&\frac{d}{dt} \controllerArg{n}{t}  + \basisspace^T \big[  \frac{\partial \velocity}{\partial \statey} \big]^T \stweightingMatArg{n}  \basisspace [\massArgnt{n}]^{-1}  \controllerArg{n}{t} = 
- - \basisspace^T \big[  \frac{\partial \velocity}{\partial \statey} \big]^T \stweightingMatArg{n} 
-\bigg( \mathbf{I} -   \basisspace  [\massArgnt{n}]^{-1}\basisspace^T \bigg)
-\stweightingMatArg{n} \bigg( \basisspace \genstateDotArg{n}{t} - \velocity(\basisspace \genstateArg{n}{t} + \stateIntercept) \bigg) 
+&\frac{d}{dt}\genstateArg{}{t} =  [\massArgnt{}]^{-1}\basisspace^T \stweightingMatArg{}\velocity(\basisspace \genstateArg{}{t} + \stateIntercept) + [\massArgnt{}]^{-1}\controllerArg{}{t} \\ 
+&\frac{d}{dt} \controllerArg{}{t}  + \basisspace^T \big[  \frac{\partial \velocity}{\partial \statey} \big]^T \stweightingMatArg{}  \basisspace [\massArgnt{}]^{-1}  \controllerArg{}{t} = 
+ - \basisspace^T \big[  \frac{\partial \velocity}{\partial \statey} \big]^T \stweightingMatArg{} 
+\bigg( \mathbf{I} -   \basisspace  [\massArgnt{}]^{-1}\basisspace^T \bigg)
+\stweightingMatArg{} \bigg( \basisspace \genstateDotArg{}{t} - \velocity(\basisspace \genstateArg{}{t} + \stateIntercept) \bigg). 
 \end{align*}
 
 
