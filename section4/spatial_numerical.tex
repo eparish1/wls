@@ -254,7 +254,7 @@ $\mathbf{J} \leftarrow
 $ \Comment{Compute weighted residual-Jacobian over window} \\
 %Compute: $[\jacobianSlabArg{n}]^T \jacobianSlabArg{n}$ \Comment{Compute system matrix for the normal equations} \\
 %Compute: $[\jacobianSlabArg{n}]^T \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n}_k)$ \Comment{compute RHS for normal equations} \\
-$\Delta \genstatecollocMatSlabArg{n} \solveAlgo [\mathbf{J}]^T \mathbf{J} \Delta \genstatecollocMatSlabArg{n}=  -\mathbf{J}^T\mathbf{r}$ \Comment{Solve the normal equations} \\
+ Compute  $\Delta  \genstatecollocMatSlabArg{n} $ satisfying $ [\mathbf{J}]^T \mathbf{J} \Delta \genstatecollocMatSlabArg{n}=  -\mathbf{J}^T\mathbf{r}$ \Comment{Solve the normal equations} \\
 $\genstatecollocMatSlabArg{n}_{k+1} \leftarrow \genstatecollocMatSlabArg{n}_k + \Delta \genstatecollocMatSlabArg{n}$ \Comment{Update guess to the state} \\
 \If{ $\norm{ \mathbf{J}^T\mathbf{r}  } \le \epsilon$ }{
 {\text{converged} $\leftarrow$ \text{true}}  \Comment{Check and set convergence based on gradient norm} \\
@@ -336,13 +336,12 @@ factor, $\fbsmDecay$}
 $\genstate^n_0 \leftarrow \bz$ \Comment{Set initial guess for state} \\
 $\controllerArgnt{n} \leftarrow \boldsymbol 0$ \Comment{Set initial
 guess for costate}\\ 
-$\genstateArgnt{n}_1 \solveAlgo \basisspaceTArg{n} \stweightingMatArg{n}
-\basisspaceArg{n} \genstateDotArgnt{n}_1  -  \basisspaceTArg{n} \stweightingMatArg{n}
-\velocity(\veloargsromntArg{1}) =  \controllerArgnt{n}$ 
+$\text{Compute } \genstateArgnt{n}_1 \text{ satisfying } \basisspaceTArg{n} \stweightingMatArg{n}
+\basisspaceArg{n} \genstateDotArgnt{n}_1(t)  -  \basisspaceTArg{n} \stweightingMatArg{n}
+\velocity(\veloargsromArg{1}) =  \controllerArg{n}{t}$ 
 % Eq.~\ref{eq:lspg_continuous} with $\adjoint^n(t) = \controllerArg{n}{t}$ to
 % obtain $\genstate_0^{n}(t)$ 
-\Comment{Solve~\eqref{eq:lspg_continuous} with initial guess to
-controller}\\ 
+\Comment{Solve~\eqref{eq:lspg_continuous}}\\ 
 %Set: $\genstate^n_1 = \genstate$ \Comment{Set state} \\
 %$\objectiveArg{n}({\genstate_1^n(t)})$
 %\Comment{Evaluate objective function}\\
@@ -350,17 +349,17 @@ $i \leftarrow 1$ \Comment{Set counter}\\
 \While{$\epsilon \le \int_{\timeStartArg{n}}^{\timeEndArg{n}} \norm{\genstate^n_{i}(t) - \genstate^n_{i-1}(t) }dt $}{
 \small{
 \begin{multline*}
-\adjointArgnt{n} \underset{\text{solve}}{\leftarrow} 
-\frac{d}{dt} \adjoint^n  + \basisspaceTArg{n} \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\basisspaceArg{n} \genstate^n_i + \stateIntercept,t) \bigg]^T \stweightingMatArg{n} \basisspaceArg{n} [\massArg{n}]^{-1} \adjoint^n = \\ -\bigg[\basisspaceTArg{n} \bigg[ \frac{\partial \velocity}{\partial \stateyDiscrete} ( \basisspaceArg{n} \genstate^n_i + \stateInterceptArg{n},t) \bigg]^T \stweightingMatArg{n} \bigg( \mathbf{I} -   \basisspace [\massArg{n}]^{-1} \basisspaceTArg{n} \bigg)  \stweightingMatArg{n} \bigg( \basisspaceArg{n} \dot{\genstate}_i^n   -   \velocity( \basisspaceArg{n} \genstate_i^n  +\stateInterceptArg{n},t) \bigg) \bigg] 
+\text{ Compute } \adjointArgnt{n} \text{ satisfying }
+\adjointDotArg{n}{t}  + \basisspaceTArg{n} \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\basisspaceArg{n} \genstate^n_i(t) + \stateInterceptArg{n},t) \bigg]^T \stweightingMatArg{n} \basisspaceArg{n} [\massArg{n}]^{-1} \adjointArg{n}{t}= \\ -\bigg[\basisspaceTArg{n} \bigg[ \frac{\partial \velocity}{\partial \stateyDiscrete} ( \basisspaceArg{n} \genstate^n_i(t) + \stateInterceptArg{n},t) \bigg]^T \stweightingMatArg{n} \bigg( \mathbf{I} -   \basisspaceArg{n} [\massArg{n}]^{-1} \basisspaceTArg{n} \stweightingMatArg{n} \bigg)  \bigg( \basisspaceArg{n} \dot{\genstate}_i^n(t)   -   \velocity( \basisspaceArg{n} \genstate_i^n(t)  +\stateInterceptArg{n},t) \bigg) \bigg] 
 \end{multline*} }
-\Comment{Solve~\eqref{eq:lspg_adjoint} to obtain guess to costate state} \\
+\Comment{Solve~\eqref{eq:lspg_adjoint} to obtain guess to costate} \\
 %Solve Eq.~\ref{eq:lspg_adjoint} with $\genstate^n(t) = \genstate^n_i(t)$ to obtain $\adjoint^n(t)$ \\
 $\controllerArgnt{n}  \leftarrow \rho \controllerArgnt{n} + (1 - \rho) \adjointArgnt{n}$ \Comment{Weighted update to costate}\\
-$i \leftarrow i+1$ \Comment{Update Counter}\\
-$\genstateArgnt{n}_i \solveAlgo \basisspaceTArg{n} \stweightingMatArg{n} \basisspaceArg{n} \genstateDotArgnt{n}_i   -  \basisspaceTArg{n} \stweightingMatArg{n} \velocity(\basisspaceArg{n} \genstate^n_i + \stateInterceptArg{n},t) =  \controllerArgnt{n} $
-\Comment{Solve~\ref{eq:lspg_continuous} with updated guess to costate}\\
+$i \leftarrow i+1$ \Comment{Update counter}\\
+$\text{Compute }\genstateArgnt{n}_i \text{ satisfying } \basisspaceTArg{n} \stweightingMatArg{n} \basisspaceArg{n} \genstateDotArgnt{n}_i(t)   -  \basisspaceTArg{n} \stweightingMatArg{n} \velocity(\basisspaceArg{n} \genstate^n_i(t) + \stateInterceptArg{n},t) =  \controllerArg{n}{t} $
+\Comment{Solve~\eqref{eq:lspg_continuous}}\\
 %$\objectiveArg{n}({\genstate_i^n(t)})$ \Comment{Evaluate objective function}\\
-\uIf{ $\objectiveArg{n}({\genstate_i^n}) \le \objectiveArg{n}({\genstate_{i-1}^n})$}
+\uIf{ $\objectiveArg{n}({\basisspaceArg{n}\genstate_i^n + \stateInterceptArg{n}\otimes \onesFunctionArg{n}}) \le \objectiveArg{n}({\basisspaceArg{n}\genstate_{i-1}^n + \stateInterceptArg{n}\otimes \onesFunctionArg{n}})$}
 {
 $\rho \leftarrow \text{min}(\rho \fbsmGrowth,1)$ \Comment{Grow the damping factor}\\
 }
