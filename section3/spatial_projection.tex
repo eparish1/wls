@@ -97,7 +97,7 @@ We also define the quantities
 \begin{equation}
 \begin{split}
 \dIdVArg{n}  & \vcentcolon
-(\genstatey , \genstateyDot, \timeDummy) \mapsto \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDot} (\genstateyArg{}{\timeDummy}, \genstateyDotArg{}{\timeDummy},\timeDummy), \\ 
+(\genstatey , \genstateyDot, \timeDummy) \mapsto \bigg[ \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDot} (\genstateyArg{}{\timeDummy}, \genstateyDotArg{}{\timeDummy},\timeDummy) \bigg]^T, \\ 
 & \vcentcolon  \RR{\romdimArg{n}} \otimes \timeSpaceArg{n} \times \RR{\romdimArg{n}} \otimes \timeSpaceArg{n} \times [\timeStartArg{n},\timeEndArg{n}]
  \rightarrow \RR{\romdimArg{n}} ,
 \end{split}
@@ -105,11 +105,12 @@ We also define the quantities
 \begin{equation}
 \begin{split}
 \dIdYArg{n}  & \vcentcolon
-(\genstatey , \genstateyDot, \timeDummy) \mapsto \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscrete} (\genstateyArg{}{\timeDummy}, \genstateyDotArg{}{\timeDummy},\timeDummy), \\ 
+(\genstatey , \genstateyDot, \timeDummy) \mapsto \bigg[ \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscrete} (\genstateyArg{}{\timeDummy}, \genstateyDotArg{}{\timeDummy},\timeDummy) \bigg]^T, \\ 
 & \vcentcolon  \RR{\romdimArg{n}} \otimes \timeSpaceArg{n} \times \RR{\romdimArg{n}} \otimes \timeSpaceArg{n} \times [\timeStartArg{n},\timeEndArg{n}]
- \rightarrow \RR{\romdimArg{n}} .
+ \rightarrow \RR{\romdimArg{n}} ,
 \end{split}
 \end{equation}
+where it is noted we have used Jacobian layout for the scalar-by-vector gradients, i.e., $\dIdVArg{n}$ is a column vector functional.
 Using this notation, the Euler--Lagrange equations (see
 Appendix~\ref{appendix:eulerlagrange} for the derivation) over the $n$th
 time window are given by, 

@@ -50,7 +50,7 @@
 \newcommand{\fbsmDecay}{\psi_2}
 \newcommand{\projector}{\mathbb{P}}
 \newcommand{\projectorArg}[1]{\projector^{#1}}
-\newcommand{\veloargsromy}{\basisspace \genstateyDiscreteArgnt{} + \stateIntercept,t}
+\newcommand{\veloargsromy}{\basisspace \genstateyDiscreteArgnt{} + \stateIntercept,\timeDummy}
 \newcommand{\quadWeightsVecArg}[1]{\boldsymbol \alpha^{#1}}
 \newcommand{\minIntegrandFull}{\frac{1}{2} \big[\frac{\partial \decoder}{\partial \genstate} \dot{\genstate} - \velocity(\decoder(\genstate)) \big]^T \stweightingMat(t) \big[\frac{\partial \decoder}{\partial \genstate} \dot{\genstate} - \velocity(\decoder(\genstate)) \big]}
 
@@ -310,7 +310,7 @@
 \newcommand{\nsamples}{n_s}
 
 \newcommand{\timeWindow}{\tau}
-\newcommand{\timeWindowArg}[2]{\tau^{#1}_{#2}}
+\newcommand{\timeWindowArg}[2]{\tau^{#1,#2}}
 
 \newcommand{\bz}{\boldsymbol 0}
 \newcommand{\nsteps}{N_{\tau}}

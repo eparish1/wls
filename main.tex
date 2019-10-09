@@ -810,18 +810,18 @@ This section details the derivation of the Euler Lagrange equations. To this end
 \begin{equation}\label{eq:el_gen}
 \mathcal{J}: (\statey,\stateyDot) \mapsto  \int_a^b \integrand(\statey(t),\stateyDot(t),t)  dt,
 \end{equation}
-where $\integrand: \RR{M} \times \RR{M} \times[a,b] \rightarrow  \RR{}$ (for arbitrary $M$) with $\integrand: (\stateyDiscrete,\stateyDotDiscrete,t) \mapsto \integrand(\stateyDiscrete,\stateyDotDiscrete,t)$. We now introduce the function $\statez: [a,b] \rightarrow \RR{M}$ that is implicitly defined as an extremum of~\eqref{eq:el_gen} subject to the boundary condition $\statez(a) = \statez_a$. 
+where $\integrand: \RR{M} \times \RR{M} \times[a,b] \rightarrow  \RRplus$ (for arbitrary $M$) with $\integrand: (\stateyDiscrete,\stateyDotDiscrete,\timeDummy) \mapsto \integrand(\stateyDiscrete,\stateyDotDiscrete,\timeDummy)$. We now introduce the function $\statez: [a,b] \rightarrow \RR{M}$ that is implicitly defined as an extremum of~\eqref{eq:el_gen} subject to the boundary condition $\statez(a) = \statez_a$. 
 We introduce an arbitrary function $\variation : [a,b] \rightarrow \RR{M}$ with the boundary condition $\variationArg{a} = \bz$ and define a variation from the extremal by,
 \begin{align*}
 \statezBar  &: (\tau,\delta) \mapsto \statez(\tau) + \delta \variation(\tau),\\
 &: [a,b] \times \RR{} \rightarrow \RR{M}.
 \end{align*}
-We note that $\statezBar$ obeys the same boundary conditions as $\statez$ since $\variationArg{a} = \bz$.
-We define a new function that is equivalent to~\eqref{eq:el_gen} evaluated at $\statezBar(t,\cdot)$,
+We note that $\statezBar$ satisfies the same boundary condition $\statez$ since $\variationArg{a} = \bz$.
+We define a new function that is equivalent to~\eqref{eq:el_gen} evaluated at $\statezBar$ in the first argument and 
+$\statezDotBar \equiv d\statezBar / d\timeDummy$ in the second argument,
 $$
 \mathcal{J}_{\delta}: \delta \mapsto \int_a^b \integrand(\statezBar(t,\delta),\statezDotBar(t,\delta) ,t)  dt.
 $$
-
 %$$
 %\mathcal{J}(\epsilon) = \int_a^b \integrand(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t)  dt.
 %$$
@@ -841,20 +841,21 @@ $$
 %\end{equation}
 %This fact can be used to derive the Euler--Lagrange equations. Evaluating Eq.~\eqref{eq:el1_appendix},
 %$$ \int_a^b \frac{d}{d\epsilon}\bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) \big) \bigg] = 0. $$
-We first evaluate the derivative. First using the chain rule,
+Using the chain rule,
 $$ 
 \frac{d}{d\delta} \big( \mathcal{J}_{\delta} \big)(\epsilon)= 
 \int_a^b \bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t\big) \frac{\partial \statezBar }{\partial \delta}(t,\epsilon)  + \frac{\partial \integrand}{\partial \stateyDotDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \frac{\partial \statezDotBar}{\partial \delta} (t,\epsilon)\bigg]dt . $$
 %$$\int_a^b \bigg[ \frac{\partial \integrand  }{\partial \statezBar } \frac{\partial \statezBar }{\partial \epsilon}\big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) \big)  + \frac{\partial \integrand}{\partial \statezDotBar }\frac{\partial \statezDotBar}{\partial \epsilon} \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) \big)\bigg]dt = 0. $$
 %Setting $\epsilon = 0$,
 %$$\int_a^b \bigg[ \frac{\partial \integrand  }{\partial \statezBar } \frac{\partial \statezBar }{\partial \epsilon}\big(\statezBar(t,0),\statezDotBar(t,0) \big)  + \frac{\partial \integrand}{\partial \statezDotBar }\frac{\partial \statezDotBar}{\partial \epsilon} \big(\statezBar(t,0),\statezDotBar(t,0) \big)\bigg]dt = 0. $$
-Noting that,
+Noting that
 $$\frac{\partial \statezBar}{\partial \delta} (t,\cdot)= \variation(t), \qquad \frac{\partial \statezDotBar }{\partial \delta}(t,\cdot)= \variationDot(t),$$
-we have,
+where $\variationDot \equiv d \variation / d\timeDummy$, 
+we have
 $$
 %\int_a^b \frac{d}{d\epsilon}\bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t \big) \bigg] dt 
 \frac{d}{d\delta} \big( \mathcal{J}_{\delta} \big)(\epsilon)
-= \int_a^b \bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon),t \big) \variation(t)  + \frac{\partial \integrand}{\partial \stateyDotDiscrete } \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t \big) \variationDot(t) \bigg]dt. $$
+= \int_a^b \bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \variation(t)  + \frac{\partial \integrand}{\partial \stateyDotDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \variationDot(t) \bigg]dt. $$
 %$$\int_a^b \bigg[\frac{\partial \integrand  }{\partial \overline{\genstate}} \variation + \frac{\partial \integrand}{\partial {\overline{\genstateDot}}}\variationDot \bigg]_{\epsilon = 0}dt = 0.$$
 We integrate the second term by parts,
 \begin{multline*}
@@ -862,14 +863,15 @@ We integrate the second term by parts,
 %\int_a^b \frac{d}{d\epsilon}\bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t \big) \bigg] dt 
 =  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \bigg) \variation(t) \bigg]dt + \\ \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(b,\epsilon),\statezDotBar(b,\epsilon) ,b \big) \variation(b)  - \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(a,\epsilon),\statezDotBar(a,\epsilon) ,a\big) \variation(a) .
 \end{multline*}
-\EP{Here}
 Noting that $\variationArg{a} = \bz$,
 \begin{multline*}
-\int_a^b \frac{d}{d\epsilon}\bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon),t \big) \bigg] dt =  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) , \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t \big) \bigg) \variation(t) \bigg]dt + \\ \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(b;\epsilon),\statezDotBar(b;\epsilon) ,b \big) \variation(b) . 
+%\int_a^b \frac{d}{d\epsilon}\bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon),t \big) \bigg] dt 
+\frac{d}{d\delta} \big( \mathcal{J}_{\delta} \big)(\epsilon)
+=  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) , t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \bigg) \variation(t) \bigg]dt + \\ \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(b,\epsilon),\statezDotBar(b,\epsilon) ,b \big) \variation(b) . 
 \end{multline*}
 Setting equal to zero to find the stationary points,
 $$
-  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon),t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon),t \big) \bigg) \variation(t) \bigg]dt + \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(b;\epsilon),\statezDotBar(b;\epsilon),b \big) \variation(b)  = 0. 
+  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \bigg) \variation(t) \bigg]dt + \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(b,\epsilon),\statezDotBar(b;\epsilon),b \big) \variation(b)  = 0. 
 $$
 By definition, we know $\statez(\cdot) \equiv \statezBar(\cdot;0)$ is a stationary point. Thus, setting $\epsilon = 0$,
  $$
@@ -892,13 +894,14 @@ $$
 $$
 Equation~\eqref{eq:euler_lagrange_appendix} is known as the Euler--Lagrange equation. It states that, if $\statez$ is an extremal of $\mathcal{J}$, then it must satisfy~\eqref{eq:euler_lagrange_appendix}. It is emphasized that~\eqref{eq:euler_lagrange_appendix} is a necessary condition on $\statez$ to make $\mathcal{J}$ stationary, but it is not a sufficient condition. It is additionally noted that~\eqref{eq:euler_lagrange_appendix} provides a stationary point of $\mathcal{J}$, but the resulting stationary point can be either a maximum or a minimum.
 
-\section{Evaluation of Gradients in the Euler--Lagrange Equations for \methodAcronym}\label{appendix:vector_calc} 
+\section{Evaluation of gradients in the Euler--Lagrange Equations for \methodAcronym\ with \spatialAcronym\ trial subspaces}\label{appendix:vector_calc}
+We now derive the specific form of the Euler--Lagrange equations for the \methodAcronym\ formulation with \spatialAcronym\ trial subspaces. Without loss of generality, we present the derivation for a single window $t \in [0,T]$ with a constant basis $\basisspace$ and weighting matrix $\stweightingMat$.  
 To obtain the specific form of the Euler--Lagrange equations for the \methodAcronym\ formulation, we need to evaluate the gradients in~\eqref{eq:el1} for the integrand,
 \begin{align*}\label{eq:integrand_apx}
  \minintegrand & \vcentcolon
-(\genstateyDiscreteArgnt{}, \genstateyDiscreteDotArgnt{} ,t) \mapsto \frac{1}{2} \big[
+(\genstateyDiscreteArgnt{}, \genstateyDiscreteDotArgnt{} ,\timeDummy) \mapsto \frac{1}{2} \big[
 \basisspace \genstateyDiscreteDotArgnt{} - \velocity(\basisspace \genstateyDiscreteArgnt{}
-+ \stateIntercept,t) \big]^T \stweightingMatArg{} \big[
++ \stateIntercept,\timeDummy) \big]^T \stweightingMatArg{} \big[
 \basisspace \genstateyDiscreteDotArgnt{}  - \velocity(\basisspace \genstateyDiscreteArgnt{} +
 \stateIntercept,t) \big], \\ & 
 \vcentcolon \RR{\romdim} \times \RR{\romdim} \times [0,T]
@@ -906,20 +909,20 @@ To obtain the specific form of the Euler--Lagrange equations for the \methodAcro
 \end{align*}
 To evaluate the gradients, we first expand $\minintegrand$:
 \begin{align*}
- \minintegrand(\genstateyDiscrete,\dot{\genstateyDiscrete},t)  &= \frac{1}{2} \big[ \basisspace \genstateyDiscreteDotArgnt{}  - \velocity(\basisspace \genstateyDiscreteArgnt{} + \stateIntercept,t) \big]^T \stweightingMatArg{n} \big[ \basisspace \genstateyDiscreteDotArgnt{} - \velocity(\veloargsromy) \big] \\ 
- &= \frac{1}{2}\big[\basisspace \genstateyDiscreteDotArgnt{}  \big]^T  \stweightingMatArg{n}  \big[\basisspace \genstateyDiscreteDotArgnt{} \big]  - \frac{1}{2}\big[ \velocity(\veloargsromy) \big]^T \stweightingMatArg{n}  \big[\basisspace \genstateyDiscreteDotArgnt{}\big] - \frac{1}{2} \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  \\ &+ \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big].
+ \minintegrand(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy)  &= \frac{1}{2} \big[ \basisspace \genstateyDiscreteDotArgnt{}  - \velocity(\basisspace \genstateyDiscreteArgnt{} + \stateIntercept,\timeDummy) \big]^T \stweightingMatArg{} \big[ \basisspace \genstateyDiscreteDotArgnt{} - \velocity(\veloargsromy) \big] \\ 
+ &= \frac{1}{2}\big[\basisspace \genstateyDiscreteDotArgnt{}  \big]^T  \stweightingMatArg{}  \big[\basisspace \genstateyDiscreteDotArgnt{} \big]  - \frac{1}{2}\big[ \velocity(\veloargsromy) \big]^T \stweightingMatArg{}  \big[\basisspace \genstateyDiscreteDotArgnt{}\big] - \frac{1}{2} \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big]  \\ &+ \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big].
 \end{align*}
 Since $\stweightingMat$ is symmetric,
 \begin{equation}\label{eq:int_expand}
- \minintegrand(\genstateyDiscrete,\genstateyDiscreteDot,t)  = \frac{1}{2}\big[\basisspace \genstateyDiscreteDotArgnt{}  \big]^T  \stweightingMatArg{n}  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]  -  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  + \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big].
+ \minintegrand(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy)  = \frac{1}{2}\big[\basisspace \genstateyDiscreteDotArgnt{}  \big]^T  \stweightingMatArg{}  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]  -  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big]  + \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big].
 \end{equation}
 For notational purposes, we write the above as,
-$$  \minintegrand(\genstateyDiscrete,\dot{\genstateyDiscrete},t) =  \minintegrand_1(\genstateyDiscrete,\genstateyDiscreteDot,t) +  \minintegrand_2(\genstateyDiscrete,\genstateyDiscreteDot,t) +  \minintegrand_3(\genstateyDiscrete,\genstateyDiscreteDot,t),$$
+$$  \minintegrand(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy) =  \minintegrand_1(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy) +  \minintegrand_2(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy) +  \minintegrand_3(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy),$$
 where
 \begin{align*}
-&\minintegrand_1(\genstateyDiscrete,\genstateyDiscreteDot,t) \equiv  \frac{1}{2}\big[\basisspace \genstateyDiscreteDotArgnt{}  \big]^T  \stweightingMatArg{n}  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big], \\
-&   \minintegrand_2(\genstateyDiscrete,\genstateyDiscreteDot,t) \equiv   -  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big], \\
-&  \minintegrand_3(\genstateyDiscrete,\genstateyDiscreteDot,t) \equiv  \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big] . 
+&\minintegrand_1(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy) \equiv  \frac{1}{2}\big[\basisspace \genstateyDiscreteDotArgnt{}  \big]^T  \stweightingMatArg{}  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big], \\
+&   \minintegrand_2(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy) \equiv   -  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big], \\
+&  \minintegrand_3(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy) \equiv  \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big] . 
 \end{align*}
 Constructing the Euler--Lagrange equations for this functional $\minintegrand$ requires evaluating the derivatives $\frac{\partial \minintegrand}{\partial \genstateyDiscrete}$ and $\frac{\partial \minintegrand}{\partial \genstateyDiscreteDot}$. We start by evaluating $\frac{\partial \minintegrand}{\partial \genstateyDiscrete}$ and go term by term.
 
@@ -927,42 +930,43 @@ Starting with $\minintegrand_1(\genstateyDiscrete,\genstateyDiscreteDot)$, we se
 $$\frac{\partial \minintegrand_1 }{\partial \genstateyDiscrete} = \boldsymbol 0,$$
 where it is noted that $\mathcal{I}_1$ only depends on $\genstateyDiscreteDot$. Working with the second term:
 \begin{align*}
-\frac{\partial \minintegrand_2}{\partial \genstateyDiscrete}  &= -\frac{\partial}{\partial \genstateyDiscrete} \bigg( \big[ \basisspace \genstateyDiscreteDot \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big] \bigg) \\ 
-&= - \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{n} \frac{\partial}{\partial \genstateyDiscreteArgnt{}} \bigg( \big[ \velocity(\veloargsromy) \big]  \bigg)\\
- &= -\big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{n}   \frac{\partial \velocity}{\partial \stateyDiscrete}\frac{\partial \stateyDiscrete}{\partial \genstateyDiscrete} \\
-& = - \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{n}  \frac{\partial \velocity}{\partial \stateyDiscrete}\basisspace \\
-&= -[\genstateyDiscreteDotArgnt{}]^T \basisspace^T \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete}  \basisspace.
+\frac{\partial \minintegrand_2}{\partial \genstateyDiscrete}  &= -\frac{\partial}{\partial \genstateyDiscrete} \bigg( \big[ \basisspace \genstateyDiscreteDot \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big] \bigg) \\ 
+&= - \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{} \frac{\partial}{\partial \genstateyDiscreteArgnt{}} \bigg( \big[ \velocity(\veloargsromy) \big]  \bigg)\\
+ &= -\big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{}   \frac{\partial \velocity}{\partial \stateyDiscrete}\frac{\partial \stateyDiscrete}{\partial \genstateyDiscrete} \\
+& = - \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{}  \frac{\partial \velocity}{\partial \stateyDiscrete}\basisspace \\
+&= -[\genstateyDiscreteDotArgnt{}]^T \basisspace^T \stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete}  \basisspace.
 \end{align*}
 For $\minintegrand_3$,
 \begin{align}\label{eq:i3sol}
-\frac{\partial  \minintegrand_3}{\partial \genstateyDiscrete}  &= \frac{1}{2} \frac{\partial }{\partial \genstateyDiscrete} \bigg( \big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{n}\big[ \velocity(\veloargsromy) \big] \bigg) \\  
-&=  [\velocity(\veloargsromy) ]^T \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \frac{\partial \stateyDiscrete}{\partial \genstateyDiscrete} \\
- &=   [\velocity(\veloargsromy) ]^T  \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace.
+\frac{\partial  \minintegrand_3}{\partial \genstateyDiscrete}  &= \frac{1}{2} \frac{\partial }{\partial \genstateyDiscrete} \bigg( \big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{}\big[ \velocity(\veloargsromy) \big] \bigg) \\  
+&=  [\velocity(\veloargsromy) ]^T \stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \frac{\partial \stateyDiscrete}{\partial \genstateyDiscrete} \\
+ &=   [\velocity(\veloargsromy) ]^T  \stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace.
 \end{align}
 This gives the final expression,
 $$
- \frac{\partial \minintegrand}{\partial \boldsymbol \genstateyDiscrete} = - \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{n}  \frac{\partial \velocity}{\partial \stateyDiscrete}\basisspace +  [\velocity(\veloargsromy) ]^T \stweightingMatArg{n} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace.
+ \frac{\partial \minintegrand}{\partial \boldsymbol \genstateyDiscrete} = - \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{}  \frac{\partial \velocity}{\partial \stateyDiscrete}\basisspace +  [\velocity(\veloargsromy) ]^T \stweightingMatArg{} \frac{\partial \velocity}{\partial \stateyDiscrete} \basisspace.
 $$%
 We now evaluate $\frac{\partial \minintegrand}{\partial \genstateyDiscreteDotArgnt{}}$ and again go term by term. Starting with $\minintegrand_1$,
 \begin{align*}
 \frac{\partial \minintegrand_1}{\partial \genstateyDiscreteDotArgnt{}} &=
-\frac{1}{2} \frac{\partial}{\partial \genstateyDiscreteDotArgnt{} }\bigg( \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]  \stweightingMatArg{n}  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]  \bigg) \\
-&= [\genstateyDiscreteDotArgnt{}]^T \basisspace^T \stweightingMatArg{n} \basisspace.
+\frac{1}{2} \frac{\partial}{\partial \genstateyDiscreteDotArgnt{} }\bigg( \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]  \stweightingMatArg{}  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]  \bigg) \\
+&= [\genstateyDiscreteDotArgnt{}]^T \basisspace^T \stweightingMatArg{} \basisspace.
 \end{align*}
 Now working with the second term:
 \begin{align*}
 \frac{\partial \minintegrand_2}{\partial \genstateyDiscreteDotArgnt{} } &=
-\frac{\partial}{\partial \genstateyDiscreteDotArgnt{}  } \bigg( \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big]  \bigg)\\
- &= \frac{\partial}{\partial \genstateyDiscreteDotArgnt{} } \bigg( [\genstateyDiscreteDotArgnt{}]^T \bigg) \basisspace^T  \stweightingMatArg{n} \big[ \velocity(\veloargsromy) \big] \\ 
- &= \bigg[  \basisspace^T  \stweightingMatArg{n}  \velocity(\veloargsromy )   \bigg]^T \\
- &= [\velocity(\veloargsromy) ]^T \stweightingMatArg{n} \basisspace.
+\frac{\partial}{\partial \genstateyDiscreteDotArgnt{}  } \bigg( \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big]  \bigg)\\
+ &= \frac{\partial}{\partial \genstateyDiscreteDotArgnt{} } \bigg( [\genstateyDiscreteDotArgnt{}]^T \bigg) \basisspace^T  \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big] \\ 
+ &= \bigg[  \basisspace^T  \stweightingMatArg{}  \velocity(\veloargsromy )   \bigg]^T \\
+ &= [\velocity(\veloargsromy) ]^T \stweightingMatArg{} \basisspace.
 \end{align*}
 Finally, for the last term,
 \begin{align*}
 \frac{\partial \minintegrand_3}{\partial \genstateyDiscreteDotArgnt{} } &= \boldsymbol 0,
 \end{align*}
 where it is noted that $\mathcal{I}_3$ only depends on $\genstateyDiscrete$. We thus have,
-$$\frac{\partial \minintegrand}{\partial \dot{ \genstateyDiscrete} } =   [\genstateyDiscreteDotArgnt{}]^T \basisspace^T \stweightingMatArg{n} \basisspace -  [\velocity(\veloargsromy ) ]^T \stweightingMatArg{n} \basisspace.$$
+$$\frac{\partial \minintegrand}{\partial \genstateyDiscreteDot } =   [\genstateyDiscreteDotArgnt{}]^T \basisspace^T \stweightingMatArg{} \basisspace -  [\velocity(\veloargsromy ) ]^T \stweightingMatArg{} \basisspace.$$
+\EP{Here}
 Combining all terms, the Euler--Lagrange equation reads,
 \begin{multline*}
  \frac{\partial \minintegrand}{\partial \genstateyDiscrete}(\genstateArg{n}{t},\genstateDotArg{n}{t},t)  - \frac{d}{dt} \bigg[ \frac{\partial \minintegrand}{\partial \genstateyDiscreteDotArgnt{}} (\genstateArg{n}{t},\genstateDotArg{n}{t},t) \bigg] =  - \big[ \basisspace \genstateDotArg{n}{t}  \big]^T \stweightingMatArg{n} \big[  \frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn) \big] \basisspace \\ + [\velocity(\veloargsromn) ]^T \stweightingMatArg{n} \big[ \frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn) \big] \basisspace - \frac{d}{dt} \bigg[  [\genstateDotArg{n}{t} ]^T  \basisspace^T \stweightingMatArg{n} \basisspace - [\velocity(\veloargsromn) ]^T \stweightingMatArg{n} \basisspace \bigg]  = \boldsymbol 0.
