@@ -85,7 +85,7 @@ algorithm converged when the gradient norm is less than $1e-4$. All Jacobians ar
  
 \item \textit{\methodAcronymROMs\ with collocation}: We consider \methodAcronymROMs\ solved via the direct method. The ROMs use the Crank--Nicolson time-discretization with a time step of 
 $\Delta t = 0.1$. We deem the Gauss--Newton algorithm converged when the gradient norm is less than $1e-4$. All Jacobians are computed via automatic differentiation. Uniform quadrature 
-weights are used for evaluating the integral in~\eqref{eq:obj_gen_slab}. 
+weights are used for evaluating the integral in the minimization problem~\eqref{eq:obj_gen_slab}. 
  
 %\begin{itemize}
 %\item Direct Method: \methodAcronym ROMs solved via the direct method are again implemented with the same Crank--Nicolson time discretization with a nominal 
@@ -155,9 +155,9 @@ weights are used for evaluating the integral in~\eqref{eq:obj_gen_slab}.
 
 \subsubsection{Numerical results}
 We first assess the performance of \methodAcronymROMs\ with varying window sizes. To this end, we consider \methodAcronymROMs\ with uniform window 
-sizes of $\Delta T^n \equiv \Delta T = 0.2,0.5,1.0,$ and $2.0$, along with the Galerkin and LSPG ROMs. Results are first considered for basis \#1 as described in 
+sizes of $\Delta T^n \equiv \Delta T = 0.2,0.5,1.0,$ and $2.0$, along with the Galerkin and LSPG ROMs. We first consider results for basis \#1 as described in 
 Table~\ref{tab:rom_basis_details}. For all ROMs, we evolve 
-the solution for $t \in [0,100]$. This comprises the same time interval used to construct the trial subspace. First, Figure~\ref{fig:cav_results1a} depicts the evolution of the pressure at the bottom wall in the midpoint of the computational domain, while Figure~\ref{fig:cav_results1b} depicts the evolution of the normalized $\elltwo$ state error of the various reduced-order models. Both the hyper-reduced Galerkin and LSPG ROMs blow up/fail to converge within the first several time units. The \methodAcronymROM\ minimizing the residual over a window of size $\Delta T = 0.2$ also fails to converge. The \methodAcronymROMs\ that minimize the residual over window sizes of $\Delta T \ge 0.5$ are seen to all be stable and accurate; the pressure response is well characterized and the normalized state errors are again less than $10\%$. The most notable discrepancy between the \methodAcronymROM\ and FOM solutions is a slight phase difference. 
+the solution for $t \in [0,100]$. This comprises the same time interval used to construct the trial subspace. First, Figure~\ref{fig:cav_results1a} depicts the evolution of the pressure at the bottom wall in the midpoint of the computational domain, while Figure~\ref{fig:cav_results1b} depicts the evolution of the normalized $\elltwo$ state error of the various reduced-order models. Both the collocated Galerkin and LSPG ROMs blow up/fail to converge within the first several time units. The \methodAcronymROM\ minimizing the residual over a window of size $\Delta T = 0.2$ also fails to converge. The \methodAcronymROMs\ that minimize the residual over window sizes of $\Delta T \ge 0.5$ are seen to all be stable and accurate; the pressure response is well characterized and the normalized state errors are again less than $10\%$. The most notable discrepancy between the \methodAcronymROM\ and FOM solutions is a slight phase difference. 
 
 
 
@@ -180,20 +180,20 @@ the solution for $t \in [0,100]$. This comprises the same time interval used to 
 \end{subfigure}
 
 \end{center}
-\caption{Comparison of the pressure profiles obtained at the midpoint of the bottom wall (top) and normalized $\elltwo$ state errors (bottom) of various hyper-reduced ROMs to the full-order model solution.}
+\caption{Comparison of the pressure profiles obtained at the midpoint of the bottom wall (top) and normalized $\elltwo$ state errors (bottom) of various collocated ROMs to the full-order model solution.}
 \label{fig:cav_results1}
 \end{figure}
 
-Figure~\ref{fig:cav_results2} shows the integrated error and objective function of the stable \methodAcronymROMs. It is seen that growing the window size over 
+Figure~\ref{fig:cav_results2} shows the space--time error and objective function of the stable \methodAcronymROMs. It is seen that growing the window size over 
 which the residual is minimized leads to a lower space--time residual, but not necessarily a lower $\elltwo$ error. This result is consistent with the previous numerical example. Next, Figure~\ref{fig:cav_wallclock}
-shows the wall-clock times of the \methodAcronymROMs\ for $t \in [0,10]$ as compared to the LSPG ROM\footnote{Note that LSPG blew up at $t \approx 16.0$, so we focus on the first ten time units}. As expected, increasing the time-slab size again leads to an increase in computational cost. Minimizing the residual over a time-slab comprising 20 time-steps leads to a 2.5x increase in cost over LSPG. 
+shows the wall-clock times of the \methodAcronymROMs\ for $t \in [0,10]$ as compared to the LSPG ROM\footnote{Note that LSPG blew up at $t \approx 16.0$, so we focus on the first ten time units.}. As expected, increasing $\Delta T$ again leads to an increase in computational cost; minimizing the residual over a window comprising 20 time instances yields a 2.5x increase in cost over LSPG. 
 
 
 \begin{figure}
 \begin{center}
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.\linewidth]{figs/cavity/error_vs_window_basis2.pdf}
-\caption{Integrated $\elltwo$ error}
+\caption{Space--time $\elltwo$ error}
 \label{fig:cav_results2a}
 \end{subfigure}
 \begin{subfigure}[t]{0.45\textwidth}
@@ -202,7 +202,7 @@ shows the wall-clock times of the \methodAcronymROMs\ for $t \in [0,10]$ as comp
 \label{fig:cav_results2b}
 \end{subfigure}
 \end{center}
-\caption{Integrated error (left) and objective function (right) as a function of window size.}
+\caption{Space--time error (left) and objective function (right) as a function of window size.}
 \label{fig:cav_results2}
 \end{figure}
 
@@ -210,7 +210,7 @@ shows the wall-clock times of the \methodAcronymROMs\ for $t \in [0,10]$ as comp
 \begin{figure}
 \begin{center}
 \includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=0.49\linewidth]{figs/cavity/walltime_vs_window_compare_basis2.pdf}
-\caption{Wall-clock times of \methodAcronymROMs\ with respect to the LSPG ROM}
+\caption{Wall-clock times of \methodAcronymROMs\ with respect to the LSPG ROM.}
 \label{fig:cav_wallclock}
 \end{center}
 \end{figure}
@@ -247,7 +247,7 @@ Figure~\ref{fig:cav_snapshots} shows vorticity fields for the FOM, LSPG ROM, and
 
 Next, we assess the performance of the various ROMs for basis \#2 as described in Table~\ref{tab:rom_basis_details}, which comprises a richer spatial basis.
  Figure~\ref{fig:cav_results1_basis1} shows the same pressure and error profiles as Figure~\ref{fig:cav_results1}, but for the enriched basis. The LSPG and Galerkin ROMs blow up faster as compared to Figure~\ref{fig:cav_results1}; LSPG fails to converge around $t \approx 8$ (opposed to $t \approx 16$), while Galerkin blows up almost immediately. The 
-\methodAcronymROMs\ again yield improved performance: \methodAcronymROMs\ minimizing the residual over window sizes of $\Delta T \ge 0.5$ are seen to all be stable and accurate; the pressure response is well characterized and the normalized state errors are less than $5\%$. The \methodAcronymROMs\ with $\Delta T \ge 0.5$ leveraging the enriched basis yield more accurate results than \methodAcronymROMs\ using the coarse basis.
+\methodAcronymROMs\ again yield improved performance: \methodAcronymROMs\ minimizing the residual over window sizes of $\Delta T \ge 0.5$ are seen to all be stable and accurate; the pressure response is well characterized and the normalized state errors are less than $5\%$. The \methodAcronymROMs\ with $\Delta T \ge 0.5$ and basis \#2 yield more accurate results than \methodAcronymROMs\ with basis \#1.
  
 
 \begin{figure}
@@ -265,7 +265,7 @@ Next, we assess the performance of the various ROMs for basis \#2 as described i
 \label{fig:cav_results1b_basis1}
 \end{subfigure}
 \end{center}
-\caption{Comparison of the pressure profiles obtained at the midpoint of the bottom wall (top) and normalized $\elltwo$ state errors (bottom) of various hyper-reduced ROMs to the full-order model solution.}
+\caption{Comparison of the pressure profiles obtained at the midpoint of the bottom wall (top) and normalized $\elltwo$ state errors (bottom) of various collocated ROMs to the full-order model solution.}
 \label{fig:cav_results1_basis1}
 \end{figure}
 
@@ -288,7 +288,7 @@ Next, we assess the performance of the various ROMs for basis \#2 as described i
 \end{figure}
 
 
-Finally, Figure~\ref{fig:cav_wallclock} shows the wall-clock times of the \methodAcronymROMs\ as compared to the LSPG ROMs for basis \#2. Increasing the window size again leads to an increase in computational cost. Minimizing the residual over a window comprising 20 time-steps leads to a 2.5x increase in cost over LSPG. This increase in computational cost is particularly reasonable in this example as LSPG yielded an unstable solution. 
+Finally, Figure~\ref{fig:cav_wallclock} shows the wall-clock times of the \methodAcronymROMs\ as compared to the LSPG ROMs for basis \#2. Increasing the window size again leads to an increase in computational cost. Minimizing the residual over a window comprising 20 time instances yields a 2.5x increase in cost over LSPG. This increase in computational cost is particularly reasonable in this example as LSPG yielded an unstable solution. 
 \begin{figure}
 \begin{center}
 \includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=0.49\linewidth]{figs/cavity/walltime_vs_window_compare.pdf}
