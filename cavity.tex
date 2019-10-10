@@ -1,5 +1,5 @@
 \subsection{Cavity flow}
-The next numerical example considers hyper-reduced ROMs of a viscous, compressible flow in a two-dimensional cavity. 
+The next numerical example considers collocated ROMs\footnote{Collocation is a form of hyper-reduction which requires sampling the full-order model at only select grid points.} of a viscous, compressible flow in a two-dimensional cavity. 
 The flow is described by the two-dimensional compressible Navier-Stokes equations,
 \begin{equation}\label{eq:compressible_ns}
 \frac{\partial \mathbf{u}}{\partial t} + \nabla \cdot \big( \mathbf{F}(\mathbf{u} ) - \mathbf{F}_v (\mathbf{u},\nabla \mathbf{u} )      \big) =\bz,
@@ -13,17 +13,18 @@ $$
 The viscous fluxes are given by
 $$
 \qquad \mathbf{F}_{v_1} = \begin{Bmatrix} 0 \\ \tau_{11} \\ \tau_{12}  \\ u_j \tau_{j1} + c_p \frac{\mu}{\text{Pr}} \frac{\partial T}{\partial x_1}  \end{Bmatrix}, 
-\qquad \mathbf{F}_{v_2} = \begin{Bmatrix} 0 \\ \tau_{21} \\ \tau_{22}  \\ u_j \tau_{j2} + c_p \frac{\mu}{\text{Pr}} \frac{\partial T}{\partial x_2}  \end{Bmatrix}.
+\qquad \mathbf{F}_{v_2} = \begin{Bmatrix} 0 \\ \tau_{21} \\ \tau_{22}  \\ u_j \tau_{j2} + c_p \frac{\mu}{\text{Pr}} \frac{\partial T}{\partial x_2}  \end{Bmatrix},
 $$
-We assume a Newtonian fluid, which leads to a viscous stress tensor of the form,
+where $\mu \in \RRplus$ is the viscosity, $\text{Pr} = 0.72$ is the Prandtl number, and $c_p \in \RRplus$ the heat capacity ratio.
+We assume a Newtonian fluid, which leads to a viscous stress tensor of the form
 \begin{equation*}
 \tau_{ij} = 2\mu S_{ij},
 \end{equation*}
-where,
+where
 \begin{equation*}
  S_{ij} = \frac{1}{2} \big( \frac{\partial u_i}{\partial \mathsf{x}_j} + \frac{\partial u_j}{\partial \mathsf{x}_i} \big) - \frac{1}{3} \frac{\partial      u_k}{\partial \mathsf{x}_i} \delta_{ij}.
 \end{equation*}
-The Navier-Stokes equations are closed with a constitutive relationship for a calorically perfect gas,
+The Navier--Stokes equations are closed with a constitutive relationship for a calorically perfect gas,
 $$p = (\gamma - 1)( \rho E - \frac{1}{2} \rho u_1^2 - \frac{1}{2} \rho u_2^2 \big),$$
 where $\gamma = 1.4$ is the heat-capacity ratio.
 
@@ -37,15 +38,15 @@ is obtained by partitioning the domain into $100$ elements in the flow direction
 in the wall-normal direction. The solution is represented to third order over each element using tensor product polynomials of order $p=2$, 
 resulting in $36000$ unknowns for each conserved variable. Spatial discretization via the discontinuous Galerkin method yields a dynamical system 
 of the form,
-$$\frac{d \state}{dt} = \mass_{\text{DG}} \velocity_{\text{DG}} (\state),$$
-where $\mass_{\text{DG}} \in \RR{N \times N}$ is the DG mass matrix and $\velocity_{\text{DG}}: \RR{N} \rightarrow \RR{N}$ is the DG velocity operator containing 
-surface and volume integrals. By the definition of the FOM~\eqref{eq:FOM}, the dynamical system velocity is $\velocity = \mass_{\text{DG}} \velocity_{\text{DG}}$. 
+$$\frac{d \state}{dt} = \mass_{\text{DG}}^{-1} \velocity_{\text{DG}} (\state),$$
+where $\mass_{\text{DG}} \in \RR{N \times N}$ is the (block diagonal) DG mass matrix and $\velocity_{\text{DG}}: \RR{N} \rightarrow \RR{N}$ is the DG velocity operator containing 
+surface and volume integrals. By the definition of the FOM~\eqref{eq:FOM}, the dynamical system velocity is $\velocity = \mass_{\text{DG}}^{-1} \velocity_{\text{DG}}$. 
 Figure~\ref{fig:cav_mesh} shows the computational mesh. The 
-DG method leverages the Rusanov flux at the cell interfaces~\cite{rusanov} and uses the first form of Bassi and Rebay~\cite{br1} for the viscous fluxes. Time integration 
-is performed via a third-order strong stability preserving Runge-Kutta method~\cite{ssp_rk3} with a time-step size of $\Delta t = 0.001$. 
+DG method uses the Rusanov flux at the cell interfaces~\cite{rusanov} and uses the first form of Bassi and Rebay~\cite{br1} for the viscous fluxes. Time integration 
+is performed via a third-order strong stability preserving Runge-Kutta method~\cite{ssp_rk3} with a time step of $\Delta t = 0.001$. 
  
-The reduced-order models leverage POD to construct the trial basis and use q-sampling~\cite{qdeim_drmac} based on snapshots of the FOM velocity to construct the weighting 
-matrix $\stweightingMatArg{n}$. The process used to construct the initial conditions and trial subspaces for the ROMs are as follows:
+The reduced-order models leverage POD to construct the \spatialAcronym\ trial basis and use q-sampling~\cite{qdeim_drmac} based on snapshots of the FOM velocity to select the sampling points and, as a result the weighting 
+matrix $\stweightingMatArg{}$; we use a constant weighting matrix across all windows, e.g., $\stweightingMatArg{n} \equiv \stweightingMatArg{}$. The process used to construct the initial conditions and trial subspaces for the ROMs is as follows:
 \begin{enumerate}
 \item Initialize the FOM with uniform free-stream conditions.
 \item Evolve the FOM for $t \in [0,400]$.
@@ -74,16 +75,16 @@ Basis \# & Trial Basis Dimension ($K$) &  Energy Criterion & Sample Points ($n_S
 Hyper-reduced ROMs based on the Galerkin, collocated Least--Squares Petrov--Galerkin, and \methodAcronym\ approaches are 
 again considered. Details on the implementation of the methods is as follows:
 \begin{itemize}
-\item \textit{Galerkin ROM with collocation}: The Galerkin ROM with collocation is obtained through Galerkin projection of the FOM. Unless 
-otherwise noted, the  Galerkin ROM is evolved in time with the Crank--Nicolson time scheme at a time step of $\Delta t =0.1$.
+\item \textit{Galerkin ROM with collocation}: We consider a Galerkin ROM with collocation. Unless 
+otherwise noted, the Galerkin ROM is evolved in time with the Crank--Nicolson time scheme at a time step of $\Delta t =0.1$.
 
-\item \textit{LSPG ROM with collocation}: The LSPG ROM with collocation is built on top of the FOM discretization using the Crank--Nicolson scheme for temporal 
+\item \textit{LSPG ROM with collocation}: We consider a collocated LSPG ROM, which is built on top of the FOM discretization using the Crank--Nicolson scheme for temporal 
 discretization. Unless otherwise noted, the time step for the LSPG ROM is $\Delta t  = 0.1$. As in the previous example, 
-the Gauss--Newton method is used to solve the non-linear least-squares problem arising at each time instance. The Gauss--Newton 
-algorithm is deemed converged when the gradient norm is less than $1e-4$. All Jacobians are again computed via automatic differentiation.
+the Gauss--Newton method is used to solve the non-linear least-squares problem arising at each time instance. We deem the Gauss--Newton 
+algorithm converged when the gradient norm is less than $1e-4$. All Jacobians are computed via automatic differentiation.
  
-\item \textit{\methodAcronymROMs\ with collocation}: \methodAcronymROMs\ are solved via the direct method. The ROMs use the Crank--Nicolson time-discretization with a time-step size of 
-$\Delta t = 0.1$. The Gauss--Newton algorithm is deemed converged when the gradient norm is less than $1e-4$. All Jacobians are computed via automatic differentiation. Uniform quadrature 
+\item \textit{\methodAcronymROMs\ with collocation}: We consider \methodAcronymROMs\ solved via the direct method. The ROMs use the Crank--Nicolson time-discretization with a time step of 
+$\Delta t = 0.1$. We deem the Gauss--Newton algorithm converged when the gradient norm is less than $1e-4$. All Jacobians are computed via automatic differentiation. Uniform quadrature 
 weights are used for evaluating the integral in~\eqref{eq:obj_gen_slab}. 
  
 %\begin{itemize}
@@ -106,7 +107,7 @@ weights are used for evaluating the integral in~\eqref{eq:obj_gen_slab}.
 \begin{figure}
 \begin{center}
 \includegraphics[trim={0cm 14cm 0cm 14cm},clip,width=1.\linewidth]{figs/cavity/grid.png}
-\caption{Computational mesh}
+\caption{Computational mesh employed in cavity flow simulations.}
 \label{fig:cav_mesh}
 \end{center}
 \end{figure}
@@ -114,7 +115,7 @@ weights are used for evaluating the integral in~\eqref{eq:obj_gen_slab}.
 \begin{figure} 
 \begin{center}
 \includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=0.65\linewidth]{figs/cavity/hyper_grid.png}
-\caption{Close up of computational mesh with highlighted collocation cells} 
+\caption{Close up of computational mesh with highlighted collocation cells.} 
 \label{fig:cav_sampmesh}
 \end{center}
 \end{figure}
