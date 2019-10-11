@@ -252,18 +252,22 @@ $\stateROMStarSolArg{n}$ and $\stateROMSolArg{n}$ are defined by the systems,
 %\adjointROMStarSolArg{n} }^2 .$$ 
 \end{comment}
 We now find an upper bound for $\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt$. 
-First, as the codomain of the $2$-norm is $\RRplus$, we can bound $\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}$ by above,
-\EP{Something got messed up here in a merge, fixing right now}
+First we can bound $\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}^2$ by above,
 \begin{align*}
-\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} &\le  \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} + \norm{\adjointROMSolArgt{n}{t} - 
-\adjointROMStarSolArgt{n}{t} } , \\
-%&\le \norm{\basisspace}  \norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}} + \norm{\basisspace} \norm{ \adjointROMSolArgt{n}{t} - 
-% \adjointROMStarSolArgt{n}{t} },\\ 
-&\le  \norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}} + \norm{ \adjointROMSolArgt{n}{t} - 
- \adjointROMStarSolArgt{n}{t} }, 
+\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}^2 &\le  \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}^2 + \norm{ \adjointROMSolArgt{n}{t} - 
+\adjointROMStarSolArgt{n}{t} }^2 , \\
+&\le  \norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}}^2 + \norm{ \adjointROMSolArgt{n}{t} - 
+ \adjointROMStarSolArgt{n}{t} }^2, 
 \end{align*}
-where $\genstateROMSol$ and $\genstateROMStarSol$ are the generalized coordinates of $\stateROMSol$ and $\stateROMStarSol$ and it is additionally noted that $\norm{\basisspaceArg{n}} = 1$ (orthonormal matrix).
-Critically, we now utilize the fact that the system governing \methodAcronym\ with \spatialAcronym\ trial subspaces is Hamiltonian. Applying Liouville's theorem for Hamiltonian systems, we have the requirement 
+where $\genstateROMSolArg{n}$ and $\genstateROMStarSolArg{n}$ are the generalized coordinates of $\stateROMSolArg{n}$ and $\stateROMStarSolArg{n}$ and it is additionally noted that 
+$\norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}} = 
+ \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}$. Taking the square root yields
+\begin{align*}
+\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} &\le \sqrt{ \norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}}^2 + \norm{ \adjointROMSolArgt{n}{t} - 
+ \adjointROMStarSolArgt{n}{t} }^2}. 
+\end{align*}
+Critically, we now utilize the fact that the system governing the \methodAcronymROM\ with \spatialAcronym\ trial spaces is Hamiltonian. 
+Applying Liouville's theorem for Hamiltonian systems, we have the requirement 
 %states that, for Hamiltonian systems, ``the volume enclosed by a closed surface in phase-space is 
 %constant as that volume moves through phase-space~\cite{liouville}.'' In the present context, Liouville's theorem states, 
 $$ \frac{d}{dt}  \sqrt{ \norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}^2 + \norm{\adjointROMSolArg{n} - 
@@ -271,11 +275,38 @@ $$ \frac{d}{dt}  \sqrt{ \norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}
 Thus, we have
 \begin{align*}
 \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt &\le 
-\intSlabArg{n} \norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}} + \norm{ \adjointROMSolArgt{n}{t} - 
- \adjointROMStarSolArgt{n}{t} } dt \\
+\intSlabArg{n} \sqrt{ \norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}}^2 + \norm{ \adjointROMSolArgt{n}{t} - 
+ \adjointROMStarSolArgt{n}{t} }^2 } dt \\
 &\le  \DeltaSlabArg{n}  \sqrt{ \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2 + \norm{\adjointROMSolArgt{n}{\timeStartArg{n}} - 
 \adjointROMStarSolArgt{n}{\timeStartArg{n}}  }^2}.
 \end{align*}
+%==================\\
+%We now find an upper bound for $\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt$. 
+%First, as the codomain of the $2$-norm is $\RRplus$, we can bound $\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}$ by above,
+%\EP{Something got messed up here in a merge, fixing right now}
+%\begin{align*}
+%\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} &\le  \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} + \norm{\adjointROMSolArgt{n}{t} - 
+%\adjointROMStarSolArgt{n}{t} } , \\
+%%&\le \norm{\basisspace}  \norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}} + \norm{\basisspace} \norm{ \adjointROMSolArgt{n}{t} - 
+%% \adjointROMStarSolArgt{n}{t} },\\ 
+%&\le  \norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}} + \norm{ \adjointROMSolArgt{n}{t} - 
+% \adjointROMStarSolArgt{n}{t} }, 
+%\end{align*}
+%where $\genstateROMSol$ and $\genstateROMStarSol$ are the generalized coordinates of $\stateROMSol$ and $\stateROMStarSol$ and it is additionally noted that $\norm{\basisspaceArg{n}} = 1$ (orthonormal matrix).
+%Critically, we now utilize the fact that the system governing \methodAcronym\ with \spatialAcronym\ trial subspaces is Hamiltonian. Applying Liouville's theorem for Hamiltonian systems, we have the requirement 
+%%states that, for Hamiltonian systems, ``the volume enclosed by a closed surface in phase-space is 
+%%constant as that volume moves through phase-space~\cite{liouville}.'' In the present context, Liouville's theorem states, 
+%$$ \frac{d}{dt}  \sqrt{ \norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}^2 + \norm{\adjointROMSolArg{n} - 
+%\adjointROMStarSolArg{n} }^2}  = \bz \qquad t \in [\timeStartArg{n},\timeEndArg{n}].$$
+%Thus, we have
+%\begin{align*}
+%\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt &\le 
+%\intSlabArg{n} \norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}} + \norm{ \adjointROMSolArgt{n}{t} - 
+% \adjointROMStarSolArgt{n}{t} } dt \\
+%&\le  \DeltaSlabArg{n}  \sqrt{ \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2 + \norm{\adjointROMSolArgt{n}{\timeStartArg{n}} - 
+%\adjointROMStarSolArgt{n}{\timeStartArg{n}}  }^2}.
+%\end{align*}
+%================
 Using the definition of the costate~\eqref{eq:costate_def} and residual, 
 \begin{equation*}
 \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt 
