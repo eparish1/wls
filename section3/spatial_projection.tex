@@ -3,8 +3,7 @@
 %\KTC{HERE}
 In this context, the \spatialAcronym\ trial subspace over the $n$th time window approximates
 the FOM ODE solution trajectory $\stateFOM(t)$,
-$t\in[\timeStartArg{n},\timeEndArg{n}]$ \KTC{I changed this because we are
-only approximating the solution in the $n$th time window.}
+$t\in[\timeStartArg{n},\timeEndArg{n}]$ 
 with $\approxstateArgnt{n} \in \stspaceSArg{n}$, where
 \begin{equation}\label{eq:sttrialspace}
  \stspaceSArg{n} \defeq 
@@ -17,7 +16,7 @@ $\trialspaceArg{n}\defeq\Range{\basismatArg{n}}$ with
 $\basismatArg{n}\equiv[\basisvecArg{n}_1\ \cdots\
 \basisvecArg{n}_{\romdimArg{n}}]\in
 \RRStar{\romdimArg{n}}{\fomdim}
-$ \KTC{Have we defined $\RRStar{m}{n}$?}, the reference state $\stateInterceptArg{n} \in \RR{\fomdim}$, $n=1,\ldots,\nslabs$ provides the affine transformation, 
+$, the reference state $\stateInterceptArg{n} \in \RR{\fomdim}$, $n=1,\ldots,\nslabs$ provides the affine transformation, 
 and  
 $\onesFunction^n\in\timeSpaceArg{n}$ is defined as
 $\onesFunction^n:\timeDummy\mapsto 1.$
@@ -42,8 +41,6 @@ implies that
 \methodAcronym\ with \spatialAcronym\ space--time trial subspaces
 sequentially computes solutions
 $\genstateArgnt{n}$, $n = 1,\ldots,\nslabs$ that satisfy
-\KTC{This optimization is defined incorrectly. It shoudl just be $\hat y\in
-ST_S^n$ under minimize and $J^n$ should take only $\hat y$ in the argument.}
 %For notational purposes, we define the ``decoder", or ``lifting operator",
 %that maps the generalized coordinates to the state-space of the full-order
 %model as, \begin{align}\label{eq:decoder} \decoder  \vcentcolon & \;
@@ -65,18 +62,18 @@ ST_S^n$ under minimize and $J^n$ should take only $\hat y$ in the argument.}
 \end{split}
 \end{equation}
 We emphasize that problem~\eqref{eq:obj_gen_slab} aims to compute the
-\textit{function} $\genstate^n\in\stspaceSArg{n}$ that minimizes the \textit{functional}
+\textit{function} $\approxstateArgnt{n}\in\stspaceSArg{n}$ that minimizes the \textit{functional}
 	$\objectiveArg{n}$. 	%corresponds to
 %an infinite dimensional minimization problem: the problem 
 
 \subsubsection{Stationary conditions and the Euler--Lagrange equations}
-	\KTC{HERE}
-	\KTC{Quite a few issues here. Need to make $\mathcal I$ have a superscript
-	$n$ everywhere, including (19), (20), need to replace $[0,T]$ with
-	$[t_s^n,t_f^n]$ in the function argumentsi, need to make the functions in
-	(19) and (20) depend also on the functional $\hat x^n$ (but use a general
-	notation for this variable). Need to make sure all the basis $\basismat$
-	have arguments throughout as well as the reference states. }
+%	\KTC{HERE}
+%	\KTC{Quite a few issues here. Need to make $\mathcal I$ have a superscript
+%	$n$ everywhere, including (19), (20), need to replace $[0,T]$ with
+%	$[t_s^n,t_f^n]$ in the function argumentsi, need to make the functions in
+%	(19) and (20) depend also on the functional $\hat x^n$ (but use a general
+%	notation for this variable). Need to make sure all the basis $\basismat$
+%	have arguments throughout as well as the reference states. }
 
 Stationary conditions for optimization problem~\eqref{eq:obj_gen_slab} can be derived via 
 	the Euler--Lagrange equations from the
@@ -99,10 +96,8 @@ coordinates) as
 %\velocity(\decoder(\genstate)) \big]^T \stweightingMat(t) \big[\frac{\partial
 %\decoder}{\partial \genstate} \dot{\genstate} -
 %\velocity(\decoder(\genstate)) \big].$$
-We also define the quantities\footnote{We use Jacobian layout for the
-scalar-by-vector gradients \KTC{Not sure whta preceding statement means. I
-would remove this footnote as the dimensions are clear from what you write
-below.}, and, as a result, the transpose operator is needed for, e.g., $\dIdVArg{n}$ is a column vector functional.}
+We also define the quantities\footnote{We use numerator layout for the
+scalar-by-vector gradients.}
 \begin{equation}
 \begin{split}
 \dIdVArg{n}  & \vcentcolon
