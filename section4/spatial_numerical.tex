@@ -59,7 +59,8 @@ other time-stepping methods (e.g., Runge--Kutta) follows closely.
 %%\timeEndArg{n}
 %\end{align*}
 \subsubsection{Linear multistep schemes}
-\KTC{HERE}
+\KTC{HERE} \EP{This section has the double superscript. We could make one of these a subscript, but then need to change the algorithms a bit as 
+I use subscripts to denote iterations. Either is fine}
 Linear multistep schemes approximate the solution at time instance $\timeWindowArg{n}{i}$ using the previous $k$ time-instances.  
 %Discretizing the FOM ODE~\eqref{eq:FOM} with a linear $k$-step scheme at the $i$th time-instance over the $n$th time slab yields,
 %\begin{equation}\label{eq:kstep}
@@ -181,12 +182,12 @@ for arbitrary $p$ and $m$. The stacked vector of generalized coordinates over th
 \genstatecollocMatSlabArg{n} \defeq 
 \unroll (\genstateDiscreteArg{n,1},\ldots,\genstateDiscreteArg{n,\nstepsArg{n}} ).
 \end{equation*}
-Now, define the weighted space--time residual over the entire window as
+We now define the weighted space--time residual over the entire window as
 \begin{equation*}
 \residLMSSlabArg{n} : (\genstatecollocMatySlabArg{};\genstateDiscreteArg{n,0}) \mapsto \begin{bmatrix}
- \sqrt{\quadWeightsLMSScalarArg{n}{1} } \stweightingMatOneArg{n,1} \residLMSArg{n,1}( \basisspaceArg{n} \genstateyDiscreteArgnt{1} + \stateInterceptArg{n},  \basisspaceArg{n} \genstateDiscreteArg{n,0} + \stateInterceptArg{n},) \\
+ \sqrt{\quadWeightsLMSScalarArg{n}{1} } \stweightingMatOneArg{n} \residLMSArg{n,1}( \basisspaceArg{n} \genstateyDiscreteArgnt{1} + \stateInterceptArg{n},  \basisspaceArg{n} \genstateDiscreteArg{n,0} + \stateInterceptArg{n},) \\
 \vdots \\
- \sqrt{\quadWeightsLMSScalarArg{n}{\nstepsArg{n}} } \stweightingMatOneArg{n,\nstepsArg{n}} \residLMSArg{n,\nstepsArg{n}}( \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n}} + \stateInterceptArg{n}, \ldots,\basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n} - k^n(\nstepsArg{n}) } + \stateInterceptArg{n}) \\
+ \sqrt{\quadWeightsLMSScalarArg{n}{\nstepsArg{n}} } \stweightingMatOneArg{n} \residLMSArg{n,\nstepsArg{n}}( \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n}} + \stateInterceptArg{n}, \ldots,\basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n} - k^n(\nstepsArg{n}) } + \stateInterceptArg{n}) \\
 \end{bmatrix},
 \end{equation*}
 where $\genstatecollocMatySlabArg{} \defeq \unroll (\genstateyDiscreteArg{1},\ldots,\genstateyDiscreteArg{\nstepsArg{n}} ).$
