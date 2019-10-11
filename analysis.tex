@@ -198,11 +198,11 @@ Applying triangle inequality,
 %$$ \le \norm{\state_R - \state^*_R} + \norm{\state^*_R - \state_f}.$$
 Integrating over the $n$th window and using the definition $\errorArg{n} \defeq \stateFOMSolArg{n} - \stateROMSolArg{n}$,
 $$\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt +  \intSlabArg{n} \norm{\stateROMStarSolArgt{n}{t} - \stateFOMSolArgt{n}{t}}dt.$$
-Applying A2 (inverse Lipshitz continuity on the integrated residual), the last term on the right-hand side becomes,
+Applying A2 (inverse Lipshitz continuity on the integrated residual), the last term on the right-hand side becomes
 \begin{equation*}
 \intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt +  \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateROMStarSolArg{n},t) - \resid(\stateFOMSolArg{n},t)} dt.
 \end{equation*}
-Noting that, $\forall t \in [0,T]$, we have $\resid(\stateFOMSolArg{n},t) = \bz$, 
+Noting that, $\forall t \in [0,T]$, we have $\resid(\stateFOMSolArg{n},t) = \bz$ and get the simplification 
 %As $\resid{\state_f} = \boldsymbol 0$,
 \begin{equation*}
 \intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateROMStarSolArg{n},t) } dt.
@@ -252,7 +252,8 @@ $\stateROMStarSolArg{n}$ and $\stateROMSolArg{n}$ are defined by the systems,
 %\adjointROMStarSolArg{n} }^2 .$$ 
 \end{comment}
 We now find an upper bound for $\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt$. 
-First, as the codomain of the $2$-norm is $\RR{+}$, we can bound $\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}$ by above,
+First, as the codomain of the $2$-norm is $\RRplus$, we can bound $\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}$ by above,
+\EP{Something got messed up here in a merge, fixing right now}
 \begin{align*}
 \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} &\le  \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} + \norm{\adjointROMSolArgt{n}{t} - 
 \adjointROMStarSolArgt{n}{t} } , \\
