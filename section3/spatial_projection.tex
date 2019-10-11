@@ -1,13 +1,15 @@
 \subsection{\spatialAcronym\ trial subspaces}
 %\KTC{Make sure that $\trialspace$ and $\stateIntercept$ depend on $n$.}
 %\KTC{HERE}
-The \spatialAcronym\ trial subspace over the $n$th time window approximates
-the FOM ODE solution trajectory $\stateFOM\in\RR{N}\otimes\timeSpace$
+In this context, the \spatialAcronym\ trial subspace over the $n$th time window approximates
+the FOM ODE solution trajectory $\stateFOM(t)$,
+$t\in[\timeStartArg{n},\timeEndArg{n}]$ \KTC{I changed this because we are
+only approximating the solution in the $n$th time window.}
 with $\approxstateArgnt{n} \in \stspaceSArg{n}$, where
 \begin{equation}\label{eq:sttrialspace}
  \stspaceSArg{n} \defeq 
 	\trialspaceArg{n} \otimes \timeSpaceArg{n} +
-	\stateInterceptArg{n}\otimes\onesFunction^n.
+	\stateInterceptArg{n}\otimes\onesFunction^n\subseteq\RR{N} \otimes \timeSpaceArg{n}.
 \end{equation}
 Here, the spatial trial subspaces $\trialspaceArg{n}\subseteq\RR{\fomdim}$,
 $n=1,\ldots,\nslabs$ satisfy 
@@ -15,14 +17,14 @@ $\trialspaceArg{n}\defeq\Range{\basismatArg{n}}$ with
 $\basismatArg{n}\equiv[\basisvecArg{n}_1\ \cdots\
 \basisvecArg{n}_{\romdimArg{n}}]\in
 \RRStar{\romdimArg{n}}{\fomdim}
-$, the reference state $\stateInterceptArg{n} \in \RR{\fomdim}$, $n=1,\ldots,\nslabs$ provides the affine transformation, 
+$ \KTC{Have we defined $\RRStar{m}{n}$?}, the reference state $\stateInterceptArg{n} \in \RR{\fomdim}$, $n=1,\ldots,\nslabs$ provides the affine transformation, 
 and  
 $\onesFunction^n\in\timeSpaceArg{n}$ is defined as
 $\onesFunction^n:\timeDummy\mapsto 1.$
 % and  
 %$\approxstateArgnt{n}: [\timeStartArg{n},\timeEndArg{n}] \rightarrow  \trialspace$ is the \methodAcronym\ approximation to the state over the $n$th time slab.
 Thus, at any time instance $t\in[\timeStartArg{n},\timeEndArg{n}]$, the
-\spatialAcronym\ trial subspace in this context 
+\spatialAcronym\ trial subspace 
 approximates the FOM ODE solution as
 \begin{equation}\label{eq:affine_trialspace_tclsrm}
 	\stateFOM(t)\approx \approxstateArgnt{n}(t) = \basismatArg{n}
@@ -33,11 +35,15 @@ $\genstateArgnt{n}: \timeDummy\mapsto \genstateArgnt{n}(\timeDummy)
 $ denotes the generalized coordinates over the $n$th time window. 
 
 Substituting the approximation~\eqref{eq:affine_trialspace_tclsrm} into the
-\methodAcronym\ minimization problem~\eqref{eq:tclsrm} and using $\elltwo$ projection of the 
-initial conditions implies that 
+\methodAcronym\ minimization problem~\eqref{eq:tclsrm} and setting 
+$\mathbb{P}^n$ to the 
+$\elltwo$-orthogonal projection operator 
+implies that 
 \methodAcronym\ with \spatialAcronym\ space--time trial subspaces
 sequentially computes solutions
 $\genstateArgnt{n}$, $n = 1,\ldots,\nslabs$ that satisfy
+\KTC{This optimization is defined incorrectly. It shoudl just be $\hat y\in
+ST_S^n$ under minimize and $J^n$ should take only $\hat y$ in the argument.}
 %For notational purposes, we define the ``decoder", or ``lifting operator",
 %that maps the generalized coordinates to the state-space of the full-order
 %model as, \begin{align}\label{eq:decoder} \decoder  \vcentcolon & \;

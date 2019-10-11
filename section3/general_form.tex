@@ -81,7 +81,8 @@ For notational purposes, we additionally define the (spatial) trial subspaces at
 	\stspaceArg{n}\})\subseteq\RR{\fomdim}, \qquad n=1,\ldots,\nslabs. 
 \end{equation}
 such that $\approxstateArg{n}{\timeStartArg{n}} \in \stspaceBoundStartArg{n}$.
-To outline \methodAcronym, we now define the objective functional over the $n$th window:
+To outline \methodAcronym, we now define the objective functional over the
+$n$th window as
 \begin{equation}\label{eq:obj}
 \begin{split} \mathcal{J}^n &\vcentcolon \statey \mapsto
 \frac{1}{2} \int_{\timeStartArg{n}}^{\timeEndArg{n}} \big[ \dot{\statey}(t)
@@ -125,7 +126,8 @@ minimization problem
 %\end{split}
 %\end{equation}
 where $\projectorArg{n} : \RR{\fomdim} \rightarrow \stspaceBoundStartArg{n}$ 
-is a (spatial) projector onto the start of the $n$th trial space (e.g., $\elltwo$).
+is a (spatial) projection operator onto the start of the $n$th trial space
+(e.g., $\elltwo$-orthogonal projection operator).
 
 %for \spatialAcronym\ subspaces
 %and
@@ -153,7 +155,7 @@ We now define the trial subspaces $\stspaceArg{n}$ considered in this work. In
 	particular, we introduce \spatialAcronym\ trial subspaces and
 	\spaceTimeAcronym\ trial subspaces tailored for this context. 
 We leave further investigation into other approaches, such as nonlinear
-	manifolds~\cite{leeCarlberg}, as a subject for future work.
+	trial manifolds~\cite{leeCarlberg}, as a subject for future work.
 %A variety of trial spaces have been examined in the model-order reduction community.
 %The most popular trial space comprises a linear, spatial-projection-only trial space (e.g., Eqns.~\eqref{eq:spatial_subspace}-\eqref{eq:spatial_subspace3}), although recently 
 %nonlinear trial spaces~\cite{leeCarlberg} and space--time trial spaces~\cite{choi_stlspg,constantine_strom,2,3} have gained attention. This work focuses on the classic 
