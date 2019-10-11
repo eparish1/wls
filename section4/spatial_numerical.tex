@@ -78,8 +78,8 @@ where $\stateFOMDiscreteArg{n,i} \approx \stateFOMArg{n}{\timeWindowArg{n}{i}} \
                &: \RR{\fomdim} \otimes \RR{\lmsWidthArg{n}{i}+1} \rightarrow \RR{\fomdim}. 
 \end{align*} 
 Additionally, $\Delta t^{n,i} = \timeWindowArg{n}{i} - \timeWindowArg{n}{i-1}$ is the time step, $\lmsWidthArg{n}{i}$ is the width of the multistep scheme, and $\alpha^{n,i}_j$ and $\beta^{n,i}_j$ are coefficients that 
-define the specific type of multistep scheme. Examples of linear multistep schemes include Adams-Bashforth schemes and  
-Adams-Moulton schemes. 
+define the specific type of multistep scheme. Examples of linear multistep schemes include Adams--Bashforth schemes and  
+Adams--Moulton schemes. 
 \begin{remark}\label{remark:LMS}
 For notational simplicity, we assume the linear multistep method employs time instances from only within the current time window. In general, the linear multistep method at the $n$th window could be designed to employ multiple time instances from previous time windows.
 \end{remark}
@@ -275,7 +275,7 @@ system given by the Euler--Lagrange equations~\eqref{eq:lspg_continuous}--\eqref
 problem. A variety of techniques have
 been devised to solve two-point boundary value problems of this type. These
 techniques include shooting methods, multiple shooting
-methods~\cite{multiple_shooting}, and the forward-backward sweep
+methods~\cite{multiple_shooting}, and the forward--backward sweep
 method~\cite{fbs} (FBSM).  This work explores using the FBSM. 
 
 %Solving this coupled problem is significantly more challenging and
@@ -292,7 +292,7 @@ method~\cite{fbs} (FBSM).  This work explores using the FBSM.
 %the forward and backward problems \item Efficient strategy for evaluating the
 %action of the Jacobian transpose on a vector \end{enumerate}
 
-\subsubsection{Forward-backward sweep method (FBSM)}\label{sec:FBSM}
+\subsubsection{Forward--backward sweep method (FBSM)}\label{sec:FBSM}
 %\subsubsection{Solution Strategy} Solving Eq.~\ref{eq:lspg_continuous} is
 %made challenging by the fact that it is a coupled two-point boundary value
 %problem. The forward problem is coupled to the backwards adjoint problem,
@@ -393,7 +393,7 @@ The Jacobian transpose can be formed in $K+1$ evaluations of the velocity. For c
 
 \begin{remark}\label{remark:fbsm}(Acceleration of Indirect Methods)
 The FBSM is a simple iterative method for solving the coupled two-point boundary value problem. For large time windows, however, the FBSM may require many 
-forward-backward iterations for convergence. More sophisticated solution techniques, such as a multiple FBSM method or multiple shooting methods, promise 
+forward--backward iterations for convergence. More sophisticated solution techniques, such as a multiple FBSM method or multiple shooting methods, promise 
 to reduce this cost. Analyses of additional solution techniques will be a subject of future work.
 \end{remark}
 

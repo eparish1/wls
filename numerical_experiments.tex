@@ -54,7 +54,7 @@ arising over each window is solved via the Gauss--Newton method. All Jacobians a
 matrix over a window is constructed by assembling local (dense) Jacobians. The global Jacobian over a single window is then stored in a compressed sparse row format. Uniform quadrature weights are used for evaluating the integral in~\eqref{eq:obj_gen_slab}. 
 
 \item Indirect method: We consider two \methodAcronymROMs\ solved via the indirect method. The first uses the same CN discretization at at time step of $\Delta t = 0.002$, while the second uses the AB2 discretization using a time step of $\Delta t = 0.0005$. The coupled two-point boundary 
-problem is solved via the Forward Backward Sweep Method. The action of the Jacobian transpose on vectors is computed via automatic differentiation. 
+problem is solved via the forward--backward sweep method. The action of the Jacobian transpose on vectors is computed via automatic differentiation. 
 \end{itemize}
 \end{itemize}
 
