@@ -66,10 +66,11 @@ As opposed to the direct approach, the indirect approach directly minimizes the 
 Numerically solving the minimization problem requires the introduction of a quadrature rule for 
 discretization of the integral. We introduce $\ncollocSTArg{n} \ge \text{ceil}(\stdimArg{n}/ N )$ \EP{Just realized this actually shouldn't be N if we do hyper-reduction; should be something like Rank($\mathbf{W}^n)$ Agree?} collocation points over the $n$th window, 
 $$\timeStartArg{n} \le \collocPointSTArg{n}{1} \le \cdots \le \collocPointSTArg{n}{\ncollocSTArg{n}} \le \timeEndArg{n}.$$
-Leveraging these collocation points, the indirect method for \methodAcronym\ with a \spaceTimeAcronym\ trial subspace yields,
+Leveraging these collocation points, the indirect method for \methodAcronym\ with an \spaceTimeAcronym\ trial subspace computes the generalized coordinates 
+$\stgenstateArg{n}$, $n=1,\ldots,\nslabs$ that satisfy
 \begin{equation}\label{eq:obj_gen_slab2} 
 \begin{split}
-&\underset{\stgenstatey}{\text{minimize }} \objectiveDiscreteSTArg{n} \bigg( \stbasisArgnt{n} \stgenstatey + \stateInterceptSTArg{n} \otimes \onesFunctionArg{n}  \bigg) , %\\
+&\underset{\stgenstatey \in \RR{\stdimArg{n}}}{\text{minimize }} \objectiveDiscreteSTArg{n} \bigg( \stbasisArgnt{n} \stgenstatey + \stateInterceptSTArg{n} \otimes \onesFunctionArg{n}  \bigg) , %\\
 %&\text{subject to }\;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateyArg{n} = \begin{cases} 
 %\mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs, \\ 
 %\mathbb{P}^n(\stateFOMArgnt{1})(0) &
@@ -88,11 +89,16 @@ Leveraging these collocation points, the indirect method for \methodAcronym\ wit
 %\end{split} 
 %\end{equation}
 where the discrete objective function is given by, 
-$$\objectiveDiscreteSTArg{n}: \stgenstatey \mapsto \sum_{i=1}^{\ncollocSTArg{n}} \gamma_i 
-\bigg[ \stbasisDotArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ }  - \velocity (\stbasisArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ } + \stateInterceptSTArg{n},\collocPointSTArg{n,i}) \bigg]^T 
+$$\objectiveDiscreteSTArg{n}: \statey \mapsto \sum_{i=1}^{\ncollocSTArg{n}} \gamma_i 
+\bigg[ \dot{\statey}(\collocPointSTArg{n}{i})  - \velocity (\stateyArg{}{\collocPointSTArg{n}{i}},\collocPointSTArg{n}{i} ) \bigg]^T 
 \stweightingMatArg{n} 
-\bigg[ \stbasisDotArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ }  - \velocity (\stbasisArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ } + \stateInterceptSTArg{n},\collocPointSTArg{n,i}) \bigg].
+\bigg[ \dot{\statey}(\collocPointSTArg{n}{i})  - \velocity (\stateyArg{}{\collocPointSTArg{n}{i}},\collocPointSTArg{n}{i} ) \bigg].
 $$
+%$$\objectiveDiscreteSTArg{n}: \stgenstatey \mapsto \sum_{i=1}^{\ncollocSTArg{n}} \gamma_i 
+%\bigg[ \stbasisDotArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ }  - \velocity (\stbasisArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ } + \stateInterceptSTArg{n},\collocPointSTArg{n,i}) \bigg]^T 
+%\stweightingMatArg{n} 
+%\bigg[ \stbasisDotArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ }  - \velocity (\stbasisArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ } + \stateInterceptSTArg{n},\collocPointSTArg{n,i}) \bigg].
+%$$
 The least-squares problem can again be solved, e.g., via the Gauss-Newton method. 
 %The stationary points are given by,
 %\begin{multline*}\label{eq:st_stationary_discrete}
