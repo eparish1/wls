@@ -140,19 +140,19 @@ $$\stateFOMProjSolArg{n} = \underset{\statey \in
 We begin by stating assumptions that will be used in the subsequent derivations.
 
 A1: We assume  Lipshitz continuity on the residual,
-$$ \norm{\resid(\state,\timeDummy) - \resid(\statey,\timeDummy) } \le \lipshitz \norm{\state(\timeDummy) - \statey(\timeDummy)},$$
+$$ \norm{\resid(\statew,\timeDummy) - \resid(\statey,\timeDummy) } \le \lipshitz \norm{\statew(\timeDummy) - \statey(\timeDummy)},$$
 where  
 \begin{align*}
 \resid &: \, (\statey,\timeDummy) \mapsto \dot{\statey}(\timeDummy) - \velocity(\stateyArg{}{\timeDummy},\timeDummy) ,\\
 &: \, \RR{N} \otimes \timeSpaceArg{} \times [0,T] \mapsto \RR{N}.
 \end{align*}
 
-A2: We assume inverse Lipshitz continuity on the integrated residual for two trajectories starting from the same initial condition: $\forall \state,\statey$ with $\state(\timeStartArg{n} ) = \statey(\timeStartArg{n})$,
-$$  \intSlabArg{n} \norm{\state(t) - \statey(t)} dt \le  \lipshitziArg{n} \intSlabArg{n} \norm{\resid(\state,t) - \resid(\statey,t) } dt.$$
+A2: We assume inverse Lipshitz continuity on the integrated residual for two trajectories starting from the same initial condition: $\forall \statew,\statey$ with $\statew(\timeStartArg{n} ) = \statey(\timeStartArg{n})$ \EP{Put this in  a set maybe? I think that this, along with the trajectory being ''sufficiently smooth", should be enough to avoid the case where we have two different trajectories that exactly satisfy the residual. Something like $\statew,\statey \in \stspaceArg{n}_*, \stspaceArg{n}_* = \{ \statew \in \stspaceArg{n} | \statew(\timeStartArg{n}) = \mathbf{g} \}$ for arbitrary $\mathbf{g}$},
+$$  \intSlabArg{n} \norm{\statew(t) - \statey(t)} dt \le  \lipshitziArg{n} \intSlabArg{n} \norm{\resid(\statew,t) - \resid(\statey,t) } dt.$$
 .
 
 A3: We assume that the FOM solution at the start of each window lies within the range of the trial subspace,
-$$ \stateFOMSolArgt{n}{\timeStartArg{n}} \in \trialspace.$$ 
+$$ \stateFOMSolArgt{n}{\timeStartArg{n}} \in \trialspaceArg{n} + \stateInterceptArg{n}.$$ 
 %A3: We assume Lipshitz continuity on the velocity
 %$$ \norm{\velocity(\state) - \velocity(\boldsymbol y) } \le \lipshitzv \norm{\state - \boldsymbol y}.$$
 %
