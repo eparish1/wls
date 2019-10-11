@@ -10,12 +10,12 @@ over a time step, and (3) ST-LSPG projection,
 which minimizes
 the  FOM O$\Delta$E residual 
 over the entire time interval, the proposed \methodAcronym\ \approachKwd\ sequentially minimizes the 
-time-continuous FOM ODE residual over a series of arbitrarily defined
+FOM ODE residual over arbitrarily defined
 \textit{time windows}. The formulation is compatible with both \spatialAcronym\ and \spaceTimeAcronym\ trial subspaces. 
 In this section, we start by outlining the \methodAcronym\ formulation  
 for a general space--time trial subspace. We then examine the \spatialAcronym\ 
-trial subspace, followed by the \spaceTimeAcronym\ trial subspace. In each case, we derive the stationary conditions 
-associated with the associated residual-minimization problems.
+trial subspace in this context, followed by the \spaceTimeAcronym\ trial subspace. In each case, we derive the stationary conditions 
+associated with the residual-minimization problems.
  %The proposed method can be formulated equivalently from
 %two viewpoints. The first formulation corresponds to a sequence of
 %minimization problems for the generalized coordinates that minimize the FOM
@@ -49,24 +49,30 @@ into $\nslabs$ non-overlapping windows $[\timeStartArg{n} ,
 \timeStartArg{n}$, $n=1,\ldots,\nslabs$ such that 
 $\timeStartArg{1} = 0$, $\timeEndArg{\nslabs} = T$, and
 $\timeStartArg{n+1} = \timeEndArg{n}$,
-$n=1,\ldots,\nslabs-1$; Fig.~\ref{fig:slab_fig} depicts this partitioning.
+$n=1,\ldots,\nslabs-1$; Fig.~\ref{fig:slab_fig} depicts such a partitioning.
 \begin{figure} 
 \begin{centering} 
 \includegraphics[trim={0.0cm 5cm 0cm 3cm},clip,width=1.0\textwidth]{figs/time_grid.pdf} 
 \caption{Partitioning of the time
-domain into time windows.} 
+	domain into time windows. \KTC{Improve this by making the time interval
+	finite (i.e., $[0,T]$) and introduce a partitioning. You should also match the font size with the rest of
+	the text. See Fig 1 of our paper ``Data-driven time parallelism via
+	forecasting", for example.}} 
 \label{fig:slab_fig} 
 \end{centering} 
 \end{figure}
 Over the $n$th time window, we approximate the FOM ODE solution as 
 $\approxstate^n(t)\approx \stateFOM(t)$,
 $t\in[\timeStartArg{n},\timeEndArg{n}]$, which is enforced to reside in 
-the $n$th space--time trial subspace such that
+the $n$th space--time trial subspace 
+$\stspaceArg{n}$
+such that
 \begin{equation}
 \approxstate^n \in \stspace^n \subseteq \RR{N} \otimes \timeSpaceArg{n} , \qquad  n = 1,\ldots,\nslabs,
 \end{equation}
-where $\stspaceArg{n}$ is the space--time trial subspace over the $n$th window and $\timeSpaceArg{n}$ denotes the set of real-valued functions acting on
-$[\timeStartArg{n},\timeEndArg{n}]$ (i.e., $\timeSpaceArg{n} = \{f\,|\,f:[\timeStartArg{n},\timeEndArg{n}]\rightarrow\RR{}\}$)
+where  $\timeSpaceArg{n}$ denotes the set of real-valued functions acting on
+$[\timeStartArg{n},\timeEndArg{n}]$ (i.e., $\timeSpaceArg{n} =
+\{f\,|\,f:[\timeStartArg{n},\timeEndArg{n}]\rightarrow\RR{}\}$).
 %and
 %$\approxstate^n \in\RR{\fomdim}\otimes\timeSpaceArg{n}$. 
 For notational purposes, we additionally define the (spatial) trial subspaces at the start of each window as
@@ -74,6 +80,7 @@ $$\approxstateArg{n}{\timeStartArg{n}} \in \stspaceBoundStartArg{n} \subset \sts
 %, \qquad 
 %\approxstateArg{n}{\timeEndArg{n}} \in \stspaceBoundEndArg{n} \subset \stspaceArg{n}.
 $$ 
+\KTC{This above doesn't make sense.}
 To outline \methodAcronym, we now define the objective functional over the $n$th window:
 \begin{equation}\label{eq:obj}
 \begin{split} \mathcal{J}^n &\vcentcolon \statey \mapsto
