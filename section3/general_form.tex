@@ -76,11 +76,11 @@ $[\timeStartArg{n},\timeEndArg{n}]$ (i.e., $\timeSpaceArg{n} =
 %and
 %$\approxstate^n \in\RR{\fomdim}\otimes\timeSpaceArg{n}$. 
 For notational purposes, we additionally define the (spatial) trial subspaces at the start of each window as
-$$\approxstateArg{n}{\timeStartArg{n}} \in \stspaceBoundStartArg{n} \subset \stspaceArg{n}, \qquad n=1,\ldots,\nslabs. 
-%, \qquad 
-%\approxstateArg{n}{\timeEndArg{n}} \in \stspaceBoundEndArg{n} \subset \stspaceArg{n}.
-$$ 
-\KTC{This above doesn't make sense.}
+\begin{equation}
+	\stspaceBoundStartArg{n}\defeq\mathrm{span}(\{\statey(\timeStartArg{n})\,|\, \statey\in
+	\stspaceArg{n}\})\subseteq\RR{\fomdim}, \qquad n=1,\ldots,\nslabs. 
+\end{equation}
+such that $\approxstateArg{n}{\timeStartArg{n}} \in \stspaceBoundStartArg{n}$.
 To outline \methodAcronym, we now define the objective functional over the $n$th window:
 \begin{equation}\label{eq:obj}
 \begin{split} \mathcal{J}^n &\vcentcolon \statey \mapsto
