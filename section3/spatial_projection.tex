@@ -65,7 +65,7 @@ ST_S^n$ under minimize and $J^n$ should take only $\hat y$ in the argument.}
 \end{split}
 \end{equation}
 We emphasize that problem~\eqref{eq:obj_gen_slab} aims to compute the
-\textit{function} $\genstate^n$ that minimizes the \textit{functional}
+\textit{function} $\genstate^n\in\stspaceSArg{n}$ that minimizes the \textit{functional}
 	$\objectiveArg{n}$. 	%corresponds to
 %an infinite dimensional minimization problem: the problem 
 
@@ -99,7 +99,10 @@ coordinates) as
 %\velocity(\decoder(\genstate)) \big]^T \stweightingMat(t) \big[\frac{\partial
 %\decoder}{\partial \genstate} \dot{\genstate} -
 %\velocity(\decoder(\genstate)) \big].$$
-We also define the quantities\footnote{We use Jacobian layout for the scalar-by-vector gradients, and, as a result, the transpose operator is needed for, e.g., $\dIdVArg{n}$ is a column vector functional.}
+We also define the quantities\footnote{We use Jacobian layout for the
+scalar-by-vector gradients \KTC{Not sure whta preceding statement means. I
+would remove this footnote as the dimensions are clear from what you write
+below.}, and, as a result, the transpose operator is needed for, e.g., $\dIdVArg{n}$ is a column vector functional.}
 \begin{equation}
 \begin{split}
 \dIdVArg{n}  & \vcentcolon
@@ -134,7 +137,8 @@ n=2,\ldots,\nslabs, \\
 Evaluating the terms in system~\eqref{eq:el1} is an exercise in
 vector calculus, and the step-by-step process is given in
 Appendix~\ref{appendix:vector_calc}. The resulting system can be written as the 
-coupled forward-backward system for $t \in [\timeStartArg{n},\timeEndArg{n} ]$,
+following coupled forward--backward system for $t \in
+[\timeStartArg{n},\timeEndArg{n} ]$:
 %\begin{comment}
 %The resulting system of equations is
 %given by the second-order differential equation,
@@ -218,7 +222,7 @@ where
 &: [\timeStartArg{n},\timeEndArg{n}] \rightarrow \RR{\romdimArg{n}} ,
 \end{split}
 \end{equation}
-is the adjoint, or ``costate" variable, $\adjointDotArgnt{n} \equiv d \adjointArgnt{n}/ d\tau$, and $\massArg{n} \equiv \basisspaceTArg{n} \stweightingMatArg{n} \basisspaceArg{n}$ is a mass matrix. 
+is the adjoint, or ``costate" variable with $\adjointDotArgnt{n} \equiv d \adjointArgnt{n}/ d\tau$, and $\massArg{n} \equiv \basisspaceTArg{n} \stweightingMatArg{n} \basisspaceArg{n}$ is a mass matrix. 
 %where
 %$\massArgnt{n}= \basisspace^T \stweightingMatArgt{n}{t} \basisspace$ is the
 %mass matrix.
