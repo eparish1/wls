@@ -66,12 +66,12 @@ for any continuous $h(t)$.
 Noting that the derivative evaluates to
 \begin{equation*}
 \bigg[ \frac{\partial \minintegrandArg{n}}{\partial \dot{\genstateyDiscrete}}(\genstateArg{n}{\zeta n},\genstateDotArg{n}{\zeta n},\zeta n) \bigg]^T=
-\basisspace^T \stweightingMatArgt{n}{\zeta n} \basisspace \genstateDotArg{n}{\zeta n} -  \basisspace^T \stweightingMatArgt{n}{\zeta n} \velocity(\basisspace \genstateArg{n}{\zeta n} + \stateIntercept ,\zeta n), 
+\basisspace^T \stweightingMatArgt{}{\zeta n} \basisspace \genstateDotArg{n}{\zeta n} -  \basisspace^T \stweightingMatArgt{}{\zeta n} \velocity(\basisspace \genstateArg{n}{\zeta n} + \stateIntercept ,\zeta n), 
 %\bigg[\frac{\partial \minintegrand}{\partial \dot{ \genstate } } \bigg]^T =  \basisspace^T \stweightingMat \basisspace \frac{d}{dt}{\genstate} -  \basisspace^T \stweightingMat \velocity(\decoder(\genstate)), 
 \end{equation*}
 we then get,
 \begin{equation*}
-\basisspace^T \stweightingMatArgt{n}{\zeta n} \basisspace \genstateDotArg{n}{\zeta n} -  \basisspace^T \stweightingMatArgt{n}{\zeta n} \velocity(\basisspace \genstateArg{n}{\zeta n} + \stateIntercept ,\zeta n) = \bz, \qquad n=1,2,\ldots,\nslabs, 
+\basisspace^T \stweightingMatArgt{}{\zeta n} \basisspace \genstateDotArg{n}{\zeta n} -  \basisspace^T \stweightingMatArgt{}{\zeta n} \velocity(\basisspace \genstateArg{n}{\zeta n} + \stateIntercept ,\zeta n) = \bz, \qquad n=1,2,\ldots,\nslabs, 
 \end{equation*}
 subject to $\genstateArg{n}{\zeta (n-1)} = \genstateArg{n-1}{\zeta(n-1)}$ for $n>1$ and $\genstateArg{1}{0} = \genstateIC $. %Left multiplying by $\mass^{-1}$ yields,
 %\begin{equation*}
