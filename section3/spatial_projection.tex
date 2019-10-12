@@ -249,9 +249,6 @@ We note that in the case $\stweightingMatArg{n} =
 \begin{cases} \basisspaceTArg{n}(\basisspaceArg{n-1}\genstateArg{n-1}{\timeEndArg{n-1}} - \stateInterceptArg{n})& n=2,\ldots,\nslabs, \\
 \genstateICOne& n=1, \end{cases}\\
 &\adjointArg{n}{\timeEndArg{n}} = \boldsymbol 0 .  \end{align*}
-\KTC{I removed the remark here, as it should be obvious that stationarity
-conditions are just necessary optimality conditions.} \KTC{Also, this
-derivation is really, really cool.}
 %\begin{remark}
 %Solutions to the Euler--Lagrange equations correspond to stationary points 
 %of the objective functional~\eqref{eq:obj_gen_slab}. There are no guarantees, 
@@ -260,16 +257,14 @@ derivation is really, really cool.}
 %\end{remark}
 
 \subsubsection{Formulation as an optimal-control problem of Lagrange type}\label{sec:optimal_control} 
-The Euler--Lagrange equations expose that~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs} can be alternatively formulated as a Lagrange
-problem from optimal control. \KTC{I didn't understand the previous sentence.
-Can you clarify how this is exposed?} To this end, consider the Galerkin ROM over the $n$th window
+The stationary conditions for \methodAcronym\ with \spatialAcronym\ trial subspaces~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs} can be alternatively formulated as a Lagrange
+problem from optimal control. To this end, consider the Galerkin ROM over the $n$th window
 $$ \basisspaceTArg{n} \stweightingMatArgt{n}{t} \basisspaceArg{n}
  \genstateGalerkinDotArg{n}{t} - \basisspaceTArg{n} \stweightingMatArgt{n}{t}
 \velocity(\veloargsromn) = \bz,\qquad .$$
 We introduce now a controller $\controllerArgnt{n} \in \RR{\romdimArg{n}} \otimes \timeSpaceArg{n}$ 
-and pose the problem of finding a a controller that minimizes the residual
-over the time window and forces the dynamics as \KTC{EP: check to see if you
-like/dislike previous sentence}
+and pose the problem of finding a controller that minimizes the residual
+over the time window and forces the dynamics as
 \begin{equation}\label{eq:controlled_rom}
  \basisspaceTArg{n}
 \stweightingMatArgt{n}{t} \basisspaceArg{n} \genstateDotArg{n}{t}  - \basisspaceTArg{n}
@@ -281,8 +276,7 @@ We now demonstrate how to compute this controller.
 Before doing so, we note that~\eqref{eq:controlled_rom} displays commonalities with \textit{subgrid-scale}
 methods~\cite{iliescu_pod_eddyviscosity,iliescu_vms_pod_ns,iliescu_ciazzo_residual_rom,parish_apg,wentland_apg,Wang:269133,San2018},
 which add an additional term to the reduced-order model in order to account
-for truncated states.  \KTC{EP verify: I changed ``truncated dynamics'' to
-``truncated states''.}
+for truncated states. 
 
 We begin by defining a \textit{Lagrangian} \KTC{Where does the interpretation
 of Lagrangian come in? This isn't totally obvious; e.g., where are the
@@ -323,8 +317,7 @@ computing the residual norm as a function of the state and controller, i.e.,
  %\tau,
 \end{split}
 \end{equation}
-\KTC{EP verify that the Lagrangian above lives in $\RRplus{}$. This is what I
-just changed.} where we have used $ \genstateDotArg{n}{t} = [\massArg{n}]^{-1}\basisspaceTArg{n}
+where we have used $ \genstateDotArg{n}{t} = [\massArg{n}]^{-1}\basisspaceTArg{n}
 \stweightingMatArg{n} \velocity(\basisspaceArg{n} \genstateArg{n}{t} +
 \stateInterceptArg{n} ,t) + [\massArg{n}]^{-1}\controllerArg{n}{t} 
 $ from Eq.~\eqref{eq:controlled_rom}.
@@ -419,12 +412,8 @@ between the system~\eqref{eq:sys_oc1} and the
 system~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs}.
 Thus, \methodAcronym\ with \spatialAcronym\ trial subspaces can be formulated
 as an optimal control problem: \methodAcronym\ computes a controller that
-modifies the Galerkin ROM to minimize the residual over the time window. In
-addition to commonalities with traditional optimal-control problems, this
-formulation displays commonalities with subgrid-scale modeling
-techniques, wherein an additional term is added to the reduced-order model to
-account for the impact of the truncated modes. \KTC{This was just said above;
-do we need to say it again?}. The \methodAcronym\ method can thus be
+modifies the Galerkin ROM to minimize the residual over the time window. 
+The \methodAcronym\ method can additionally be
 interpreted as a subgrid-scale modeling technique that constructs a
 residual-minimizing subgrid-scale model.
 

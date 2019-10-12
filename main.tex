@@ -807,36 +807,28 @@ $$\mathbf{F}(N_{\text{skip}}) \defeq \begin{bmatrix} \velocity (\stateFOMDiscret
 
 
 \section{Derivation of the Euler--Lagrange equations}\label{appendix:eulerlagrange}
-	\KTC{In this section, $a$ and $b$ are sometimes used as time limits, while
-	$0$ and $T$ are used elsewhere. Please go through carefully and make this
-	consistent. I recommend using $a$ and $b$ because this is used within time
-	windows.}
-	\KTC{In this section, "extremum" is used a lot. You are just finding
-	stationary points, which could be local minima, local maxima, or saddle
-	points. Please avoid using "extemum" for this reason.} 
 This section details the derivation of the Euler--Lagrange equations. To this end, we consider the generic functional of the form,
 \begin{equation}\label{eq:el_gen}
-\mathcal{J}: (\statey,\stateyDot) \mapsto  \int_0^T \integrand(\statey(t),\stateyDot(t),t)  dt,
+\mathcal{J}: (\statey,\stateyDot) \mapsto  \int_a^b \integrand(\statey(t),\stateyDot(t),t)  dt,
 \end{equation}
-where $\integrand: \RR{M}  \times \RR{M}  \times[0,T] \rightarrow  \RRplus$
+where $\integrand: \RR{M}  \times \RR{M}  \times[a,b] \rightarrow  \RRplus$
 	(for arbitrary $M$) with $\integrand:
 	(\stateyDiscrete,\stateyDotDiscrete,\timeDummy) \mapsto
 	\integrand(\stateyDiscrete,\stateyDotDiscrete,\timeDummy)$. We now introduce
-	the function $\statez: [0,T] \rightarrow \RR{M}$ that is implicitly defined
-	as an extremum of~\eqref{eq:el_gen} subject to the boundary condition
-	$\statez(0) = \statez_0$. \KTC{This previous sentence isn't correct. The
+	the function $\statez: [a,b] \rightarrow \RR{M}$ with $\statez: \timeDummy \mapsto \statez(\timeDummy)$ along with $\statezDot \equiv d \statez /d\timeDummy$. We define this function to be a stationary point of~\eqref{eq:el_gen} (with $\statez$ being the first argument and $\statezDot$ being the second argument) subject to the boundary condition
+	$\statez(a) = \statez_a$. \KTC{This previous sentence isn't correct. The
 	functional defined here has two arguments; the extremum can't be a single
 	argument, as it's a pair of arguments. You need to connect these by defining
 	a new function that maps a time-dependent function to this functional
-	evaluated at the time-dependent function and its derivative..} 
-We introduce an arbitrary function $\variation : [0,T] \rightarrow \RR{M}$
-with the boundary condition $\variationArg{0} = \bz$ and define a variation
-from the extremum by
+	evaluated at the time-dependent function and its derivative..}\EP{ Check this, I think this is more precise now.} 
+We introduce an arbitrary function $\variation : [a,b] \rightarrow \RR{M}$
+with the boundary condition $\variationArg{a} = \bz$ and define a variation
+from the stationary point by
 \begin{align*}
 \statezBar  &: (\tau,\delta) \mapsto \statez(\tau) + \delta \variation(\tau),\\
 &: [a,b] \times \RR{} \rightarrow \RR{M}.
 \end{align*}
-We note that $\statezBar$ satisfies the same boundary condition $\statez$ since $\variationArg{0} = \bz$.
+We note that $\statezBar$ satisfies the same boundary condition $\statez$ since $\variationArg{a} = \bz$.
 We define a new function that is equivalent to~\eqref{eq:el_gen} evaluated at $\statezBar$ in the first argument and 
 $\statezDotBar \equiv d\statezBar / d\timeDummy$ in the second argument,
 $$
@@ -866,7 +858,7 @@ respect to $\delta$ and setting the result to zero, i.e., % Noting that the exte
 Using the chain rule,
 $$ 
 \frac{d}{d\delta} \big( \mathcal{J}_{\delta} \big)(\epsilon)= 
-\int_0^T \bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t\big) \frac{\partial \statezBar }{\partial \delta}(t,\epsilon)  + \frac{\partial \integrand}{\partial \stateyDotDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \frac{\partial \statezDotBar}{\partial \delta} (t,\epsilon)\bigg]dt . $$
+\int_a^b \bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t\big) \frac{\partial \statezBar }{\partial \delta}(t,\epsilon)  + \frac{\partial \integrand}{\partial \stateyDotDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \frac{\partial \statezDotBar}{\partial \delta} (t,\epsilon)\bigg]dt . $$
 %$$\int_a^b \bigg[ \frac{\partial \integrand  }{\partial \statezBar } \frac{\partial \statezBar }{\partial \epsilon}\big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) \big)  + \frac{\partial \integrand}{\partial \statezDotBar }\frac{\partial \statezDotBar}{\partial \epsilon} \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) \big)\bigg]dt = 0. $$
 %Setting $\epsilon = 0$,
 %$$\int_a^b \bigg[ \frac{\partial \integrand  }{\partial \statezBar } \frac{\partial \statezBar }{\partial \epsilon}\big(\statezBar(t,0),\statezDotBar(t,0) \big)  + \frac{\partial \integrand}{\partial \statezDotBar }\frac{\partial \statezDotBar}{\partial \epsilon} \big(\statezBar(t,0),\statezDotBar(t,0) \big)\bigg]dt = 0. $$
@@ -877,29 +869,29 @@ we have
 $$
 %\int_a^b \frac{d}{d\epsilon}\bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon) ,t \big) \bigg] dt 
 \frac{d}{d\delta} \big( \mathcal{J}_{\delta} \big)(\epsilon)
-= \int_0^T \bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \variation(t)  + \frac{\partial \integrand}{\partial \stateyDotDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \variationDot(t) \bigg]dt. $$
+= \int_a^b \bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \variation(t)  + \frac{\partial \integrand}{\partial \stateyDotDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \variationDot(t) \bigg]dt. $$
 %$$\int_a^b \bigg[\frac{\partial \integrand  }{\partial \overline{\genstate}} \variation + \frac{\partial \integrand}{\partial {\overline{\genstateDot}}}\variationDot \bigg]_{\epsilon = 0}dt = 0.$$
 We integrate the second term by parts,
 \begin{align}\label{eq:gradient}
 	\begin{split}
 %\int_a^b \frac{d}{d\epsilon}\bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon),t \big) \bigg] dt 
 \frac{d}{d\delta} \big( \mathcal{J}_{\delta} \big)(\epsilon)
-	=&  \int_0^T  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete }
+	=&  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete }
 	\big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) , t \big)
 	\variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial
 	\stateyDotDiscrete }  \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon)
-	,t \big) \bigg) \variation(t) \bigg]dt + \\ &\frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(T,\epsilon),\statezDotBar(T,\epsilon) ,T \big) \variation(T) . 
+	,t \big) \bigg) \variation(t) \bigg]dt + \\ &\frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(b,\epsilon),\statezDotBar(b,\epsilon) ,b \big) \variation(b) , 
 	\end{split}
 \end{align}
-where we have used $\variationArg{0} = \bz$.
+where we have used $\variationArg{a} = \bz$.
 Substituting Eq.~\eqref{eq:gradient} in the stationarity conditions~\eqref{eq:stationaryOne} yields
 \begin{equation}\label{eq:statOne}
-  \int_0^T  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \bigg) \variation(t) \bigg]dt + \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(T,\epsilon),\statezDotBar(T,\epsilon),T \big) \variation(T)  = 0. 
+  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \bigg) \variation(t) \bigg]dt + \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(b,\epsilon),\statezDotBar(b,\epsilon),b \big) \variation(b)  = 0. 
 \end{equation}
-By construction, $\statez(\cdot) \equiv \statezBar(\cdot;0)$ is a stationary
+By construction, $\statez(\cdot) \equiv \statezBar(\cdot;0)$ and $\statezDot(\cdot) \equiv \statezDotBar(\cdot;0)$, comprise a stationary
 point; thus, setting $\epsilon = 0$ in Eq.~\eqref{eq:statOne} yields
 \begin{equation}
-  \int_0^T  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statez(t),\statezDot(t),t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statez(t),\statezDot(t),t \big) \bigg) \variation(t) \bigg]dt + \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statez(T),\statezDot(T) ,T\big) \variation(T)  = 0. 
+  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statez(t),\statezDot(t),t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statez(t),\statezDot(t),t \big) \bigg) \variation(t) \bigg]dt + \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statez(b),\statezDot(b) ,b\big) \variation(b)  = 0. 
 \end{equation}
 %$$  \int_a^b \bigg[\frac{\partial \integrand  }{\partial \overline{\genstate}} \variation  - \frac{d}{dt}\frac{\partial \integrand}{\partial {\overline{\genstateDot}}}\variation \bigg]_{\epsilon = 0}dt + \bigg[\bigg[ \frac{\partial \integrand}{\partial {\overline{\genstateDot}}} \variation \bigg]_a^b\bigg]_{\epsilon = 0} = 0. $$
 %At $\epsilon = 0$ we have $\overline{\genstate} = \genstate$ and, as $\variationArg{a} = 0$, we obtain,
@@ -913,24 +905,24 @@ As $\variation$ is an arbitrary function, this equality requires
 	\big(\statez(t),\statezDot(t) ,t\big) \bigg]^T - \bigg[ \frac{d}{dt}\bigg(
 	\frac{\partial \integrand}{\partial \stateyDotDiscrete }
 	\big(\statez(t),\statezDot(t),t \big) \bigg) \bigg]^T = \bz  \\
-\statez(a) = \statez_a, \qquad \bigg[ \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statez(b),\statezDot(b),b \big) \variation(b) \bigg]^T = \bz.
+\statez(a) = \statez_a, \qquad \bigg[ \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statez(b),\statezDot(b),b \big) \bigg]^T = \bz.
 \end{gather}
 %\genstate(a) = \genstate_a, \qquad \bigg[ \frac{\partial \integrand}{\partial {\genstateDot}} \bigg]^T_{t=b} = \bz.
 \KTC{I removed "subject to" as this is only used in an optimization-problem
 statement. Also, I don't understand the $z(a) = z_a$ conditions, or how that
 derives obviously from above. Can you clarify? Also note the inconsistent use
-of $a$, $b$, and $0$, $T$.}
+of $a$, $b$, and $0$, $T$.} \EP{Yes, sorry about the [a,b], I changed this recently and obviously missed things. As for the BC, 
+the requirement that $z(a)=z_a$ comes in first from the implicit definition of $z$, which is required to satisfy this BC. Then, in defining the variation, 
+we explicitly force the variation to be zero at the IC such that all possible functions satisfy the BC. We don't, however, make any such requirement on the end point 
+condition, $\eta(b)$ can be anything. This yields the endpoint boundary condition on the gradient (i.e., second term in Eq 56.). If we had a fixed final boundary condition, then the second term in Eq. 56 would be replaced 
+with this end point condition.} 
 Equation~\eqref{eq:euler_lagrange_appendix} is known as the Euler--Lagrange
-equation. It states that, if $\statez$ is an extremum of $\mathcal{J}$
-\KTC{Again, note that $\mathcal J$ has two arguments, so it can't havec a
-single vector servec as an extremum. Fix needed}, then it must
+equation. It states that, for ($\statez$,$\statezDot$) to define a stationary point of $\mathcal{J}$, then they must 
 satisfy~\eqref{eq:euler_lagrange_appendix}. It is emphasized
-that~\eqref{eq:euler_lagrange_appendix} is a necessary condition on $\statez$
+that~\eqref{eq:euler_lagrange_appendix} is a necessary condition on ($\statez,\statezDot$)
 to make $\mathcal{J}$ stationary, but it is not a sufficient condition. It is
 additionally noted that~\eqref{eq:euler_lagrange_appendix} provides a
-stationary point of $\mathcal{J}$, but the resulting stationary point can be
-either a maximum or a minimum. \KTC{See above. Strictly, these could be local
-minima, local maxima, or saddle points.}
+stationary point of $\mathcal{J}$, but the resulting stationary point could be a local minima, local maxima, or saddle point.
 
 \section{Evaluation of gradients in the Euler--Lagrange equations for \methodAcronym\ with \spatialAcronym\ trial subspaces}\label{appendix:vector_calc}
 We now derive the specific form of the Euler--Lagrange equations for the \methodAcronym\ formulation with \spatialAcronym\ trial subspaces. Without loss of generality, we present the derivation for a single window $t \in [0,T]$ with a constant basis $\basisspace$ and weighting matrix $\stweightingMat$.  
