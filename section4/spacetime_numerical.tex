@@ -31,14 +31,14 @@ Leveraging the definition of the fully discrete objective function~\eqref{eq:obj
 %\mathbb{P}^n(\stateFOMArgnt{1})(0) &
 %n=1. \end{cases}\end{split} 
 %\end{equation}
-It is noted that the boundary conditions are automatically satisfied through the definition of the $\spaceTimeAcronym$\ trial subspace. The minimization problem~\eqref{eq:obj_gen_lms_final_st} can be solved, e.g, via the Gauss-Newton method.
+It is noted that the boundary conditions are automatically satisfied through the definition of the $\spaceTimeAcronym$\ trial subspace. The minimization problem~\eqref{eq:obj_gen_lms_final_st} can be solved, e.g, via the Gauss--Newton method.
 
 \begin{remark}
 For the limiting case where the window size spans the entire domain, $\DeltaSlabArg{1}\equiv T$, and a uniform quadrature weights are used, direct \methodAcronym\ with a \spaceTimeAcronym\ trial subspace recovers ST-LSPG.
 \end{remark}
 
 \subsection{\spaceTimeAcronym: indirect solution approach}
-As opposed to the direct approach, the indirect approach directly minimizes the continuous objective function~\eqref{eq:obj_gen_slab_spacetime},
+As opposed to the direct approach, the indirect approach directly minimizes the continuous objective function~\eqref{eq:obj_gen_slab_spacetime} and sequentially computes solutions $\stgenstateArg{n}$, $n = 1,\ldots,\nslabs$ that satisfy
 \begin{equation}\label{eq:obj_gen_slab2}
 \begin{split}
  & \underset{\stgenstatey}{\text{minimize }} \mathcal{J}^n \bigg( \stbasisArgnt{n} \stgenstatey + \stateInterceptSTArg{n} \otimes \onesFunctionArg{n} \bigg) .%\\  
@@ -64,7 +64,7 @@ As opposed to the direct approach, the indirect approach directly minimizes the 
 %\velocity}{\partial \stateyDiscrete} (\stbasisDotArg{n}{t} \stgenstateArg{n} +                    
 %\stateInterceptArg{n})\bigg]^T  \bigg] \stweightingMatArg{n} \bigg( \stbasisDotArg{n}{t} \stgenstateArg{n}  - \velocity (\stbasisArg{n}{t} \stgenstateArg{n} + \stateInterceptArg{n}) \bigg) dt = \bz.\end{equation}
 Numerically solving the minimization problem requires the introduction of a quadrature rule for 
-discretization of the integral. We introduce $\ncollocSTArg{n} \ge \text{ceil}(\stdimArg{n}/ N )$ \EP{Just realized this actually shouldn't be N if we do hyper-reduction; should be something like Rank($\mathbf{W}^n)$ Agree?} collocation points over the $n$th window, 
+discretization of the integral. We introduce $\ncollocSTArg{n} \ge \text{ceil}(\stdimArg{n}/ \text{Rank}(\stweightingMatOneArg{n}))$ \EP{Originally this was divided by $N$, just realized this actually shouldn't be N if we do hyper-reduction; should be something like Rank($\mathbf{W}^n)$ Agree?} collocation points over the $n$th window 
 $$\timeStartArg{n} \le \collocPointSTArg{n}{1} \le \cdots \le \collocPointSTArg{n}{\ncollocSTArg{n}} \le \timeEndArg{n}.$$
 Leveraging these collocation points, the indirect method for \methodAcronym\ with an \spaceTimeAcronym\ trial subspace computes the generalized coordinates 
 $\stgenstateArg{n}$, $n=1,\ldots,\nslabs$ that satisfy
@@ -88,7 +88,7 @@ $\stgenstateArg{n}$, $n=1,\ldots,\nslabs$ that satisfy
 %\end{cases}
 %\end{split} 
 %\end{equation}
-where the discrete objective function is given by, 
+where the discrete objective function is given by
 $$\objectiveDiscreteSTArg{n}: \statey \mapsto \sum_{i=1}^{\ncollocSTArg{n}} \gamma_i 
 \bigg[ \dot{\statey}(\collocPointSTArg{n}{i})  - \velocity (\stateyArg{}{\collocPointSTArg{n}{i}},\collocPointSTArg{n}{i} ) \bigg]^T 
 \stweightingMatArg{n} 
@@ -99,7 +99,7 @@ $$
 %\stweightingMatArg{n} 
 %\bigg[ \stbasisDotArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ }  - \velocity (\stbasisArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ } + \stateInterceptSTArg{n},\collocPointSTArg{n,i}) \bigg].
 %$$
-The least-squares problem can again be solved, e.g., via the Gauss-Newton method. 
+The least-squares problem can again be solved, e.g., via the Gauss--Newton method. 
 %The stationary points are given by,
 %\begin{multline*}\label{eq:st_stationary_discrete}
 %\frac{\partial \objectiveDiscreteSTArg{n}}{\partial \stgenstatey}(\stgenstateArg{n}) = 

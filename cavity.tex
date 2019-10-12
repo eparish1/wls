@@ -37,7 +37,7 @@ The full-order model comprises a discontinuous-Galerkin discretization. The disc
 is obtained by partitioning the domain into $100$ elements in the flow direction and $40$ elements 
 in the wall-normal direction. The solution is represented to third order over each element using tensor product polynomials of order $p=2$, 
 resulting in $36000$ unknowns for each conserved variable. Spatial discretization via the discontinuous Galerkin method yields a dynamical system 
-of the form,
+of the form
 $$\frac{d \state}{dt} = \mass_{\text{DG}}^{-1} \velocity_{\text{DG}} (\state),$$
 where $\mass_{\text{DG}} \in \RR{N \times N}$ is the (block diagonal) DG mass matrix and $\velocity_{\text{DG}}: \RR{N} \rightarrow \RR{N}$ is the DG velocity operator containing 
 surface and volume integrals. By the definition of the FOM~\eqref{eq:FOM}, the dynamical system velocity is $\velocity = \mass_{\text{DG}}^{-1} \velocity_{\text{DG}}$. 

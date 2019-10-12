@@ -73,7 +73,7 @@ Employing a linear multistep method for temporal discretization of the FOM ODE y
 \stateFOMDiscreteArg{n-1,\nstepsArg{n-1}} & n = 2,\ldots,\nslabs, \\
 \stateFOMIC & n=1, \end{cases}
 \end{align*}
-where $\stateFOMDiscreteArg{n,i} \approx \stateFOMArg{n}{\timeWindowArg{n}{i}} \in \RR{\fomdim}$ is the discrete approximation to the FOM state at the $i$th time instance over the $n$th window and $\residLMSArg{n,i}$ is the discrete linear multistep residual over the $i$th time instance of the $n$th window,
+where $\stateFOMDiscreteArg{n,i} \approx \stateFOMArg{n}{\timeWindowArg{n}{i}} \in \RR{\fomdim}$ is the discrete approximation to the FOM state at the $i$th time instance over the $n$th window and $\residLMSArg{n,i}$ is the discrete linear multistep residual over the $i$th time instance of the $n$th window and is defined as
 \begin{align*}
 \residArg{n,i} &: (\stateyDiscreteArgnt{i},\ldots,\stateyDiscreteArgnt{i-\lmsWidthArg{n}{i}}) \mapsto  \frac{1}{\Delta t^{n,i}} \sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha^{n,i}_j \stateyDiscreteArgnt{i-j} -  \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta^{n,i}_j \velocity(\stateyDiscreteArgnt{i-j},\timeWindowArg{n}{i-j}) \\
                &: \RR{\fomdim} \otimes \RR{\lmsWidthArg{n}{i}+1} \rightarrow \RR{\fomdim}. 
@@ -177,7 +177,7 @@ a concatenated vector,
  \unroll &\vcentcolon (\stateyDiscreteArg{1},\ldots,\stateyDiscreteArg{m} ) \mapsto \begin{bmatrix} [\stateyDiscreteArg{1}]^T & \ldots & [\stateyDiscreteArg{m}]^T \end{bmatrix}^T  \\
 &\vcentcolon \RR{p} \otimes \RR{m} \rightarrow \RR{pm},
 \end{align*}
-for arbitrary $p$ and $m$. The stacked vector of generalized coordinates over the $n$th time window are then defined as, 
+for arbitrary $p$ and $m$. The stacked vector of generalized coordinates over the $n$th time window are then defined as
 \begin{equation*}
 \genstatecollocMatSlabArg{n} \defeq 
 \unroll (\genstateDiscreteArg{n,1},\ldots,\genstateDiscreteArg{n,\nstepsArg{n}} ).
@@ -200,7 +200,7 @@ It is worth noting that, by design,
 Using these definitions, Algorithm~\ref{alg:colloc_gn} presents the standard Gauss--Newton method. The algorithm consists of three fundamental steps: (1) compute the FOM O$\Delta$E residual given the current guess, (2) compute the time window residual-Jacobian and form the normal equations, and (3) solve the normal equations and update the state. 
 
 The practical implementation of the Gauss--Newton algorithm requires an efficient method for computing the time window residual-Jacobians. In particular, it is important to note that for linear multistep methods (and many other time marching schemes) the time window residual Jacobian will (almost) be a block-diagonal 
-sparse matrix with the sparsity pattern,
+sparse matrix with the sparsity pattern
 \begin{equation*}
 \frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{}}(\genstatecollocMatSlabArg{n})  =
  \begin{bmatrix*}[l]
@@ -385,7 +385,7 @@ In the case one does not have access to the full-order model Jacobian (or it is 
 \begin{enumerate}
 \item \textit{Jacobian-free approximation}: A non-intrusive way to evaluate the Jacobian transpose in~\eqref{eq:lspg_adjoint} is to recognize that all terms including the Jacobian transpose are left multiplied by the transpose of the trial basis. One can make the manipulation,
 $$\basisspaceTArg{n} \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn)\bigg]^T = \bigg[  \frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn) \basisspaceArg{n} \bigg]^T.$$
-This manipulation allows one to compute the action of the Jacobian on each column of $\basisspaceArg{n}$ by, e.g., a finite difference approximation,
+This manipulation allows one to compute the action of the Jacobian on each column of $\basisspaceArg{n}$ by, e.g., the finite difference approximation
 $$\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \basisvec_i^n \approx \frac{1}{\epsilon}\bigg( \velocity(\basisspaceArg{n}\genstateArg{n}{t} + \stateInterceptArg{n} + \epsilon \basisvec_i^n,t) - \velocity(\veloargsromn) \bigg).$$
 The Jacobian transpose can be formed in $K+1$ evaluations of the velocity. For cases where the reduced-order model is low dimensional, this approach is feasible. For higher dimensional reduced-order models, this approach can be prohibitively expensive.
 
