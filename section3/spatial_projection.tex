@@ -16,7 +16,7 @@ $\trialspaceArg{n}\defeq\Range{\basismatArg{n}}$ with
 $\basismatArg{n}\equiv[\basisvecArg{n}_1\ \cdots\
 \basisvecArg{n}_{\romdimArg{n}}]\in
 \RRStar{\romdimArg{n}}{\fomdim}
-$, the reference state $\stateInterceptArg{n} \in \RR{\fomdim}$, $n=1,\ldots,\nslabs$ provides the affine transformation, 
+$, the reference states $\stateInterceptArg{n} \in \RR{\fomdim}$, $n=1,\ldots,\nslabs$ provide the affine transformation, 
 and  
 $\onesFunction^n\in\timeSpaceArg{n}$ is defined as
 $\onesFunction^n:\timeDummy\mapsto 1.$
@@ -29,7 +29,7 @@ approximates the FOM ODE solution as
 	\stateFOM(t)\approx \approxstateArgnt{n}(t) = \basismatArg{n}
 	\genstateArg{n}{t} + \stateInterceptArg{n},
 \end{equation}
-where $\genstateArgnt{n} \in \RR{\romdim} \otimes \timeSpaceArg{n}$ with
+where $\genstateArgnt{n} \in \RR{\romdimArg{n}} \otimes \timeSpaceArg{n}$ with
 $\genstateArgnt{n}: \timeDummy\mapsto \genstateArgnt{n}(\timeDummy)
 $ denotes the generalized coordinates over the $n$th time window. 
 
@@ -61,9 +61,9 @@ $\genstateArgnt{n}$, $n = 1,\ldots,\nslabs$ that satisfy
 \genstateICOne & n=1. \end{cases} 
 \end{split}
 \end{equation}
-We emphasize that problem~\eqref{eq:obj_gen_slab} aims to compute the
-\textit{function} $\approxstateArgnt{n}\in\stspaceSArg{n}$ that minimizes the \textit{functional}
-	$\objectiveArg{n}$. 	%corresponds to
+%We emphasize that problem~\eqref{eq:obj_gen_slab} aims to compute the
+%\textit{function} $\approxstateArgnt{n}\in\stspaceSArg{n}$ that minimizes the \textit{functional}
+	%$\objectiveArg{n}$. 	%corresponds to
 %an infinite dimensional minimization problem: the problem 
 
 \subsubsection{Stationary conditions and the Euler--Lagrange equations}
@@ -75,11 +75,11 @@ We emphasize that problem~\eqref{eq:obj_gen_slab} aims to compute the
 %	notation for this variable). Need to make sure all the basis $\basismat$
 %	have arguments throughout as well as the reference states. }
 
-Stationary conditions for optimization problem~\eqref{eq:obj_gen_slab} can be derived via 
+We derive stationary conditions for optimization problem~\eqref{eq:obj_gen_slab} via 
 	the Euler--Lagrange equations from the
-calculus of variations. To outline this process, we begin by defining the
-integrand appearing in the objective function $\mathcal{J}^n$ defined in Eq.~\eqref{eq:obj} (in terms of the generalized
-coordinates) as 
+calculus of variations. To begin, we define the
+integrand appearing in the objective function $\mathcal{J}^n$ defined in Eq.~\eqref{eq:obj} in terms of the generalized
+coordinates induced by the \spatialAcronym\ subspace as 
 \begin{equation}\label{eq:integrand}
 \begin{split}
  \minintegrandArg{n} & \vcentcolon
