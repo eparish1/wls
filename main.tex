@@ -811,7 +811,16 @@ This section details the derivation of the Euler--Lagrange equations. To this en
 \begin{equation}\label{eq:el_gen}
 \mathcal{J}: (\statey,\stateyDot) \mapsto  \int_0^T \integrand(\statey(t),\stateyDot(t),t)  dt,
 \end{equation}
-where $\integrand: \RR{M}  \times \RR{M}  \times[0,T] \rightarrow  \RRplus$ (for arbitrary $M$) with $\integrand: (\stateyDiscrete,\stateyDotDiscrete,\timeDummy) \mapsto \integrand(\stateyDiscrete,\stateyDotDiscrete,\timeDummy)$. We now introduce the function $\statez: [0,T] \rightarrow \RR{M}$ that is implicitly defined as an extremum of~\eqref{eq:el_gen} subject to the boundary condition $\statez(0) = \statez_0$. 
+where $\integrand: \RR{M}  \times \RR{M}  \times[0,T] \rightarrow  \RRplus$
+	(for arbitrary $M$) with $\integrand:
+	(\stateyDiscrete,\stateyDotDiscrete,\timeDummy) \mapsto
+	\integrand(\stateyDiscrete,\stateyDotDiscrete,\timeDummy)$. We now introduce
+	the function $\statez: [0,T] \rightarrow \RR{M}$ that is implicitly defined
+	as an extremum of~\eqref{eq:el_gen} subject to the boundary condition
+	$\statez(0) = \statez_0$. \KTC{This previous sentence isn't correct. The
+	functional defined here has two arguments; the extremum can't be a single
+	argument, as it's a pair of arguments. You need to connect these by saying
+	they associate with the same time-dependent funciton.} 
 We introduce an arbitrary function $\variation : [0,T] \rightarrow \RR{M}$ with the boundary condition $\variationArg{0} = \bz$ and define a variation from the extremal by,
 \begin{align*}
 \statezBar  &: (\tau,\delta) \mapsto \statez(\tau) + \delta \variation(\tau),\\
