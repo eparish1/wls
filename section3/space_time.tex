@@ -1,5 +1,4 @@
 \subsection{\spaceTimeAcronym\ trial spaces}\label{sec:wls_spacetime}
-\KTC{HERE}
 %\KTC{Error in first equation. This is the approximate solution not the real
 %one. Use parallel language to hwo this was done in the last section for
 %S-reduction trial subspaces. Also make sure the basis is zero at the beginning
@@ -15,8 +14,11 @@ with $\approxstateArgnt{n} \in \stspaceSTArg{n}$, where
  \stspaceSTArg{n} \defeq
  \Range{\stbasisArgnt{n}} + \stateInterceptSTArg{n}\otimes \onesFunctionArg{n} \subseteq \RR{\fomdim} \otimes \timeSpaceArg{n}.
 \end{equation}
-Here $\stbasisArg{n}{t} \in \RR{\fomdim \times \stdimArg{n}}$, $n=1,\ldots,\nslabs$, with $\stbasisArgnt{n}: \timeDummy \mapsto \stbasisArgnt{n}(\timeDummy)$ and $\stbasisArg{n}{\timeStartArg{n}} = \bz$ is the space--time trial basis matrix \textit{function} and $\stateInterceptSTArg{n} \in \RR{\fomdim}$ provides the affine transformation. 
-For \spaceTimeAcronym\ trial subspaces, we take the affine transformation to be $\stateInterceptSTArg{n} = \approxstateArg{n-1}{\timeEndArg{n-1}}$ for $n=2,\ldots,\nslabs$ and $\stateInterceptSTArg{1} = \stateFOMIC$; this definition of the trial subspace automatically satisfies the boundary condition at $t=0$ and enforces continuity between windows.
+Here $\stbasisArgnt{n} \in \RR{\fomdim \times
+\stdimArg{n}}\otimes\timeSpaceArg{n}$, $n=1,\ldots,\nslabs$, with $\stbasisArgnt{n}: \timeDummy \mapsto \stbasisArgnt{n}(\timeDummy)$ and $\stbasisArg{n}{\timeStartArg{n}} = \bz$ is the space--time trial basis matrix {function} and $\stateInterceptSTArg{n} \in \RR{\fomdim}$ provides the affine transformation. 
+To enforce the initial condition and ensure solution continuity across time windows, we set $\stateInterceptSTArg{1} = \stateFOMIC$ and
+$\stateInterceptSTArg{n} = \approxstateArg{n-1}{\timeEndArg{n-1}}$ for
+$n=2,\ldots,\nslabs$.
 At any time instance $t \in [\timeStartArg{n},\timeEndArg{n}]$, the \spaceTimeAcronym\ trial subspace approximates the FOM ODE solution as
  \begin{equation}\label{eq:stapprox}
  \stateFOMArg{n}{t} \approx \approxstateArg{n}{t}  = \stbasisArg{n}{t} \stgenstateArg{n} + \stateInterceptSTArg{n},
@@ -46,7 +48,10 @@ The state over each window is approximated by,
 %where $\stgenstateArg{n} \in \RR{\stdimArg{n}}$ are the space--time generalized coordinates over the $n$th window.
 
 \end{comment}
-Substituting the approximation~\eqref{eq:stapprox} into the minimization problem~\eqref{eq:tclsrm} implies that \methodAcronym\ with \spaceTimeAcronym\ trial subspaces sequentially computes solutions $\stgenstateArg{n}$, $n = 1,\ldots,\nslabs$ that satisfy
+Setting $\stspace^n \leftarrow \stspaceSTArg{n}$ in the
+\methodAcronym\ minimization problem~\eqref{eq:tclsrm} implies that
+\methodAcronym\ with \spaceTimeAcronym\ trial subspaces sequentially computes
+solutions $\stgenstateArg{n}$, $n = 1,\ldots,\nslabs$ that satisfy
 \begin{align}\label{eq:obj_gen_slab_spacetime}
 \begin{split}
 &\underset{\stgenstateyArg{} \in \RR{\stdimArg{n}}}{\text{minimize}}\; \mathcal{J}^n( \stbasisArgnt{n} \stgenstateyArg{} + \stateInterceptSTArg{n} \otimes \onesFunctionArg{n} ).% \\ 
@@ -86,11 +91,17 @@ Substituting the approximation~\eqref{eq:stapprox} into the minimization problem
 %\mathbb{P}^n \stateFOMIC
 % & n=1. \end{cases} \end{equation}
 \subsubsection{Stationary conditions} 
-The key difference between \spaceTimeAcronym\ and \spatialAcronym\ trial subspaces is as follows: in \spaceTimeAcronym\ trial subspaces the generalized coordinates comprise a vector in $\RR{\stdimArg{n}}$, while in the \spatialAcronym\ trial subspaces the generalized coordinates comprise a \textit{vector of functions}, i.e., the generalized coordinates live in $\RR{\romdimArg{n}} \otimes \timeSpaceArg{n}$. 
-Thus, in the \spaceTimeAcronym\ case the optimization problem is no longer minimizing a functional with respect to a function, but now is minimizing a function with 
+The key difference between \spaceTimeAcronym\ and \spatialAcronym\ trial
+	subspaces is as follows: generalized coordinates for \spaceTimeAcronym\ trial subspaces 
+	comprise a vector in $\RR{\stdimArg{n}}$, while generalized coordinates for
+	the \spatialAcronym\ trial subspaces comprise a
+	time-dependent vector in
+	$\RR{\romdimArg{n}} \otimes \timeSpaceArg{n}$. 
+Thus, in the \spaceTimeAcronym\ case, the optimization problem is no longer
+	minimizing a functional with respect to a (time-dependent) function, but now is minimizing a function with 
 respect to vector.  As such, the first-order optimality conditions can be
 	derived using standard calculus. Differentiating the objective with respect
-	to $\stgenstatey$ and setting equal to zero yields 
+	to the generalized coordinates and setting the result equal to zero yields 
 \begin{equation}\label{eq:st_stationary}
  \intSlabArg{n} \bigg[ \stbasisDotArg{n}{t}^T  - \stbasisArg{n}{t}^T \bigg[\frac{\partial
 \velocity}{\partial \stateyDiscrete} (\stbasisDotArg{n}{t} \stgenstateArg{n} +                    
@@ -101,4 +112,6 @@ respect to vector.  As such, the first-order optimality conditions can be
 %\mathbb{P}^n\stbasisArg{n-1}{\timeEndArg{n-1}}\stgenstateArg{n-1}  & n = 2,\ldots,\nslabs, \\ 
 %\mathbb{P}^n \stateFOMIC &
 %n=1. \end{cases} \end{equation}
-For \spaceTimeAcronym\ trial subspaces, the stationary conditions comprise an algebraic system of equations, as opposed to a system of differential equations.
+Thus, for \spaceTimeAcronym\ trial subspaces, the stationary conditions
+	comprise an algebraic system of equations, as opposed to a system of
+	differential equations as with \spatialAcronym\ trial subspaces.

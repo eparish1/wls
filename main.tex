@@ -433,7 +433,8 @@ $ \basismat \equiv \begin{bmatrix}  \basisvec_1  & \cdots &  \basisvec_K \end{bm
 The basis vectors $\basisvec_i$, $i=1,\ldots,K$ are typically constructed
 using state snapshots, e.g., via
 proper orthogonal decomposition (POD)~\cite{berkooz_turbulence_pod}, the reduced-basis method~\cite{rb_1,rb_2,rb_3,NgocCuong2005,Rozza2008}. 
-Thus, at any time instance $t\in[0,T]$, ROMs that employ the  \spatialAcronym\ trial subspace approximate the state as
+Thus, at any time instance $t\in[0,T]$, ROMs that employ the  \spatialAcronym\
+trial subspace approximate the FOM ODE solution as
 \begin{equation}\label{eq:affine_trialspace}
 \stateFOMArg{}{t} \approx \approxstate(t) = \basisspace \genstateArg{}{t} + \stateIntercept,
 \end{equation}
@@ -603,7 +604,7 @@ and $\stbasis:\timeDummy\mapsto\stbasis(\timeDummy)$ with $\stbasis(0) =
 \boldsymbol 0$
 denotes the space--time trial basis. 
 Thus, at any time instance $t\in[0,T]$, ROMs that employ the
-\spaceTimeAcronym\ trial subspace approximate the state as
+\spaceTimeAcronym\ trial subspace approximate the FOM ODE solution as
 \begin{equation}\label{eq:stapprox1}
  \stateFOMArg{}{t} \approx \approxstateArg{}{t}  = \stbasisArg{}{t} \stgenstate + \stateFOMIC,
 \end{equation}
