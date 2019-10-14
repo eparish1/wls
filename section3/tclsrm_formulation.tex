@@ -3,11 +3,10 @@
 \input{section3/space_time}
 
 \subsection{\methodAcronym\ summary}
-This section outlined the \methodAcronym\ method for model reduction. In
+This section outlined the \methodAcronym\ \approachKwd\ for model reduction. In
 summary, \methodAcronym\ sequentially minimizes the time continuous FOM ODE
-residual within the range of a space--time trial over time
-windows subject to boundary conditions associated with continuity across time
-windoes; i.e.,  
+residual within the range of a space--time trial subspace over time
+windows; i.e.,  
 %\methodAcronym\  
 %computes the generalized coordinates
 %$\genstateArgnt{n}$, for $n = 1,\ldots,\nslabs$, as the solution to the
@@ -15,8 +14,8 @@ windoes; i.e.,
 \methodAcronym\ sequentially computes approximate solutions
 $\approxstateArgnt{n}\in\stspace^n$, $n=1,\ldots,\nslabs$ that comprise
 solutions to the optimization problem \eqref{eq:tclsrm}.
-\KTC{I removed repeated equations here and just referred to their previous
-definitions. This will cut down on the text.}
+%\KTC{I removed repeated equations here and just referred to their previous
+%definitions. This will cut down on the text.}
 %\begin{equation*}
 %\underset{\stateyArgnt{} \in \stspace^n}{\text{minimize } }
 %\mathcal{J}^n(\stateyArgnt{}),
@@ -31,7 +30,6 @@ definitions. This will cut down on the text.}
 %\RRplus,
 %\end{align*}
 %subject to the boundary conditions. 
-
 For \spatialAcronym\ trial subspaces, the stationary conditions for the
 residual minimization problem can be derived via the Euler--Lagrange equations
 and yield the system \eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs} over the $n$th window for $t \in
