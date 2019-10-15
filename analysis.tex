@@ -148,7 +148,9 @@ where
 &: \, \RR{N} \otimes \timeSpaceArg{} \times [0,T] \mapsto \RR{N}.
 \end{align*}
 
-\item \textbf{A2:} We assume inverse Lipshitz continuity on the integrated residual for two trajectories starting from the same initial condition: $\forall \statew,\statey$ with $\statew(\timeStartArg{n} ) = \statey(\timeStartArg{n})$ \EP{Put this in  a set maybe? I think that this, along with the trajectory being ''sufficiently smooth", should be enough to avoid the case where we have two different trajectories that exactly satisfy the residual. Something like $\statew,\statey \in \stspaceArg{n}_*, \stspaceArg{n}_* = \{ \statew \in \stspaceArg{n} | \statew(\timeStartArg{n}) = \mathbf{g} \}$ for arbitrary $\mathbf{g}$},
+\item \textbf{A2:} We assume inverse Lipshitz continuity on the integrated residual for two trajectories starting from the FOM solution over the $n$th window:
+$\forall \statew,\statey \in \stspaceArg{n}_*, \stspaceArg{n}_* = \{ \statew \in \stspaceArg{n} | \statew(\timeStartArg{n}) = \stateFOMArg{}{\timeStartArg{n}} \}$ we assume 
+%$\forall \statew,\statey$ with $\statew(\timeStartArg{n} ) = \statey(\timeStartArg{n})$ \EP{Put this in  a set maybe? I think that this, along with the trajectory being ''sufficiently smooth", should be enough to avoid the case where we have two different trajectories that exactly satisfy the residual. Something like $\statew,\statey \in \stspaceArg{n}_*, \stspaceArg{n}_* = \{ \statew \in \stspaceArg{n} | \statew(\timeStartArg{n}) = \mathbf{g} \}$ for arbitrary $\mathbf{g}$},
 $$  \intSlabArg{n} \norm{\statew(t) - \statey(t)} dt \le  \lipshitziArg{n} \intSlabArg{n} \norm{\resid(\statew,t) - \resid(\statey,t) } dt.$$
 \item \textbf{A3:} We assume that the FOM solution at the start of each window lies within the range of the trial subspace:
 $$ \stateFOMSolArgt{n}{\timeStartArg{n}} \in \trialspaceArg{n} + \stateInterceptArg{n}.$$
