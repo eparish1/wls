@@ -6,7 +6,7 @@ wanted to check (maybe it's made clear later).}
 \EP{This time grid becomes the time discretization over each window. At this point in the paper, 
 there is no notion of a time grid for \methodAcronym}
 
-Direct approaches solve~\eqref{eq:tclsrm} by
+Direct approaches solve the optimization problem~\eqref{eq:tclsrm} by
 ``transcribing" the infinite dimensional optimization problem into a finite
 dimensional one by discretizing the state and objective functional in time.
 The minimization problem is then reformulated as a (non)linear programming, or
@@ -62,7 +62,7 @@ other time-stepping methods (e.g., Runge--Kutta) follows closely.
 \subsubsection{Linear multistep schemes}
 \EP{This section has the double superscript. We could make one of these a subscript, but then need to change the algorithms a bit as 
 I use subscripts to denote iterations. Either is fine}
-Linear multistep schemes approximate the solution at time instance $\timeWindowArg{n}{i}$ using the previous $k$ time-instances.  
+Linear multistep schemes approximate the solution at time instance $\timeWindowArg{n}{i}$ using the previous $k$ time instances.  
 %Discretizing the FOM ODE~\eqref{eq:FOM} with a linear $k$-step scheme at the $i$th time-instance over the $n$th time slab yields,
 %\begin{equation}\label{eq:kstep}
 %\sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha_j \stateFOMDiscreteArg{n,i-j} = \Delta t^{n,i} \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta_j \velocity(\stateFOMDiscreteArg{n,i-j}),
@@ -115,7 +115,7 @@ Employing a linear multistep method allows the objective \textit{functional}~\eq
 %\end{align*} 
 %is the discrete residual resulting from the linear multistep scheme and 
 where $\quadWeightsLMSScalarArg{n}{i} \in \RR{}$ are quadrature weights. 
-\methodAcronym\ sequentially computes the approximate solutions $\approxstateDiscreteArg{n,0},\ldots,\approxstateDiscreteArg{n,\nstepsArg{n}}$, $n=1,\ldots,\nslabs$, as the solution to the minimization problems
+\methodAcronym\ sequentially computes the approximate solutions $\approxstateDiscreteArg{n,0},\ldots,\approxstateDiscreteArg{n,\nstepsArg{n}}$, $n=1,\ldots,\nslabs$, as the solution to the minimization problem
 \begin{align*}
 &\underset{\stateyDiscreteArgnt{0},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}} \in \trialspace}{\text{minimize } }
 \objectiveArgLMS{n} (\stateyDiscreteArgnt{0},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \\
@@ -163,8 +163,8 @@ the objective functional). Typically, the same integration scheme used to discre
 backward Euler method is used to discretize the FOM ODE, then a backward Euler method is the used to numerically integrate the objective functional.
 
 \begin{remark}
-For the limiting case where the window size is equivalent to the time-step size, $\DeltaSlabArg{n} \equiv \timeWindowArg{n}{1} - \timeWindowArg{n}{0}$, and uniform 
-quadrature weights are used, \methodAcronym\ recovers LSPG.
+For the limiting case where $\nstepsArg{n} = 1$ such that the window size is equivalent to the time step, $\DeltaSlabArg{n} \equiv \timeWindowArg{n}{1} - \timeWindowArg{n}{0}$, and uniform 
+quadrature weights are used, \methodAcronym\ with \spatialAcronym\ trial subspaces solved via the direct approach recovers LSPG.
 \end{remark} 
 \subsubsection{Solution to the least-squares problem through the Gauss--Newton method}
 Discretization through linear multistep methods (as well as other techniques) 
@@ -195,12 +195,12 @@ where $\genstatecollocMatySlabArg{} \defeq \unroll (\genstateyDiscreteArg{1},\ld
 It is worth noting that, by design,
 \begin{equation*}
 \objectiveArgLMS{n} \bigg( \basisspaceArg{n} \genstateDiscreteArg{n,0} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateDiscreteArg{n,\nstepsArg{n}} + \stateInterceptArg{n} \ \bigg) 
-\equiv
+=
 \bigg[\residLMSSlabArg{n}  (\genstatecollocMatSlabArg{n};\genstateDiscreteArg{n,0}) \bigg]^T \bigg[ \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n};\genstateDiscreteArg{n,0}) \bigg].
 \end{equation*} 
-Using these definitions, Algorithm~\ref{alg:colloc_gn} presents the standard Gauss--Newton method. The algorithm consists of three fundamental steps: (1) compute the FOM O$\Delta$E residual given the current guess, (2) compute the time window residual-Jacobian and form the normal equations, and (3) solve the normal equations and update the state. 
+Using these definitions, Algorithm~\ref{alg:colloc_gn} presents the standard Gauss--Newton method. The algorithm consists of three fundamental steps: (1) compute the FOM O$\Delta$E residual given the current guess, (2) compute the Jacobian of the residual over the time window and form the normal equations, and (3) solve the normal equations and update the state. 
 
-The practical implementation of the Gauss--Newton algorithm requires an efficient method for computing the time window residual-Jacobians. In particular, it is important to note that for linear multistep methods (and many other time marching schemes) the time window residual Jacobian will (almost) be a block-diagonal 
+The practical implementation of the Gauss--Newton algorithm requires an efficient method for computing the Jacobian of the residual over the time window. In particular, it is important to note that for linear multistep methods (and many other time marching schemes) the Jacobian of the residual over the time window will an almost block-diagonal 
 sparse matrix with the sparsity pattern
 \begin{equation*}
 \frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{}}(\genstatecollocMatSlabArg{n})  =
@@ -219,7 +219,7 @@ sparse matrix with the sparsity pattern
 % & &  & & \hspace{-15 pt} \matshapea 
 %\end{bmatrix*}.
 \end{equation*}
-This sparsity pattern can be leveraged to assemble the time window residual-Jacobian from local residual Jacobians. 
+This sparsity pattern can be leveraged to assemble the Jacobian of the residual over the time window from Jacobians of the residual at single time instances. 
 Further, the sparsity pattern can be 
 leveraged to efficiently compute the Jacobian matrix-matrix product in the normal equations.
 It is also worth noting that the 
@@ -319,8 +319,8 @@ approximation to the generalized coordinates. This gives a new estimate to the
 costate, which is then used to again solve the forward problem to obtain
 a new estimate of the generalized coordinates. This process is continued until
 convergence. Algorithm~\ref{alg:st_iter} outlines the method. The algorithm
-contains three parameters: the damping factor $\rho$, the growth factor
-$\fbsmGrowth$, and the decay factor $\fbsmDecay$. The damping factor controls the rate at which the costate seen by~\eqref{eq:lspg_continuous} is updated. The
+contains three parameters: the damping factor $\rho \le 1$, the growth factor
+$\fbsmGrowth \ge 1$, and the decay factor $\fbsmDecay \ge 1$. The damping factor controls the rate at which the costate seen by~\eqref{eq:lspg_continuous} is updated. The
 closer $\rho$ is to unity, the faster the resulting algorithm will converge.
 For large window sizes, however, too high a value of $\rho$ can lead to an unstable iterative process. 
 A proper value of $\rho$ can be
@@ -331,8 +331,8 @@ enough value of $\rho$, the algorithm will converge.
 
 \begin{algorithm} \caption{\spatialAcronym\ trial subspace: algorithm for the FBSM over the $n$th window.} \label{alg:st_iter} 
 \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
-\Input{tolerance, $\epsilon$; damping factor, $\rho$; growth factor, $\fbsmGrowth$; decay
-factor, $\fbsmDecay$} 
+\Input{tolerance, $\epsilon$; damping factor, $\rho \le 1$; growth factor, $\fbsmGrowth \ge 1$; decay
+factor, $\fbsmDecay \ge 1$} 
 \Output{Stationary point, $\genstateArgnt{n}$ }
 \textbf{Online Steps:}\\ 
 $\genstate^n_0 \leftarrow \bz$ \Comment{Set initial guess for state} \\
@@ -373,9 +373,9 @@ $\genstate_i^{n} \leftarrow  \genstate_{i-1}^{n}$ \Comment{Reset state to value 
 Return converged solution, $\genstateArgnt{n}= \genstateArgnt{n}_i$
 \end{algorithm}
 \subsubsection{Numerical considerations for the forward and backward problems}
-The FBSM requires solving~\eqref{eq:lspg_continuous} and~\eqref{eq:lspg_adjoint}, both of which are defined at the time-continuous level. 
+The FBSM requires solving the systems~\eqref{eq:lspg_continuous} and~\eqref{eq:lspg_adjoint}, both of which are defined at the time-continuous level. 
 The numerical implementation of the FBSM requires two main ingredients: (1) temporal discretization schemes for the forward and backward problems and (2) 
-an efficient method for computing action of the Jacobian transpose on a vector.  
+an efficient method for computing the action of the Jacobian transpose on a vector.  
 
 This work examines the use of linear multistep methods for the purpose of temporal discretization of the forward and 
 backwards problems. As described in  

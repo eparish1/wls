@@ -34,7 +34,7 @@ Leveraging the definition of the fully discrete objective function~\eqref{eq:obj
 It is noted that the boundary conditions are automatically satisfied through the definition of the $\spaceTimeAcronym$\ trial subspace. The minimization problem~\eqref{eq:obj_gen_lms_final_st} can be solved, e.g, via the Gauss--Newton method.
 
 \begin{remark}
-For the limiting case where the window size spans the entire domain, $\DeltaSlabArg{1}\equiv T$, and a uniform quadrature weights are used, direct \methodAcronym\ with a \spaceTimeAcronym\ trial subspace recovers ST-LSPG.
+For the limiting case where the window size spans the entire domain, $\DeltaSlabArg{1}\equiv T$, and uniform quadrature weights are used, and the weighting matrix $\stweightingMatArg{n} = \mathbf{I}$, direct \methodAcronym\ with a \spaceTimeAcronym\ trial subspace recovers ST-LSPG with $\lspgWeightingSTArg{\cdot} = \mathbf{I}$. For equivalence conditions in the case where $\lspgWeightingSTArg{\cdot} \ne \mathbf{I}$, the objective function~\eqref{eq:obj_gen_lms_final_st} can be modified to enable weighted space--time norm. 
 \end{remark}
 
 \subsection{\spaceTimeAcronym: indirect solution approach}
