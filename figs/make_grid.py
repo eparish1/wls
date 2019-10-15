@@ -6,10 +6,10 @@ from matplotlib import rc
 rc('text', usetex=True)
 rc('text.latex', preamble='\usepackage{amsmath},\usepackage{amssymb}')
 import os
-axis_font = {'size':16,'family':'serif'}
+axis_font = {'size':12,'family':'serif'}
 mpl.rc('font',family='serif')
 rc('text', usetex=True)
-axis_font = {'size':'14'}
+axis_font = {'size':'12'}
 close("all")
 import matplotlib.patches as patches
 fig,ax = plt.subplots(1)
@@ -35,4 +35,4 @@ ax.axis('off')
 #ax.set_xticks([])
 #ax.set_yticks([])
 savefig('time_grid.pdf')
-show()
+#show()
