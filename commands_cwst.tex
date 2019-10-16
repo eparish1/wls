@@ -50,6 +50,9 @@
 \newcommand{\fbsmDecay}{\psi_2}
 \newcommand{\projector}{\mathbb{P}}
 \newcommand{\projectorArg}[1]{\projector^{#1}}
+\newcommand{\genProjectorSpatialArg}[1]{\hat{\projector}_s^{#1}}
+
+\newcommand{\projectorSpatialArg}[1]{\projector_{\mathcal{S}}^{#1}}
 \newcommand{\veloargsromy}{\basisspace \genstateyDiscreteArgnt{} + \stateIntercept,\timeDummy}
 \newcommand{\quadWeightsVecArg}[1]{\boldsymbol \alpha^{#1}}
 \newcommand{\minIntegrandFull}{\frac{1}{2} \big[\frac{\partial \decoder}{\partial \genstate} \dot{\genstate} - \velocity(\decoder(\genstate)) \big]^T \stweightingMat(t) \big[\frac{\partial \decoder}{\partial \genstate} \dot{\genstate} - \velocity(\decoder(\genstate)) \big]}
@@ -199,6 +202,7 @@
 
 \newcommand{\genspatialICDiscrete}{\basisspaceTArg{n}(\basisspaceArg{n-1} \genstateDiscreteArg{n-1,\nstepsArg{n-1}}   + \stateInterceptArg{n-1} - \stateInterceptArg{n} )}
 \newcommand{\spatialIC}{\basisspaceTArg{n}(\basisspaceArg{n-1} \genstate^{n-1}(\timeEndArg{n-1} )  + \stateInterceptArg{n-1} - \stateInterceptArg{n} )}
+%\newcommand{\spatialIC}{\genProjectorSpatialArg{n}(\basisspaceArg{n-1} \genstate^{n-1}(\timeEndArg{n-1} )  + \stateInterceptArg{n-1} )}
 
 \newcommand{\defeq}{\vcentcolon=}
 \newcommand{\mass}{\mathbf{M}}
