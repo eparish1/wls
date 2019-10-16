@@ -6,17 +6,16 @@ dimensional one by discretizing the state and objective functional in time.
 The minimization problem is then reformulated as a (non)linear programming, or
 optimization, problem. A variety of direct solution approaches exist, 
 including collocation approaches, spectral  methods, and genetic algorithms.  
-\EP{Make sure 4.2.1 is settled on before this}
 In the context of \spatialAcronym\ trial subspaces, the most straightforward direct solution approach consists of the 
 following steps: (1) numerically discretize the FOM ODE (and hence the
 \textit{integrand} of the objective function in problem~\eqref{eq:obj_gen_slab}) and 
 (2) select a numerical quadrature rule to evaluate the \textit{integral} in~\eqref{eq:obj_gen_slab}.
-To this end, we define a time grids
+To this end, we define time grids
 $\{\timeWindowArg{n}{i}\}_{i=0}^{\nstepsArg{n}}\subseteq[\timeStartArg{n},\timeEndArg{n}]$,
 $n=1,\ldots,\nslabs$ that
 satisfy 
 $\timeStartArg{n}=\timeWindowArg{n}{0} \le \cdots \le \timeWindowArg{n}{\nstepsArg{n}} 
- = \timeEndArg{n}$.
+ = \timeEndArg{n}$ and, for notational purposes, we define $\timeWindowArg{n}{i} = \timeWindowArg{n-1}{\nstepsArg{n-1}+i}$ for $i < 0$.
 %\KTC{use cdots, not
 %hdots or ldots. Don't use $\defeq$ for the first and last times; these are
 %just equalities, i.e., you happen to set them equal to those values, but they
@@ -55,16 +54,16 @@ Linear multistep schemes approximate the solution at time instance $\timeWindowA
 %\begin{equation}\label{eq:kstep}
 %\sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha_j \stateFOMDiscreteArg{n,i-j} = \Delta t^{n,i} \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta_j \velocity(\stateFOMDiscreteArg{n,i-j}),
 %\end{equation}
-Employing a linear multistep method to discretize the FOM ODE yields the FOM O$\Delta$E over the $n$th window,
-\footnote{
+Employing a linear multistep method to discretize the FOM ODE yields the FOM O$\Delta$E over the $n$th window\footnote{
 To maintain notational simplicity in this section, and handle the case where the linear multistep method employs time instances from the previous window(s), for superscripts $n=1,\ldots,\nslabs$ and $i<0$, we set the superscripts to be $n =n-1, i = \nstepsArg{n-1}+i$ 
 % $\stateFOMDiscreteLMSArg{n}{i} = \stateFOMDiscreteLMSArg{n-1}{\nstepsArg{n-1}+i}$, along with $\timeWindowArg{n}{i} = \timeWindowArg{n-1}{\nstepsArg{n-1}+i}$.
-} 
+}, 
 \begin{align*}
 &\residLMSWArg{n}{i} (\stateFOMDiscreteLMSArg{n}{i};\stateFOMDiscreteLMSArg{n}{i-1},\ldots,\stateFOMDiscreteLMSArg{n}{i-\lmsWidthArg{n}{i}}) = \bz, \qquad i=1,\ldots,\nstepsArg{n}, \\
-&\stateFOMDiscreteLMSArg{n}{0} = \begin{cases}
-\stateFOMDiscreteLMSArg{n-1}{\nstepsArg{n-1}} & n = 2,\ldots,\nslabs, \\
-\stateFOMIC & n=1, \end{cases}
+&\stateFOMDiscreteLMSArg{n}{i} = 
+\begin{cases}
+\stateFOMDiscreteLMSArg{n-1}{\nstepsArg{n-1}+i} & n = 2,\ldots,\nslabs, \; i \le 0 \\
+\stateFOMIC & n=1, \; i=0,\end{cases}
 \end{align*}
 where $\stateFOMDiscreteLMSArg{n}{i} (\approx
 \stateFOMArg{}{\timeWindowArg{n}{i}})
@@ -121,12 +120,12 @@ In the above, $\objectiveArgLMS{n}$ is the discrete objective function at the $n
 \begin{equation*}%\label{eq:obj_lms}
 \begin{split} 
 \objectiveArgLMS{n} &\vcentcolon (\stateyDiscreteArgnt{n,1},\ldots,\stateyDiscreteArgnt{n,\nstepsArg{n}}) \mapsto
-\frac{1}{2} \sum_{i=1}^{\nstepsArg{n}} \quadWeightsLMSScalarArg{n}{i} [\residLMSWArg{n}{i}(\stateyDiscreteArgnt{n,i};\stateyDiscreteArgnt{n,i-1},\ldots, \stateyDiscreteArgnt{n,i-\lmsWidthArg{n}{i})})]^T  \stweightingMatArgt{n}{\timeWindowArg{n}{i}} \residLMSArg{n}{i}(\stateyDiscreteArgnt{n,i};\stateyDiscreteArgnt{n,i-1},\ldots, \stateyDiscreteArgnt{n,i-\lmsWidthArg{n}{i}}), \\
+\frac{1}{2} \sum_{i=1}^{\nstepsArg{n}} \quadWeightsLMSScalarArg{n}{i} [\residLMSWArg{n}{i}(\stateyDiscreteArgnt{n,i};\stateyDiscreteArgnt{n,i-1},\ldots, \stateyDiscreteArgnt{n,i-\lmsWidthArg{n}{i})})]^T  \stweightingMatArgt{n}{\timeWindowArg{n}{i}} \residLMSWArg{n}{i}(\stateyDiscreteArgnt{n,i};\stateyDiscreteArgnt{n,i-1},\ldots, \stateyDiscreteArgnt{n,i-\lmsWidthArg{n}{i}}), \\
 &\vcentcolon \RR{\fomdim} \otimes \RR{\nstepsArg{n}} \rightarrow
 \RR{}_+, 
 \end{split}
 \end{equation*}
-where $\quadWeightsLMSScalarArg{n}{i} \in \RRplus$ are quadrature weights and, for $i \le 0$, we set
+where $\quadWeightsLMSScalarArg{n}{i} \in \RRplus$ are quadrature weights and, for $i \le 0$
 \begin{equation}\label{eq:wls_spatial_direct_args}
 \stateyDiscreteArgnt{n,i}  \equiv 
 \begin{cases}
@@ -192,7 +191,7 @@ backward Euler method is used to discretize the FOM ODE, then a backward Euler m
 For the limiting case where $\nstepsArg{n} = 1$ such that the window size is equivalent to the time step, $\DeltaSlabArg{n} \equiv \timeWindowArg{n}{1} - \timeWindowArg{n}{0}$, uniform 
 quadrature weights are used, and uniform bases and weighting matrices are used (i.e., $\basisspaceArg{n} \equiv \basisspace, \stweightingMatArg{n} \equiv \stweightingMat, n=1,\ldots,\nslabs$), 
 \methodAcronym\ with \spatialAcronym\ trial
-	subspaces solved via the direct approach recovers LSPG. \KTC{Not exactly. To
+	subspaces solved via the direct approach recovers the LSPG approach. \KTC{Not exactly. To
 	make this LSPG as presented earlier, also require the time grid here to
 	align with the time grid used for time integration earlier. Also, this
 	formulation requires allowing the stencil to go back to time steps at
@@ -225,7 +224,7 @@ superscript on the residual) and arbitrary previous solutions could be
 included in the first residual here.}
 \begin{equation*}
 \residLMSSlabArg{n} : (\genstatecollocMatySlabArg{}) \mapsto \begin{bmatrix}
- \sqrt{\frac{\quadWeightsLMSScalarArg{n}{1}}{2}} \stweightingMatOneArg{n} \residLMSArg{n,1}( \basisspaceArg{n} \genstateyDiscreteArgnt{1} + \stateInterceptArg{n}, \ldots , \basisspaceArg{n} \genstateDiscreteArg{n,1 - \lmsWidthArg{n}{1}} + \stateInterceptArg{n}) \\
+ \sqrt{\frac{\quadWeightsLMSScalarArg{n}{1}}{2}} \stweightingMatOneArg{n} \residLMSArg{n,1}( \basisspaceArg{n} \genstateyDiscreteArgnt{1} + \stateInterceptArg{n}; \ldots , \stateyDiscreteArgnt{n,1 - \lmsWidthArg{n}{1} } ) \\
 \vdots \\
  \sqrt{\frac{\quadWeightsLMSScalarArg{n}{\nstepsArg{n}}}{2}} \stweightingMatOneArg{n} \residLMSArg{n,\nstepsArg{n}}( \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n}} + \stateInterceptArg{n}, \ldots,\basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n} - k^n(\nstepsArg{n}) } + \stateInterceptArg{n}) \\
 \end{bmatrix},
