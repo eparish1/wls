@@ -194,7 +194,7 @@ the objective functional). Typically, the same integration scheme used to discre
 backward Euler method is used to discretize the FOM ODE, then a backward Euler method is the used to numerically integrate the objective functional.
 
 \begin{remark}
-For the limiting case where $\nstepsArg{n} = 1$ such that the window size is equivalent to the time step (i.e., $\DeltaSlabArg{n} = \timeWindowArg{n}{1} - \timeWindowArg{n}{0}$), uniform 
+For the limiting case where $\nstepsArg{n} = 1$, $n=1,\ldots,\nslabs$ such that the window size is equivalent to the time step (i.e., $\DeltaSlabArg{n} = \timeWindowArg{n}{1} - \timeWindowArg{n}{0}$), uniform 
 quadrature weights are used, a uniform basis is employed (i.e., $\basisspaceArg{n} = \basisspace, n=1,\ldots,\nslabs$), the weighting matrices are taken to be
 $\stweightingMatOneArg{n} = \lspgWeightingArg{}, n=1,\ldots,\nslabs$, and the time instances $\timeWindowArg{n}{1} = t^n$, $n=1,\ldots,\nslabs$, then 
 $\approxstateDiscreteArg{n,1}  = \approxstateLSPG^n$, $n=1,\ldots,\nslabs$ and  
@@ -274,7 +274,7 @@ to efficiently compute the Jacobian matrix--matrix product.
 \KTC{We should never be solving the normal equations. This squares the
 condition number!}
 It is also worth noting that the 
-normal equations will be comprise a banded block system; this is a fact that can be leveraged to speed up the linear solves at each Gauss--Newton iteration.
+normal equations will comprise a banded block system, this can be leveraged to speed up the linear solves at each Gauss--Newton iteration.
 
 \begin{remark}\label{remark:gaussnewton}\textit{(Acceleration of the Gauss--Newton Solve)}\\
 	The principal cost of a Gauss--Newton method is often the formation of the Jacobian matrix. A variety of techniques aimed at 
@@ -395,9 +395,8 @@ factor, $\fbsmDecay \ge 1$}
 $\genstate^n_0 \leftarrow \bz$ \Comment{Set initial guess for state} \\
 $\controllerArgnt{n} \leftarrow \boldsymbol 0$ \Comment{Set initial
 guess for costate}\\ 
-$\text{Compute } \genstateArgnt{n}_1 \text{ satisfying } \basisspaceTArg{n} \stweightingMatArg{n}
-\basisspaceArg{n} \genstateDotArgnt{n}_1(t)  -  \basisspaceTArg{n} \stweightingMatArg{n}
-\velocity(\veloargsromArg{1}) =  \controllerArg{n}{t}$ 
+$\text{Compute } \genstateArgnt{n}_1 \text{ satisfying }  \massArg{n} \genstateDotArgnt{n}_1(t)  -  \basisspaceTArg{n} \stweightingMatArg{n}
+\velocity(\veloargsromArg{1}) =  \massArg{n} \controllerArg{n}{t}$ 
 % Eq.~\ref{eq:lspg_continuous} with $\adjoint^n(t) = \controllerArg{n}{t}$ to
 % obtain $\genstate_0^{n}(t)$ 
 \Comment{Solve~\eqref{eq:lspg_continuous}}\\ 
@@ -409,13 +408,13 @@ $i \leftarrow 1$ \Comment{Set counter}\\
 \small{
 \begin{multline*}
 \text{ Compute } \adjointArgnt{n} \text{ satisfying }
-\adjointDotArg{n}{t}  + \basisspaceTArg{n} \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\basisspaceArg{n} \genstate^n_i(t) + \stateInterceptArg{n},t) \bigg]^T \stweightingMatArg{n} \basisspaceArg{n} [\massArg{n}]^{-1} \adjointArg{n}{t}= \\ -\bigg[\basisspaceTArg{n} \bigg[ \frac{\partial \velocity}{\partial \stateyDiscrete} ( \basisspaceArg{n} \genstate^n_i(t) + \stateInterceptArg{n},t) \bigg]^T \stweightingMatArg{n} \bigg( \mathbf{I} -   \basisspaceArg{n} [\massArg{n}]^{-1} \basisspaceTArg{n} \stweightingMatArg{n} \bigg)  \bigg( \basisspaceArg{n} \dot{\genstate}_i^n(t)   -   \velocity( \basisspaceArg{n} \genstate_i^n(t)  +\stateInterceptArg{n},t) \bigg) \bigg] 
+\massArg{n} \adjointDotArg{n}{t}  + \basisspaceTArg{n} \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\basisspaceArg{n} \genstate^n_i(t) + \stateInterceptArg{n},t) \bigg]^T \stweightingMatArg{n} \basisspaceArg{n} \adjointArg{n}{t}= \\ -\bigg[\basisspaceTArg{n} \bigg[ \frac{\partial \velocity}{\partial \stateyDiscrete} ( \basisspaceArg{n} \genstate^n_i(t) + \stateInterceptArg{n},t) \bigg]^T \stweightingMatArg{n} \bigg( \mathbf{I} -   \basisspaceArg{n} [\massArg{n}]^{-1} \basisspaceTArg{n} \stweightingMatArg{n} \bigg)  \bigg( \basisspaceArg{n} \dot{\genstate}_i^n(t)   -   \velocity( \basisspaceArg{n} \genstate_i^n(t)  +\stateInterceptArg{n},t) \bigg) \bigg] 
 \end{multline*} }
 \Comment{Solve~\eqref{eq:lspg_adjoint} to obtain guess to costate} \\
 %Solve Eq.~\ref{eq:lspg_adjoint} with $\genstate^n(t) = \genstate^n_i(t)$ to obtain $\adjoint^n(t)$ \\
 $\controllerArgnt{n}  \leftarrow \rho \controllerArgnt{n} + (1 - \rho) \adjointArgnt{n}$ \Comment{Weighted update to costate}\\
 $i \leftarrow i+1$ \Comment{Update counter}\\
-$\text{Compute }\genstateArgnt{n}_i \text{ satisfying } \basisspaceTArg{n} \stweightingMatArg{n} \basisspaceArg{n} \genstateDotArgnt{n}_i(t)   -  \basisspaceTArg{n} \stweightingMatArg{n} \velocity(\basisspaceArg{n} \genstate^n_i(t) + \stateInterceptArg{n},t) =  \controllerArg{n}{t} $
+$\text{Compute }\genstateArgnt{n}_i \text{ satisfying } \massArg{n} \genstateDotArgnt{n}_i(t)   -  \basisspaceTArg{n} \stweightingMatArg{n} \velocity(\basisspaceArg{n} \genstate^n_i(t) + \stateInterceptArg{n},t) = \massArg{n} \controllerArg{n}{t} $
 \Comment{Solve~\eqref{eq:lspg_continuous}}\\
 %$\objectiveArg{n}({\genstate_i^n(t)})$ \Comment{Evaluate objective function}\\
 \uIf{ $\objectiveArg{n}({\basisspaceArg{n}\genstate_i^n + \stateInterceptArg{n}\otimes \onesFunctionArg{n}}) \le \objectiveArg{n}({\basisspaceArg{n}\genstate_{i-1}^n + \stateInterceptArg{n}\otimes \onesFunctionArg{n}})$}
