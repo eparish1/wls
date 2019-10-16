@@ -258,8 +258,11 @@ normal equations will also (almost) \KTC{What does ``almost'' block diagonal
 mean? This is imprecise} be block-diagonal; this is a fact that can be leveraged to speed up the linear solves at each Gauss--Newton iteration.
 
 \begin{remark}\label{remark:gaussnewton}\textit{(Acceleration of the Gauss--Newton Solve)}\\
-The principle cost of a Gauss--Newton method is often the formation of the Jacobian matrix. A variety of techniques aimed at 
-reducing this computational burden exist; Jacobian-free Newton-Krylov methods~\cite{jfnk}, Broyden's method~\cite{broyden} (as explored in Ref.~\cite{carlberg_thesis}, Appendix A), and frozen Jacobian approximations are several such examples. Further, the space--time formulation exposes an extra dimension for parallelization that can be exposed to accelerate the wall-clock time of the ROM. The investigation of these additional, potentially more efficient, solution algorithms will be a topic of future work. 
+	The \KTC{this should be `principal', not `principle':} principle cost of a Gauss--Newton method is often the formation of the Jacobian matrix. A variety of techniques aimed at 
+reducing this computational burden exist; Jacobian-free Newton-Krylov
+	methods~\cite{jfnk}, Broyden's method~\cite{broyden} (as explored in
+	Ref.~\cite{carlberg_thesis}, Appendix A), and frozen Jacobian approximations
+	are several such examples. \KTC{Expose used twice in this sentence} Further, the space--time formulation exposes an extra dimension for parallelization that can be exposed to accelerate the wall-clock time of the ROM. The investigation of these additional, potentially more efficient, solution algorithms will be a topic of future work. 
 \end{remark}
 %\subsubsection{Jacobian-Free Implementation}
 %The dominant cost of the Gauss Newton algorithm is the computatation of the action of the Jacobian matrix on the trial basis. To alleviate this burden, the following Jacobian-free method is proposed:
