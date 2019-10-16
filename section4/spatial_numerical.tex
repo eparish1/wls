@@ -195,7 +195,7 @@ backward Euler method is used to discretize the FOM ODE, then a backward Euler m
 
 \begin{remark}
 For the limiting case where $\nstepsArg{n} = 1$, $n=1,\ldots,\nslabs$ such that the window size is equivalent to the time step (i.e., $\DeltaSlabArg{n} = \timeWindowArg{n}{1} - \timeWindowArg{n}{0}$), uniform 
-quadrature weights are used, a uniform basis is employed (i.e., $\basisspaceArg{n} = \basisspace, n=1,\ldots,\nslabs$), the weighting matrices are taken to be
+quadrature weights are used, a uniform trial space is employed (i.e., $\trialspaceArg{n} = \trialspace, n=1,\ldots,\nslabs$), the weighting matrices are taken to be
 $\stweightingMatOneArg{n} = \lspgWeightingArg{}, n=1,\ldots,\nslabs$, and the time instances $\timeWindowArg{n}{1} = t^n$, $n=1,\ldots,\nslabs$, then 
 $\approxstateDiscreteArg{n,1}  = \approxstateLSPG^n$, $n=1,\ldots,\nslabs$ and  
 \methodAcronym\ with \spatialAcronym\ trial
