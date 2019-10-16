@@ -49,7 +49,7 @@ other time-integration methods (e.g., Runge--Kutta) follows closely.
 %%\timeEndArg{n}
 %\end{align*}
 \subsubsection{Linear multistep schemes}
-Linear multistep schemes approximate the solution at time instance $\timeWindowArg{n}{i}$ using the previous $k$ time instances.  
+Linear multistep schemes approximate the solution at time instance $\timeWindowArg{n}{i}$ using the previous $\lmsWidthArg{n}{i}$ time instances, where $\lmsWidthArg{n}{i}$ (with $\lmsWidthArg{1}{1} = 1$) denotes the number of time steps employed by the scheme at the $i$th time instance over the $n$th window. 
 %Discretizing the FOM ODE~\eqref{eq:FOM} with a linear $k$-step scheme at the $i$th time-instance over the $n$th time slab yields,
 %\begin{equation}\label{eq:kstep}
 %\sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha_j \stateFOMDiscreteArg{n,i-j} = \Delta t^{n,i} \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta_j \velocity(\stateFOMDiscreteArg{n,i-j}),
@@ -76,7 +76,7 @@ defined as
                &: \RR{\fomdim} \otimes \RR{\lmsWidthArg{n}{i}+1} \rightarrow \RR{\fomdim}. 
 \end{align*}
 Here, $\Delta t^{n,i} \defeq \timeWindowArg{n}{i} - \timeWindowArg{n}{i-1}$
-denotes the time step, $\lmsWidthArg{n}{i}$ with $\lmsWidthArg{1}{1} = 1$ denotes the number of time steps employed by the scheme at the $i$th time instance over the $n$th window  and
+denotes the time step, and
 $\alpha^{n,i}_j,\beta^{n,i}_j\in\RR{}$ denote coefficients that 
 define the specific type of multistep scheme. 
 %\begin{remark}\label{remark:LMS}
@@ -231,7 +231,7 @@ second argument could be omitted here (okay because there is already a
 superscript on the residual) and arbitrary previous solutions could be
 included in the first residual here.}
 \begin{equation*}
-\residLMSSlabArg{n} : (\genstatecollocMatySlabArg{}) \mapsto \begin{bmatrix}
+\residLMSSlabArg{n} : \genstatecollocMatySlabArg{} \mapsto \begin{bmatrix}
  \sqrt{\frac{\quadWeightsLMSScalarArg{n}{1}}{2}} \stweightingMatOneArg{n} \residLMSArg{n,1}( \basisspaceArg{n} \genstateyDiscreteArgnt{1} + \stateInterceptArg{n}; 
 %\residLMSArg{n,0}( \basisspaceArg{n} \genstateyDiscreteArgnt{0} + \stateInterceptArg{n}),
 \projectorSpatialArg{n}( \approxstateDiscreteArg{n,0}),
