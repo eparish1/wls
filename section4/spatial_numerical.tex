@@ -64,16 +64,26 @@ for a discrete residual. See email.}
 \stateFOMDiscreteArg{n-1,\nstepsArg{n-1}} & n = 2,\ldots,\nslabs, \\
 \stateFOMIC & n=1, \end{cases}
 \end{align*}
-where $\stateFOMDiscreteArg{n,i} \approx \stateFOMArg{}{\timeWindowArg{n}{i}} \in \RR{\fomdim}$ is the discrete approximation to the FOM state at the $i$th time instance over the $n$th window and $\residLMSArg{n,i}$ is the discrete linear multistep residual over the $i$th time instance of the $n$th window and is defined as
+where $\stateFOMDiscreteArg{n,i} (\approx
+\stateFOMArg{}{\timeWindowArg{n}{i}})
+\in \RR{\fomdim}$ and $\residLMSArg{n,i}$ denotes the FOM O$\Delta$E
+residual over the $i$th time instance of the $n$th window 
+defined as
 \begin{align*}
 \residArg{n,i} &: (\stateyDiscreteArgnt{i},\ldots,\stateyDiscreteArgnt{i-\lmsWidthArg{n}{i}}) \mapsto  \frac{1}{\Delta t^{n,i}} \sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha^{n,i}_j \stateyDiscreteArgnt{i-j} -  \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta^{n,i}_j \velocity(\stateyDiscreteArgnt{i-j},\timeWindowArg{n}{i-j}) \\
                &: \RR{\fomdim} \otimes \RR{\lmsWidthArg{n}{i}+1} \rightarrow \RR{\fomdim}. 
 \end{align*} 
-Additionally, $\Delta t^{n,i} = \timeWindowArg{n}{i} - \timeWindowArg{n}{i-1}$ is the time step, $\lmsWidthArg{n}{i}$ is the width of the multistep scheme at the $i$th time instance over the $n$th window, and $\alpha^{n,i}_j$ and $\beta^{n,i}_j$ are coefficients that 
-define the specific type of multistep scheme. Examples of linear multistep schemes include Adams--Bashforth schemes and  
-Adams--Moulton schemes. 
+Here, $\Delta t^{n,i} \defeq \timeWindowArg{n}{i} - \timeWindowArg{n}{i-1}$
+denotes the time step, $\lmsWidthArg{n}{i}$ denotes the number of time steps employed by the scheme at the $i$th time instance over the $n$th window, and
+$\alpha^{n,i}_j,\beta^{n,i}_j\in\RR{}$ denote coefficients that 
+define the specific type of multistep scheme. 
 \begin{remark}\label{remark:LMS}
-For notational simplicity, we assume the linear multistep method employs time instances from only within the current time window. In general, the linear multistep method at the $n$th window could be designed to employ multiple time instances from previous time windows.
+For notational simplicity, we assume the linear multistep method employs time
+	instances from only within the current time window. In general, the linear
+	multistep method at the $n$th window could be designed to employ multiple
+	time instances from previous time windows. \KTC{What are the implications of
+	this? I suggest removing this and adding a simple condition, maybe with a
+	footnote.}
 \end{remark}
 %Employing a linear multistep method for temporal discretization of the FOM ODE leads to the FOM O$\Delta$E over the $n$th slab,
 %\begin{align*}
@@ -104,10 +114,18 @@ Employing a linear multistep method allows the objective \textit{functional}~\eq
 %               &: \RR{\fomdim} \otimes \RR{k(i)} \rightarrow \RR{\fomdim}, 
 %\end{align*} 
 %is the discrete residual resulting from the linear multistep scheme and 
-where $\quadWeightsLMSScalarArg{n}{i} \in \RR{}$ are quadrature weights. 
-\methodAcronym\ sequentially computes the approximate solutions $\approxstateDiscreteArg{n,0},\ldots,\approxstateDiscreteArg{n,\nstepsArg{n}}$, $n=1,\ldots,\nslabs$, as the solution to the minimization problem
+where $\quadWeightsLMSScalarArg{n}{i} \in \RR{}$ are quadrature weights.
+\KTC{Don't these weights need to be non-negative to guarantee the integral is
+non-negative? If so, then specify $\quadWeightsLMSScalarArg{n}{i} \in\RR{}_+$}
+\methodAcronym\ sequentially computes the solutions
+$\approxstateDiscreteArg{n,0},\ldots,\approxstateDiscreteArg{n,\nstepsArg{n}}$,
+$n=1,\ldots,\nslabs$ that satisfy
+	\KTC{What is $\genstate^{n-1}(\timeEndArg{n-1} ) $ doing here? Two problems
+	(1) there is no notion of a generalized coordinate $\genstate$ yet, and (2)
+	this should be the discrete solution, not the exact solution evaluated at
+	the final time.}
 \begin{align*}
-&\underset{\stateyDiscreteArgnt{0},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}} \in \trialspace}{\text{minimize } }
+	&\underset{(\stateyDiscreteArgnt{0},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \in \trialspace\otimes \RR{\lmsWidthArg{n}{i}+1}}{\text{minimize } }
 \objectiveArgLMS{n} (\stateyDiscreteArgnt{0},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \\
 & \text{subject to} \hspace{0.2 in}  \stateyDiscreteArg{0} =
 \begin{cases} \basisspaceArg{n} \spatialIC + \stateInterceptArg{n}& n = 2,\ldots,\nslabs,\\
@@ -119,11 +137,17 @@ where $\quadWeightsLMSScalarArg{n}{i} \in \RR{}$ are quadrature weights.
 %& \text{subject to} \hspace{0.2 in}  \approxstateDiscreteArg{n,0} =
 %\begin{cases} \approxstateDiscreteArg{n-1,\nstepsArg{n-1}} & n = 2,\ldots,\nslabs,\\
 %\approxstateIC & n=1. \end{cases} \end{align*}
-Defining $\genstateDiscreteArg{n,i} \in \RR{\romdim}$ to be the discrete approximation to the generalized coordinates at the $i$th time instance over the $n$th window, 
-the minimization problem can be written equivalently as
+	Equivalently, WLS sequentially computes the generalized
+	coordinates
+	$\genstateDiscreteArg{n,0},\ldots,\genstateDiscreteArg{n,\timeWindowArg{n}{i}}$,
+	$n=1,\ldots,\nslabs$ 
+with $\genstateDiscreteArg{n,i}(\approx
+	\genstateArgnt{n}(\timeWindowArg{n}{i}))\in\RR{\romdim}$
+	that satisfy
 \begin{equation}\label{eq:obj_gen_lms_final}
 \begin{split}
-& \underset{\genstateyDiscreteArg{0},\ldots,\genstateyDiscreteArg{\nstepsArg{n}}}{\text{minimize } }
+	&
+	\underset{(\genstateyDiscreteArg{0},\ldots,\genstateyDiscreteArg{\nstepsArg{n}})\in\RR{\romdim}\otimes \RR{\lmsWidthArg{n}{i}+1}}{\text{minimize } }
 \objectiveArgLMS{n} (\basisspaceArg{n} \genstateyDiscreteArg{0} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateyDiscreteArg{\nstepsArg{n}} + \stateInterceptArg{n}) \\ 
 & \text{subject to} \hspace{0.2 in}
 \genstateyDiscreteArg{0} =
@@ -141,12 +165,12 @@ the minimization problem can be written equivalently as
 %\basisspace^T(\stateFOMIC - \stateIntercept)& n=1. \end{cases} 
 %\end{split}
 %\end{equation}
-The optimization problem takes the form of a \textit{weighted (non)linear least-squares problem}, 
-in where the weights correspond the quadrature weights.  
-Before proceeding, it is worth mentioning that~\eqref{eq:obj_gen_lms_final} corresponds to a least-squares problem due
-to the reduction in \textit{spatial} complexity, as opposed to the reduction
-in temporal complexity (the same  number of temporal constraints and temporal 
-degrees of freedom have been introduced).
+The optimization problem takes the form of a \textit{weighted least-squares
+	problem}. \KTC{I got rid of (non)linear. If it's either linear or nonlinear,
+	then omit it as an adjective, as this is no longer descriptive. }
+We emphasize that optimization problem~\eqref{eq:obj_gen_lms_final} associates
+	with an \spatialAcronym\ trial subspace characterized by a reduction in
+	spatial complexity, but no reduction in temporal complexity.
  
 The minimization problem~\eqref{eq:obj_gen_lms_final} requires specification of the quadrature weights (and hence the integration scheme used to discretize 
 the objective functional). Typically, the same integration scheme used to discretize the FOM ODE is employed for consistency~\cite{colloc_review}; e.g., if a  
@@ -154,9 +178,17 @@ backward Euler method is used to discretize the FOM ODE, then a backward Euler m
 
 \begin{remark}
 For the limiting case where $\nstepsArg{n} = 1$ such that the window size is equivalent to the time step, $\DeltaSlabArg{n} \equiv \timeWindowArg{n}{1} - \timeWindowArg{n}{0}$, and uniform 
-quadrature weights are used, \methodAcronym\ with \spatialAcronym\ trial subspaces solved via the direct approach recovers LSPG.
+quadrature weights are used, \methodAcronym\ with \spatialAcronym\ trial
+	subspaces solved via the direct approach recovers LSPG. \KTC{Not exactly. To
+	make this LSPG as presented earlier, also require the time grid here to
+	align with the time grid used for time integration earlier. Also, this
+	formulation requires allowing the stencil to go back to time steps at
+	previous windows.} 
 \end{remark} 
 \subsubsection{Solution to the least-squares problem through the Gauss--Newton method}
+	\KTC{If the dynamics are linear, doesn't this just yield a linear
+	least-squares problem that can be solved directly? We need to present this
+	more clearly.}
 Discretization through linear multistep methods (as well as other techniques) 
 results in a (non)linear least-squares problem.
 A variety of algorithms exist for solving least-squares problems, including trust region approaches, the Gauss–Newton method, and the Levenberg–Marquardt method.  
