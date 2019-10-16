@@ -59,7 +59,7 @@ Employing a linear multistep method to discretize the FOM ODE yields the FOM O$\
 \KTC{Note: the notation here is not consistent with what was defined earlier
 for a discrete residual. See email.}
 \begin{align*}
-&\residLMSArg{n,i} (\stateFOMDiscreteArg{n,i},\ldots,\stateFOMDiscreteArg{n,i-\lmsWidthArg{n}{i}}) = \bz, \qquad i=1,\ldots,\nstepsArg{n}, \\
+&\residLMSArg{n,i} (\stateFOMDiscreteArg{n,i};\stateFOMDiscreteArg{n,i-1},\ldots,\stateFOMDiscreteArg{n,i-\lmsWidthArg{n}{i}}) = \bz, \qquad i=1,\ldots,\nstepsArg{n}, \\
 &\stateFOMDiscreteArg{n,0} = \begin{cases}
 \stateFOMDiscreteArg{n-1,\nstepsArg{n-1}} & n = 2,\ldots,\nslabs, \\
 \stateFOMIC & n=1, \end{cases}
@@ -67,24 +67,24 @@ for a discrete residual. See email.}
 where $\stateFOMDiscreteArg{n,i} (\approx
 \stateFOMArg{}{\timeWindowArg{n}{i}})
 \in \RR{\fomdim}$ and $\residLMSArg{n,i}$ denotes the FOM O$\Delta$E
-residual over the $i$th time instance of the $n$th window 
+residual over the $i$th time instance of the $n$th window  
 defined as
 \begin{align*}
-\residArg{n,i} &: (\stateyDiscreteArgnt{i},\ldots,\stateyDiscreteArgnt{i-\lmsWidthArg{n}{i}}) \mapsto  \frac{1}{\Delta t^{n,i}} \sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha^{n,i}_j \stateyDiscreteArgnt{i-j} -  \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta^{n,i}_j \velocity(\stateyDiscreteArgnt{i-j},\timeWindowArg{n}{i-j}) \\
+\residArg{n,i} &: (\stateyDiscreteArgnt{i};\stateyDiscreteArgnt{i-1},\ldots,\stateyDiscreteArgnt{i-\lmsWidthArg{n}{i}}) \mapsto  \frac{1}{\Delta t^{n,i}} \sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha^{n,i}_j \stateyDiscreteArgnt{i-j} -  \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta^{n,i}_j \velocity(\stateyDiscreteArgnt{i-j},\timeWindowArg{n}{i-j}) \\
                &: \RR{\fomdim} \otimes \RR{\lmsWidthArg{n}{i}+1} \rightarrow \RR{\fomdim}. 
 \end{align*} 
 Here, $\Delta t^{n,i} \defeq \timeWindowArg{n}{i} - \timeWindowArg{n}{i-1}$
-denotes the time step, $\lmsWidthArg{n}{i}$ denotes the number of time steps employed by the scheme at the $i$th time instance over the $n$th window, and
+denotes the time step, $\lmsWidthArg{n}{i}$ denotes the number of time steps employed by the scheme at the $i$th time instance over the $n$th window and
 $\alpha^{n,i}_j,\beta^{n,i}_j\in\RR{}$ denote coefficients that 
-define the specific type of multistep scheme. 
-\begin{remark}\label{remark:LMS}
-For notational simplicity, we assume the linear multistep method employs time
-	instances from only within the current time window. In general, the linear
-	multistep method at the $n$th window could be designed to employ multiple
-	time instances from previous time windows. \KTC{What are the implications of
-	this? I suggest removing this and adding a simple condition, maybe with a
-	footnote.}
-\end{remark}
+define the specific type of multistep scheme. To handle the case where the linear multistep method employs time instances from the previous window(s), we enforce the condition on the indices $(n,i) = (n-1,\nstepsArg{n-1}+i)$ for $i<0$. 
+%\begin{remark}\label{remark:LMS}
+%For notational simplicity, we assume the linear multistep method employs time
+%	instances from only within the current time window. In general, the linear
+%	multistep method at the $n$th window could be designed to employ multiple
+%	time instances from previous time windows. \KTC{What are the implications of
+%	this? I suggest removing this and adding a simple condition, maybe with a
+%	footnote.}
+%\end{remark}
 %Employing a linear multistep method for temporal discretization of the FOM ODE leads to the FOM O$\Delta$E over the $n$th slab,
 %\begin{align*}
 %&\residLMSArg{n,i} (\stateFOMDiscreteArg{n,i},\ldots,\stateFOMDiscreteArg{n,i-k^n(i)}) = \bz, \qquad i=1,\ldots,\nstepsArg{n}, \\
@@ -98,15 +98,43 @@ For notational simplicity, we assume the linear multistep method employs time
 %\\
 %               &: \RR{\fomdim} \otimes \RR{k(i)} \rightarrow \RR{\fomdim}. 
 %\end{align*} 
-Employing a linear multistep method allows the objective \textit{functional}~\eqref{eq:obj} to be replaced with the objective \textit{function}
+\EP{In the process of reworking this slightly, need to take care for the case where we are employing multiple time steps 
+from the previous window. Still cleaning up}
+\methodAcronym\ with the direct approach and a linear multistep method sequentially computes the solutions
+$\approxstateDiscreteArg{n,1},\ldots,\approxstateDiscreteArg{n,\nstepsArg{n}}$,
+$n=1,\ldots,\nslabs$ that satisfy
+%	\KTC{What is $\genstate^{n-1}(\timeEndArg{n-1} ) $ doing here? Two problems
+%	(1) there is no notion of a generalized coordinate $\genstate$ yet, and (2)
+%	this should be the discrete solution, not the exact solution evaluated at
+%	the final time.} \EP{You are correct, I think there is an error now in the minimize term though. It was $\in \trialspace\otimes \RR{\lmsWidthArg{n}{i}+1}$, it should be $\trialspace\otimes \RR{\nstepsArg{n}+1}$}
+\begin{align*}
+	&\underset{(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \in \trialspace\otimes \RR{\nstepsArg{n}{i}}}{\text{minimize } }
+\objectiveArgLMS{n} (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}). 
+%%& \text{subject to} \hspace{0.2 in}  \stateyDiscreteArg{0} =
+%%\begin{cases} \basisspaceArg{n} \spatialICDiscrete + \stateInterceptArg{n}& n = 2,\ldots,\nslabs,\\
+%\basisspaceArg{1} \genstateICOne  + \stateInterceptArg{1}& n=1. \end{cases} 
+\end{align*}
+%Employing a linear multistep method allows the objective \textit{functional}~\eqref{eq:obj} to be replaced with the objective \textit{function}
+%\EP{Had to change the definition of the objective function to reflect stepping back into previous window}
+In the above, $\objectiveArgLMS{n}$ is the discrete objective function at the $n$th time window and is defined as
 \begin{equation}\label{eq:obj_lms}
 \begin{split} 
-\objectiveArgLMS{n} &\vcentcolon (\stateyDiscreteArgnt{0},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto
-\frac{1}{2} \sum_{i=1}^{\nstepsArg{n}} \quadWeightsLMSScalarArg{n}{i} [\residArg{n,i}(\stateyDiscreteArgnt{i},\ldots, \stateyDiscreteArgnt{i-\lmsWidthArg{n}{i})})]^T  \stweightingMatArgt{n}{\timeWindowArg{n}{i}} \residArg{n,i}(\stateyDiscreteArgnt{i},\ldots, \stateyDiscreteArgnt{i-\lmsWidthArg{n}{i}}), \\
-&\vcentcolon \RR{\fomdim} \otimes \RR{\nstepsArg{n}+1} \rightarrow
+\objectiveArgLMS{n} &\vcentcolon (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto
+\frac{1}{2} \sum_{i=1}^{\nstepsArg{n}} \quadWeightsLMSScalarArg{n}{i} [\residArg{n,i}(\stateyDiscreteArgnt{i};\ldots, \stateyDiscreteArgnt{i-\lmsWidthArg{n}{i})})]^T  \stweightingMatArgt{n}{\timeWindowArg{n}{i}} \residArg{n,i}(\stateyDiscreteArgnt{i};\ldots, \stateyDiscreteArgnt{i-\lmsWidthArg{n}{i}}), \\
+&\vcentcolon \RR{\fomdim} \otimes \RR{\nstepsArg{n}} \rightarrow
 \RR{}_+, 
 \end{split}
 \end{equation}
+where $\quadWeightsLMSScalarArg{n}{i} \in \RRplus$ are quadrature weights and, for $i \le 0$ in $\objectiveArgLMS{n}$, we take
+\begin{equation}\label{eq:wls_spatial_direct_args}
+\stateyDiscreteArgnt{i}  \equiv 
+\begin{cases}
+\basisspaceArg{n} \basisspaceTArg{n} (\approxstateDiscreteArg{n-1,\nstepsArg{n-1}+i} - \stateInterceptArg{n}) + \stateInterceptArg{n} & n = 2,\ldots,\nslabs,  \\
+\basisspaceArg{n} \basisspaceTArg{n} (\stateFOMIC - \stateInterceptArg{n}) + \stateInterceptArg{n} & n = 1.
+\end{cases}
+\end{equation}
+Note that the boundary conditions are automatically satisfied by Eq.~\eqref{eq:wls_spatial_direct_args}.
+
 %where 
 %\begin{align*}
 %\residArg{n,i} &: (\stateyArgnt{n,i},\ldots,\stateyArgnt{n,i-k(i)}) \mapsto  \sum_{j=0}^k \alpha_j \stateyArgnt{n,i-j} = \Delta t^{n,i} \sum_{j=0}^k \beta_j \velocity(\stateyArgnt{n,i-j}),
@@ -114,22 +142,6 @@ Employing a linear multistep method allows the objective \textit{functional}~\eq
 %               &: \RR{\fomdim} \otimes \RR{k(i)} \rightarrow \RR{\fomdim}, 
 %\end{align*} 
 %is the discrete residual resulting from the linear multistep scheme and 
-where $\quadWeightsLMSScalarArg{n}{i} \in \RR{}$ are quadrature weights.
-\KTC{Don't these weights need to be non-negative to guarantee the integral is
-non-negative? If so, then specify $\quadWeightsLMSScalarArg{n}{i} \in\RR{}_+$}
-\methodAcronym\ sequentially computes the solutions
-$\approxstateDiscreteArg{n,0},\ldots,\approxstateDiscreteArg{n,\nstepsArg{n}}$,
-$n=1,\ldots,\nslabs$ that satisfy
-	\KTC{What is $\genstate^{n-1}(\timeEndArg{n-1} ) $ doing here? Two problems
-	(1) there is no notion of a generalized coordinate $\genstate$ yet, and (2)
-	this should be the discrete solution, not the exact solution evaluated at
-	the final time.}
-\begin{align*}
-	&\underset{(\stateyDiscreteArgnt{0},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \in \trialspace\otimes \RR{\lmsWidthArg{n}{i}+1}}{\text{minimize } }
-\objectiveArgLMS{n} (\stateyDiscreteArgnt{0},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \\
-& \text{subject to} \hspace{0.2 in}  \stateyDiscreteArg{0} =
-\begin{cases} \basisspaceArg{n} \spatialIC + \stateInterceptArg{n}& n = 2,\ldots,\nslabs,\\
-\basisspaceArg{1} \genstateICOne  + \stateInterceptArg{1}& n=1. \end{cases} \end{align*}
 %\methodAcronym\ solves the minimization problem over each time window, 
 %\begin{align*}
 %&\approxstateDiscreteArg{n,0},\ldots,\approxstateDiscreteArg{n,\nstepsArg{n}} = \underset{\stateyDiscreteArgnt{n,0},\ldots,\stateyDiscreteArgnt{n,\nstepsArg{n}} \in \trialspace}{\text{arg\,min } }
@@ -137,9 +149,9 @@ $n=1,\ldots,\nslabs$ that satisfy
 %& \text{subject to} \hspace{0.2 in}  \approxstateDiscreteArg{n,0} =
 %\begin{cases} \approxstateDiscreteArg{n-1,\nstepsArg{n-1}} & n = 2,\ldots,\nslabs,\\
 %\approxstateIC & n=1. \end{cases} \end{align*}
-	Equivalently, WLS sequentially computes the generalized
+	Equivalently, \methodAcronym\ sequentially computes the generalized
 	coordinates
-	$\genstateDiscreteArg{n,0},\ldots,\genstateDiscreteArg{n,\timeWindowArg{n}{i}}$,
+	$\genstateDiscreteArg{n,1},\ldots,\genstateDiscreteArg{n,\timeWindowArg{n}{i}}$,
 	$n=1,\ldots,\nslabs$ 
 with $\genstateDiscreteArg{n,i}(\approx
 	\genstateArgnt{n}(\timeWindowArg{n}{i}))\in\RR{\romdim}$
@@ -147,12 +159,12 @@ with $\genstateDiscreteArg{n,i}(\approx
 \begin{equation}\label{eq:obj_gen_lms_final}
 \begin{split}
 	&
-	\underset{(\genstateyDiscreteArg{0},\ldots,\genstateyDiscreteArg{\nstepsArg{n}})\in\RR{\romdim}\otimes \RR{\lmsWidthArg{n}{i}+1}}{\text{minimize } }
-\objectiveArgLMS{n} (\basisspaceArg{n} \genstateyDiscreteArg{0} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateyDiscreteArg{\nstepsArg{n}} + \stateInterceptArg{n}) \\ 
-& \text{subject to} \hspace{0.2 in}
-\genstateyDiscreteArg{0} =
-\begin{cases} \spatialIC & n = 2,\ldots,\nslabs \\
-\genstateICOne& n=1. \end{cases} 
+	\underset{(\genstateyDiscreteArg{1},\ldots,\genstateyDiscreteArg{\nstepsArg{n}})\in\RR{\romdim}\otimes \RR{\nstepsArg{n}}}{\text{minimize } }
+\objectiveArgLMS{n} (\basisspaceArg{n} \genstateyDiscreteArg{1} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateyDiscreteArg{\nstepsArg{n}} + \stateInterceptArg{n}). 
+%& \text{subject to} \hspace{0.2 in}
+%\genstateyDiscreteArg{0} =
+%\begin{cases} \genspatialICDiscrete  & n = 2,\ldots,\nslabs \\
+%\genstateICOne& n=1. \end{cases} 
 \end{split}
 \end{equation}
 %\begin{equation}\label{eq:obj_gen_lms_final}
@@ -177,13 +189,14 @@ the objective functional). Typically, the same integration scheme used to discre
 backward Euler method is used to discretize the FOM ODE, then a backward Euler method is the used to numerically integrate the objective functional.
 
 \begin{remark}
-For the limiting case where $\nstepsArg{n} = 1$ such that the window size is equivalent to the time step, $\DeltaSlabArg{n} \equiv \timeWindowArg{n}{1} - \timeWindowArg{n}{0}$, and uniform 
-quadrature weights are used, \methodAcronym\ with \spatialAcronym\ trial
+For the limiting case where $\nstepsArg{n} = 1$ such that the window size is equivalent to the time step, $\DeltaSlabArg{n} \equiv \timeWindowArg{n}{1} - \timeWindowArg{n}{0}$, uniform 
+quadrature weights are used, and uniform bases and weighting matrices are used, 
+\methodAcronym\ with \spatialAcronym\ trial
 	subspaces solved via the direct approach recovers LSPG. \KTC{Not exactly. To
 	make this LSPG as presented earlier, also require the time grid here to
 	align with the time grid used for time integration earlier. Also, this
 	formulation requires allowing the stencil to go back to time steps at
-	previous windows.} 
+	previous windows.} \EP{I agree with the second comment, to be 100\% precise we need to go back into other time windows. Clearly you can do this if you would like, and I think the comment clarifies this. Hopefully can avoid this now with the condition you mentioned. I think the first comment is not required. The LSPG ``approach" minimizes the residual at a time instance; it isn't tied to the description we gave earlier.} 
 \end{remark} 
 \subsubsection{Solution to the least-squares problem through the Gauss--Newton method}
 	\KTC{If the dynamics are linear, doesn't this just yield a linear
@@ -201,6 +214,7 @@ To describe the Gauss--Newton method, we first define a ``vectorization" functio
 \end{align*}
 The vectorized generalized coordinates over the $n$th time window are then
 defined as \KTC{notationally, why are we doing a double bar instead of a bar?}
+\EP{The notation for space--time in 2.4 uses bars. I don't want to confuse these generalized coordinates with those, they conceptually two different things} 
 \begin{equation*}
 \genstatecollocMatSlabArg{n} \defeq 
 \unroll (\genstateDiscreteArg{n,1},\ldots,\genstateDiscreteArg{n,\nstepsArg{n}} ).

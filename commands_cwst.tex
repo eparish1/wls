@@ -195,6 +195,9 @@
 \newcommand{\genCollocModes}{\overline{\collocModes}}
 \newcommand{\genCollocModesArg}[1]{\overline{\collocModes}^{#1}}
 
+\newcommand{\spatialICDiscrete}{\basisspaceTArg{n}( \approxstateDiscreteArg{n-1,\nstepsArg{n-1}}  - \stateInterceptArg{n} )}
+
+\newcommand{\genspatialICDiscrete}{\basisspaceTArg{n}(\basisspaceArg{n-1} \genstateDiscreteArg{n-1,\nstepsArg{n-1}}   + \stateInterceptArg{n-1} - \stateInterceptArg{n} )}
 \newcommand{\spatialIC}{\basisspaceTArg{n}(\basisspaceArg{n-1} \genstate^{n-1}(\timeEndArg{n-1} )  + \stateInterceptArg{n-1} - \stateInterceptArg{n} )}
 
 \newcommand{\defeq}{\vcentcolon=}
