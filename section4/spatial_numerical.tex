@@ -50,13 +50,12 @@ other time-integration methods (e.g., Runge--Kutta) follows closely.
 %%\timeEndArg{n}
 %\end{align*}
 \subsubsection{Linear multistep schemes}
-\KTC{HERE} I use subscripts to denote iterations. Either is fine}
 Linear multistep schemes approximate the solution at time instance $\timeWindowArg{n}{i}$ using the previous $k$ time instances.  
 %Discretizing the FOM ODE~\eqref{eq:FOM} with a linear $k$-step scheme at the $i$th time-instance over the $n$th time slab yields,
 %\begin{equation}\label{eq:kstep}
 %\sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha_j \stateFOMDiscreteArg{n,i-j} = \Delta t^{n,i} \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta_j \velocity(\stateFOMDiscreteArg{n,i-j}),
 %\end{equation}
-Employing a linear multistep method for temporal discretization of the FOM ODE yields the FOM O$\Delta$E over the $n$th window,
+Employing a linear multistep method for time discretization of the FOM ODE yields the FOM O$\Delta$E over the $n$th window,
 \begin{align*}
 &\residLMSArg{n,i} (\stateFOMDiscreteArg{n,i},\ldots,\stateFOMDiscreteArg{n,i-\lmsWidthArg{n}{i}}) = \bz, \qquad i=1,\ldots,\nstepsArg{n}, \\
 &\stateFOMDiscreteArg{n,0} = \begin{cases}
