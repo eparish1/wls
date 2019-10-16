@@ -55,7 +55,9 @@ Linear multistep schemes approximate the solution at time instance $\timeWindowA
 %\begin{equation}\label{eq:kstep}
 %\sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha_j \stateFOMDiscreteArg{n,i-j} = \Delta t^{n,i} \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta_j \velocity(\stateFOMDiscreteArg{n,i-j}),
 %\end{equation}
-Employing a linear multistep method for time discretization of the FOM ODE yields the FOM O$\Delta$E over the $n$th window,
+Employing a linear multistep method to discretize the FOM ODE yields the FOM O$\Delta$E over the $n$th window,
+\KTC{Note: the notation here is not consistent with what was defined earlier
+for a discrete residual. See email.}
 \begin{align*}
 &\residLMSArg{n,i} (\stateFOMDiscreteArg{n,i},\ldots,\stateFOMDiscreteArg{n,i-\lmsWidthArg{n}{i}}) = \bz, \qquad i=1,\ldots,\nstepsArg{n}, \\
 &\stateFOMDiscreteArg{n,0} = \begin{cases}
