@@ -1,39 +1,29 @@
-\subsection{\spatialAcronym: direct solution approach}\label{sec:direct} 
-\KTC{HERE}
-\KTC{Does the time grid definted in this section have any relationship to the
-time grid used for time discretization? Haven't gotten past HERE below, but
-wanted to check (maybe it's made clear later).}
-\EP{This time grid becomes the time discretization over each window. At this point in the paper, 
-there is no notion of a time grid for \methodAcronym}
+\subsection{\spatialAcronym\ trial subspaces: direct solution approach}\label{sec:direct} 
 
-Direct approaches solve the optimization problem~\eqref{eq:tclsrm} by
+Direct approaches solve optimization problem~\eqref{eq:tclsrm} by
 ``transcribing" the infinite dimensional optimization problem into a finite
 dimensional one by discretizing the state and objective functional in time.
 The minimization problem is then reformulated as a (non)linear programming, or
 optimization, problem. A variety of direct solution approaches exist, 
 including collocation approaches, spectral  methods, and genetic algorithms.  
 
-In the present context, the most straightforward direct solution approach consists of the 
-following steps: (1) numerically discretize the FOM ODE (and hence the \textit{integrand} of~\eqref{eq:obj_gen_slab}) and 
+In the context of \spatialAcronym\ trial subspaces, the most straightforward direct solution approach consists of the 
+following steps: (1) numerically discretize the FOM ODE (and hence the
+\textit{integrand} of the objective function in problem~\eqref{eq:obj_gen_slab}) and 
 (2) select a numerical quadrature rule to evaluate the \textit{integral} in~\eqref{eq:obj_gen_slab}.
-To this end, we start by defining a discrete time grid 
-over each window by introducing
-$\nstepsArg{n}+1$ strictly increasing time instances described by
-$\{\timeWindowArg{n}{i}\}_{i=0}^{\nstepsArg{n}}$ with
+To this end, we define a time grids
+$\{\timeWindowArg{n}{i}\}_{i=0}^{\nstepsArg{n}}\subseteq[\timeStartArg{n},\timeEndArg{n}]$,
+$n=1,\ldots,\nslabs$ that
+satisfy 
+$\timeStartArg{n}=\timeWindowArg{n}{0} \le \cdots \le \timeWindowArg{n}{\nstepsArg{n}} 
+ = \timeEndArg{n}$.
 %\KTC{use cdots, not
 %hdots or ldots. Don't use $\defeq$ for the first and last times; these are
 %just equalities, i.e., you happen to set them equal to those values, but they
 %aren't identically the same:}
-\begin{align}
-&\timeWindowArg{n}{0} \le \cdots \le \timeWindowArg{n}{\nstepsArg{n}} , \label{eq:timegrid1} \;
-\timeWindowArg{n}{0} = \timeStartArg{n},\;
-\timeWindowArg{n}{\nstepsArg{n}} = \timeEndArg{n} . 
-%\timeWindowArg{n}{0} = \timeStartArg{n}, \timeWindowArg{n}{\nstepsArg{n}} =
-%\timeEndArg{n}
-\end{align}
-Figure~\ref{fig:slab_fig2} depicts this discretization.
+Figure~\ref{fig:slab_fig2} depicts such a discretization.
 We now outline the direct solution approach for linear-multistep schemes; we note that the formulation for
-other time-stepping methods (e.g., Runge--Kutta) follows closely. 
+other time-integration methods (e.g., Runge--Kutta) follows closely. 
 \begin{figure} 
 \begin{centering} 
 \includegraphics[trim={0.0cm 4.5cm 0cm 3cm},clip,width=1.0\textwidth]{figs/time_grid_timesteps.pdf} 
@@ -60,8 +50,7 @@ other time-stepping methods (e.g., Runge--Kutta) follows closely.
 %%\timeEndArg{n}
 %\end{align*}
 \subsubsection{Linear multistep schemes}
-\EP{This section has the double superscript. We could make one of these a subscript, but then need to change the algorithms a bit as 
-I use subscripts to denote iterations. Either is fine}
+\KTC{HERE} I use subscripts to denote iterations. Either is fine}
 Linear multistep schemes approximate the solution at time instance $\timeWindowArg{n}{i}$ using the previous $k$ time instances.  
 %Discretizing the FOM ODE~\eqref{eq:FOM} with a linear $k$-step scheme at the $i$th time-instance over the $n$th time slab yields,
 %\begin{equation}\label{eq:kstep}
@@ -269,7 +258,7 @@ $k\leftarrow k+1$
 
 %\input{direct_collocation}
 
-\subsection{\spatialAcronym: indirect solution approach}\label{sec:indirect}
+\subsection{\spatialAcronym\ trial subspaces: indirect solution approach}\label{sec:indirect}
 In contrast to the direct approach,
 indirect methods ``indirectly" solve the minimization
 problem~\eqref{eq:tclsrm} by solving the Euler--Lagrange equations. The
