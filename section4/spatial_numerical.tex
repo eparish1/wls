@@ -6,7 +6,7 @@ dimensional one by discretizing the state and objective functional in time.
 The minimization problem is then reformulated as a (non)linear programming, or
 optimization, problem. A variety of direct solution approaches exist, 
 including collocation approaches, spectral  methods, and genetic algorithms.  
-
+\EP{Make sure 4.2.1 is settled on before this}
 In the context of \spatialAcronym\ trial subspaces, the most straightforward direct solution approach consists of the 
 following steps: (1) numerically discretize the FOM ODE (and hence the
 \textit{integrand} of the objective function in problem~\eqref{eq:obj_gen_slab}) and 
@@ -56,27 +56,29 @@ Linear multistep schemes approximate the solution at time instance $\timeWindowA
 %\sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha_j \stateFOMDiscreteArg{n,i-j} = \Delta t^{n,i} \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta_j \velocity(\stateFOMDiscreteArg{n,i-j}),
 %\end{equation}
 Employing a linear multistep method to discretize the FOM ODE yields the FOM O$\Delta$E over the $n$th window,
-\KTC{Note: the notation here is not consistent with what was defined earlier
-for a discrete residual. See email.}
+\footnote{
+To maintain notational simplicity in this section, and handle the case where the linear multistep method employs time instances from the previous window(s), for superscripts $n=1,\ldots,\nslabs$ and $i<0$, we set the superscripts to be $n =n-1, i = \nstepsArg{n-1}+i$ 
+% $\stateFOMDiscreteLMSArg{n}{i} = \stateFOMDiscreteLMSArg{n-1}{\nstepsArg{n-1}+i}$, along with $\timeWindowArg{n}{i} = \timeWindowArg{n-1}{\nstepsArg{n-1}+i}$.
+} 
 \begin{align*}
-&\residLMSArg{n,i} (\stateFOMDiscreteArg{n,i};\stateFOMDiscreteArg{n,i-1},\ldots,\stateFOMDiscreteArg{n,i-\lmsWidthArg{n}{i}}) = \bz, \qquad i=1,\ldots,\nstepsArg{n}, \\
-&\stateFOMDiscreteArg{n,0} = \begin{cases}
-\stateFOMDiscreteArg{n-1,\nstepsArg{n-1}} & n = 2,\ldots,\nslabs, \\
+&\residLMSWArg{n}{i} (\stateFOMDiscreteLMSArg{n}{i};\stateFOMDiscreteLMSArg{n}{i-1},\ldots,\stateFOMDiscreteLMSArg{n}{i-\lmsWidthArg{n}{i}}) = \bz, \qquad i=1,\ldots,\nstepsArg{n}, \\
+&\stateFOMDiscreteLMSArg{n}{0} = \begin{cases}
+\stateFOMDiscreteLMSArg{n-1}{\nstepsArg{n-1}} & n = 2,\ldots,\nslabs, \\
 \stateFOMIC & n=1, \end{cases}
 \end{align*}
-where $\stateFOMDiscreteArg{n,i} (\approx
+where $\stateFOMDiscreteLMSArg{n}{i} (\approx
 \stateFOMArg{}{\timeWindowArg{n}{i}})
-\in \RR{\fomdim}$ and $\residLMSArg{n,i}$ denotes the FOM O$\Delta$E
+\in \RR{\fomdim}$ and $\residLMSWArg{n}{i}$ denotes the FOM O$\Delta$E
 residual over the $i$th time instance of the $n$th window  
 defined as
 \begin{align*}
-\residArg{n,i} &: (\stateyDiscreteArgnt{i};\stateyDiscreteArgnt{i-1},\ldots,\stateyDiscreteArgnt{i-\lmsWidthArg{n}{i}}) \mapsto  \frac{1}{\Delta t^{n,i}} \sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha^{n,i}_j \stateyDiscreteArgnt{i-j} -  \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta^{n,i}_j \velocity(\stateyDiscreteArgnt{i-j},\timeWindowArg{n}{i-j}) \\
+\residLMSWArg{n}{i} &: (\stateyDiscreteArgnt{i};\stateyDiscreteArgnt{i-1},\ldots,\stateyDiscreteArgnt{i-\lmsWidthArg{n}{i}}) \mapsto  \frac{1}{\Delta t^{n,i}} \sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha^{n,i}_j \stateyDiscreteArgnt{i-j} -  \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta^{n,i}_j \velocity(\stateyDiscreteArgnt{i-j},\timeWindowArg{n}{i-j}) \\
                &: \RR{\fomdim} \otimes \RR{\lmsWidthArg{n}{i}+1} \rightarrow \RR{\fomdim}. 
-\end{align*} 
+\end{align*}
 Here, $\Delta t^{n,i} \defeq \timeWindowArg{n}{i} - \timeWindowArg{n}{i-1}$
 denotes the time step, $\lmsWidthArg{n}{i}$ denotes the number of time steps employed by the scheme at the $i$th time instance over the $n$th window and
 $\alpha^{n,i}_j,\beta^{n,i}_j\in\RR{}$ denote coefficients that 
-define the specific type of multistep scheme. To handle the case where the linear multistep method employs time instances from the previous window(s), we enforce the condition on the indices $(n,i) = (n-1,\nstepsArg{n-1}+i)$ for $i<0$. 
+define the specific type of multistep scheme. 
 %\begin{remark}\label{remark:LMS}
 %For notational simplicity, we assume the linear multistep method employs time
 %	instances from only within the current time window. In general, the linear
@@ -98,8 +100,7 @@ define the specific type of multistep scheme. To handle the case where the linea
 %\\
 %               &: \RR{\fomdim} \otimes \RR{k(i)} \rightarrow \RR{\fomdim}. 
 %\end{align*} 
-\EP{In the process of reworking this slightly, need to take care for the case where we are employing multiple time steps 
-from the previous window. Still cleaning up}
+
 \methodAcronym\ with the direct approach and a linear multistep method sequentially computes the solutions
 $\approxstateDiscreteArg{n,1},\ldots,\approxstateDiscreteArg{n,\nstepsArg{n}}$,
 $n=1,\ldots,\nslabs$ that satisfy
@@ -117,17 +118,17 @@ $n=1,\ldots,\nslabs$ that satisfy
 %Employing a linear multistep method allows the objective \textit{functional}~\eqref{eq:obj} to be replaced with the objective \textit{function}
 %\EP{Had to change the definition of the objective function to reflect stepping back into previous window}
 In the above, $\objectiveArgLMS{n}$ is the discrete objective function at the $n$th time window and is defined as
-\begin{equation}\label{eq:obj_lms}
+\begin{equation*}%\label{eq:obj_lms}
 \begin{split} 
-\objectiveArgLMS{n} &\vcentcolon (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto
-\frac{1}{2} \sum_{i=1}^{\nstepsArg{n}} \quadWeightsLMSScalarArg{n}{i} [\residArg{n,i}(\stateyDiscreteArgnt{i};\ldots, \stateyDiscreteArgnt{i-\lmsWidthArg{n}{i})})]^T  \stweightingMatArgt{n}{\timeWindowArg{n}{i}} \residArg{n,i}(\stateyDiscreteArgnt{i};\ldots, \stateyDiscreteArgnt{i-\lmsWidthArg{n}{i}}), \\
+\objectiveArgLMS{n} &\vcentcolon (\stateyDiscreteArgnt{n,1},\ldots,\stateyDiscreteArgnt{n,\nstepsArg{n}}) \mapsto
+\frac{1}{2} \sum_{i=1}^{\nstepsArg{n}} \quadWeightsLMSScalarArg{n}{i} [\residLMSWArg{n}{i}(\stateyDiscreteArgnt{n,i};\stateyDiscreteArgnt{n,i-1},\ldots, \stateyDiscreteArgnt{n,i-\lmsWidthArg{n}{i})})]^T  \stweightingMatArgt{n}{\timeWindowArg{n}{i}} \residLMSArg{n}{i}(\stateyDiscreteArgnt{n,i};\stateyDiscreteArgnt{n,i-1},\ldots, \stateyDiscreteArgnt{n,i-\lmsWidthArg{n}{i}}), \\
 &\vcentcolon \RR{\fomdim} \otimes \RR{\nstepsArg{n}} \rightarrow
 \RR{}_+, 
 \end{split}
-\end{equation}
-where $\quadWeightsLMSScalarArg{n}{i} \in \RRplus$ are quadrature weights and, for $i \le 0$ in $\objectiveArgLMS{n}$, we take
+\end{equation*}
+where $\quadWeightsLMSScalarArg{n}{i} \in \RRplus$ are quadrature weights and, for $i \le 0$, we set
 \begin{equation}\label{eq:wls_spatial_direct_args}
-\stateyDiscreteArgnt{i}  \equiv 
+\stateyDiscreteArgnt{n,i}  \equiv 
 \begin{cases}
 \basisspaceArg{n} \basisspaceTArg{n} (\approxstateDiscreteArg{n-1,\nstepsArg{n-1}+i} - \stateInterceptArg{n}) + \stateInterceptArg{n} & n = 2,\ldots,\nslabs,  \\
 \basisspaceArg{n} \basisspaceTArg{n} (\stateFOMIC - \stateInterceptArg{n}) + \stateInterceptArg{n} & n = 1.
@@ -159,7 +160,7 @@ with $\genstateDiscreteArg{n,i}(\approx
 \begin{equation}\label{eq:obj_gen_lms_final}
 \begin{split}
 	&
-	\underset{(\genstateyDiscreteArg{1},\ldots,\genstateyDiscreteArg{\nstepsArg{n}})\in\RR{\romdim}\otimes \RR{\nstepsArg{n}}}{\text{minimize } }
+	\underset{(\genstateyDiscreteArg{1},\ldots,\genstateyDiscreteArg{\nstepsArg{n}})\in\RR{\romdimArg{n}}\otimes \RR{\nstepsArg{n}}}{\text{minimize } }
 \objectiveArgLMS{n} (\basisspaceArg{n} \genstateyDiscreteArg{1} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateyDiscreteArg{\nstepsArg{n}} + \stateInterceptArg{n}). 
 %& \text{subject to} \hspace{0.2 in}
 %\genstateyDiscreteArg{0} =
@@ -178,8 +179,7 @@ with $\genstateDiscreteArg{n,i}(\approx
 %\end{split}
 %\end{equation}
 The optimization problem takes the form of a \textit{weighted least-squares
-	problem}. \KTC{I got rid of (non)linear. If it's either linear or nonlinear,
-	then omit it as an adjective, as this is no longer descriptive. }
+	problem}. 
 We emphasize that optimization problem~\eqref{eq:obj_gen_lms_final} associates
 	with an \spatialAcronym\ trial subspace characterized by a reduction in
 	spatial complexity, but no reduction in temporal complexity.
@@ -190,7 +190,7 @@ backward Euler method is used to discretize the FOM ODE, then a backward Euler m
 
 \begin{remark}
 For the limiting case where $\nstepsArg{n} = 1$ such that the window size is equivalent to the time step, $\DeltaSlabArg{n} \equiv \timeWindowArg{n}{1} - \timeWindowArg{n}{0}$, uniform 
-quadrature weights are used, and uniform bases and weighting matrices are used, 
+quadrature weights are used, and uniform bases and weighting matrices are used (i.e., $\basisspaceArg{n} \equiv \basisspace, \stweightingMatArg{n} \equiv \stweightingMat, n=1,\ldots,\nslabs$), 
 \methodAcronym\ with \spatialAcronym\ trial
 	subspaces solved via the direct approach recovers LSPG. \KTC{Not exactly. To
 	make this LSPG as presented earlier, also require the time grid here to
@@ -203,9 +203,8 @@ quadrature weights are used, and uniform bases and weighting matrices are used,
 	least-squares problem that can be solved directly? We need to present this
 	more clearly.}
 Discretization through linear multistep methods (as well as other techniques) 
-results in a (non)linear least-squares problem.
-A variety of algorithms exist for solving least-squares problems, including trust region approaches, the Gauss–Newton method, and the Levenberg–Marquardt method.  
-The numerical experiments presented in this work consider the Gauss--Newton method, and as such we outline this approach here. 
+results in a least-squares problem. In particular, for the case where the full-order model~\eqref{eq:FOM} is nonlinear, the direct approach yields a nonlinear least-squares problem. 
+A variety of algorithms exist for solving nonlinear least-squares problems, including trust region approaches, the Gauss–Newton method, and the Levenberg–Marquardt method. The numerical experiments presented in this work comprise nonlinear systems and are solved via the Gauss--Newton method, and as such we outline this approach here. 
 
 To describe the Gauss--Newton method, we first define a ``vectorization" function 
 \begin{align*}
@@ -225,10 +224,10 @@ second argument could be omitted here (okay because there is already a
 superscript on the residual) and arbitrary previous solutions could be
 included in the first residual here.}
 \begin{equation*}
-\residLMSSlabArg{n} : (\genstatecollocMatySlabArg{};\genstateDiscreteArg{n,0}) \mapsto \begin{bmatrix}
- \sqrt{\quadWeightsLMSScalarArg{n}{1} } \stweightingMatOneArg{n} \residLMSArg{n,1}( \basisspaceArg{n} \genstateyDiscreteArgnt{1} + \stateInterceptArg{n},  \basisspaceArg{n} \genstateDiscreteArg{n,0} + \stateInterceptArg{n},) \\
+\residLMSSlabArg{n} : (\genstatecollocMatySlabArg{}) \mapsto \begin{bmatrix}
+ \sqrt{\frac{\quadWeightsLMSScalarArg{n}{1}}{2}} \stweightingMatOneArg{n} \residLMSArg{n,1}( \basisspaceArg{n} \genstateyDiscreteArgnt{1} + \stateInterceptArg{n}, \ldots , \basisspaceArg{n} \genstateDiscreteArg{n,1 - \lmsWidthArg{n}{1}} + \stateInterceptArg{n}) \\
 \vdots \\
- \sqrt{\quadWeightsLMSScalarArg{n}{\nstepsArg{n}} } \stweightingMatOneArg{n} \residLMSArg{n,\nstepsArg{n}}( \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n}} + \stateInterceptArg{n}, \ldots,\basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n} - k^n(\nstepsArg{n}) } + \stateInterceptArg{n}) \\
+ \sqrt{\frac{\quadWeightsLMSScalarArg{n}{\nstepsArg{n}}}{2}} \stweightingMatOneArg{n} \residLMSArg{n,\nstepsArg{n}}( \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n}} + \stateInterceptArg{n}, \ldots,\basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n} - k^n(\nstepsArg{n}) } + \stateInterceptArg{n}) \\
 \end{bmatrix},
 \end{equation*}
 where $\genstatecollocMatySlabArg{} \defeq \unroll (\genstateyDiscreteArg{1},\ldots,\genstateyDiscreteArg{\nstepsArg{n}} ).$
@@ -242,8 +241,7 @@ factor}
 Using these definitions, Algorithm~\ref{alg:colloc_gn} presents the standard Gauss--Newton method. The algorithm consists of three fundamental steps: (1) compute the FOM O$\Delta$E residual given the current guess, (2) compute the Jacobian of the residual over the time window and form the normal equations, and (3) solve the normal equations and update the state. 
 
 The practical implementation of the Gauss--Newton algorithm requires an efficient method for computing the Jacobian of the residual over the time window. In particular, it is important to note that for linear multistep methods (and many other time marching schemes) the Jacobian of the residual over the time window will an almost block-diagonal 
-sparse matrix with the sparsity pattern \KTC{number of residual arguments
-inconsistent with above}
+sparse matrix with the sparsity pattern
 \begin{equation*}
 \frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{}}(\genstatecollocMatSlabArg{n})  =
  \begin{bmatrix*}[l]
@@ -262,21 +260,19 @@ inconsistent with above}
 %\end{bmatrix*}.
 \end{equation*}
 This sparsity pattern can be leveraged to assemble the Jacobian of the residual over the time window from Jacobians of the residual at single time instances. 
-Further, the sparsity pattern can be 
-leveraged \KTC{split infinitive:} to efficiently compute the Jacobian
-\KTC{shoudl be an en-dash:} matrix-matrix product in the normal equations.
+Further, for solution techniques based on the normal equations, one can leverage the sparsity pattern 
+to efficiently compute the Jacobian matrix--matrix product.
 \KTC{We should never be solving the normal equations. This squares the
 condition number!}
 It is also worth noting that the 
-normal equations will also (almost) \KTC{What does ``almost'' block diagonal
-mean? This is imprecise} be block-diagonal; this is a fact that can be leveraged to speed up the linear solves at each Gauss--Newton iteration.
+normal equations will be comprise a banded block system; this is a fact that can be leveraged to speed up the linear solves at each Gauss--Newton iteration.
 
 \begin{remark}\label{remark:gaussnewton}\textit{(Acceleration of the Gauss--Newton Solve)}\\
-	The \KTC{this should be `principal', not `principle':} principle cost of a Gauss--Newton method is often the formation of the Jacobian matrix. A variety of techniques aimed at 
+	The principal cost of a Gauss--Newton method is often the formation of the Jacobian matrix. A variety of techniques aimed at 
 reducing this computational burden exist; Jacobian-free Newton-Krylov
 	methods~\cite{jfnk}, Broyden's method~\cite{broyden} (as explored in
 	Ref.~\cite{carlberg_thesis}, Appendix A), and frozen Jacobian approximations
-	are several such examples. \KTC{Expose used twice in this sentence} Further, the space--time formulation exposes an extra dimension for parallelization that can be exposed to accelerate the wall-clock time of the ROM. The investigation of these additional, potentially more efficient, solution algorithms will be a topic of future work. 
+	are several such examples. Further, the space--time formulation introduces an extra dimension for parallelization that can be exposed to accelerate the wall-clock time of the ROM. The investigation of these additional, potentially more efficient, solution algorithms will be a topic of future work. 
 \end{remark}
 %\subsubsection{Jacobian-Free Implementation}
 %The dominant cost of the Gauss Newton algorithm is the computatation of the action of the Jacobian matrix on the trial basis. To alleviate this burden, the following Jacobian-free method is proposed:
@@ -284,7 +280,7 @@ reducing this computational burden exist; Jacobian-free Newton-Krylov
 \caption{\spatialAcronym\ trial subspace: algorithm for the direct solution technique with the Gauss--Newton method and a linear multistep method over the $n$th window}
 \label{alg:colloc_gn}
 \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
-\Input{tolerance, $\epsilon$; initial guess, $\genstateGuessDiscreteArg{n,1}{0},\ldots,\genstateGuessDiscreteArg{n,\nstepsArg{n}}{0}$; initial condition $\genstateDiscreteArg{n,0}$}
+\Input{tolerance, $\epsilon$; initial guess, $\genstateGuessDiscreteArg{n,1}{0},\ldots,\genstateGuessDiscreteArg{n,\nstepsArg{n}}{0}$}%; initial condition $\genstateDiscreteArg{n,0}$}
 \Output{Solution to least squares problem, $\genstatecollocMatSlabArg{n}$} 
 \textbf{Online Steps}: \\
 $\text{converged} \leftarrow \text{false}$ \Comment{Set convergence checker} \\
@@ -299,17 +295,20 @@ $\genstatecollocMatSlabArg{n}_k \leftarrow \unroll(\genstateGuessDiscreteArg{n,1
 %Compute: $\velocity(\basisspace \genstateDiscreteArg{n,i} + \stateIntercept ) $ \Comment{Compute velocity at each time-step instance}\\
 %Compute: $\residLMSArg{n,i}(\basisspace \genstateDiscreteArg{n,i} + \stateIntercept, \ldots , \basisspace \genstateDiscreteArg{n,i - k^n(i)} + \stateIntercept) $  \Comment{Compute residual} \\
 %}
-$\mathbf{r} \leftarrow \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n}_k;\genstateDiscreteArg{n,0})$ \Comment{Compute weighted residual over window} \\
+$\mathbf{r} \leftarrow \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n}_k)$ \Comment{Compute weighted residual over window} \\
 $\mathbf{J} \leftarrow  
 \frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{}}(\genstatecollocMatSlabArg{n}_k) 
 $ \Comment{Compute weighted residual-Jacobian over window} \\
 %Compute: $[\jacobianSlabArg{n}]^T \jacobianSlabArg{n}$ \Comment{Compute system matrix for the normal equations} \\
 %Compute: $[\jacobianSlabArg{n}]^T \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n}_k)$ \Comment{compute RHS for normal equations} \\
- Compute  $\Delta  \genstatecollocMatSlabArg{n} $ satisfying $ [\mathbf{J}]^T \mathbf{J} \Delta \genstatecollocMatSlabArg{n}=  -\mathbf{J}^T\mathbf{r}$ \Comment{Solve the normal equations} \\
-$\genstatecollocMatSlabArg{n}_{k+1} \leftarrow \genstatecollocMatSlabArg{n}_k + \Delta \genstatecollocMatSlabArg{n}$ \Comment{Update guess to the state} \\
-\If{ $\norm{ \mathbf{J}^T\mathbf{r}  } \le \epsilon$ }{
+\uIf{ $\norm{ \mathbf{J}^T\mathbf{r}  } \le \epsilon$ }{
 {\text{converged} $\leftarrow$ \text{true}}  \Comment{Check and set convergence based on gradient norm} \\
 Return: $\genstatecollocMatSlabArg{n} = \genstatecollocMatSlabArg{n}_{k+1} $ \Comment{Return converged solution}\\
+}
+\Else{
+ Compute  $\Delta  \genstatecollocMatSlabArg{n} $ that minimizes $\norm{ \mathbf{J} \Delta \genstatecollocMatSlabArg{n} +\mathbf{r}}^2$ \Comment{Solve the linear least-squares problem} \\
+% Compute  $\Delta  \genstatecollocMatSlabArg{n} $ satisfying $ [\mathbf{J}]^T \mathbf{J} \Delta \genstatecollocMatSlabArg{n}=  -\mathbf{J}^T\mathbf{r}$ \Comment{Solve the normal equations} \\
+$\genstatecollocMatSlabArg{n}_{k+1} \leftarrow \genstatecollocMatSlabArg{n}_k + \Delta \genstatecollocMatSlabArg{n}$ \Comment{Update guess to the state} \\
 }
 $k\leftarrow k+1$
 }
@@ -428,7 +427,7 @@ an efficient method for computing the action of the Jacobian transpose on a vect
 
 This work examines the use of linear multistep methods for the purpose of temporal discretization of the forward and 
 backwards problems. As described in  
-the direct solution approach, temporal discretization is achieved by introducing $\nstepsArg{n} + 1$ time instances~\eqref{eq:timegrid1} over each time window. Linear multistep methods then use this time-grid for temporal discretization of~\eqref{eq:lspg_continuous} and~\eqref{eq:lspg_adjoint}. 
+the direct solution approach, temporal discretization is achieved by introducing $\nstepsArg{n} + 1$ time instances over each time window. Linear multistep methods then use this time-grid for temporal discretization of~\eqref{eq:lspg_continuous} and~\eqref{eq:lspg_adjoint}. 
 
 The second ingredient, namely an efficient method for computing the action of the Jacobian transpose on a vector, can be challenging. 
 In the case one does not have access to the full-order model Jacobian (or it is too costly to compute), the evaluation of this term can be both challenging and expensive. Here, two methods are discussed that can be used to evaluate the action of the Jacobian transpose on a vector as seen in~\eqref{eq:lspg_adjoint}:
