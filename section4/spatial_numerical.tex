@@ -194,18 +194,22 @@ results in a (non)linear least-squares problem.
 A variety of algorithms exist for solving least-squares problems, including trust region approaches, the Gauss–Newton method, and the Levenberg–Marquardt method.  
 The numerical experiments presented in this work consider the Gauss--Newton method, and as such we outline this approach here. 
 
-To describe the Gauss--Newton method, we first define a ``vectorization" function that takes a tuple of time-local solutions at each time instance and outputs 
-a concatenated vector, 
+To describe the Gauss--Newton method, we first define a ``vectorization" function 
 \begin{align*}
  \unroll &\vcentcolon (\stateyDiscreteArg{1},\ldots,\stateyDiscreteArg{m} ) \mapsto \begin{bmatrix} [\stateyDiscreteArg{1}]^T & \ldots & [\stateyDiscreteArg{m}]^T \end{bmatrix}^T  \\
-&\vcentcolon \RR{p} \otimes \RR{m} \rightarrow \RR{pm},
+&\vcentcolon \RR{p} \otimes \RR{m} \rightarrow \RR{pm}.
 \end{align*}
-for arbitrary $p$ and $m$. The stacked vector of generalized coordinates over the $n$th time window are then defined as
+The vectorized generalized coordinates over the $n$th time window are then
+defined as \KTC{notationally, why are we doing a double bar instead of a bar?}
 \begin{equation*}
 \genstatecollocMatSlabArg{n} \defeq 
 \unroll (\genstateDiscreteArg{n,1},\ldots,\genstateDiscreteArg{n,\nstepsArg{n}} ).
 \end{equation*}
 We now define the weighted space--time residual over the entire window as
+\KTC{To make this valid for seeping back into the previous time window, the
+second argument could be omitted here (okay because there is already a
+superscript on the residual) and arbitrary previous solutions could be
+included in the first residual here.}
 \begin{equation*}
 \residLMSSlabArg{n} : (\genstatecollocMatySlabArg{};\genstateDiscreteArg{n,0}) \mapsto \begin{bmatrix}
  \sqrt{\quadWeightsLMSScalarArg{n}{1} } \stweightingMatOneArg{n} \residLMSArg{n,1}( \basisspaceArg{n} \genstateyDiscreteArgnt{1} + \stateInterceptArg{n},  \basisspaceArg{n} \genstateDiscreteArg{n,0} + \stateInterceptArg{n},) \\
@@ -214,7 +218,8 @@ We now define the weighted space--time residual over the entire window as
 \end{bmatrix},
 \end{equation*}
 where $\genstatecollocMatySlabArg{} \defeq \unroll (\genstateyDiscreteArg{1},\ldots,\genstateyDiscreteArg{\nstepsArg{n}} ).$
-It is worth noting that, by design,
+It is worth noting that, by design, \KTC{This is incorrect. Missing a 1/2
+factor}
 \begin{equation*}
 \objectiveArgLMS{n} \bigg( \basisspaceArg{n} \genstateDiscreteArg{n,0} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateDiscreteArg{n,\nstepsArg{n}} + \stateInterceptArg{n} \ \bigg) 
 =
@@ -223,7 +228,8 @@ It is worth noting that, by design,
 Using these definitions, Algorithm~\ref{alg:colloc_gn} presents the standard Gauss--Newton method. The algorithm consists of three fundamental steps: (1) compute the FOM O$\Delta$E residual given the current guess, (2) compute the Jacobian of the residual over the time window and form the normal equations, and (3) solve the normal equations and update the state. 
 
 The practical implementation of the Gauss--Newton algorithm requires an efficient method for computing the Jacobian of the residual over the time window. In particular, it is important to note that for linear multistep methods (and many other time marching schemes) the Jacobian of the residual over the time window will an almost block-diagonal 
-sparse matrix with the sparsity pattern
+sparse matrix with the sparsity pattern \KTC{number of residual arguments
+inconsistent with above}
 \begin{equation*}
 \frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{}}(\genstatecollocMatSlabArg{n})  =
  \begin{bmatrix*}[l]
@@ -243,9 +249,13 @@ sparse matrix with the sparsity pattern
 \end{equation*}
 This sparsity pattern can be leveraged to assemble the Jacobian of the residual over the time window from Jacobians of the residual at single time instances. 
 Further, the sparsity pattern can be 
-leveraged to efficiently compute the Jacobian matrix-matrix product in the normal equations.
+leveraged \KTC{split infinitive:} to efficiently compute the Jacobian
+\KTC{shoudl be an en-dash:} matrix-matrix product in the normal equations.
+\KTC{We should never be solving the normal equations. This squares the
+condition number!}
 It is also worth noting that the 
-normal equations will also (almost) be block-diagonal; this is a fact that can be leveraged to speed up the linear solves at each Gauss--Newton iteration.
+normal equations will also (almost) \KTC{What does ``almost'' block diagonal
+mean? This is imprecise} be block-diagonal; this is a fact that can be leveraged to speed up the linear solves at each Gauss--Newton iteration.
 
 \begin{remark}\label{remark:gaussnewton}\textit{(Acceleration of the Gauss--Newton Solve)}\\
 The principle cost of a Gauss--Newton method is often the formation of the Jacobian matrix. A variety of techniques aimed at 
