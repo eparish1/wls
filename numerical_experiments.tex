@@ -70,10 +70,10 @@ problem is solved via the forward--backward sweep method. The action of the Jaco
 
 
 \subsubsection{Numerical results}
-The impact of the window size on \methodAcronymROMs\ is first assessed. We consider a set of \methodAcronymROMs\ that minimize the residual over windows of constant size 
+We first assess the impact of the window size on the performance of the \methodAcronymROMs.  We consider a set of \methodAcronymROMs\ that minimize the residual over windows of constant size 
 $\DeltaSlabArg{n} \equiv \DeltaSlabArg{} =  .002$, $0.004$ ,$0.008$, $0.02$, $0.04$, $0.10$, $0.20$, $1.0$. We additionally consider the standard Galerkin and LSPG ROMs. We first show results for \methodAcronymROMs\ using the direct method with CN time discretization; a comparison of different time-marching methods and direct/indirect solution techniques will be provided later in this section. 
 First, Figure~\ref{fig:sod_density} presents the density solutions predicted by the various ROMs at $t = 0.5$ and $1.0$. Figure~\ref{fig:sod_xt} shows 
-$x-t$ diagrams for the same density solutions. From Figures~\ref{fig:sod_density} and~\ref{fig:sod_xt}, it is observed that the LSPG and Galerkin ROMs accurately characterize 
+$x-t$ diagrams for the same density solutions. From Figures~\ref{fig:sod_density} and~\ref{fig:sod_xt}, we observe that the LSPG and Galerkin ROMs accurately characterize 
 the system: they correctly track the shock location, expansion waves, etc. We observe both predictions, however, to be highly oscillatory. These oscillations are 
 not physical and can lead to numerical blowup; e.g., due to negative pressure. We observe the \methodAcronymROMs\ to produce less oscillatory solutions than both 
 the Galerkin and LSPG ROMs. Critically, we see that the solution becomes less oscillatory as the window size over which the residual is minimized grows. The solution displays no oscillations when the residual is minimized over the entire space--time domain. 
@@ -188,14 +188,14 @@ Gauss--Newton iterations required for convergence. The cost of the FBSM method i
 than the direct methods. Encouragingly, \methodAcronymROMs\ based on the CN discretization
 minimizing the full space--time residual (comprising 
 500 time instances) only  
-cost approximately one order of magnitude more than the case where the residual is minimized over a single time-step (i.e., LSPG). Also of interest is the 
+cost approximately one order of magnitude more than the case where the residual is minimized over a single time step (i.e., LSPG). Also of interest is the 
 fact that the direct method utilizing the AB2 time-discretization scheme costs only slightly more per a given window size than the direct method 
 utilizing the CN time discretization. This is despite the fact that AB2 is evolved at a time step of $\Delta t = 0.0005$, while CN uses $\Delta t = 0.002$; thus 
 AB2 contains 4 times more temporal degrees of freedom than CN.  Finally, we emphasize that the 
 results presented here are presented for standard algorithms (e.g., Guass--Newton and the FBSM). As mentioned in 
 Remarks~\ref{remark:gaussnewton} and~\ref{remark:fbsm}, we expect the computational cost 
 of both the indirect and direct methods can be decreased through the use and/or development of 
-algorithms tailored to the minimization problem. 
+algorithms tailored to the windowed minimization problem. 
 
 
 \begin{figure}
@@ -212,14 +212,14 @@ algorithms tailored to the minimization problem.
 
 Finally, we study the impact of the time step on the \methodAcronymROM\ results. We examine \methodAcronymROMs\ that use a
 window size of $\Delta T = 0.1$, with time steps $\Delta t =$  $0.001$, $0.002$, $0.005$, $0.01$, $0.05$, $0.1$ (i.e.,  
-$100$, $50$, $20$, $10$, $2$, and $1$ time-steps per window). We additionally 
-consider LSPG ROMs leveraging the same set of time steps. To assess time step convergence, we compare results to a new full-order model, which is as described in Section~\ref{sec:sod_fom} but uses a fine time step of $\Delta t = 1e-4$. Figure~\ref{fig:time_step_study} shows the space--time $\elltwo$ error and residual norm  
+$100$, $50$, $20$, $10$, $2$, and $1$ time instances per window). We additionally 
+consider LSPG ROMs leveraging the same set of time steps. To assess time step convergence, we compare results to a new full-order model, which is as described in Section~\ref{sec:sod_fom} but uses a fine time step of $\Delta t = 10^{-4}$. Figure~\ref{fig:time_step_study} shows the space--time $\elltwo$ error and residual norm  
 of the various ROMs. We observe that both the space--time $\elltwo$ error and residual norm 
 of the \methodAcronymROMs\ decrease and converge as the time step decreases. This is in direct contrast to the LSPG ROMs, in where both the $\elltwo$ 
 space--time error and residual norm increase as the time step decreases. This result 
 demonstrates that \methodAcronym\ overcomes the time-step dependence inherit to the LSPG approach. Lastly, Figure~\ref{fig:walltime_dtvar}
-shows the relative wall-clock times of the \methodAcronymROMs\ with respect to the LSPG ROMs. It is seen that, for all time steps considered, the \methodAcronym-ROMs 
-are less than 6x the cost LSPG; despite the window sizes comprising up to 100 time steps. 
+shows the relative wall-clock times of the \methodAcronymROMs\ with respect to the LSPG ROMs. It is seen that for all time steps considered, the \methodAcronymROMs\ 
+are less than 6x the cost of LSPG, despite the window sizes comprising up to 100 time instances. 
 \begin{figure}
 \begin{center}
 \begin{subfigure}[t]{0.45\textwidth}
@@ -255,7 +255,7 @@ The key observations from the results of the first numerical example are:
 \begin{enumerate}
 \item Increasing the window size over which the residual is minimized led to more physically relevant solutions. Specifically, we observed that as the window size over which the residual was minimized grew, \methodAcronym\ led to less oscillatory solutions.
 \item Increasing the window size over which the residual is minimized does not necessary lead to a lower space--time state error as measured by the $\elltwo$ norm. We observed that minimizing the residual over an intermediary window size led to the lowest space--time state error in the $\elltwo$ norm. 
-\item The \methodAcronym\ displays time-step convergence: both the space--time $\elltwo$ state error and residual norm decreased and displayed time-step convergence as the time step decreased. This is in contrast to LSPG.
+\item \methodAcronym\ displays time-step convergence: both the space--time $\elltwo$ state error and residual norm decreased and displayed time-step convergence as the time step decreased. This is in contrast to LSPG.
 \item For all examples considered, in where the windows comprised up to 2000 time instances, \methodAcronym\ with the direct method is between 1x and 10x the cost of the LSPG. The 
 direct method was observed to be, in general, slightly more efficient and robust than the indirect method.
 \end{enumerate} 
