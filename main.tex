@@ -759,9 +759,9 @@ Algorithm~\ref{alg:pod} presents the algorithm for computing the trial basis via
 \begin{algorithm}
 \caption{Algorithm for generating POD Basis.}
 \label{alg:pod}
-Input: Number of time-steps between snapshots $N_{\text{skip}}$; intercept $\stateInterceptArg{}$; basis dimension $K$ \; 
+\textbf{Input:} Number of time-steps between snapshots $N_{\text{skip}}$; intercept $\stateInterceptArg{}$; basis dimension $K$ \; 
 %\newline
-Output: POD Basis $\basisspace \in \mathbb{V}_{K}(\RR{N})$ \;
+\textbf{Output:} POD Basis $\basisspace \in \mathbb{V}_{K}(\RR{N})$ \;
 %\newline
 Steps:
 \begin{enumerate}
@@ -783,9 +783,9 @@ mesh concept~\cite{carlberg_gnat}. Algorithm~\ref{alg:qdeim} outlines the steps 
 \begin{algorithm}
 \caption{Algorithm for generating the sampling matrix through q-sampling.}
 \label{alg:qdeim}
-Input: Number of time-steps between snapshots $N_{\text{skip}}$, number of primal sampling points, $n_s$ \; 
+\textbf{Input:} Number of time-steps between snapshots $N_{\text{skip}}$, number of primal sampling points, $n_s$ \; 
 %\newline
-Output: Weighting matrix $\stweightingMatArg{} \equiv \stweightingMatOneTArg{} \stweightingMatOneArg{} \in \{0,1\}^{N \times N}$ \;
+\textbf{Output:} Weighting matrix $\stweightingMatArg{} \equiv \stweightingMatOneTArg{} \stweightingMatOneArg{} \in \{0,1\}^{N \times N}$ \;
 %\newline
 Steps:
 \begin{enumerate}

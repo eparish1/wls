@@ -13,6 +13,9 @@
 \newcommand{\RRplus}{\RR{}_{+}}
 \newcommand{\methodName}{Windowed Least-Squares}
 \newcommand{\methodNameLower}{windowed least-squares}
+
+\newcommand{\Changes}[1]{{\color{purple}#1}}
+
 \newcommand{\EP}[1]{{\color{red}EP: #1}}
 %======= Shaping for matrix
 %\newcommand{\matshapea}{\underbrace{[ \circ \circ \circ \circ \circ ]}_{1 \times N}}
@@ -50,6 +53,9 @@
 \newcommand{\fbsmDecay}{\psi_2}
 \newcommand{\projector}{\mathbb{P}}
 \newcommand{\projectorArg}[1]{\projector^{#1}}
+\newcommand{\genProjectorSpatialArg}[1]{\hat{\projector}_s^{#1}}
+
+\newcommand{\projectorSpatialArg}[1]{\projector_{\mathcal{S}}^{#1}}
 \newcommand{\veloargsromy}{\basisspace \genstateyDiscreteArgnt{} + \stateIntercept,\timeDummy}
 \newcommand{\quadWeightsVecArg}[1]{\boldsymbol \alpha^{#1}}
 \newcommand{\minIntegrandFull}{\frac{1}{2} \big[\frac{\partial \decoder}{\partial \genstate} \dot{\genstate} - \velocity(\decoder(\genstate)) \big]^T \stweightingMat(t) \big[\frac{\partial \decoder}{\partial \genstate} \dot{\genstate} - \velocity(\decoder(\genstate)) \big]}
@@ -163,7 +169,7 @@
 \newcommand{\errorArgt}[2]{\error^{#1}(#2)}
 \newcommand{\objectiveArg}[1]{\objective^{#1}}
 \newcommand{\objectiveDiscrete}{J}
-\newcommand{\objectiveArgLMS}[1]{\objectiveDiscrete_{}^{#1}}
+\newcommand{\objectiveArgLMS}[1]{\objectiveDiscrete^{#1}}
 \newcommand{\objectiveArgC}[1]{\objectiveDiscrete_{C}^{#1}}
 
 \newcommand{\objectiveDiscreteST}{J_{\text{ST}}}
@@ -195,7 +201,11 @@
 \newcommand{\genCollocModes}{\overline{\collocModes}}
 \newcommand{\genCollocModesArg}[1]{\overline{\collocModes}^{#1}}
 
+\newcommand{\spatialICDiscrete}{\basisspaceTArg{n}( \approxstateDiscreteArg{n-1,\nstepsArg{n-1}}  - \stateInterceptArg{n} )}
+
+\newcommand{\genspatialICDiscrete}{\basisspaceTArg{n}(\basisspaceArg{n-1} \genstateDiscreteArg{n-1,\nstepsArg{n-1}}   + \stateInterceptArg{n-1} - \stateInterceptArg{n} )}
 \newcommand{\spatialIC}{\basisspaceTArg{n}(\basisspaceArg{n-1} \genstate^{n-1}(\timeEndArg{n-1} )  + \stateInterceptArg{n-1} - \stateInterceptArg{n} )}
+%\newcommand{\spatialIC}{\genProjectorSpatialArg{n}(\basisspaceArg{n-1} \genstate^{n-1}(\timeEndArg{n-1} )  + \stateInterceptArg{n-1} )}
 
 \newcommand{\defeq}{\vcentcolon=}
 \newcommand{\mass}{\mathbf{M}}
@@ -390,7 +400,11 @@
 
 \newcommand{\stateFOMDiscrete}{{\mathbf{x}}}
 \newcommand{\stateFOMDiscreteArg}[1]{\stateFOMDiscrete^{#1}}
+\newcommand{\stateFOMDiscreteLMS}{{\mathbf{x}}}
+\newcommand{\stateFOMDiscreteLMSArg}[2]{\stateFOMDiscrete^{\indexMapper(#1,#2)}}
 
+\newcommand{\indexMapper}{q}
+\newcommand{\indexMappern}{r}
 
 \newcommand{\stateyArg}[2]{\statey^{#1}(#2)}
 \newcommand{\stateArgnt}[1]{\state^{#1}}
@@ -436,6 +450,8 @@
 \newcommand{\decoderDotColloc}{\dot{\decoder}_c}
 \newcommand{\residCollocArg}[1]{\resid_c^{#1}}
 \newcommand{\residLMSArg}[1]{\resid_{}^{#1}}
+\newcommand{\residLMSWArg}[2]{\resid_{}^{#1,#2}}
+
 \newcommand{\lmsSlabArg}[1]{g^{#1}}
 \newcommand{\lmsCollocArg}[1]{k^{#1}}
 \newcommand{\lmsWidthArg}[2]{k^{#1,#2}}
@@ -470,9 +486,9 @@
 
 
 \newcommand{\stspaceBoundStartArg}[1]{\stspaceBoundStart^{#1}} 
-\newcommand{\stspaceBoundStart}{\mathcal{B}_{s}} 
-\newcommand{\stspaceBoundEndArg}[1]{\stspaceBoundEnd^{#1}} 
-\newcommand{\stspaceBoundEnd}{\mathcal{B}_{e}} 
+\newcommand{\stspaceBoundStart}{\mathcal{B}} 
+%\newcommand{\stspaceBoundEndArg}[1]{\stspaceBoundEnd^{#1}} 
+%\newcommand{\stspaceBoundEnd}{\mathcal{B}_{e}} 
 
 \newcommand{\stspaceBoundArg}[1]{\stspaceBound^{#1}} 
 \newcommand{\stspaceBound}{\mathcal{B}\timeSpace} 

@@ -116,7 +116,7 @@ scalar-by-vector gradients.}
 \end{equation}
 Using this notation, the Euler--Lagrange equations (see
 Appendix~\ref{appendix:eulerlagrange} for the derivation) over the $n$th
-time window are given by, 
+time window for $t \in [\timeStartArg{n},\timeEndArg{n}]$ are given by
 \begin{equation}\label{eq:el1} 
 \begin{split}
 & \dIdYArg{n}(\genstateArgnt{n},\genstateDotArgnt{n},t) - \dIdVDotArg{n}(\genstateArgnt{n},\genstateDotArgnt{n}, t )  = \bz, \\ 
@@ -224,11 +224,11 @@ is the adjoint or ``costate'' variable with $\adjointDotArgnt{n} \equiv d \adjoi
 Eq.~\eqref{eq:lspg_continuous} is equivalent to a Galerkin reduced-order
 model forced by the costate variable $\adjointArgnt{n}$.
 Eq.~\eqref{eq:lspg_adjoint} is typically referred to as the adjoint
-equation, which is linear in the adjoint and is forced by the residual.
+equation, which is linear in the costate and is forced by the residual.
 We note that both ODEs~\eqref{eq:lspg_continuous}
 and~\eqref{eq:lspg_adjoint} can be equipped with hyper-reduction, e.g., via
 collocation, (discrete) empirical interpolation, Gappy
-POD~\cite{everson_sirovich_gappy,eim,qdeim_drmac}. The state--adjoint
+POD~\cite{everson_sirovich_gappy,eim,qdeim_drmac}. The state--costate
 coupled system~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs} can be interpreted as an ``optimally controlled"
 ROM, wherein the adjoint equation controls the forward model by enforcing the
 minimum residual condition over the time window.
@@ -258,10 +258,10 @@ We note that in the case $\stweightingMatArg{n} =
 
 \subsubsection{Formulation as an optimal-control problem of Lagrange type}\label{sec:optimal_control} 
 The stationary conditions for \methodAcronym\ with \spatialAcronym\ trial subspaces~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs} can be alternatively formulated as a Lagrange
-problem from optimal control. To this end, consider the Galerkin ROM over the $n$th window
-$$ \basisspaceTArg{n} \stweightingMatArgt{n}{t} \basisspaceArg{n}
- \genstateGalerkinDotArg{n}{t} - \basisspaceTArg{n} \stweightingMatArgt{n}{t}
-\velocity(\veloargsromn) = \bz,\qquad .$$
+problem from optimal control. To this end, recall the dynamics of the Galerkin ROM over $t \in [\timeStartArg{n},\timeEndArg{n}]$, 
+$$ \basisspaceTArg{} \stweightingMatArgt{}{t} \basisspaceArg{}
+ \genstateGalerkinDotArg{}{t} - \basisspaceTArg{} \stweightingMatArgt{}{t}
+\velocity(\basisspace \genstateGalerkin + \stateIntercept , t) = \bz.$$
 We introduce now a controller $\controllerArgnt{n} \in \RR{\romdimArg{n}} \otimes \timeSpaceArg{n}$ 
 and pose the problem of finding a controller that minimizes the residual
 over the time window and forces the dynamics as
@@ -320,7 +320,7 @@ computing the residual norm as a function of the state and controller, i.e.,
 where we have used $ \genstateDotArg{n}{t} = [\massArg{n}]^{-1}\basisspaceTArg{n}
 \stweightingMatArg{n} \velocity(\basisspaceArg{n} \genstateArg{n}{t} +
 \stateInterceptArg{n} ,t) + [\massArg{n}]^{-1}\controllerArg{n}{t} 
-$ from Eq.~\eqref{eq:controlled_rom}.
+$ from Eq.~\eqref{eq:controlled_rom}. Note that this Lagrangian measures the same residual as Eq.~\eqref{eq:integrand}.
 The \methodAcronym\ approach with \spatialAcronym\ trial subspaces can be formulated as an optimal-control
 method that sequentially computes the controllers $\controllerArgnt{n}
 \in \RR{\romdimArg{n}} \otimes \timeSpaceArg{n}
@@ -369,11 +369,11 @@ $, $n=1,\ldots,\nslabs$ that satisfy
 %\end{equation}
 The solution to the system~\eqref{eq:tclspg_oc1a} is equivalent of that defined by~\eqref{eq:obj_gen_slab}. 
 This can be demonstrated via the \textit{Pontryagin Maximum Principle} (PMP)~\cite{optimal_control_book}. To this end, we introduce the Lagrange multiplier (costate) 
-	$\adjointOCArgnt{n} \in \RR{\romdimArg{n}} \otimes \timeSpaceArg{n}$ and define the Hamiltonian, 
+	$\adjointOCArgnt{n} \in \RR{\romdimArg{n}} \otimes \timeSpaceArg{n}$ and define the Hamiltonian
 \begin{equation}\label{eq:hamiltonian}
 \begin{split}
 \hamiltonianArg{n} \; &: \;  (\genstateyDiscreteArgnt{},\adjointDiscreteDumArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \mapsto 
- \adjointDiscreteDumArgnt{T} \bigg[  [\massArg{n}]^{-1}\basisspaceTArg{n} \stweightingMatArgt{n}{t}\velocity(\basisspaceArg{n} \genstateyDiscreteArgnt{} + \stateInterceptArg{n},\timeDummy) + [\massArg{n}]^{-1}\controllerDiscreteDumArgnt{} \bigg] +  \objectiveControlArg{n}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \\
+ \adjointDiscreteDumArgnt{T} \bigg[  [\massArg{n}]^{-1}\basisspaceTArg{n} \stweightingMatArgt{n}{t}\velocity(\basisspaceArg{n} \genstateyDiscreteArgnt{} + \stateInterceptArg{n},\timeDummy) + [\massArg{n}]^{-1}\controllerDiscreteDumArgnt{} \bigg] +  \objectiveControlArg{n}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy), \\
 &: \; \RR{\romdimArg{n}} \times \RR{\romdimArg{n}} \times \RR{\romdimArg{n}} \times [\timeStartArg{n},\timeEndArg{n}] \rightarrow \RR{}.
 \end{split}
 \end{equation} 
