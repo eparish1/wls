@@ -17,7 +17,7 @@ with $\approxstateArgnt{n} \in \stspaceSTArg{n}$, where
 \EP{Is it wrong to say $\stbasisArg{n}{\cdot} \in \RR{\fomdim \times \stdimArg{n}}$ with $\stbasisArgnt{n}: \timeDummy \mapsto \stbasisArgnt{n}(\timeDummy) \ldots$? I don't particularly like
 $\stbasisArgnt{n} \in \RR{\fomdim \times \stdimArg{n}}\otimes\timeSpaceArg{n}$; as the reader I think that $\stbasisArgnt{n}$ can take on all temporal functions.}
 Here $\stbasisArgnt{n} \in \RR{\fomdim \times
-\stdimArg{n}}\otimes\timeSpaceArg{n}$, $n=1,\ldots,\nslabs$, with $\stbasisArgnt{n}: \timeDummy \mapsto \stbasisArgnt{n}(\timeDummy)$ and $\stbasisArg{n}{\timeStartArg{n}} = \bz$ is the space--time trial basis matrix {function} and $\stateInterceptSTArg{n} \in \RR{\fomdim}$ provides the affine transformation. 
+\stdimArg{n}}\otimes\timeSpaceArg{n}$, $n=1,\ldots,\nslabs$, with $\stbasisArgnt{n}: \timeDummy \mapsto \stbasisArgnt{n}(\timeDummy)$ and $\stbasisArg{n}{\timeStartArg{n}} = \bz$ is the space--time trial basis matrix {function} and $\stateInterceptSTArg{n} \in \RR{\fomdim}$, $n=1,\ldots,\nslabs$ provides the affine transformation. 
 To enforce the initial condition and ensure solution continuity across time windows, we set $\stateInterceptSTArg{1} = \stateFOMIC$ and
 $\stateInterceptSTArg{n} = \approxstateArg{n-1}{\timeEndArg{n-1}}$ for
 $n=2,\ldots,\nslabs$.
@@ -101,7 +101,7 @@ The key difference between \spaceTimeAcronym\ and \spatialAcronym\ trial
 	$\RR{\romdimArg{n}} \otimes \timeSpaceArg{n}$. 
 Thus, in the \spaceTimeAcronym\ case, the optimization problem is no longer
 	minimizing a functional with respect to a (time-dependent) function, but now is minimizing a function with 
-respect to vector.  As such, the first-order optimality conditions can be
+respect to a vector.  As such, the first-order optimality conditions can be
 	derived using standard calculus. Differentiating the objective with respect
 	to the generalized coordinates and setting the result equal to zero yields 
 \begin{equation}\label{eq:st_stationary}

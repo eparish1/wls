@@ -67,7 +67,7 @@ such that
 \begin{equation}
 \approxstate^n \in \stspace^n \subseteq \RR{N} \otimes \timeSpaceArg{n} , \qquad  n = 1,\ldots,\nslabs,
 \end{equation}
-where  $\timeSpaceArg{n}$ denotes the set of real-valued functions acting on
+where  $\timeSpaceArg{n}$ denotes the set of (sufficiently smooth) real-valued functions acting on
 $[\timeStartArg{n},\timeEndArg{n}]$ (i.e., $\timeSpaceArg{n} =
 \{f\,|\,f:[\timeStartArg{n},\timeEndArg{n}]\rightarrow\RR{}\}$).
 %and
@@ -84,7 +84,7 @@ $n$th window as
 \begin{split} \mathcal{J}^n &\vcentcolon \statey \mapsto
 \frac{1}{2} \int_{\timeStartArg{n}}^{\timeEndArg{n}} \big[ \dot{\statey}(t)
 - \velocity(\stateyArg{}{t},t) \big]^T \stweightingMatArgt{n}{t} \big[
-\dot{\statey}(t) - \velocity(\stateyArg{}{t},t) \big] d t \\
+\dot{\statey}(t) - \velocity(\stateyArg{}{t},t) \big] d t, \\
 %&\vcentcolon \RR{\fomdim} \times [\timeStartArg{n},\timeEndArg{n}] \rightarrow
 %\RR{}, \end{align}
 &\vcentcolon \RR{\fomdim}\otimes \timeSpaceArg{n}  \rightarrow
@@ -109,7 +109,7 @@ minimization problem
 \begin{split}
       &\underset{\statey \in \stspace^n}{\text{minimize}} \; \mathcal{J}^n(\statey), \\
 			&\text{subject to } \;  \statey(\timeStartArg{n}) =
-\begin{cases}\mathbb{P}^n (\approxstateArgnt{n-1}(\timeEndArg{n-1})) & n = 2,\ldots,\nslabs \\
+\begin{cases}\mathbb{P}^n (\approxstateArgnt{n-1}(\timeEndArg{n-1})) & n = 2,\ldots,\nslabs, \\
 \mathbb{P}^n( \stateFOMIC)& n=1, \end{cases} 
 \end{split}
 \end{equation}

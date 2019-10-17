@@ -57,7 +57,7 @@ $\genstateArgnt{n}$, $n = 1,\ldots,\nslabs$ that satisfy
 			\stateInterceptArg{n} \otimes \onesFunction^n), \\ 
       & \text{subject to }\; \genstateyArg{}{\timeStartArg{n}} =
 	\begin{cases}
-\spatialIC & n = 2,\ldots,\nslabs \\
+\spatialIC & n = 2,\ldots,\nslabs, \\
 \genstateICOne & n=1. \end{cases} 
 \end{split}
 \end{equation}
@@ -395,8 +395,8 @@ Evaluation of the required gradients (Appendix~\ref{appendix:optimal_control}) y
 %\end{equation}
 %\begin{equation}\label{eq:lspg_adjoint}
  & \adjointOCDotArg{n}{t}  + \basisspaceTArg{n} \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn) \bigg]^T \stweightingMatArgt{n}{t} \basisspaceArg{n} [\massArg{n}]^{-1} \adjointOCArg{n}{t} =  \basisspaceTArg{n} \big[ \frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \big]^T \\
-& \hspace{1.8in} \stweightingMatArgt{n}{t} \big( \mathbf{I} -   \basisspaceArg{n} [\massArg{n}]^{-1} \basisspaceTArg{n}  \stweightingMatArgt{n}{t} \big)  \big( \basisspaceArg{n}\genstateDotArg{n}{t}  -   \velocity(\veloargsromn) \big) \\%\label{eq:sys_oc2} \\
-&\controllerArg{n}{t} = -\adjointOCArg{n}{t} \\%\label{eq:sys_oc3}, \\
+& \hspace{1.8in} \stweightingMatArgt{n}{t} \big( \mathbf{I} -   \basisspaceArg{n} [\massArg{n}]^{-1} \basisspaceTArg{n}  \stweightingMatArgt{n}{t} \big)  \big( \basisspaceArg{n}\genstateDotArg{n}{t}  -   \velocity(\veloargsromn) \big), \\%\label{eq:sys_oc2} \\
+&\controllerArg{n}{t} = -\adjointOCArg{n}{t} ,\\%\label{eq:sys_oc3}, \\
 & \genstateArg{n}{\timeStartArg{n}} = 
 \begin{cases}
 \spatialIC& n=2,\ldots,\nslabs, \\

@@ -463,8 +463,8 @@ the overdetermined system of ODEs
 \end{equation}
 where $\genstateDot\equiv {d \genstate}/{d\tau}$.
 Because Eq.~\eqref{eq:g_truncation} is overdetermined, a solution may not
-exist. Typically, either the \textit{Galerkin} or \textit{least-squares
-Petrov--Galerkin} approach is employed to reduce the number of equations
+exist. Typically, either \textit{Galerkin} or \textit{least-squares
+Petrov--Galerkin} projection is employed to reduce the number of equations
 such that a unique solution exists. We now describe these two methods.
 
 \subsubsection{Galerkin projection}
@@ -564,7 +564,7 @@ minimizes the residual, i.e., LSPG sequentially computes the solutions
 $\approxstateLSPG^n \approx \stateFOMDiscreteArg{n}$, $n=1,\ldots,
 \ntimeSteps$ that satisfy
 \begin{equation*}
-\approxstateLSPG^n = \underset{\stateyDiscrete \in \trialspace  }{\text{arg\,min}}|| \lspgWeightingArg{\stateyDiscrete}\residLMSArg{n} (\stateyDiscrete; \approxstateLSPG^{n-1},\ldots,\approxstateLSPG^{n-k^n}) ||_2^2, \qquad n = 1,\ldots,\ntimeSteps,
+\approxstateLSPG^n = \underset{\stateyDiscrete \in \trialspace + \stateIntercept }{\text{arg\,min}}|| \lspgWeightingArg{\stateyDiscrete}\residLMSArg{n} (\stateyDiscrete; \approxstateLSPG^{n-1},\ldots,\approxstateLSPG^{n-k^n}) ||_2^2, \qquad n = 1,\ldots,\ntimeSteps,
 \end{equation*}
 where 
 $\lspgWeightingArg{\cdot} \in \RR{\nsamples \times \fomdim}$, with $\romdim

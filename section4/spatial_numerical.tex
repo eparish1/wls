@@ -66,13 +66,13 @@ Employing a linear multistep method to discretize the FOM ODE yields the FOM O$\
 %% $\stateFOMDiscreteLMSArg{n}{i} = \stateFOMDiscreteLMSArg{n-1}{\nstepsArg{n-1}+i}$, along with $\timeWindowArg{n}{i} = \timeWindowArg{n-1}{\nstepsArg{n-1}+i}$.
 %}, 
 \begin{align*}
-&\residLMSWArg{n}{i} (\stateFOMDiscreteArg{n,i};\stateFOMDiscreteLMSArg{n}{i-1},\ldots,\stateFOMDiscreteLMSArg{n}{i-\lmsWidthArg{n}{i}}) = \bz, \qquad i=1,\ldots,\nstepsArg{n}, \\
-&\stateFOMDiscreteArg{1,0} = \stateFOMIC. 
+&\residLMSWArg{n}{i} (\stateFOMDiscreteArg{n,i};\stateFOMDiscreteLMSArg{n}{i-1},\ldots,\stateFOMDiscreteLMSArg{n}{i-\lmsWidthArg{n}{i}}) = \bz, \qquad i=1,\ldots,\nstepsArg{n}, 
 %\begin{cases}
 %\stateFOMDiscreteLMSArg{n-1}{0} & n = 2,\ldots,\nslabs \\
 %\stateFOMIC & n=1, \end{cases}
 \end{align*}
-where $\stateFOMDiscreteArg{n,i} (\approx
+along with the initial condition $\stateFOMDiscreteArg{1,0} = \stateFOMIC$.
+In the above, $\stateFOMDiscreteArg{n,i} (\approx
 \stateFOMArg{}{\timeWindowArg{n}{i}})
 \in \RR{\fomdim}$ and $\residLMSWArg{n}{i}$ denotes the FOM O$\Delta$E
 residual over the $i$th time instance of the $n$th window  
