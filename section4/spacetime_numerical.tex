@@ -2,11 +2,11 @@
 We now briefly consider \spaceTimeAcronym\ trial subspaces. 
 For \spaceTimeAcronym\ trial subspaces, the distinction between a direct and indirect method is less clear as the optimization variable (i.e., the generalized coordinates) are finite 
 dimensional. There is no need to transcribe an infinite dimensional optimization variable into a finite dimensional one. There is, however, still a need to develop a finite 
-dimensional representation of the objective function~\eqref{eq:obj_gen_slab}. In what follows, we describe two techniques to do this: one that works with the FOM O$\Delta$E and one that works with the FOM ODE. We associate direct methods as those 
+dimensional representation of the objective functional~\eqref{eq:obj_gen_slab}. In what follows, we describe two techniques to do this: one that works with the FOM O$\Delta$E and one that works with the FOM ODE. We associate direct methods as those 
 that work with the O$\Delta$E and indirect methods with those that work directly with the ODE.  
 
 \subsection{\spaceTimeAcronym: direct solution approach}
-The direct solution technique seeks to minimize the fully discrete objective function associated with the O$\Delta$E. For brevity, we again focus on linear multistep methods. For notational simplicity, we define an index mapping function that is 
+The direct solution technique seeks to minimize the fully discrete objective function associated with the O$\Delta$E. For brevity, we again focus on linear multistep methods and leverage the time grids introduced in Section~\ref{sec:direct}. For notational simplicity, we define an index mapping function that is 
 equivalent to the mapping function $\indexMapper$, but outputs only the first argument: 
 $$\indexMappern: (n,i) \mapsto 
 \begin{cases}
@@ -16,7 +16,7 @@ n & n \ge 1, \; i > 0, \\
 \end{cases}$$
 %The definition of the fully discrete objective functions~\eqref{eq:obj_lms} as outlined in Section~\ref{sec:direct}, can be leveraged for this purpose. For simplicity, we only 
 %outline the case for linear multistep schemes. 
-Assuming $\text{Rank}(\stweightingMatOneArg{n})\nstepsArg{n} \ge \stdimArg{n}$, \methodAcronym\ leveraging an \spaceTimeAcronym\ basis sequentially computes the generalized coordinates $\stgenstateArg{n}$, $n=1,\ldots,\nslabs$, that satisfy
+Assuming $\text{Rank}(\stweightingMatOneArg{n})\nstepsArg{n} \ge \stdimArg{n}$, \methodAcronym\ with the direct approach and an \spaceTimeAcronym\ trial subspace sequentially computes the generalized coordinates $\stgenstateArg{n}$, $n=1,\ldots,\nslabs$ that satisfy
  \begin{equation}\label{eq:obj_gen_lms_final_st}
 \begin{split}
 & \underset{\stgenstatey \in \RR{\stdimArg{n}}}{\text{minimize } }
@@ -95,9 +95,9 @@ As opposed to the direct approach, the indirect approach directly minimizes the 
 %\velocity}{\partial \stateyDiscrete} (\stbasisDotArg{n}{t} \stgenstateArg{n} +                    
 %\stateInterceptArg{n})\bigg]^T  \bigg] \stweightingMatArg{n} \bigg( \stbasisDotArg{n}{t} \stgenstateArg{n}  - \velocity (\stbasisArg{n}{t} \stgenstateArg{n} + \stateInterceptArg{n}) \bigg) dt = \bz.\end{equation}
 Numerically solving the minimization problem requires the introduction of a quadrature rule for 
-discretization of the integral. Towards this end we introduce $\ncollocSTArg{n} \ge \text{ceil}(\stdimArg{n}/ \text{Rank}(\stweightingMatOneArg{n}))$ collocation points over the $n$th window, $ \{ \collocPointSTArg{n}{i} \}_{i=1}^{\ncollocSTArg{n}} \subseteq [\timeStartArg{n},\timeEndArg{n}]$, $n=1,\ldots,\nslabs$. 
+discretization of the integral. Towards this end we introduce $\ncollocSTArg{n} \ge \text{ceil}(\stdimArg{n}/ \text{Rank}(\stweightingMatOneArg{n}))$ quadrature points over the $n$th window, $ \{ \collocPointSTArg{n}{i} \}_{i=1}^{\ncollocSTArg{n}} \subseteq [\timeStartArg{n},\timeEndArg{n}]$, $n=1,\ldots,\nslabs$. 
 %with $\timeStartArg{n} \le \collocPointSTArg{n}{1} \le \cdots \le \collocPointSTArg{n}{\ncollocSTArg{n}} \le \timeEndArg{n}.$
-Leveraging these collocation points, the indirect method for \methodAcronym\ with an \spaceTimeAcronym\ trial subspace computes the generalized coordinates 
+Leveraging these quadrature points, \methodAcronym\ with the indirect method and an \spaceTimeAcronym\ trial subspace computes the generalized coordinates 
 $\stgenstateArg{n}$, $n=1,\ldots,\nslabs$ that satisfy
 \begin{equation}\label{eq:obj_gen_slab2} 
 \begin{split}
@@ -120,11 +120,12 @@ $\stgenstateArg{n}$, $n=1,\ldots,\nslabs$ that satisfy
 %\end{split} 
 %\end{equation}
 where the discrete objective function is given by
-$$\objectiveDiscreteSTArg{n}: \statey \mapsto \sum_{i=1}^{\ncollocSTArg{n}} \gamma_i 
+$$\objectiveDiscreteSTArg{n}: \statey \mapsto \sum_{i=1}^{\ncollocSTArg{n}} \zeta^{n,i} 
 \bigg[ \dot{\statey}(\collocPointSTArg{n}{i})  - \velocity (\stateyArg{}{\collocPointSTArg{n}{i}},\collocPointSTArg{n}{i} ) \bigg]^T 
 \stweightingMatArg{n} 
-\bigg[ \dot{\statey}(\collocPointSTArg{n}{i})  - \velocity (\stateyArg{}{\collocPointSTArg{n}{i}},\collocPointSTArg{n}{i} ) \bigg].
+\bigg[ \dot{\statey}(\collocPointSTArg{n}{i})  - \velocity (\stateyArg{}{\collocPointSTArg{n}{i}},\collocPointSTArg{n}{i} ) \bigg],
 $$
+where $\zeta^{n,i} \in \RRplus$, $i=1,\ldots,\ncollocSTArg{n}$ are quadrature weights over the $n$th window. The optimization problem~\eqref{eq:obj_gen_slab2} again comprises a least-squares problem.
 %$$\objectiveDiscreteSTArg{n}: \stgenstatey \mapsto \sum_{i=1}^{\ncollocSTArg{n}} \gamma_i 
 %\bigg[ \stbasisDotArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ }  - \velocity (\stbasisArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ } + \stateInterceptSTArg{n},\collocPointSTArg{n,i}) \bigg]^T 
 %\stweightingMatArg{n} 

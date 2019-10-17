@@ -385,19 +385,19 @@ approximation to the generalized coordinates. This gives a new estimate to the
 costate, which is then used to again solve the forward problem to obtain
 a new estimate of the generalized coordinates. This process is continued until
 convergence. Algorithm~\ref{alg:st_iter} outlines the method. The algorithm
-contains three parameters: the damping factor $\rho \le 1$, the growth factor
-$\fbsmGrowth \ge 1$, and the decay factor $\fbsmDecay \ge 1$. The damping factor controls the rate at which the costate seen by~\eqref{eq:lspg_continuous} is updated. The
-closer $\rho$ is to unity, the faster the resulting algorithm will converge.
+contains three parameters: the relaxation factor $\rho \le 1$, the growth factor
+$\fbsmGrowth \ge 1$, and the decay factor $\fbsmDecay \ge 1$. The relaxation factor controls the rate at which the costate seen by~\eqref{eq:lspg_continuous} is updated. The
+closer $\rho$ is to unity, the faster the algorithm will converge.
 For large window sizes, however, too high a value of $\rho$ can lead to an unstable iterative process. 
 A proper value of $\rho$ can be
-obtained with a line search. The line search presented in Algorithm~\ref{alg:st_iter} adapts the damping factor
+obtained with a line search. The line search presented in Algorithm~\ref{alg:st_iter} adapts the relaxation factor
 according to the objective. Convergence properties of the FBSM method are
 presented in Ref.~\cite{McAsey2012ConvergenceOT}. It is shown that, for a small 
 enough value of $\rho$, the algorithm will converge.
 
 \begin{algorithm} \caption{\spatialAcronym\ trial subspace: algorithm for the FBSM over the $n$th window.} \label{alg:st_iter} 
 \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
-\Input{tolerance, $\epsilon$; damping factor, $\rho \le 1$; growth factor, $\fbsmGrowth \ge 1$; decay
+\Input{tolerance, $\epsilon$; relaxation factor, $\rho \le 1$; growth factor, $\fbsmGrowth \ge 1$; decay
 factor, $\fbsmDecay \ge 1$} 
 \Output{Stationary point, $\genstateArgnt{n}$ }
 \textbf{Online Steps:}\\ 
@@ -428,10 +428,10 @@ $\text{Compute }\genstateArgnt{n}_i \text{ satisfying } \massArg{n} \genstateDot
 %$\objectiveArg{n}({\genstate_i^n(t)})$ \Comment{Evaluate objective function}\\
 \uIf{ $\objectiveArg{n}({\basisspaceArg{n}\genstate_i^n + \stateInterceptArg{n}\otimes \onesFunctionArg{n}}) \le \objectiveArg{n}({\basisspaceArg{n}\genstate_{i-1}^n + \stateInterceptArg{n}\otimes \onesFunctionArg{n}})$}
 {
-$\rho \leftarrow \text{min}(\rho \fbsmGrowth,1)$ \Comment{Grow the damping factor}\\
+$\rho \leftarrow \text{min}(\rho \fbsmGrowth,1)$ \Comment{Grow the relaxation factor}\\
 }
 \Else{
-$\rho \leftarrow \frac{\rho }{ \fbsmDecay}$ \Comment{Shrink the damping factor}\\ 
+$\rho \leftarrow \frac{\rho }{ \fbsmDecay}$ \Comment{Shrink the relaxation factor}\\ 
 $\genstate_i^{n} \leftarrow  \genstate_{i-1}^{n}$ \Comment{Reset state to value at previous iteration}
 }
 }
@@ -447,13 +447,13 @@ backwards problems. As described in
 the direct solution approach, temporal discretization is achieved by introducing $\nstepsArg{n} + 1$ time instances over each time window. Linear multistep methods then use this time-grid for temporal discretization of~\eqref{eq:lspg_continuous} and~\eqref{eq:lspg_adjoint}. 
 
 The second ingredient, namely an efficient method for computing the action of the Jacobian transpose on a vector, can be challenging. 
-In the case one does not have access to the full-order model Jacobian (or it is too costly to compute), the evaluation of this term can be both challenging and expensive. Here, two methods are discussed that can be used to evaluate the action of the Jacobian transpose on a vector as seen in~\eqref{eq:lspg_adjoint}:
+In the case one does not have access to the full-order model Jacobian (or it is too costly to compute), the evaluation of this term can be challenging and expensive. Here, two methods are discussed that can be used to evaluate the action of the Jacobian transpose on a vector as seen in~\eqref{eq:lspg_adjoint}:
 \begin{enumerate}
 \item \textit{Jacobian-free approximation}: A non-intrusive way to evaluate the Jacobian transpose in~\eqref{eq:lspg_adjoint} is to recognize that all terms including the Jacobian transpose are left multiplied by the transpose of the trial basis. One can make the manipulation,
 $$\basisspaceTArg{n} \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn)\bigg]^T = \bigg[  \frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn) \basisspaceArg{n} \bigg]^T.$$
 This manipulation allows one to compute the action of the Jacobian on each column of $\basisspaceArg{n}$ by, e.g., the finite difference approximation
 $$\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \basisvec_i^n \approx \frac{1}{\epsilon}\bigg( \velocity(\basisspaceArg{n}\genstateArg{n}{t} + \stateInterceptArg{n} + \epsilon \basisvec_i^n,t) - \velocity(\veloargsromn) \bigg).$$
-The Jacobian transpose can be formed in $K+1$ evaluations of the velocity. For cases where the reduced-order model is low dimensional, this approach is feasible. For higher dimensional reduced-order models, this approach can be prohibitively expensive.
+The Jacobian transpose can be formed in $\romdimArg{n}+1$ evaluations of the velocity. For cases where the reduced-order model is low dimensional, this approach is feasible. For higher dimensional reduced-order models, this approach can be prohibitively expensive.
 
 \item \textit{Automatic differentiation}: A more intrusive, but potentially more efficient, method of computing the action of the Jacobian transpose on a vector is through automatic differentiation (AD). AD methods comprise a class of techniques that can be used to numerically evaluate derivatives of functions (e.g., Jacobians, vector-Jacobian products) by recursively applying the chain rule. The numerical examples presented later in this work leverage AD. The principle drawback of AD is that AD methods are intrusive and may not be suitable for, e.g., legacy codes.  
 \end{enumerate}
