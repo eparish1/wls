@@ -106,6 +106,17 @@ define the specific type of multistep scheme.
 %\\
 %               &: \RR{\fomdim} \otimes \RR{k(i)} \rightarrow \RR{\fomdim}. 
 %\end{align*} 
+Employing a linear multistep method allows the objective \textit{functional}~\eqref{eq:obj} to be replaced with the objective \textit{function}
+%In the above, $\objectiveArgLMS{n}$ is the discrete objective function at the $n$th time window and is defined as
+\begin{equation*}%\label{eq:obj_lms}
+\begin{split} 
+\objectiveArgLMS{n} &\vcentcolon (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}; \stateyDiscreteArgnt{0},\ldots,\stateyDiscreteArgnt{-\lmsWidthArg{n}{1}+1}) \mapsto 
+\frac{1}{2} \sum_{i=1}^{\nstepsArg{n}} \quadWeightsLMSScalarArg{n}{i} [\residLMSWArg{n}{i}(\stateyDiscreteArgnt{i};\stateyDiscreteArgnt{i-1},\ldots, \stateyDiscreteArgnt{i-\lmsWidthArg{n}{i})})]^T  \stweightingMatArgt{n}{\timeWindowArg{n}{i}} \residLMSWArg{n}{i}(\stateyDiscreteArgnt{i};\stateyDiscreteArgnt{i-1},\ldots, \stateyDiscreteArgnt{i-\lmsWidthArg{n}{i}}), \\
+&\vcentcolon \RR{\fomdim} \otimes \RR{\nstepsArg{n}} \rightarrow
+\RR{}_+, 
+\end{split}
+\end{equation*}
+where $\quadWeightsLMSScalarArg{n}{i} \in \RRplus$ are quadrature weights.  
 
 \methodAcronym\ with the direct approach and a linear multistep method sequentially computes the solutions
 $\approxstateDiscreteArg{n,1},\ldots,\approxstateDiscreteArg{n,\nstepsArg{n}}$,
@@ -116,37 +127,18 @@ $n=1,\ldots,\nslabs$, that satisfy
 %	the final time.} \EP{You are correct, I think there is an error now in the minimize term though. It was $\in \trialspace\otimes \RR{\lmsWidthArg{n}{i}+1}$, it should be $\trialspace\otimes \RR{\nstepsArg{n}+1}$}
 \begin{align*}
 	&\underset{(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \in \trialspace\otimes \RR{\nstepsArg{n}}}{\text{minimize } }
-\objectiveArgLMS{n} (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}). 
+\objectiveArgLMS{n}_s (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}), 
 %%& \text{subject to} \hspace{0.2 in}  \stateyDiscreteArg{0} =
 %%\begin{cases} \basisspaceArg{n} \spatialICDiscrete + \stateInterceptArg{n}& n = 2,\ldots,\nslabs,\\
 %\basisspaceArg{1} \genstateICOne  + \stateInterceptArg{1}& n=1. \end{cases} 
 \end{align*}
-%Employing a linear multistep method allows the objective \textit{functional}~\eqref{eq:obj} to be replaced with the objective \textit{function}
-%\EP{Had to change the definition of the objective function to reflect stepping back into previous window}
-In the above, $\objectiveArgLMS{n}$ is the discrete objective function at the $n$th time window and is defined as
-\begin{equation*}%\label{eq:obj_lms}
-\begin{split} 
-\objectiveArgLMS{n} &\vcentcolon (\stateyDiscreteArgnt{n,1},\ldots,\stateyDiscreteArgnt{n,\nstepsArg{n}}) \mapsto
-\frac{1}{2} \sum_{i=1}^{\nstepsArg{n}} \quadWeightsLMSScalarArg{n}{i} [\residLMSWArg{n}{i}(\stateyDiscreteArgnt{n,i};\stateyDiscreteArgnt{n,i-1},\ldots, \stateyDiscreteArgnt{n,i-\lmsWidthArg{n}{i})})]^T  \stweightingMatArgt{n}{\timeWindowArg{n}{i}} \residLMSWArg{n}{i}(\stateyDiscreteArgnt{n,i};\stateyDiscreteArgnt{n,i-1},\ldots, \stateyDiscreteArgnt{n,i-\lmsWidthArg{n}{i}}), \\
-&\vcentcolon \RR{\fomdim} \otimes \RR{\nstepsArg{n}} \rightarrow
-\RR{}_+, 
-\end{split}
-\end{equation*}
-where $\quadWeightsLMSScalarArg{n}{i} \in \RRplus$ are quadrature weights, $\stateyDiscreteArgnt{n,i}$ for $i>0$ are the arguments, and for $i \le 0$
-\EP{I think this is a little unclear, could include ICs in the definition of the objective function and split the arguments with a ;  Thoughts?} 
-\begin{equation}\label{eq:wls_spatial_direct_args}
-\stateyDiscreteArgnt{n,i}  \equiv 
-\begin{cases}
-\projectorSpatialArg{n}(\approxstateDiscreteArg{\indexMapper(n,i)})  & n = 2,\ldots,\nslabs,  \\
-\projectorSpatialArg{1}(\stateFOMIC)  & n = 1, \\
-%\basisspaceArg{n} \basisspaceTArg{n} (\approxstateDiscreteArg{n-1,\nstepsArg{n-1}+i} - \stateInterceptArg{n}) + \stateInterceptArg{n} & n = 2,\ldots,\nslabs,  \\
-%\basisspaceArg{n} \basisspaceTArg{n} (\stateFOMIC - \stateInterceptArg{n}) + \stateInterceptArg{n} & n = 1.
-\end{cases}
-\end{equation}
-where $\projectorSpatialArg{n} : \RR{\fomdim} \rightarrow \trialspaceArg{n}$ is the $\elltwo$-orthogonal projector and is defined as 
+where
+$$\objectiveArgLMS{n}_{\text{s}} :  (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto \objectiveArgLMS{n}(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}; \projectorSpatialArg{n}(\approxstateDiscreteArg{\indexMapper(n,0)}),\ldots,\projectorSpatialArg{n}(\approxstateDiscreteArg{\indexMapper(n,-\lmsWidthArg{n}+1)})),
+$$
+and $\projectorSpatialArg{n} : \RR{\fomdim} \rightarrow \trialspaceArg{n}$ is the $\elltwo$-orthogonal projector 
 $$\projectorSpatialArg{n} : \stateyDiscreteArgnt{} \mapsto  \basisspaceArg{n}\basisspaceTArg{n} (\stateyDiscreteArgnt{} - \stateInterceptArg{n}) + \stateInterceptArg{n} .$$
-Note that the boundary conditions are automatically satisfied by Eq.~\eqref{eq:wls_spatial_direct_args}.
-
+We additionally set $\approxstateDiscreteArg{1,0} = \projectorSpatialArg{n}(\stateFOMIC).
+$
 %where 
 %\begin{align*}
 %\residArg{n,i} &: (\stateyArgnt{n,i},\ldots,\stateyArgnt{n,i-k(i)}) \mapsto  \sum_{j=0}^k \alpha_j \stateyArgnt{n,i-j} = \Delta t^{n,i} \sum_{j=0}^k \beta_j \velocity(\stateyArgnt{n,i-j}),
@@ -161,7 +153,8 @@ Note that the boundary conditions are automatically satisfied by Eq.~\eqref{eq:w
 %& \text{subject to} \hspace{0.2 in}  \approxstateDiscreteArg{n,0} =
 %\begin{cases} \approxstateDiscreteArg{n-1,\nstepsArg{n-1}} & n = 2,\ldots,\nslabs,\\
 %\approxstateIC & n=1. \end{cases} \end{align*}
-	Equivalently, \methodAcronym\ sequentially computes the generalized
+
+Equivalently, \methodAcronym\ sequentially computes the generalized
 	coordinates
 	$\genstateDiscreteArg{n,1},\ldots,\genstateDiscreteArg{n,\nstepsArg{n}}$,
 	$n=1,\ldots,\nslabs$ 
@@ -172,7 +165,7 @@ with $\genstateDiscreteArg{n,i}(\approx
 \begin{split}
 	&
 	\underset{(\genstateyDiscreteArg{1},\ldots,\genstateyDiscreteArg{\nstepsArg{n}})\in\RR{\romdimArg{n}}\otimes \RR{\nstepsArg{n}}}{\text{minimize } }
-\objectiveArgLMS{n} (\basisspaceArg{n} \genstateyDiscreteArg{1} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateyDiscreteArg{\nstepsArg{n}} + \stateInterceptArg{n}). 
+\objectiveArgLMS{n}_s (\basisspaceArg{n} \genstateyDiscreteArg{1} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateyDiscreteArg{\nstepsArg{n}} + \stateInterceptArg{n}). 
 %& \text{subject to} \hspace{0.2 in}
 %\genstateyDiscreteArg{0} =
 %\begin{cases} \genspatialICDiscrete  & n = 2,\ldots,\nslabs \\
@@ -252,7 +245,7 @@ where $\genstatecollocMatySlabArg{} \defeq \unroll (\genstateyDiscreteArg{1},\ld
 \end{equation}
 It is worth noting that, by design, 
 \begin{equation*}
-\objectiveArgLMS{n} \bigg( \basisspaceArg{n} \genstateDiscreteArg{n,1} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateDiscreteArg{n,\nstepsArg{n}} + \stateInterceptArg{n} \ \bigg) 
+\objectiveArgLMS{n}_s \bigg( \basisspaceArg{n} \genstateDiscreteArg{n,1} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateDiscreteArg{n,\nstepsArg{n}} + \stateInterceptArg{n} \ \bigg) 
 =
 \bigg[\residLMSSlabArg{n}  (\genstatecollocMatSlabArg{n}) \bigg]^T \bigg[ \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n}) \bigg].
 \end{equation*} 

@@ -6,38 +6,68 @@ dimensional representation of the objective function~\eqref{eq:obj_gen_slab}. In
 that work with the O$\Delta$E and indirect methods with those that work directly with the continuous ODE.  
 
 \subsection{\spaceTimeAcronym: direct solution approach}
-The direct solution technique seeks to minimize the fully discrete objective function associated with the O$\Delta$E. For brevity, we again focus on linear multistep methods. 
-
+The direct solution technique seeks to minimize the fully discrete objective function associated with the O$\Delta$E. For brevity, we again focus on linear multistep methods. For notational simplicity, we define an index mapping function that is 
+equivalent to $\indexMapper$, but outputs only the first argument: 
+$$\indexMappern: (n,i) \mapsto 
+\begin{cases}
+1 & n=1, \; i = 0,\\
+n & n \ge 1, \; i > 0, \\
+\indexMappern(n-1,\nstepsArg{n-1}+i) & n > 1, \; i \le 0.
+\end{cases}$$
 %The definition of the fully discrete objective functions~\eqref{eq:obj_lms} as outlined in Section~\ref{sec:direct}, can be leveraged for this purpose. For simplicity, we only 
 %outline the case for linear multistep schemes. 
-
-\EP{I will rework this section depending on 4.2\\
-Leveraging the definition of the fully discrete objective function~\eqref{eq:obj_lms}, and assuming $N \nstepsArg{n} \ge \stdimArg{n}$, \methodAcronym\ leveraging a \spaceTimeAcronym\ basis sequentially computes the generalized coordinates $\stgenstateArg{n}$, $n=1,\ldots,\nslabs$, that satisfy
+Assuming $\text{Rank}(\stweightingMatOneArg{n})\nstepsArg{n} \ge \stdimArg{n}$, \methodAcronym\ leveraging an \spaceTimeAcronym\ basis sequentially computes the generalized coordinates $\stgenstateArg{n}$, $n=1,\ldots,\nslabs$, that satisfy
  \begin{equation}\label{eq:obj_gen_lms_final_st}
 \begin{split}
 & \underset{\stgenstatey}{\text{minimize } }
-\objectiveArgLMS{n} (\stbasisArg{n}{\timeWindowArg{n}{0}} \stgenstatey + \stateInterceptSTArg{n},\ldots,\stbasisArg{n}{\timeWindowArg{n}{\nstepsArg{n}}} \stgenstatey + \stateInterceptSTArg{n}).%  \\
+\objectiveArgLMS{n}_{\text{D-ST}} (\stbasisArg{n}{\timeWindowArg{n}{1}} \stgenstatey + \stateInterceptSTArg{n},\ldots,\stbasisArg{n}{\timeWindowArg{n}{\nstepsArg{n}}} \stgenstatey + \stateInterceptSTArg{n}),%  \\
 %&\text{subject to } \;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateyArg{n} = \begin{cases} 
 %\mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs, \\ 
 %\mathbb{P}^n(\stateFOMArgnt{1})(0) &
 %n=1. \end{cases}
 \end{split} 
 \end{equation}
-% \begin{equation}\label{eq:obj_gen_lms_final_st}
-%\begin{split}
-%&\stgenstateArg{n} = \underset{\stgenstatey}{\text{arg\,min } }
-%\objectiveArgLMS{n} (\stbasisArg{n}{\timeWindowArg{n}{0}} \stgenstatey + \stateInterceptArg{n},\ldots,\stbasisArg{n}{\timeWindowArg{n}{\nstepsArg{n}}} \stgenstatey + \stateInterceptArg{n})  \\
-%&\text{subject to } \;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateArg{n} = \begin{cases} 
-%\mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs, \\ 
-%\mathbb{P}^n(\stateFOMArgnt{1})(0) &
-%n=1. \end{cases}\end{split} 
-%\end{equation}
-It is noted that the boundary conditions are automatically satisfied through the definition of the \spaceTimeAcronym\ trial subspace. The minimization problem~\eqref{eq:obj_gen_lms_final_st} can be solved, e.g, via the Gauss--Newton method.
+where the space--time objective function for the direct method is
+$$
+\objectiveArgLMS{n}_{\text{D-ST}}  :  (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto \objectiveArgLMS{n}(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}; \approxstateArg{\indexMappern(n,0)}{\timeWindow^{\indexMapper(n,0)}},\ldots, 
+ \approxstateArg{\indexMappern(n,-\lmsWidthArg{n}{1}+1)}{\timeWindow^{\indexMapper(n,-\lmsWidthArg{n}{1}+1)}})
+$$
+It is noted that the boundary conditions are automatically satisfied through the definition of the \spaceTimeAcronym\ trial subspace. The minimization problem~\eqref{eq:obj_gen_lms_final_st} again yields a least-squares problem.
+\begin{remark}
+For the limiting case where the window size spans the entire domain, $\DeltaSlabArg{1}\equiv T$, uniform quadrature weights are used, the trial space is set to be $\stspaceSTArg{1} = \stspaceST$, the weighting matrices $\stweightingMatArg{1} = \lspgWeightingST = \mathbf{I}$, and $\nstepsArg{1} = N_t$ time instances are employed that satisfy $\timeWindowArg{1}{i} = t^i$, $i=1,\ldots,N_t$, then $\stgenstateArg{1} =  \stgenstate_\text{ST-LSPG}$ and direct \methodAcronym\ with an \spaceTimeAcronym\ trial subspace recovers ST-LSPG. 
+\end{remark}
 
 \begin{remark}
-For the limiting case where the window size spans the entire domain, $\DeltaSlabArg{1}\equiv T$, and uniform quadrature weights are used, and the weighting matrix $\stweightingMatArg{n} = \mathbf{I}$, direct \methodAcronym\ with a \spaceTimeAcronym\ trial subspace recovers ST-LSPG with $\lspgWeightingSTArg{\cdot} = \mathbf{I}$. For equivalence conditions in the case where $\lspgWeightingSTArg{\cdot} \ne \mathbf{I}$, the objective function~\eqref{eq:obj_gen_lms_final_st} can be modified to enable weighted space--time norm. 
+To enable equivalence in the case for general $\lspgWeightingSTArg{\cdot}$, the weighting matrix $\stweightingMatArg{1}$ needs to be a time-dependent matrix function such that the objective function~\eqref{eq:obj_gen_lms_final_st} permits a modified space--time norm. This is not pursued here.
 \end{remark}
-}
+ 
+%\EP{I will rework this section depending on 4.2\\
+%Leveraging the definition of the fully discrete objective function~\eqref{eq:obj_lms}, and assuming $N \nstepsArg{n} \ge \stdimArg{n}$, \methodAcronym\ leveraging a \spaceTimeAcronym\ basis sequentially computes the generalized coordinates $\stgenstateArg{n}$, $n=1,\ldots,\nslabs$, that satisfy
+% \begin{equation}\label{eq:obj_gen_lms_final_st}
+%\begin{split}
+%& \underset{\stgenstatey}{\text{minimize } }
+%\objectiveArgLMS{n} (\stbasisArg{n}{\timeWindowArg{n}{0}} \stgenstatey + \stateInterceptSTArg{n},\ldots,\stbasisArg{n}{\timeWindowArg{n}{\nstepsArg{n}}} \stgenstatey + \stateInterceptSTArg{n}).%  \\
+%%&\text{subject to } \;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateyArg{n} = \begin{cases} 
+%%\mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs, \\ 
+%%\mathbb{P}^n(\stateFOMArgnt{1})(0) &
+%%n=1. \end{cases}
+%\end{split} 
+%\end{equation}
+%% \begin{equation}\label{eq:obj_gen_lms_final_st}
+%%\begin{split}
+%%&\stgenstateArg{n} = \underset{\stgenstatey}{\text{arg\,min } }
+%%\objectiveArgLMS{n} (\stbasisArg{n}{\timeWindowArg{n}{0}} \stgenstatey + \stateInterceptArg{n},\ldots,\stbasisArg{n}{\timeWindowArg{n}{\nstepsArg{n}}} \stgenstatey + \stateInterceptArg{n})  \\
+%%&\text{subject to } \;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateArg{n} = \begin{cases} 
+%%\mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs, \\ 
+%%\mathbb{P}^n(\stateFOMArgnt{1})(0) &
+%%n=1. \end{cases}\end{split} 
+%%\end{equation}
+%It is noted that the boundary conditions are automatically satisfied through the definition of the \spaceTimeAcronym\ trial subspace. The minimization problem~\eqref{eq:obj_gen_lms_final_st} can be solved, e.g, via the Gauss--Newton method.
+%
+%\begin{remark}
+%For the limiting case where the window size spans the entire domain, $\DeltaSlabArg{1}\equiv T$, and uniform quadrature weights are used, and the weighting matrix $\stweightingMatArg{n} = \mathbf{I}$, direct \methodAcronym\ with a \spaceTimeAcronym\ trial subspace recovers ST-LSPG with $\lspgWeightingSTArg{\cdot} = \mathbf{I}$. For equivalence conditions in the case where $\lspgWeightingSTArg{\cdot} \ne \mathbf{I}$, the objective function~\eqref{eq:obj_gen_lms_final_st} can be modified to enable weighted space--time norm. 
+%\end{remark}
+%}
 \subsection{\spaceTimeAcronym: indirect solution approach}
 As opposed to the direct approach, the indirect approach directly minimizes the continuous objective function~\eqref{eq:obj_gen_slab_spacetime} and sequentially computes solutions $\stgenstateArg{n}$, $n = 1,\ldots,\nslabs$ that satisfy
 \begin{equation}\label{eq:obj_gen_slab2}
@@ -65,7 +95,7 @@ As opposed to the direct approach, the indirect approach directly minimizes the 
 %\velocity}{\partial \stateyDiscrete} (\stbasisDotArg{n}{t} \stgenstateArg{n} +                    
 %\stateInterceptArg{n})\bigg]^T  \bigg] \stweightingMatArg{n} \bigg( \stbasisDotArg{n}{t} \stgenstateArg{n}  - \velocity (\stbasisArg{n}{t} \stgenstateArg{n} + \stateInterceptArg{n}) \bigg) dt = \bz.\end{equation}
 Numerically solving the minimization problem requires the introduction of a quadrature rule for 
-discretization of the integral. Towards this end we introduce $\ncollocSTArg{n} \ge \text{ceil}(\stdimArg{n}/ \text{Rank}(\stweightingMatOneArg{n}))$ \EP{Originally this was divided by $N$, just realized this actually shouldn't be N if we do hyper-reduction; should be something like Rank($\mathbf{W}^n)$ Agree?} collocation points over the $n$th window, $ \{ \collocPointSTArg{n}{i} \}_{i=1}^{\ncollocSTArg{n}} \subseteq [\timeStartArg{n},\timeEndArg{n}]$, $n=1,\ldots,\nslabs$. 
+discretization of the integral. Towards this end we introduce $\ncollocSTArg{n} \ge \text{ceil}(\stdimArg{n}/ \text{Rank}(\stweightingMatOneArg{n}))$ collocation points over the $n$th window, $ \{ \collocPointSTArg{n}{i} \}_{i=1}^{\ncollocSTArg{n}} \subseteq [\timeStartArg{n},\timeEndArg{n}]$, $n=1,\ldots,\nslabs$. 
 %with $\timeStartArg{n} \le \collocPointSTArg{n}{1} \le \cdots \le \collocPointSTArg{n}{\ncollocSTArg{n}} \le \timeEndArg{n}.$
 Leveraging these collocation points, the indirect method for \methodAcronym\ with an \spaceTimeAcronym\ trial subspace computes the generalized coordinates 
 $\stgenstateArg{n}$, $n=1,\ldots,\nslabs$ that satisfy
