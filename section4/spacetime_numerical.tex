@@ -3,11 +3,11 @@ We now briefly consider \spaceTimeAcronym\ trial subspaces.
 For \spaceTimeAcronym\ trial subspaces, the distinction between a direct and indirect method is less clear as the optimization variable (i.e., the generalized coordinates) are finite 
 dimensional. There is no need to transcribe an infinite dimensional optimization variable into a finite dimensional one. There is, however, still a need to develop a finite 
 dimensional representation of the objective function~\eqref{eq:obj_gen_slab}. In what follows, we describe two techniques to do this: one that works with the FOM O$\Delta$E and one that works with the FOM ODE. We associate direct methods as those 
-that work with the O$\Delta$E and indirect methods with those that work directly with the continuous ODE.  
+that work with the O$\Delta$E and indirect methods with those that work directly with the ODE.  
 
 \subsection{\spaceTimeAcronym: direct solution approach}
 The direct solution technique seeks to minimize the fully discrete objective function associated with the O$\Delta$E. For brevity, we again focus on linear multistep methods. For notational simplicity, we define an index mapping function that is 
-equivalent to $\indexMapper$, but outputs only the first argument: 
+equivalent to the mapping function $\indexMapper$, but outputs only the first argument: 
 $$\indexMappern: (n,i) \mapsto 
 \begin{cases}
 1 & n=1, \; i = 0,\\
@@ -29,12 +29,12 @@ Assuming $\text{Rank}(\stweightingMatOneArg{n})\nstepsArg{n} \ge \stdimArg{n}$, 
 \end{equation}
 where the space--time objective function for the direct method is
 $$
-\objectiveArgLMS{n}_{\text{D-ST}}  :  (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto \objectiveArgLMS{n}(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}; \approxstateArg{\indexMappern(n,0)}{\timeWindow^{\indexMapper(n,0)}},\ldots, 
- \approxstateArg{\indexMappern(n,-\lmsWidthArg{n}{1}+1)}{\timeWindow^{\indexMapper(n,-\lmsWidthArg{n}{1}+1)}})
+\objectiveArgLMS{n}_{\text{D-ST}}  :  (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto \objectiveArgLMS{n}_{\text{D}}(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}; \approxstateArg{\indexMappern(n,0)}{\timeWindow^{\indexMapper(n,0)}},\ldots, 
+ \approxstateArg{\indexMappern(n,-\lmsWidthArg{n}{1}+1)}{\timeWindow^{\indexMapper(n,-\lmsWidthArg{n}{1}+1)}}).
 $$
 It is noted that the boundary conditions are automatically satisfied through the definition of the \spaceTimeAcronym\ trial subspace. The minimization problem~\eqref{eq:obj_gen_lms_final_st} again yields a least-squares problem.
 \begin{remark}
-For the limiting case where the window size spans the entire domain, $\DeltaSlabArg{1}\equiv T$, uniform quadrature weights are used, the trial space is set to be $\stspaceSTArg{1} = \stspaceST$, the weighting matrices $\stweightingMatArg{1} = \lspgWeightingST = \mathbf{I}$, and $\nstepsArg{1} = N_t$ time instances are employed that satisfy $\timeWindowArg{1}{i} = t^i$, $i=1,\ldots,N_t$, then $\stgenstateArg{1} =  \stgenstate_\text{ST-LSPG}$ and direct \methodAcronym\ with an \spaceTimeAcronym\ trial subspace recovers ST-LSPG. 
+For the limiting case where one window comprises entire domain (i.e., $\DeltaSlabArg{1}\equiv T$), uniform quadrature weights are used, the trial space is set to be $\stspaceSTArg{1} = \stspaceST$, the weighting matrices $\stweightingMatArg{1} = \lspgWeightingST = \mathbf{I}$, and $\nstepsArg{1} = N_t$ time instances are employed that satisfy $\timeWindowArg{1}{i} = t^i$, $i=1,\ldots,N_t$, then $\stgenstateArg{1} =  \stgenstate_\text{ST-LSPG}$ and direct \methodAcronym\ with an \spaceTimeAcronym\ trial subspace recovers ST-LSPG. 
 \end{remark}
 
 \begin{remark}
