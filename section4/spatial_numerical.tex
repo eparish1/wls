@@ -15,12 +15,18 @@ $\{\timeWindowArg{n}{i}\}_{i=0}^{\nstepsArg{n}}\subseteq[\timeStartArg{n},\timeE
 $n=1,\ldots,\nslabs$ that
 satisfy 
 $\timeStartArg{n}=\timeWindowArg{n}{0} \le \cdots \le \timeWindowArg{n}{\nstepsArg{n}} 
- = \timeEndArg{n}$ and, for notational purposes, we define $\timeWindowArg{n}{i} = \timeWindowArg{n-1}{\nstepsArg{n-1}+i}$ for $i < 0$ and $n=2,\ldots,\nslabs$.
-%\KTC{use cdots, not
+ = \timeEndArg{n}$. %\KTC{use cdots, not
 %hdots or ldots. Don't use $\defeq$ for the first and last times; these are
 %just equalities, i.e., you happen to set them equal to those values, but they
 %aren't identically the same:}
 Figure~\ref{fig:slab_fig2} depicts such a discretization.
+For the purposes of indexing between different windows, we additionally define a function:
+$$\indexMapper: (n,i) \mapsto 
+\begin{cases}
+1,0 & n=1, \; i = 0,\\
+n,i & n \ge 1, \; i > 0, \\
+\indexMapper(n-1,\nstepsArg{n-1}+i) & n > 1, \; i \le 0.
+\end{cases}$$
 We now outline the direct solution approach for linear-multistep schemes; we note that the formulation for
 other time-integration methods (e.g., Runge--Kutta) follows closely. 
 \begin{figure} 
@@ -49,7 +55,7 @@ other time-integration methods (e.g., Runge--Kutta) follows closely.
 %%\timeEndArg{n}
 %\end{align*}
 \subsubsection{Linear multistep schemes}
-Linear multistep schemes approximate the solution at time instance $\timeWindowArg{n}{i}$ using the previous $\lmsWidthArg{n}{i}$ time instances, where $\lmsWidthArg{n}{i}$ (with $\lmsWidthArg{1}{1} = 1$) denotes the number of time steps employed by the scheme at the $i$th time instance over the $n$th window. 
+Linear multistep schemes approximate the solution at time instance $\timeWindowArg{n}{i}$ using the previous $\lmsWidthArg{n}{i}$ time instances, where $\lmsWidthArg{n}{i}$ denotes the number of time steps employed by the scheme at the $i$th time instance over the $n$th window. 
 %Discretizing the FOM ODE~\eqref{eq:FOM} with a linear $k$-step scheme at the $i$th time-instance over the $n$th time slab yields,
 %\begin{equation}\label{eq:kstep}
 %\sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha_j \stateFOMDiscreteArg{n,i-j} = \Delta t^{n,i} \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta_j \velocity(\stateFOMDiscreteArg{n,i-j}),
@@ -60,19 +66,19 @@ Employing a linear multistep method to discretize the FOM ODE yields the FOM O$\
 %% $\stateFOMDiscreteLMSArg{n}{i} = \stateFOMDiscreteLMSArg{n-1}{\nstepsArg{n-1}+i}$, along with $\timeWindowArg{n}{i} = \timeWindowArg{n-1}{\nstepsArg{n-1}+i}$.
 %}, 
 \begin{align*}
-&\residLMSWArg{n}{i} (\stateFOMDiscreteLMSArg{n}{i};\stateFOMDiscreteLMSArg{n}{i-1},\ldots,\stateFOMDiscreteLMSArg{n}{i-\lmsWidthArg{n}{i}}) = \bz, \qquad i=1,\ldots,\nstepsArg{n}, \\
-&\stateFOMDiscreteLMSArg{n}{i} = 
-\begin{cases}
-\stateFOMDiscreteLMSArg{n-1}{\nstepsArg{n-1}+i} & n = 2,\ldots,\nslabs, \; i \le 0 \\
-\stateFOMIC & n=1, \; i=0,\end{cases}
+&\residLMSWArg{n}{i} (\stateFOMDiscreteArg{n,i};\stateFOMDiscreteLMSArg{n}{i-1},\ldots,\stateFOMDiscreteLMSArg{n}{i-\lmsWidthArg{n}{i}}) = \bz, \qquad i=1,\ldots,\nstepsArg{n}, \\
+&\stateFOMDiscreteArg{1,0} = \stateFOMIC. 
+%\begin{cases}
+%\stateFOMDiscreteLMSArg{n-1}{0} & n = 2,\ldots,\nslabs \\
+%\stateFOMIC & n=1, \end{cases}
 \end{align*}
-where $\stateFOMDiscreteLMSArg{n}{i} (\approx
+where $\stateFOMDiscreteArg{n,i} (\approx
 \stateFOMArg{}{\timeWindowArg{n}{i}})
 \in \RR{\fomdim}$ and $\residLMSWArg{n}{i}$ denotes the FOM O$\Delta$E
 residual over the $i$th time instance of the $n$th window  
 defined as
 \begin{align*}
-\residLMSWArg{n}{i} &: (\stateyDiscreteArgnt{i};\stateyDiscreteArgnt{i-1},\ldots,\stateyDiscreteArgnt{i-\lmsWidthArg{n}{i}}) \mapsto  \frac{1}{\Delta t^{n,i}} \sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha^{n,i}_j \stateyDiscreteArgnt{i-j} -  \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta^{n,i}_j \velocity(\stateyDiscreteArgnt{i-j},\timeWindowArg{n}{i-j}) \\
+\residLMSWArg{n}{i} &: (\stateyDiscreteArgnt{i};\stateyDiscreteArgnt{i-1},\ldots,\stateyDiscreteArgnt{i-\lmsWidthArg{n}{i}}) \mapsto  \frac{1}{\Delta t^{n,i}} \sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha^{n,i}_j \stateyDiscreteArgnt{i-j} -  \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta^{n,i}_j \velocity(\stateyDiscreteArgnt{i-j},\timeWindow^{\indexMapper(n,i-j)}) \\
                &: \RR{\fomdim} \otimes \RR{\lmsWidthArg{n}{i}+1} \rightarrow \RR{\fomdim}. 
 \end{align*}
 Here, $\Delta t^{n,i} \defeq \timeWindowArg{n}{i} - \timeWindowArg{n}{i-1}$
@@ -103,7 +109,7 @@ define the specific type of multistep scheme.
 
 \methodAcronym\ with the direct approach and a linear multistep method sequentially computes the solutions
 $\approxstateDiscreteArg{n,1},\ldots,\approxstateDiscreteArg{n,\nstepsArg{n}}$,
-$n=1,\ldots,\nslabs$ that satisfy
+$n=1,\ldots,\nslabs$, that satisfy
 %	\KTC{What is $\genstate^{n-1}(\timeEndArg{n-1} ) $ doing here? Two problems
 %	(1) there is no notion of a generalized coordinate $\genstate$ yet, and (2)
 %	this should be the discrete solution, not the exact solution evaluated at
@@ -131,13 +137,13 @@ where $\quadWeightsLMSScalarArg{n}{i} \in \RRplus$ are quadrature weights, $\sta
 \begin{equation}\label{eq:wls_spatial_direct_args}
 \stateyDiscreteArgnt{n,i}  \equiv 
 \begin{cases}
-\projectorSpatialArg{n}(\approxstateDiscreteArg{n-1,\nstepsArg{n-1}+i})  & n = 2,\ldots,\nslabs,  \\
-\projectorSpatialArg{1}(\stateFOMIC)  & n = 1  \\
+\projectorSpatialArg{n}(\approxstateDiscreteArg{\indexMapper(n,i)})  & n = 2,\ldots,\nslabs,  \\
+\projectorSpatialArg{1}(\stateFOMIC)  & n = 1, \\
 %\basisspaceArg{n} \basisspaceTArg{n} (\approxstateDiscreteArg{n-1,\nstepsArg{n-1}+i} - \stateInterceptArg{n}) + \stateInterceptArg{n} & n = 2,\ldots,\nslabs,  \\
 %\basisspaceArg{n} \basisspaceTArg{n} (\stateFOMIC - \stateInterceptArg{n}) + \stateInterceptArg{n} & n = 1.
 \end{cases}
 \end{equation}
-with 
+where $\projectorSpatialArg{n} : \RR{\fomdim} \rightarrow \trialspaceArg{n}$ is the $\elltwo$-orthogonal projector and is defined as 
 $$\projectorSpatialArg{n} : \stateyDiscreteArgnt{} \mapsto  \basisspaceArg{n}\basisspaceTArg{n} (\stateyDiscreteArgnt{} - \stateInterceptArg{n}) + \stateInterceptArg{n} .$$
 Note that the boundary conditions are automatically satisfied by Eq.~\eqref{eq:wls_spatial_direct_args}.
 
@@ -160,7 +166,7 @@ Note that the boundary conditions are automatically satisfied by Eq.~\eqref{eq:w
 	$\genstateDiscreteArg{n,1},\ldots,\genstateDiscreteArg{n,\nstepsArg{n}}$,
 	$n=1,\ldots,\nslabs$ 
 with $\genstateDiscreteArg{n,i}(\approx
-	\genstateArgnt{n}(\timeWindowArg{n}{i}))\in\RR{\romdim}$
+	\genstateArgnt{n}(\timeWindowArg{n}{i}))\in\RR{\romdimArg{n}}$
 	that satisfy
 \begin{equation}\label{eq:obj_gen_lms_final}
 \begin{split}
@@ -199,11 +205,7 @@ quadrature weights are used, a uniform trial space is employed (i.e., $\trialspa
 $\stweightingMatOneArg{n} = \lspgWeightingArg{}, n=1,\ldots,\nslabs$, and the time instances $\timeWindowArg{n}{1} = t^n$, $n=1,\ldots,\nslabs$, then 
 $\approxstateDiscreteArg{n,1}  = \approxstateLSPG^n$, $n=1,\ldots,\nslabs$ and  
 \methodAcronym\ with \spatialAcronym\ trial
-	subspaces solved via the direct approach recovers the LSPG approach. \KTC{Not exactly. To
-	make this LSPG as presented earlier, also require the time grid here to
-	align with the time grid used for time integration earlier. Also, this
-	formulation requires allowing the stencil to go back to time steps at
-	previous windows.}  
+	subspaces solved via the direct approach recovers the LSPG approach. 
 \end{remark} 
 \subsubsection{Solution to the least-squares problem through the Gauss--Newton method}
 	\KTC{If the dynamics are linear, doesn't this just yield a linear
@@ -234,13 +236,20 @@ included in the first residual here.}
 \residLMSSlabArg{n} : \genstatecollocMatySlabArg{} \mapsto \begin{bmatrix}
  \sqrt{\frac{\quadWeightsLMSScalarArg{n}{1}}{2}} \stweightingMatOneArg{n} \residLMSArg{n,1}( \basisspaceArg{n} \genstateyDiscreteArgnt{1} + \stateInterceptArg{n}; 
 %\residLMSArg{n,0}( \basisspaceArg{n} \genstateyDiscreteArgnt{0} + \stateInterceptArg{n}),
-\projectorSpatialArg{n}( \approxstateDiscreteArg{n,0}),
-\ldots , \projectorSpatialArg{n}( \approxstateDiscreteArg{n,1 - \lmsWidthArg{n}{1} } )  ) \\
+\projectorSpatialArg{n}( \approxstateDiscreteArg{\indexMapper(n,0)}),
+\ldots , \projectorSpatialArg{n}( \approxstateDiscreteArg{\indexMapper(n,1 - \lmsWidthArg{n}{1}) } )  ) \\
 \vdots \\
  \sqrt{\frac{\quadWeightsLMSScalarArg{n}{\nstepsArg{n}}}{2}} \stweightingMatOneArg{n} \residLMSArg{n,\nstepsArg{n}}( \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n}} + \stateInterceptArg{n}; \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n}-1} + \stateInterceptArg{n} ,  \ldots,\projectorSpatialArg{n}( \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n} - \lmsWidthArg{n}{\nstepsArg{n}} } + \stateInterceptArg{n} )) \\
 \end{bmatrix},
 \end{equation*}
-where $\genstatecollocMatySlabArg{} \defeq \unroll (\genstateyDiscreteArg{1},\ldots,\genstateyDiscreteArg{\nstepsArg{n}} ).$
+where $\genstatecollocMatySlabArg{} \defeq \unroll (\genstateyDiscreteArg{1},\ldots,\genstateyDiscreteArg{\nstepsArg{n}} )$ and, for $i \le 0$,
+\begin{equation}\label{eq:wls_genspatial_direct_args}
+\genstateyDiscreteArgnt{n,i}  \equiv 
+\begin{cases}
+\genstateDiscreteArg{\indexMapper(n,i)}  & n = 2,\ldots,\nslabs,  \\
+\genstateICOne  & n = 1. 
+\end{cases}
+\end{equation}
 It is worth noting that, by design, 
 \begin{equation*}
 \objectiveArgLMS{n} \bigg( \basisspaceArg{n} \genstateDiscreteArg{n,1} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateDiscreteArg{n,\nstepsArg{n}} + \stateInterceptArg{n} \ \bigg) 

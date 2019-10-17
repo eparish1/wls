@@ -401,8 +401,9 @@
 \newcommand{\stateFOMDiscrete}{{\mathbf{x}}}
 \newcommand{\stateFOMDiscreteArg}[1]{\stateFOMDiscrete^{#1}}
 \newcommand{\stateFOMDiscreteLMS}{{\mathbf{x}}}
-\newcommand{\stateFOMDiscreteLMSArg}[2]{\stateFOMDiscrete^{#1,#2}}
+\newcommand{\stateFOMDiscreteLMSArg}[2]{\stateFOMDiscrete^{\indexMapper(#1,#2)}}
 
+\newcommand{\indexMapper}{w}
 
 \newcommand{\stateyArg}[2]{\statey^{#1}(#2)}
 \newcommand{\stateArgnt}[1]{\state^{#1}}
@@ -484,9 +485,9 @@
 
 
 \newcommand{\stspaceBoundStartArg}[1]{\stspaceBoundStart^{#1}} 
-\newcommand{\stspaceBoundStart}{\mathcal{B}_{s}} 
-\newcommand{\stspaceBoundEndArg}[1]{\stspaceBoundEnd^{#1}} 
-\newcommand{\stspaceBoundEnd}{\mathcal{B}_{e}} 
+\newcommand{\stspaceBoundStart}{\mathcal{B}} 
+%\newcommand{\stspaceBoundEndArg}[1]{\stspaceBoundEnd^{#1}} 
+%\newcommand{\stspaceBoundEnd}{\mathcal{B}_{e}} 
 
 \newcommand{\stspaceBoundArg}[1]{\stspaceBound^{#1}} 
 \newcommand{\stspaceBound}{\mathcal{B}\timeSpace} 
