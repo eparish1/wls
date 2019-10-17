@@ -186,6 +186,8 @@ quadrature weights are used, \methodAcronym\ with \spatialAcronym\ trial
 	previous windows.} 
 \end{remark} 
 \subsubsection{Solution to the least-squares problem through the Gauss--Newton method}
+	\KTC{I recommend rewriting this section with several important things in
+	mind. We can discuss.}
 	\KTC{If the dynamics are linear, doesn't this just yield a linear
 	least-squares problem that can be solved directly? We need to present this
 	more clearly.}
@@ -274,9 +276,9 @@ reducing this computational burden exist; Jacobian-free Newton-Krylov
 \Output{Solution to least squares problem, $\genstatecollocMatSlabArg{n}$} 
 \textbf{Online Steps}: \\
 $\text{converged} \leftarrow \text{false}$ \Comment{Set convergence checker} \\
+$\genstatecollocMatSlabArg{n}_0 \leftarrow \unroll(\genstateGuessDiscreteArg{n,1}{0},\ldots,\genstateGuessDiscreteArg{n,\nstepsArg{n}}{0})$ \Comment{Assemble generalized coordinates over window} \\
 $k \leftarrow 0$ \Comment{Set counter}\\
-$\genstatecollocMatSlabArg{n}_k \leftarrow \unroll(\genstateGuessDiscreteArg{n,1}{0},\ldots,\genstateGuessDiscreteArg{n,\nstepsArg{n}}{0})$ \Comment{Assemble generalized coordinates over window} \\
-\While{\text{converged} == \text{false}}
+\While{\text{not converged}}
 {
 %\For{$i=1,\hdots,\nstepsArg{n}$}{
 %  \For{$j=1,\hdots,\ncollocArg{n}{i}$}{
@@ -305,13 +307,16 @@ $k\leftarrow k+1$
 %\input{direct_collocation}
 
 \subsection{\spatialAcronym\ trial subspaces: indirect solution approach}\label{sec:indirect}
+\KTC{This is a fantastic insight and a really great contribution!}
 In contrast to the direct approach,
 indirect methods ``indirectly" solve the minimization
-problem~\eqref{eq:tclsrm} by solving the Euler--Lagrange equations. The
-system given by the Euler--Lagrange equations~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_adjoint} comprises a coupled two-point boundary value
-problem. A variety of techniques have
-been devised to solve two-point boundary value problems of this type. These
-techniques include shooting methods, multiple shooting
+problem~\eqref{eq:tclsrm} by solving the Euler--Lagrange
+equations~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_adjoint} associated with
+stationarity. The
+system associated with the Euler--Lagrange equations comprises a coupled two-point boundary value
+problem. Several techniques have
+been devised to solve such problems, 
+including shooting methods, multiple shooting
 methods~\cite{multiple_shooting}, and the forward--backward sweep
 method~\cite{fbs} (FBSM).  This work explores using the FBSM. 
 
