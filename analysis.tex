@@ -4,15 +4,7 @@ between \methodAcronym\  with (uniform) \spatialAcronym\ trial subspaces and the
 %\item For direct methods leveraging uniform quadrature for discretization of the objective functional, the \methodAcronym\ approach recovers the LSPG approach when 
 %the time slab corresponds to a single time-step. 
 %\end{enumerate}
-Next, \textit{a priori} error bounds are derived for autonomous systems. It is shown that:
-\begin{enumerate}
-\item The error in the \methodAcronym-ROM is bounded \textit{a priori} by a recursive summation of the integrated FOM ODE residual evaluated at the FOM state projected onto the trial subspace. 
-\item For the case where only 
-one time window is used, i.e., the residual is minimized over all of space and time, the error in the \methodAcronym-ROM is bounded \textit{a priori} by a single 
-integration of the FOM ODE residual evaluated at the FOM state projected onto the trial subspace. 
-\end{enumerate}
-The remainder of this section details these results. 
-
+Next, \textit{a priori} error bounds are derived for autonomous systems. 
 \subsection{Equivalence conditions}
 \begin{theorem}\label{theorem:galerkin_equiv}\textit{(Galerkin equivalence)}
 For sequential minimization over infinitesimal time windows and uniform \spatialAcronym\ trial spaces $\trialspaceArg{n} = \trialspace$, $n=1,\ldots,\nslabs$, the \methodAcronym\ approach (weakly) recovers the Galerkin approach.
@@ -30,16 +22,16 @@ The \methodAcronym\ approach with uniform \spatialAcronym\ subspaces comprises s
 \genstateIC & n=1, \end{cases} 
 \end{split}
 \end{equation}
-for $n = 1,\ldots,\nslabs$. Letting $\minintegrandArg{n}(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy)$ denote the integrand associated with the objective function~\eqref{eq:obj_proof} (as defined in~\eqref{eq:integrand}) and following the derivation of the Euler--Lagrange equations presented in Appendix~\ref{appendix:eulerlagrange} leads to the sequence of systems to be solved for $\genstate^n$ (and, implicitly, $\genstateDotArgnt{n}$):
+for $n = 1,\ldots,\nslabs$. Letting $\minintegrandArg{n}(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy)$ denote the integrand associated with the objective function~\eqref{eq:obj_proof} (as defined in~\eqref{eq:integrand}) and following the derivation of the Euler--Lagrange equations presented in Appendix~\ref{appendix:eulerlagrange} leads to the sequence of systems to be solved for $\genstate^n$ (and, implicitly, $\genstateDotArgnt{n}$) over $t \in [\timeStartArg{n},\timeEndArg{n}]$:
 \begin{equation}\label{eq:g_equiv_1}
- \int_{\timeStartArg{n}}^{\timeEndArg{n}} \bigg( \bigg[ \frac{\partial \minintegrandArg{n}  }{\partial \genstateyDiscrete }(\genstateArg{n}{t},\genstateDotArg{n}{t},t) \bigg]  \variationArgntt{n}{t}  - \bigg[ \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDot} (\genstateArg{n}{t},\genstateDotArg{n}{t},t ) \bigg] \variationArgntt{n}{t} \bigg)dt  = 0, \qquad n = 1,\ldots,\nslabs,
+ \int_{\timeStartArg{n}}^{\timeEndArg{n}} \bigg( \bigg[ \frac{\partial \minintegrandArg{n}  }{\partial \genstateyDiscrete }(\genstateArg{n}{t},\genstateDotArg{n}{t},t) \bigg]  \variationArgntt{n}{t}  - \bigg[ \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDot} (\genstateArg{n}{t},\genstateDotArg{n}{t},t ) \bigg] \variationArgntt{n}{t} \bigg)dt  = 0,
 \end{equation}
 with the boundary conditions
 \begin{equation*}
  \genstate^n(\timeStartArg{n})  = 
 \begin{cases}
 \genstate^{n-1}(\timeEndArg{n-1}) & n=2,\ldots,\nslabs, \\
-\genstateIC & n=1, \end{cases}, \qquad 
+\genstateIC & n=1, \end{cases} \qquad 
 \bigg[\frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDot}(\genstateArg{n}{\timeEndArg{n}},\genstateDotArg{n}{\timeEndArg{n}},\timeEndArg{n}) \bigg]^T= \boldsymbol 0.
 \end{equation*}
 In the above, $\variationArgn{n}: [\timeStartArg{n},\timeEndArg{n}] \rightarrow \RR{\romdim}$ is an an arbitrary function that satisifes $\variationArgntt{n}{\timeStartArg{n}} = \bz$. 
@@ -53,7 +45,7 @@ Taking the limit of $\zeta \rightarrow 0^+$, we collapse the window size to obta
  \genstateArg{n}{\zeta(n-1)} = 
 \begin{cases}
 \genstate^{n-1}(\zeta(n-1)) & n=2,\ldots,\nslabs,\\
-\genstateIC & n=1, \end{cases}, \qquad
+\genstateIC & n=1, \end{cases} \qquad
 %\genstate^{n-1}(\zeta n), \qquad \frac{\partial \integrand}{\partial \dot{\genstate}^n} \bigg|_{t= \zeta n} = \boldsymbol 0, \qquad n = 1,2,\nslabs,
 \bigg[ \frac{\partial \minintegrandArg{n}}{\partial \dot{\genstateyDiscrete}}(\genstateArg{n}{\zeta n},\genstateDotArg{n}{\zeta n},\zeta n) \bigg]^T= \boldsymbol 0,
 \end{equation*}
@@ -73,7 +65,7 @@ we then have
 \begin{equation*}
 \basisspace^T \stweightingMatArgt{}{\zeta n} \basisspace \genstateDotArg{n}{\zeta n} -  \basisspace^T \stweightingMatArgt{}{\zeta n} \velocity(\basisspace \genstateArg{n}{\zeta n} + \stateIntercept ,\zeta n) = \bz, \qquad n=1,\ldots,\nslabs, 
 \end{equation*}
-with the boundary conditionswith the boundary conditions  $\genstateArg{n}{\zeta (n-1)} = \genstateArg{n-1}{\zeta(n-1)}$ for $n=2,\ldots,\nslabs$ and $\genstateArg{1}{0} = \genstateIC $. %Left multiplying by $\mass^{-1}$ yields,
+with the boundary conditions  $\genstateArg{n}{\zeta (n-1)} = \genstateArg{n-1}{\zeta(n-1)}$ for $n=2,\ldots,\nslabs$ and $\genstateArg{1}{0} = \genstateIC $. %Left multiplying by $\mass^{-1}$ yields,
 %\begin{equation*}
 %\genstateDotArg{n}{\timeEndArg{n}} -  \mass^{-1} \basisspace^T \stweightingMatArg{n} \velocity(\basisspace \genstateArg{n}{\timeEndArg{n}} + \stateIntercept ,\timeEndArg{n}) = \bz, \qquad n=1,2,\ldots,\nslabs. 
 %\end{equation*}
@@ -129,12 +121,12 @@ In the limit of $\zeta \rightarrow 0$ (and hence $\nslabs \rightarrow \infty$) t
 %\end{remark} 
 
 \subsection{\textit{A priori} error bounds}
-\textit{A priori} error bounds are derived for \spatialAcronym trial subspaces in the case that the velocity is autonomous, $\velocity(\cdot,t) \equiv \velocity(\cdot)$, and no weighting matrix is employed, $\stweightingMat = \mathbf{I}$.
+\textit{A priori} error bounds are derived for \spatialAcronym\ trial subspaces in the case that the velocity is autonomous, $\velocity(\cdot,t) \equiv \velocity(\cdot)$, and no weighting matrix is employed, $\stweightingMat = \mathbf{I}$.
 %We define the residual as,
 %$$\resid(\state) = \dot{\state} - \velocity(\state).$$
-In the following,  $\stateFOMSolArg{n}$ is the state implicitly defined as the solution to full-order model, $\stateROMSolArg{n}$ is the state implicitly defined as the solution to the \methodAcronym-ROM, $\adjointROMSolArg{n}$ is the costate solution to the \methodAcronym-ROM, and the error is defined as
+In the following,  $\stateFOMSolArg{n}$ is the state implicitly defined as the solution to full-order model, $\stateROMSolArg{n}$ is the state implicitly defined as the solution to the \methodAcronym-ROM, $\adjointROMSolArg{n}$ is the costate solution to the \methodAcronymROM, and the error is defined as
 $$\errorArg{n} \defeq \stateFOMSolArg{n} - \stateROMSolArg{n}.$$
-Additionally, we denote $\stateFOMProjSolArg{n}$ to be the $L^2$ optimal solution
+Additionally, we denote $\stateFOMProjSolArg{n}$ to be the $\elltwo$ optimal solution
 $$\stateFOMProjSolArg{n} = \underset{\statey \in
 \stspace^n}{\text{arg}\,\text{min } } \intSlabArg{n} \norm{ \statey(t) - \stateFOMSolArgt{n}{t} }^2.$$ 
 We begin by stating assumptions that will be used in the subsequent derivations.
@@ -149,7 +141,7 @@ where
 \end{align*}
 
 \item \textbf{A2:} We assume inverse Lipshitz continuity on the integrated residual for two trajectories starting from the FOM solution over the $n$th window:
-$\forall \statew,\statey \in \stspaceArg{n}_*, \stspaceArg{n}_* = \{ \statew \in \stspaceArg{n} | \statew(\timeStartArg{n}) = \stateFOMArg{}{\timeStartArg{n}} \}$ we assume 
+$\forall \statew,\statey \in \stspaceArg{n}_*, \stspaceArg{n}_* = \{ \statew \in \RR{\fomdim} \otimes \timeSpaceArg{n} | \statew(\timeStartArg{n}) = \stateFOMArg{}{\timeStartArg{n}} \}$ we assume 
 %$\forall \statew,\statey$ with $\statew(\timeStartArg{n} ) = \statey(\timeStartArg{n})$ \EP{Put this in  a set maybe? I think that this, along with the trajectory being ''sufficiently smooth", should be enough to avoid the case where we have two different trajectories that exactly satisfy the residual. Something like $\statew,\statey \in \stspaceArg{n}_*, \stspaceArg{n}_* = \{ \statew \in \stspaceArg{n} | \statew(\timeStartArg{n}) = \mathbf{g} \}$ for arbitrary $\mathbf{g}$},
 $$  \intSlabArg{n} \norm{\statew(t) - \statey(t)} dt \le  \lipshitziArg{n} \intSlabArg{n} \norm{\resid(\statew,t) - \resid(\statey,t) } dt.$$
 \item \textbf{A3:} We assume that the FOM solution at the start of each window lies within the range of the trial subspace:
