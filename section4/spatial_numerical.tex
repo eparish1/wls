@@ -55,7 +55,7 @@ other time-integration methods (e.g., Runge--Kutta) follows closely.
 %%\timeEndArg{n}
 %\end{align*}
 \subsubsection{Linear multistep schemes}
-Linear multistep schemes approximate the solution at time instance $\timeWindowArg{n}{i}$ using the previous $\lmsWidthArg{n}{i}$ time instances, where $\lmsWidthArg{n}{i}$ denotes the number of time steps employed by the scheme at the $i$th time instance over the $n$th window. 
+Linear multistep schemes approximate the solution at time instance $\timeWindowArg{n}{i}$ using the previous $\lmsWidthArg{n}{i}$ time instances, where $\lmsWidthArg{n}{i}$ denotes the number of time steps employed by the scheme at the $i$th time instance of the $n$th window. 
 %Discretizing the FOM ODE~\eqref{eq:FOM} with a linear $k$-step scheme at the $i$th time-instance over the $n$th time slab yields,
 %\begin{equation}\label{eq:kstep}
 %\sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha_j \stateFOMDiscreteArg{n,i-j} = \Delta t^{n,i} \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta_j \velocity(\stateFOMDiscreteArg{n,i-j}),
@@ -78,13 +78,13 @@ In the above, $\stateFOMDiscreteArg{n,i} (\approx
 residual over the $i$th time instance of the $n$th window  
 defined as
 \begin{align*}
-\residLMSWArg{n}{i} &: (\stateyDiscreteArgnt{i};\stateyDiscreteArgnt{i-1},\ldots,\stateyDiscreteArgnt{i-\lmsWidthArg{n}{i}}) \mapsto  \frac{1}{\Delta t^{n,i}} \sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha^{n,i}_j \stateyDiscreteArgnt{i-j} -  \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta^{n,i}_j \velocity(\stateyDiscreteArgnt{i-j},\timeWindow^{\indexMapper(n,i-j)}) \\
+\residLMSWArg{n}{i} &: (\stateyDiscreteArgnt{i};\stateyDiscreteArgnt{i-1},\ldots,\stateyDiscreteArgnt{i-\lmsWidthArg{n}{i}}) \mapsto  \frac{1}{\Delta t^{n,i}} \sum_{j=0}^{\lmsWidthArg{n}{i}} \alpha^{n,i}_j \stateyDiscreteArgnt{i-j} -  \sum_{j=0}^{\lmsWidthArg{n}{i}} \beta^{n,i}_j \velocity(\stateyDiscreteArgnt{i-j},\timeWindow^{\indexMapper(n,i-j)}), \\
                &: \RR{\fomdim} \otimes \RR{\lmsWidthArg{n}{i}+1} \rightarrow \RR{\fomdim}. 
 \end{align*}
 Here, $\Delta t^{n,i} \defeq \timeWindowArg{n}{i} - \timeWindowArg{n}{i-1}$
 denotes the time step, and
 $\alpha^{n,i}_j,\beta^{n,i}_j\in\RR{}$ denote coefficients that 
-define the specific type of multistep scheme. 
+define the specific type of multistep scheme at the $i$th time instance of the $n$th window. 
 %\begin{remark}\label{remark:LMS}
 %For notational simplicity, we assume the linear multistep method employs time
 %	instances from only within the current time window. In general, the linear
@@ -126,15 +126,19 @@ $n=1,\ldots,\nslabs$, that satisfy
 %	this should be the discrete solution, not the exact solution evaluated at
 %	the final time.} \EP{You are correct, I think there is an error now in the minimize term though. It was $\in \trialspace\otimes \RR{\lmsWidthArg{n}{i}+1}$, it should be $\trialspace\otimes \RR{\nstepsArg{n}+1}$}
 \begin{align*}
-	&\underset{(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \in \trialspace\otimes \RR{\nstepsArg{n}}}{\text{minimize } }
+	&\underset{(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \in ( \trialspace + \stateInterceptArg{n}) \otimes \RR{\nstepsArg{n}}}{\text{minimize } }
 \objectiveArgLMS{n}_{\text{D-S}} (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}), 
 %%& \text{subject to} \hspace{0.2 in}  \stateyDiscreteArg{0} =
 %%\begin{cases} \basisspaceArg{n} \spatialICDiscrete + \stateInterceptArg{n}& n = 2,\ldots,\nslabs,\\
 %\basisspaceArg{1} \genstateICOne  + \stateInterceptArg{1}& n=1. \end{cases} 
 \end{align*}
 where
-$$\objectiveArgLMS{n}_{\text{D-S}} :  (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto \objectiveArgLMS{n}(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}; \projectorSpatialArg{n}(\approxstateDiscreteArg{\indexMapper(n,0)}),\ldots,\projectorSpatialArg{n}(\approxstateDiscreteArg{\indexMapper(n,-\lmsWidthArg{n}+1)})),
-$$
+\begin{equation*}
+\begin{split}
+\objectiveArgLMS{n}_{\text{D-S}} &\vcentcolon  (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto \objectiveArgLMS{n}(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}; \projectorSpatialArg{n}(\approxstateDiscreteArg{\indexMapper(n,0)}),\ldots,\projectorSpatialArg{n}(\approxstateDiscreteArg{\indexMapper(n,-\lmsWidthArg{n}{1}+1)})), \\
+&\vcentcolon \RR{\fomdim} \otimes \RR{\nstepsArg{n}} \rightarrow \RR{}_+,
+\end{split}
+\end{equation*}
 and $\projectorSpatialArg{n} : \RR{\fomdim} \rightarrow \trialspaceArg{n}$ is the $\elltwo$-orthogonal projector 
 $$\projectorSpatialArg{n} : \stateyDiscreteArgnt{} \mapsto  \basisspaceArg{n}\basisspaceTArg{n} (\stateyDiscreteArgnt{} - \stateInterceptArg{n}) + \stateInterceptArg{n} .$$
 We additionally set $\approxstateDiscreteArg{1,0} = \projectorSpatialArg{n}(\stateFOMIC).
@@ -154,7 +158,7 @@ $
 %\begin{cases} \approxstateDiscreteArg{n-1,\nstepsArg{n-1}} & n = 2,\ldots,\nslabs,\\
 %\approxstateIC & n=1. \end{cases} \end{align*}
 
-Equivalently, \methodAcronym\ sequentially computes the generalized
+Equivalently, \methodAcronym\ with the direct approach and a linear multistep method sequentially computes the generalized
 	coordinates
 	$\genstateDiscreteArg{n,1},\ldots,\genstateDiscreteArg{n,\nstepsArg{n}}$,
 	$n=1,\ldots,\nslabs$ 
@@ -194,7 +198,7 @@ backward Euler method is used to discretize the FOM ODE, then a backward Euler m
 
 \begin{remark}
 For the limiting case where $\nstepsArg{n} = 1$, $n=1,\ldots,\nslabs$ such that the window size is equivalent to the time step (i.e., $\DeltaSlabArg{n} = \timeWindowArg{n}{1} - \timeWindowArg{n}{0}$), uniform 
-quadrature weights are used, a uniform trial space is employed (i.e., $\trialspaceArg{n} = \trialspace, n=1,\ldots,\nslabs$), the weighting matrices are taken to be
+quadrature weights are used, a uniform trial space is employed (i.e., $\trialspaceArg{n} = \trialspace$ and $\stateInterceptArg{n} = \stateInterceptArg{}, n=1,\ldots,\nslabs$), the weighting matrices are taken to be
 $\stweightingMatOneArg{n} = \lspgWeightingArg{}, n=1,\ldots,\nslabs$, and the time instances $\timeWindowArg{n}{1} = t^n$, $n=1,\ldots,\nslabs$, then 
 $\approxstateDiscreteArg{n,1}  = \approxstateLSPG^n$, $n=1,\ldots,\nslabs$ and  
 \methodAcronym\ with \spatialAcronym\ trial
@@ -251,9 +255,9 @@ It is worth noting that, by design,
 =
 \bigg[\residLMSSlabArg{n}  (\genstatecollocMatSlabArg{n}) \bigg]^T \bigg[ \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n}) \bigg].
 \end{equation*} 
-Using these definitions, Algorithm~\ref{alg:colloc_gn} presents the standard Gauss--Newton method. The algorithm consists of three fundamental steps: (1) compute the FOM O$\Delta$E residual given the current guess, (2) compute the Jacobian of the residual over the time window and form the normal equations, and (3) solve the normal equations and update the state. 
+Using these definitions, Algorithm~\ref{alg:colloc_gn} presents the standard Gauss--Newton method. The algorithm consists of three fundamental steps: (1) compute the FOM O$\Delta$E residual given the current guess, (2) compute the Jacobian of the residual over the time window and (3) solve the linear least-squares problem and update the guess. 
 
-The practical implementation of the Gauss--Newton algorithm requires an efficient method for computing the Jacobian of the residual over the time window. In particular, it is important to note that for linear multistep methods (and many other time marching schemes) the Jacobian of the residual over the time window will an almost block-diagonal 
+The practical implementation of the Gauss--Newton algorithm requires an efficient method for computing the Jacobian of the residual over the time window. In particular, it is important to note that for linear multistep methods (and many other time marching schemes) the Jacobian of the residual over the time window will yield an almost block-diagonal 
 sparse matrix with the sparsity pattern
 \begin{equation*}
 \frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{}}(\genstatecollocMatSlabArg{n})  =
@@ -275,8 +279,6 @@ sparse matrix with the sparsity pattern
 This sparsity pattern can be leveraged to assemble the Jacobian of the residual over the time window from Jacobians of the residual at single time instances. 
 Further, for solution techniques based on the normal equations, one can leverage the sparsity pattern 
 to efficiently compute the Jacobian matrix--matrix product.
-\KTC{We should never be solving the normal equations. This squares the
-condition number!}
 It is also worth noting that the 
 normal equations will comprise a banded block system, this can be leveraged to speed up the linear solves at each Gauss--Newton iteration.
 
