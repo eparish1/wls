@@ -763,7 +763,7 @@ Algorithm~\ref{alg:pod} presents the algorithm for computing the trial basis via
 %\newline
 \textbf{Output:} POD Basis $\basisspace \in \mathbb{V}_{K}(\RR{N})$ \;
 %\newline
-Steps:
+\textbf{Steps:}
 \begin{enumerate}
     \item Solve FOM O$\Delta$E and collect solutions into snapshot matrix
 $$\mathbf{S}(N_{\text{skip}}) \defeq \begin{bmatrix} \stateFOMDiscreteArg{0} - \stateInterceptArg{n} & \stateFOMDiscreteArg{N_{\text{skip}}} - \stateInterceptArg{n} & \cdots & \stateFOMDiscreteArg{\text{floor}(N_t/N_{\text{skip}})N_{\text{skip}}} - \stateInterceptArg{n} \end{bmatrix}$$
@@ -787,7 +787,7 @@ mesh concept~\cite{carlberg_gnat}. Algorithm~\ref{alg:qdeim} outlines the steps 
 %\newline
 \textbf{Output:} Weighting matrix $\stweightingMatArg{} \equiv \stweightingMatOneTArg{} \stweightingMatOneArg{} \in \{0,1\}^{N \times N}$ \;
 %\newline
-Steps:
+\textbf{Steps:}
 \begin{enumerate}
     \item Solve FOM O$\Delta$E and collect velocity snapshots 
 $$\mathbf{F}(N_{\text{skip}}) \defeq \begin{bmatrix} \velocity (\stateFOMDiscreteArg{0})  & \velocity( \stateFOMDiscreteArg{N_{\text{skip}}}) & \cdots & \velocity( \stateFOMDiscreteArg{\text{floor}(N_t/N_{\text{skip}})N_{\text{skip}}} ) \end{bmatrix}$$
