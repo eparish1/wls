@@ -363,12 +363,12 @@ Substituting~\eqref{eq:ustarbound} into~\eqref{eq:boundtmp}, noting that $\state
 \begin{corollary}
 When only a single space-time window is used, error bounds are given by
 \begin{equation*}
-\int_0^T \norm{\errorArgt{1}{t}} dt \le \lipshitziArg{1} \int_0^T \norm{\resid(\stateFOMProjSolArgt{1}{t},t)}dt +
- T \sqrt{1 + \lipshitz} \norm{\errorArgt{1}{\timeStartArg{1}} } .
+\int_0^T \norm{\errorArgt{1}{t}} dt \le \lipshitziArg{1} \int_0^T \norm{\resid(\stateFOMProjSolArgt{1}{t},t)}dt. %+
+% T \sqrt{1 + \lipshitz} \norm{\errorArgt{1}{\timeStartArg{1}} } .
 \end{equation*}
 \end{corollary}
 \begin{proof}
-Setting $n=1$ in~\eqref{eq:apriori_bound} with the time intervals $\timeStartArg{1}=0$, $\timeEndArg{1}=T$ yields the desired result.
+Setting $n=1$ in~\eqref{eq:apriori_bound} with the time intervals $\timeStartArg{1}=0$, $\timeEndArg{1}=T$, employing assumption A3, and noting that the initial conditions are known yields the desired result.
 \end{proof}
 
 \begin{comment}
@@ -407,8 +407,8 @@ Inserting the above into~\eqref{eq:boundtmp},
 \end{proof}
 \end{comment}
 \subsection{Discussion} 
-Theorem~\ref{theorem:apriori_bound} provides \textit{a priori} bounds on the integrated normed error for \methodAcronym\ employing \spatialAcronym\ trial subspaces. Several 
-observations are made. First, it is observed \methodAcronym\ is subject to recursive error bounds (through the first term on the RHS in Eq.~\eqref{eq:apriori_bound}). As the number of time window grows, so does the recursive growth of error. Second, we observe that when a single window spans the entire domain, the error in the \methodAcronym\ with \spatialAcronym\ trial subspaces is bounded \textit{a priori} by the initial condition error and the residual of the projected FOM solution. 
+Theorem~\ref{theorem:apriori_bound} provides \textit{a priori} bounds on the integrated normed error for \methodAcronym\ employing \spatialAcronym\ trial subspaces. We make several 
+observations. First, it is observed \methodAcronym\ is subject to recursive error bounds (through the first term on the RHS in the upper bound~\eqref{eq:apriori_bound}). As the number of time windows grows, so does the recursive growth of error. Second, we observe that when a single window spans the entire domain, the error in the \methodAcronym\ with \spatialAcronym\ trial subspaces is bounded \textit{a priori} by the residual of the projected FOM solution. 
 %\begin{theorem}\label{theorem:aposteriori}
 %A posteriori error bounds on the the CST-LSPG ROM are,
 %%The a posteriori error bound is then,
