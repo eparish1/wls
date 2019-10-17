@@ -126,7 +126,7 @@ In the limit of $\zeta \rightarrow 0$ (and hence $\nslabs \rightarrow \infty$) t
 %$$\resid(\state) = \dot{\state} - \velocity(\state).$$
 In the following,  $\stateFOMSolArg{n}$ is the state implicitly defined as the solution to full-order model, $\stateROMSolArg{n}$ is the state implicitly defined as the solution to the \methodAcronym-ROM, $\adjointROMSolArg{n}$ is the costate solution to the \methodAcronymROM, and the error is defined as
 $$\errorArg{n} \defeq \stateFOMSolArg{n} - \stateROMSolArg{n}.$$
-Additionally, we denote $\stateFOMProjSolArg{n}$ to be the $\elltwo$ optimal solution
+Additionally, we denote $\stateFOMProjSolArg{n}$, $n=1,\ldots,\nslabs$ to be the $\elltwo$ optimal solution
 $$\stateFOMProjSolArg{n} = \underset{\statey \in
 \stspace^n}{\text{arg}\,\text{min } } \intSlabArg{n} \norm{ \statey(t) - \stateFOMSolArgt{n}{t} }^2.$$ 
 We begin by stating assumptions that will be used in the subsequent derivations.
@@ -156,7 +156,7 @@ $$ \stateFOMSolArgt{n}{\timeStartArg{n}} \in \trialspaceArg{n} + \stateIntercept
 \begin{theorem}(\textit{A priori} error bounds)\label{theorem:apriori_bound}
 Error bounds for \methodAcronymROMs\ over the $n$th window with \spatialAcronym\ trial subspaces are:
 \begin{equation}\label{eq:apriori_bound}
-\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \DeltaSlabArg{n} \sqrt{1 + \lipshitz} \norm{ \errorArgt{n}{\timeStartArg{n}}  }   + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArgt{n}{t}) } dt.
+\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \DeltaSlabArg{n} \sqrt{1 + \lipshitz} \norm{ \errorArgt{n}{\timeStartArg{n}}  }   + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
 \end{equation}
 \EP{We can do over the entire time domain, but we have to introduce an assumption to relate $ \errorArgt{n}{\timeStartArg{n}} $ to $\intSlabArg{n-1} \norm{\errorArgt{n-1}{t}} dt$}
 %\begin{equation}\label{eq:apriori_bound}
@@ -175,7 +175,7 @@ we start by defining a new quantity, $\stateROMStarSolArg{n}$, $n=1,\ldots,\nsla
 & \text{subject to } \statey(\timeStartArg{n})= \stateFOMSolArgt{n}{\timeStartArg{n}}.
 \end{split}
 \end{equation}
-Note that the minimization problem~\eqref{eq:min_correct} is is equivalent to \methodAcronym\ minimization problem~\eqref{eq:tclsrm}, but uses the FOM solution for the initial conditions. 
+Note that minimization problem~\eqref{eq:min_correct} is is equivalent to the \methodAcronym\ minimization problem~\eqref{eq:tclsrm}, but uses the FOM solution for the initial conditions. 
 Additionally, define $\adjointROMStarSolArg{n}$, $n=1,\ldots,\nslabs$ to be the associated costate solution.
  The error in the solution obtained by the 
 \methodAcronymROM\ over the $n$th window at time $t$ can be written as
@@ -202,7 +202,7 @@ Noting that, $\forall t \in [0,T]$, we have $\resid(\stateFOMSolArg{n},t) = \bz$
 \intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateROMStarSolArg{n},t) } dt.
 \end{equation*}
 %$$\int \norm{\error} dt \le \int \norm{\state_R - \state^*_R} dt +  \int \norm{\resid{\state^*_R}}dt.$$
-Leveraging the residual minimization property of \methodAcronym, we have 
+Leveraging the residual-minimization property of \methodAcronym, we have 
 $$ \intSlabArg{n} \norm{\resid(\stateROMStarSolArg{n},t)}dt \le \intSlabArg{n} \norm{\resid(\stateFOMProjSolArg{n},t)}dt.$$
 %$$ \int \norm{\resid{\state^*_R}}dt \le \int \norm{\resid{\tilde{\state}_f}}dt,$$
 This leads to the following expression for the error over the $n$th window,
@@ -407,7 +407,7 @@ Inserting the above into~\eqref{eq:boundtmp},
 \end{proof}
 \end{comment}
 \subsection{Discussion} 
-Theorems~\ref{theorem:apriori_bound} provides \textit{a priori} bounds on the integrated normed error for \methodAcronym\ for \spatialAcronym\ trial subspaces. Several 
+Theorem~\ref{theorem:apriori_bound} provides \textit{a priori} bounds on the integrated normed error for \methodAcronym\ employing \spatialAcronym\ trial subspaces. Several 
 observations are made. First, it is observed \methodAcronym\ is subject to recursive error bounds (through the first term on the RHS in Eq.~\eqref{eq:apriori_bound}). As the number of time window grows, so does the recursive growth of error. Second, we observe that when a single window spans the entire domain, the error in the \methodAcronym\ with \spatialAcronym\ trial subspaces is bounded \textit{a priori} by the initial condition error and the residual of the projected FOM solution. 
 %\begin{theorem}\label{theorem:aposteriori}
 %A posteriori error bounds on the the CST-LSPG ROM are,
