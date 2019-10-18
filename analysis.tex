@@ -1,13 +1,18 @@
 \section{Analysis}\label{sec:analysis}
+\KTC{HERE}
 This section provides theoretical analysis of the \methodAcronym\ \approachKwd. First, we demonstrate equivalence conditions 
-between \methodAcronym\  with (uniform) \spatialAcronym\ trial subspaces and the Galerkin ROM for the limit $\DeltaSlabArg{n} \rightarrow 0$.
+between \methodAcronym\  with (uniform) \spatialAcronym\ trial subspaces and
+the Galerkin ROM in the limit $\DeltaSlabArg{n} \rightarrow 0$.
 %\item For direct methods leveraging uniform quadrature for discretization of the objective functional, the \methodAcronym\ approach recovers the LSPG approach when 
 %the time slab corresponds to a single time-step. 
 %\end{enumerate}
-Next, \textit{a priori} error bounds are derived for autonomous systems. 
+Next, we derive \textit{a priori} error bounds for autonomous systems. 
 \subsection{Equivalence conditions}
 \begin{theorem}\label{theorem:galerkin_equiv}\textit{(Galerkin equivalence)}
-For sequential minimization over infinitesimal time windows and uniform \spatialAcronym\ trial spaces $\trialspaceArg{n} = \trialspace$, $n=1,\ldots,\nslabs$, the \methodAcronym\ approach (weakly) recovers the Galerkin approach.
+For sequential minimization over infinitesimal time windows and uniform
+	\spatialAcronym\ trial spaces, i.e., $\trialspaceArg{n} = \trialspace$,
+	$n=1,\ldots,\nslabs$, the \methodAcronym\ approach (weakly) recovers
+	Galerkin projection.
 \end{theorem}
 \begin{proof}
 %\begin{equation}
