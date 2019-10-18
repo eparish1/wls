@@ -139,8 +139,6 @@ $n=1,\ldots,\nslabs$, that satisfy
 %\basisspaceArg{1} \genstateICOne  + \stateInterceptArg{1}& n=1. \end{cases} 
 \end{align*}
 where
-\KTC{This next equation: I don't think you should project the previous
-solutions.}
 \begin{equation*}
 \begin{split}
 \objectiveArgLMS{n}_{\text{D-S}} &\vcentcolon  (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto \objectiveArgLMS{n}(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}; \approxstateDiscreteArg{\indexMapper(n,0)},\ldots,\approxstateDiscreteArg{\indexMapper(n,-\lmsWidthArg{n}{1}+1)}), \\
@@ -221,8 +219,7 @@ $\approxstateDiscreteArg{n,1}  = \approxstateLSPG^n$, $n=1,\ldots,\nslabs$ and
 	its first argument. 
 A variety of algorithms exist for solving nonlinear least-squares problems,
 	including the Gauss--Newton method, and the Levenberg--Marquardt method.
-	\KTC{Removed `trust-region approaches', because Levenberg--Marquardt is a
-	trust-region approach. Also added en-dashed.} The numerical experiments
+ The numerical experiments
 	presented in this work consider nonlinear dynamical systems and are solved
 	via the Gauss--Newton method; as such, we outline this approach here. 
 
@@ -273,15 +270,14 @@ window
 $\frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{}}$.
 For this purpose, we can leverage the fact that this Jacobian is a block lower
 triangular matrix with the following sparsity pattern (for $\lmsWidthArg{n}{i} = 1$,
-$i=1,\ldots,\nstepsArg{n}$):  \KTC{make sure the column widths are correct.
-Maybe add dimensions for each block?}
+$i=1,\ldots,\nstepsArg{n}$): 
 \begin{equation*} \begin{bmatrix*}[l]
-\matshapeb & \\%[-5pt]
+\matshapea & \\%[-5pt]
  \matshapea & \matshapea & \\%[-5pt]
  & \matshapea  & \matshapea & \\%[-5pt]
 &  & \ddots & \\%[-5pt]
  & &  & \matshapea &  \matshapea 
-\end{bmatrix*}.
+\end{bmatrix*},
 % \begin{bmatrix*}[c]
 %\matshapeb & \\[-5pt]
 % & \hspace{-12pt}\matshapea & \\[-5pt]
@@ -290,6 +286,7 @@ Maybe add dimensions for each block?}
 % & &  & & \hspace{-15 pt} \matshapea 
 %\end{bmatrix*}.
 \end{equation*}
+where each block comprises an $\fomdim \times \romdimArg{n}$ dense matrix.
 In particular, solution techniques can leverage this structure, e.g., to
 efficiently compute Jacobian--vector products.
 Another consequence of this sparsity pattern is that the normal equations
@@ -341,6 +338,7 @@ Return: $\genstatecollocMatSlabArg{n} = \genstatecollocMatSlabArg{n}_{k+1} $ \Co
 \Else{
  Compute  $\Delta  \genstatecollocMatSlabArg{n} $ that minimizes $\norm{ \mathbf{J} \Delta \genstatecollocMatSlabArg{n} +\mathbf{r}}^2$ \Comment{Solve the linear least-squares problem} \\
 % Compute  $\Delta  \genstatecollocMatSlabArg{n} $ satisfying $ [\mathbf{J}]^T \mathbf{J} \Delta \genstatecollocMatSlabArg{n}=  -\mathbf{J}^T\mathbf{r}$ \Comment{Solve the normal equations} \\
+$\alpha \leftarrow \text{linesearch}(\Delta  \genstatecollocMatSlabArg{n} ) $ \Comment{Compute $\alpha$ based on a line search, or set to 1.}\\
 $\genstatecollocMatSlabArg{n}_{k+1} \leftarrow \genstatecollocMatSlabArg{n}_k + \Delta \genstatecollocMatSlabArg{n}$ \Comment{Update guess to the state} \\
 }
 $k\leftarrow k+1$
