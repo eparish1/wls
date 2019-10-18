@@ -81,7 +81,7 @@ reduced-order models that inherit such important properties.  The primary
 challenge in
 developing reduced-order models for general nonlinear dynamical systems is
 that such properties are difficult to assess quantitatively. As a result, it
-is difficult to develop reduced-order models that preserve important
+is challenging to develop reduced-order models that preserve important
 dynamical-system properties, which often results in methods that yield
 trajectories that are
 inaccurate, unstable, or violate physical properties.  To address this, researchers have pursued several directions that
@@ -89,7 +89,7 @@ aim to imbue reduced-order models for nonlinear
 dynamical systems with properties that can improve robustness and accuracy.
 These
 efforts include residual-minimization approaches that equip the ROM solution with a notion of optimality~\cite{carlberg_lspg,carlberg_gnat,legresley_1,legresley_2,legresley_3,bui_resmin_steady,bui_unsteady,rovas_thesis,carlberg_thesis,bui_thesis,l1};
-space--time approaches that leads to error bounds that grow slowly in time~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC,benner_st};
+space--time approaches that lead to error bounds that grow slowly in time~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC,benner_st};
 ``energy-based'' inner
 products that ensure non-increasing entropy in the ROM
 solution~\cite{rowley_pod_energyproj,Kalashnikova_sand2014,chan2019entropy};
@@ -107,7 +107,7 @@ methods for the current work and comprise the focus of the following review.
 
 
 Residual-minimization methods in model reduction compute the solution within a
-low-dimensional trial subspace that minimizes the full-order-model residual.
+low-dimensional trial subspace that minimizes the full-order-model residual.\footnote{While we focus our review on residual-minimization approaches in the context of model reduction, we note that these approaches are intimately related to least-squares finite element methods,~\cite{bochev_leastsquares,bochev_lsfem_book} which predate ROM residual-minimization approaches.}
 Researchers have developed such residual-minimizing model-reduction methods
 for both static systems (i.e., systems without time-dependence)
 \cite{legresley_1,legresley_2,legresley_3,bui_resmin_steady,rovas_thesis,carlberg_thesis,bui_thesis}
@@ -128,8 +128,7 @@ full-order-model residual, and (2) LSPG and Galerkin projection are equivalent
 in the limit as the time step goes to zero (i.e., Galerkin projection 
 minimizes the time-instantaneous full-order-model residual). Numerous
 numerical experiments have demonstrated that LSPG often yields more
-accurate and stable solutions than Galerkin
-~\cite{bui_thesis,carlberg_lspg_v_galerkin,carlberg_gnat,carlberg_thesis,parish_apg}.
+accurate and stable solutions than Galerkin~\cite{bui_thesis,carlberg_lspg_v_galerkin,carlberg_gnat,carlberg_thesis,parish_apg}.
 The common intuitive explanation for this improved performance is that, by
 minimizing the full-order-model residual over a finite time window (rather
 than time instantaneously), LSPG computes solutions that are more
@@ -196,7 +195,7 @@ coordinates.
 %coordinates.
 
 Space--time residual minimization approaches minimize the FOM residual over all of space and time and, as a result, yield models that are equipped with a notion of space--time optimality and \textit{a priori} error bounds that grow more slowly
-in time. Further, space--time approaches reduce both the spatial and temporal dimensions of the full-order-model, and thus promise cost savings over spatial-projection-only approaches.
+in time. Further, space--time approaches reduce both the spatial and temporal dimensions of the full-order model, and thus promise cost savings over spatial-projection-only approaches.
 % and the resulting \textit{trajectory} exhibits a notion of
 %optimality; this implies that the solution exhibits a notion of optimality
 %over the entire time domain. 
@@ -274,9 +273,7 @@ associated with spatial dimension reduction only.
 \begin{centering} 
 \includegraphics[trim={0.1cm 0cm 1cm 0cm},clip,width=0.99\textwidth]{diagram.pdf} 
 \caption{Relationship diagram for the \methodAcronym\ approach for model
-	reduction. \KTC{Also, can we make this more specific? In particular, can
-	we write specific equations (e.g., ``$W = T$ in Eq.~(10)'') for the limiting
-	cases?} \EP{I tried, it becomes very crowded. I think with the description of trial spaces its pretty good now}} 
+	reduction.} 
 \label{fig:flowchart} 
 \end{centering} 
 \end{figure}
@@ -288,7 +285,7 @@ associated with spatial dimension reduction only.
 %\item The development of a time-continuous residual minimization framework for reduced-order models.
 \item The \methodNameLower\ (\methodAcronym) approach for dynamical-system
 	model reduction. The approach sequentially minimizes the time-continuous
-		full-order model residual over arbitrary time windows.
+		full-order-model residual over arbitrary time windows.
 %\item Support of two space--time trial subspaces: one that reduces the spatial
 %	dimension of the FOM only, and one that reduces both the spatial and
 %		temporal dimensions of the FOM. 
@@ -303,8 +300,8 @@ The former case is of particular
 		backward system, which is forced by the time-continuous FOM residual
 		evaluated about the ROM state, governs the dynamics of the costate. 
 	\item Derivation of two solution techniques:
-		\textit{discretize-then-optimize} (i.e., direct) and
-		\textit{optimize-then-discretize} (i.e., indirect). 
+		\textit{discretize then optimize} (i.e., direct) and
+		\textit{optimize then discretize} (i.e., indirect). 
 	\item Remarks and derivations of conditions under which the
 		\methodAcronym\ approach recovers Galerkin, LSPG, and space--time LSPG.
 \item Error analysis of the \methodAcronym\ approach using
