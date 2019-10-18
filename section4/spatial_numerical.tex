@@ -135,14 +135,15 @@ $n=1,\ldots,\nslabs$, that satisfy
 where
 \begin{equation*}
 \begin{split}
-\objectiveArgLMS{n}_{\text{D-S}} &\vcentcolon  (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto \objectiveArgLMS{n}(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}; \projectorSpatialArg{n}(\approxstateDiscreteArg{\indexMapper(n,0)}),\ldots,\projectorSpatialArg{n}(\approxstateDiscreteArg{\indexMapper(n,-\lmsWidthArg{n}{1}+1)})), \\
+\objectiveArgLMS{n}_{\text{D-S}} &\vcentcolon  (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto \objectiveArgLMS{n}(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}; \approxstateDiscreteArg{\indexMapper(n,0)},\ldots,\approxstateDiscreteArg{\indexMapper(n,-\lmsWidthArg{n}{1}+1)}), \\
 &\vcentcolon \RR{\fomdim} \otimes \RR{\nstepsArg{n}} \rightarrow \RR{}_+,
 \end{split}
 \end{equation*}
-and $\projectorSpatialArg{n} : \RR{\fomdim} \rightarrow \trialspaceArg{n}$ is the $\elltwo$-orthogonal projector 
-$$\projectorSpatialArg{n} : \stateyDiscreteArgnt{} \mapsto  \basisspaceArg{n}\basisspaceTArg{n} (\stateyDiscreteArgnt{} - \stateInterceptArg{n}) + \stateInterceptArg{n} .$$
-We additionally set $\approxstateDiscreteArg{1,0} = \projectorSpatialArg{n}(\stateFOMIC).
-$
+with the initial condition $\approxstateDiscreteArg{1,0} = \basisspaceArg{n}\basisspaceTArg{n} (\stateFOMIC - \stateInterceptArg{n}) + \stateInterceptArg{n}$.
+%We additionally set $\approxstateDiscreteArg{1,0} = \projectorSpatialArg{n}(\stateFOMIC)$, where
+%$\projectorSpatialArg{n} : \RR{\fomdim} \rightarrow \trialspaceArg{n}$ is the $\elltwo$-orthogonal projector 
+%$$\projectorSpatialArg{n} : \stateyDiscreteArgnt{} \mapsto  \basisspaceArg{n}\basisspaceTArg{n} (\stateyDiscreteArgnt{} - \stateInterceptArg{n}) + \stateInterceptArg{n} .$$
+
 %where 
 %\begin{align*}
 %\residArg{n,i} &: (\stateyArgnt{n,i},\ldots,\stateyArgnt{n,i-k(i)}) \mapsto  \sum_{j=0}^k \alpha_j \stateyArgnt{n,i-j} = \Delta t^{n,i} \sum_{j=0}^k \beta_j \velocity(\stateyArgnt{n,i-j}),
@@ -235,10 +236,10 @@ included in the first residual here.}
 \residLMSSlabArg{n} : \genstatecollocMatySlabArg{} \mapsto \begin{bmatrix}
  \sqrt{\frac{\quadWeightsLMSScalarArg{n}{1}}{2}} \stweightingMatOneArg{n} \residLMSArg{n,1}( \basisspaceArg{n} \genstateyDiscreteArgnt{1} + \stateInterceptArg{n}; 
 %\residLMSArg{n,0}( \basisspaceArg{n} \genstateyDiscreteArgnt{0} + \stateInterceptArg{n}),
-\projectorSpatialArg{n}( \approxstateDiscreteArg{\indexMapper(n,0)}),
-\ldots , \projectorSpatialArg{n}( \approxstateDiscreteArg{\indexMapper(n,1 - \lmsWidthArg{n}{1}) } )  ) \\
+ \approxstateDiscreteArg{\indexMapper(n,0)},
+\ldots , \approxstateDiscreteArg{\indexMapper(n,1 - \lmsWidthArg{n}{1}) }   ) \\
 \vdots \\
- \sqrt{\frac{\quadWeightsLMSScalarArg{n}{\nstepsArg{n}}}{2}} \stweightingMatOneArg{n} \residLMSArg{n,\nstepsArg{n}}( \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n}} + \stateInterceptArg{n}; \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n}-1} + \stateInterceptArg{n} ,  \ldots,\projectorSpatialArg{n}( \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n} - \lmsWidthArg{n}{\nstepsArg{n}} } + \stateInterceptArg{n} )) \\
+ \sqrt{\frac{\quadWeightsLMSScalarArg{n}{\nstepsArg{n}}}{2}} \stweightingMatOneArg{n} \residLMSArg{n,\nstepsArg{n}}( \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n}} + \stateInterceptArg{n}; \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n}-1} + \stateInterceptArg{n} ,  \ldots, \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n} - \lmsWidthArg{n}{\nstepsArg{n}} } + \stateInterceptArg{n} ) \\
 \end{bmatrix},
 \end{equation*}
 where $\genstatecollocMatySlabArg{} \defeq \unroll (\genstateyDiscreteArg{1},\ldots,\genstateyDiscreteArg{\nstepsArg{n}} )$ and, for $i \le 0$,
