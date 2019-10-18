@@ -351,13 +351,12 @@ $k\leftarrow k+1$
 %\input{direct_collocation}
 
 \subsection{\spatialAcronym\ trial subspaces: indirect solution approach}\label{sec:indirect}
-\KTC{This is a fantastic insight and a really great contribution!}
 In contrast to the direct approach,
 indirect methods ``indirectly" solve the minimization
 problem~\eqref{eq:tclsrm} by solving the Euler--Lagrange
 equations~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_adjoint} associated with
-stationarity. The
-system associated with the Euler--Lagrange equations comprises a coupled two-point boundary value
+stationarity. This
+system comprises a coupled two-point boundary value
 problem. Several techniques have
 been devised to solve such problems, 
 including shooting methods, multiple shooting
@@ -394,24 +393,34 @@ method~\cite{fbs} (FBSM).  This work explores using the FBSM.
 %practice, however, this technique may not be practical for larger
 %time-windows due to the size of the resuling nonlinear problem. 
 
-The FBSM is an iterative approach that can be used to
-solve the two-point boundary value problem. The general process of the FBSM is
-as follows: First, the system~\eqref{eq:lspg_continuous} is (numerically) solved forward in
-time using an initial guess to the costate to obtain an initial guess to
-the generalized coordinates. Next, the adjoint equation~\eqref{eq:lspg_adjoint} is solved \textit{backwards} in time given the
-approximation to the generalized coordinates. This gives a new estimate to the
-costate, which is then used to again solve the forward problem to obtain
-a new estimate of the generalized coordinates. This process is continued until
-convergence. Algorithm~\ref{alg:st_iter} outlines the method. The algorithm
+Until convergence, the FBSM alternates between solving the
+system~\eqref{eq:lspg_continuous} \textit{forward} in time given a fixed value
+of the costate, and solving the adjoint equation~\eqref{eq:lspg_adjoint}
+\textit{backward} in time given a fixed value for the generalized coordinates.
+Typically, the system~\eqref{eq:lspg_continuous} is solved first given an
+initial guess for the costate.
+%
+%consists of the following steps. First, the
+%system~\eqref{eq:lspg_continuous} is (numerically) solved \textit{forward} in
+%time using an initial guess of the costate to obtain an initial solution for
+%the generalized coordinates. Next, given this initial solution for the
+%generalized coordinates, the adjoint equation~\eqref{eq:lspg_adjoint} is
+%solved \textit{backward} in time for an updated costate solution.
+%approximation to the generalized coordinates. This gives a new estimate to the
+%costate, which is then used to again solve the forward problem to obtain
+%a new estimate of the generalized coordinates. This process is continued until
+%convergence. 
+Algorithm~\ref{alg:st_iter} outlines the algorithm, which 
 contains three parameters: the relaxation factor $\rho \le 1$, the growth factor
 $\fbsmGrowth \ge 1$, and the decay factor $\fbsmDecay \ge 1$. The relaxation factor controls the rate at which the costate seen by~\eqref{eq:lspg_continuous} is updated. The
 closer $\rho$ is to unity, the faster the algorithm will converge.
-For large window sizes, however, too high a value of $\rho$ can lead to an unstable iterative process. 
-A proper value of $\rho$ can be
-obtained with a line search. The line search presented in Algorithm~\ref{alg:st_iter} adapts the relaxation factor
+For large window sizes, however, a large a value of $\rho$ can lead to an unstable iterative process. 
+In practice, a line search is used to compute an acceptable value for the
+relaxation factor $\rho$. The line search presented in Algorithm~\ref{alg:st_iter} adapts the relaxation factor
 according to the objective. Convergence properties of the FBSM method are
-presented in Ref.~\cite{McAsey2012ConvergenceOT}. It is shown that, for a small 
-enough value of $\rho$, the algorithm will converge.
+presented in Ref.~\cite{McAsey2012ConvergenceOT}, which shows that the
+algorithm will converge for a sufficiently small 
+value of $\rho$.
 
 \begin{algorithm} \caption{\spatialAcronym\ trial subspace: algorithm for the FBSM over the $n$th window.} \label{alg:st_iter} 
 \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
