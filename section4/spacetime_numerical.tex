@@ -33,7 +33,7 @@ $$
 $$
 It is noted that the boundary conditions are automatically satisfied through the definition of the \spaceTimeAcronym\ trial subspace. The minimization problem~\eqref{eq:obj_gen_lms_final_st} again yields a least-squares problem.
 \begin{remark}
-For the limiting case where one window comprises entire domain (i.e., $\DeltaSlabArg{1}\equiv T$), uniform quadrature weights are used, the trial space is set to be $\stspaceSTArg{1} = \stspaceST$, the weighting matrices $\stweightingMatArg{1} = \lspgWeightingST = \mathbf{I}$, and $\nstepsArg{1} = N_t$ time instances are employed that satisfy $\timeWindowArg{1}{i} = t^i$, $i=1,\ldots,N_t$, then $\stgenstateArg{1} =  \stgenstate_\text{ST-LSPG}$ and direct \methodAcronym\ with an \spaceTimeAcronym\ trial subspace recovers ST-LSPG. 
+For the limiting case where one window comprises entire domain (i.e., $\DeltaSlabArg{1}\equiv T$), uniform quadrature weights are used, the trial space is set to be $\stspaceSTArg{1} = \stspaceST$, the weighting matrices $\stweightingMatArg{1}$ and $\lspgWeightingST$ comprise the identity matrix $\mathbf{I}$, and $\nstepsArg{1} = N_t$ time instances are employed that satisfy $\timeWindowArg{1}{i} = t^i$, $i=1,\ldots,N_t$, then $\stgenstateArg{1} =  \stgenstate_\text{ST-LSPG}$ and direct \methodAcronym\ with an \spaceTimeAcronym\ trial subspace recovers ST-LSPG. 
 \end{remark}
 
 \begin{remark}
