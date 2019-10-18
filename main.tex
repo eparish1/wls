@@ -891,7 +891,7 @@ Substituting Eq.~\eqref{eq:gradient} in the stationarity conditions~\eqref{eq:st
 \end{equation}
 By construction, $\statez(\cdot) \equiv \statezBar(\cdot;0)$ and $\statezDot(\cdot) \equiv \statezDotBar(\cdot;0)$, comprise a stationary
 point; thus, setting $\epsilon = 0$ in Eq.~\eqref{eq:statOne} yields
-\begin{equation}
+\begin{equation}\label{eq:euler_lagrange_analysis}
   \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statez(t),\statezDot(t),t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statez(t),\statezDot(t),t \big) \bigg) \variation(t) \bigg]dt + \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statez(b),\statezDot(b) ,b\big) \variation(b)  = 0. 
 \end{equation}
 %$$  \int_a^b \bigg[\frac{\partial \integrand  }{\partial \overline{\genstate}} \variation  - \frac{d}{dt}\frac{\partial \integrand}{\partial {\overline{\genstateDot}}}\variation \bigg]_{\epsilon = 0}dt + \bigg[\bigg[ \frac{\partial \integrand}{\partial {\overline{\genstateDot}}} \variation \bigg]_a^b\bigg]_{\epsilon = 0} = 0. $$
