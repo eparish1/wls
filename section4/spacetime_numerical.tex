@@ -95,7 +95,7 @@ As opposed to the direct approach, the indirect approach directly minimizes the 
 %\velocity}{\partial \stateyDiscrete} (\stbasisDotArg{n}{t} \stgenstateArg{n} +                    
 %\stateInterceptArg{n})\bigg]^T  \bigg] \stweightingMatArg{n} \bigg( \stbasisDotArg{n}{t} \stgenstateArg{n}  - \velocity (\stbasisArg{n}{t} \stgenstateArg{n} + \stateInterceptArg{n}) \bigg) dt = \bz.\end{equation}
 Numerically solving the minimization problem requires the introduction of a quadrature rule for 
-discretization of the integral. Towards this end we introduce $\ncollocSTArg{n} \ge \text{ceil}(\stdimArg{n}/ \text{Rank}(\stweightingMatOneArg{n}))$ quadrature points over the $n$th window, $ \{ \collocPointSTArg{n}{i} \}_{i=1}^{\ncollocSTArg{n}} \subseteq [\timeStartArg{n},\timeEndArg{n}]$, $n=1,\ldots,\nslabs$. 
+discretization of the integral. Towards this end we introduce $\ncollocSTArg{n} \ge \text{ceil}(\stdimArg{n}/ \text{Rank}(\stweightingMatOneArg{n}))$ quadrature points over the $n$th window, $ \{ \collocPointSTArg{n}{i} \}_{i=1}^{\ncollocSTArg{n}} \subset [\timeStartArg{n},\timeEndArg{n}]$, $n=1,\ldots,\nslabs$. 
 %with $\timeStartArg{n} \le \collocPointSTArg{n}{1} \le \cdots \le \collocPointSTArg{n}{\ncollocSTArg{n}} \le \timeEndArg{n}.$
 Leveraging these quadrature points, \methodAcronym\ with the indirect method and an \spaceTimeAcronym\ trial subspace computes the generalized coordinates 
 $\stgenstateArg{n}$, $n=1,\ldots,\nslabs$ that satisfy

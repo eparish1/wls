@@ -336,8 +336,8 @@ Return: $\genstatecollocMatSlabArg{n} = \genstatecollocMatSlabArg{n}_{k+1} $ \Co
 \Else{
  Compute  $\Delta  \genstatecollocMatSlabArg{n} $ that minimizes $\norm{ \mathbf{J} \Delta \genstatecollocMatSlabArg{n} +\mathbf{r}}^2$ \Comment{Solve the linear least-squares problem} \\
 % Compute  $\Delta  \genstatecollocMatSlabArg{n} $ satisfying $ [\mathbf{J}]^T \mathbf{J} \Delta \genstatecollocMatSlabArg{n}=  -\mathbf{J}^T\mathbf{r}$ \Comment{Solve the normal equations} \\
-$\alpha \leftarrow \text{linesearch}(\Delta  \genstatecollocMatSlabArg{n} ) $ \Comment{Compute $\alpha$ based on a line search, or set to 1.}\\
-$\genstatecollocMatSlabArg{n}_{k+1} \leftarrow \genstatecollocMatSlabArg{n}_k + \Delta \genstatecollocMatSlabArg{n}$ \Comment{Update guess to the state} \\
+$\alpha \leftarrow \text{linesearch}(\Delta  \genstatecollocMatSlabArg{n} ,\genstatecollocMatSlabArg{n}_k ) $ \Comment{Compute $\alpha$ based on a line search, or set to 1}\\
+$\genstatecollocMatSlabArg{n}_{k+1} \leftarrow \genstatecollocMatSlabArg{n}_k + \alpha \Delta \genstatecollocMatSlabArg{n}$ \Comment{Update guess to the state} \\
 }
 $k\leftarrow k+1$
 }
@@ -504,7 +504,7 @@ which requires $\romdimArg{n}+1$ evaluations of the velocity.
 		examples presented later in this work leverage AD. The principal drawback
 		of this approach is their intrusiveness, which may prevent them from
 		practical application, e.g., in legacy codes.
-		\KTC{EP: verify this paragraph.}
+		\KTC{EP: verify this paragraph.} \EP{This looks good to me}
 \end{enumerate}
 
 \KTC{HERE}
