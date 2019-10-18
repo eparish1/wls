@@ -124,7 +124,7 @@ Ref.~\cite{carlberg_lspg_v_galerkin} performed detailed analyses of this
 formulation and examined its connections with Galerkin projection. Critically,
 this work demonstrated that (1) under certain conditions, LSPG can be cast as a 
 Petrov--Galerkin projection applied to the time-continuous
-full-order-model residual, and (2) the LSPG and Galerkin projection are equivalent
+full-order-model residual, and (2) LSPG and Galerkin projection are equivalent
 in the limit as the time step goes to zero (i.e., Galerkin projection 
 minimizes the time-instantaneous full-order-model residual). Numerous
 numerical experiments have demonstrated that LSPG often yields more
@@ -162,15 +162,15 @@ Researchers have pursued the development of space--time
 residual-minimization approaches~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC} to
 address the issues incurred by sequential residual minimization in time.
 Existing space--time approaches differ from the classic LSPG and Galerkin approaches in (1) the definition of the space--time trial subspace and (2) the definition of the residual minimization problem. 
-First, space--time approaches leverage a space--time trial basis that characterizes both the spatial \textit{and} temporal dependence of the state, classic "spatial" model reduction approaches such as LSPG and Galerkin leverage only a spatial trial basis that characterizes the spatial dependence of the state. 
+First, space--time approaches leverage a space--time trial basis that characterizes both the spatial \textit{and} temporal dependence of the state, classic ``spatial" model reduction approaches such as LSPG and Galerkin leverage only a spatial trial basis that characterizes the spatial dependence of the state. 
 %First, space--time approaches leverage a space--time trial 
 %subspace that associates with a space--time projection operator; classic ``spatial" model reduction approaches such as LSPG and Galerkin leverage a space--time trial subspace that can be associated with a spatial projection operator only. 
-Second, space--time residual minimization approaches compute the entire space--time trajectory of the state (within the low-dimensional space--time trial subspace) that minimizes the full-order-model residual over the entire time domain; Galerkin and LSPG sequentially compute instances of the state that either minimize the full-order model instantaneously (Galerkin) or over a time-step instance (LSPG). 
-The result of these differences is that space--time approaches yield an algebraic system of equations defined
-over all space and time, whose solution comprises a \text{fixed} vector of
-(space--time) generalized coordinates; on the other hand, spatial projection only approaches 
-generally associates with a system of ODEs whose solution
-comprises a \textit{time-dependent} vector of (spatial) generalized
+Second, space--time residual minimization approaches compute the entire space--time trajectory of the state (within the low-dimensional space--time trial subspace) that minimizes the full-order-model residual over the entire time domain; Galerkin and LSPG sequentially compute instances of the state that either minimize the full-order model instantaneously (Galerkin) or over a time step (LSPG). 
+The result of these differences is that space--time approaches yield a system of algebraic equations defined
+over all space and time, whose solution comprises a vector of
+(space--time) generalized coordinates; on the other hand, spatial-projection-only approaches 
+generally associate with systems of ODEs whose solutions
+comprise \textit{time-dependent} vectors of (spatial) generalized
 coordinates.
 
 %Space--time residual-minimization approaches compute the space--time
@@ -196,12 +196,12 @@ coordinates.
 %coordinates.
 
 Space--time residual minimization approaches minimize the FOM residual over all of space and time and, as a result, yield models that are equipped with a notion of space--time optimality and \textit{a priori} error bounds that grow more slowly
-in time.
+in time. Further, space--time approaches reduce both the spatial and temporal dimensions of the full-order-model, and thus promise cost savings over spatial-projection-only approaches.
 % and the resulting \textit{trajectory} exhibits a notion of
 %optimality; this implies that the solution exhibits a notion of optimality
 %over the entire time domain. 
 %\EP{Come back to this, this also has to do with residual minimization}
-However, these techniques also suffer from several
+However, space--time techniques also suffer from several
 limitations. First, the computational cost of solving the algebraic system arising from space--time
 approaches scales cubically with the number of space--time degrees of freedom;
 in contrast, the computational cost incurred by standard
