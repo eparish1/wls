@@ -131,20 +131,18 @@ $n=1,\ldots,\nslabs$, that satisfy
 %	the final time.} \EP{You are correct, I think there is an error now in the minimize term though. It was $\in \trialspace\otimes \RR{\lmsWidthArg{n}{i}+1}$, it should be $\trialspace\otimes \RR{\nstepsArg{n}+1}$}
 \begin{align*}
 	&\underset{(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \in ( \trialspace + \stateInterceptArg{n}) \otimes \RR{\nstepsArg{n}}}{\text{minimize } }
-\objectiveArgLMS{n}_{\text{D-S}} (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}), 
+\objectiveArgLMS{n}_{\text{D}} (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}} ; \approxstateDiscreteArg{\indexMapper(n,0)},\ldots,\approxstateDiscreteArg{\indexMapper(n,-\lmsWidthArg{n}{1}+1)}), 
 %%& \text{subject to} \hspace{0.2 in}  \stateyDiscreteArg{0} =
 %%\begin{cases} \basisspaceArg{n} \spatialICDiscrete + \stateInterceptArg{n}& n = 2,\ldots,\nslabs,\\
 %\basisspaceArg{1} \genstateICOne  + \stateInterceptArg{1}& n=1. \end{cases} 
 \end{align*}
-where
-\begin{equation*}
-\begin{split}
-\objectiveArgLMS{n}_{\text{D-S}} &\vcentcolon  (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto \objectiveArgLMS{n}(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}; \approxstateDiscreteArg{\indexMapper(n,0)},\ldots,\approxstateDiscreteArg{\indexMapper(n,-\lmsWidthArg{n}{1}+1)}), \\
-&\vcentcolon \RR{\fomdim} \otimes \RR{\nstepsArg{n}} \rightarrow \RR{}_+,
-\end{split}
-\end{equation*}
-\KTC{On the RHS, shouldn't this be $\objectiveArgLMS{n}_\text{D}$? I couldn't
-find the definition of $\objectiveArgLMS{n}$ anywhere.}
+%where
+%\begin{equation*}
+%\begin{split}
+%\objectiveArgLMS{n}_{\text{D-S}} &\vcentcolon  (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto \objectiveArgLMS{n}_D(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}; \approxstateDiscreteArg{\indexMapper(n,0)},\ldots,\approxstateDiscreteArg{\indexMapper(n,-\lmsWidthArg{n}{1}+1)}), \\
+%&\vcentcolon \RR{\fomdim} \otimes \RR{\nstepsArg{n}} \rightarrow \RR{}_+,
+%\end{split}
+%\end{equation*}
 with the initial condition $\approxstateDiscreteArg{1,0} = \basisspaceArg{n}\basisspaceTArg{n} (\stateFOMIC - \stateInterceptArg{n}) + \stateInterceptArg{n}$.
 %We additionally set $\approxstateDiscreteArg{1,0} = \projectorSpatialArg{n}(\stateFOMIC)$, where
 %$\projectorSpatialArg{n} : \RR{\fomdim} \rightarrow \trialspaceArg{n}$ is the $\elltwo$-orthogonal projector 
@@ -176,7 +174,7 @@ with $\genstateDiscreteArg{n,i}(\approx
 \begin{split}
 	&
 	\underset{(\genstateyDiscreteArg{1},\ldots,\genstateyDiscreteArg{\nstepsArg{n}})\in\RR{\romdimArg{n}}\otimes \RR{\nstepsArg{n}}}{\text{minimize } }
-\objectiveArgLMS{n}_{\text{D-S}} (\basisspaceArg{n} \genstateyDiscreteArg{1} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateyDiscreteArg{\nstepsArg{n}} + \stateInterceptArg{n}). 
+\objectiveArgLMS{n}_{\text{D}} (\basisspaceArg{n} \genstateyDiscreteArg{1} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateyDiscreteArg{\nstepsArg{n}} + \stateInterceptArg{n}; \approxstateDiscreteArg{\indexMapper(n,0)},\ldots,\approxstateDiscreteArg{\indexMapper(n,-\lmsWidthArg{n}{1}+1)}). 
 %& \text{subject to} \hspace{0.2 in}
 %\genstateyDiscreteArg{0} =
 %\begin{cases} \genspatialICDiscrete  & n = 2,\ldots,\nslabs \\
@@ -255,7 +253,7 @@ where $\genstatecollocMatySlabArg{} \equiv \unroll (\genstateyDiscreteArg{1},\ld
 \end{equation}
 We note that
 \begin{equation*}
-\objectiveArgLMS{n}_{\text{D-S}} \bigg( \basisspaceArg{n} \genstateDiscreteArg{n,1} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateDiscreteArg{n,\nstepsArg{n}} + \stateInterceptArg{n} \ \bigg) 
+\objectiveArgLMS{n}_{\text{D}} \bigg( \approxstateDiscreteArg{n,1} ,\ldots,\approxstateDiscreteArg{n,\nstepsArg{n}}  ; \approxstateDiscreteArg{\indexMapper(n,0)},\ldots,\approxstateDiscreteArg{\indexMapper(n,-\lmsWidthArg{n}{1}+1)}  \bigg) 
 =
 \bigg[\residLMSSlabArg{n}  (\genstatecollocMatSlabArg{n}) \bigg]^T \bigg[ \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n}) \bigg].
 \end{equation*} 

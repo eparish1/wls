@@ -10,10 +10,10 @@ that operates on the FOM O$\Delta$E and an indirect method that operates on the 
 \subsection{\spaceTimeAcronym\ trial subspaces: direct solution approach}
 \KTC{Fix this section:
 \begin{enumerate} 
-\item remove $\theta^\star$
-\item replace $J_{D-ST}^n$ in (38) with $J_D^n$. You can do this because of Eq
-	(33)
-\item remove definition of $J_{D-ST}$.
+\item remove $\theta^\star$ \EP{I think we still need this for Eq. 38}
+\item replace $J_{D-ST}^n$ in (38) with $J_D^n$. You can do this because of Eq 
+	(33) \EP{Yes, done}
+\item remove definition of $J_{D-ST}$. \EP{Yes, done}
  \end{enumerate}
 }
 The direct solution technique seeks to minimize the fully discrete objective
@@ -31,33 +31,38 @@ n & n \ge 1, \; i > 0, \\
 %The definition of the fully discrete objective functions~\eqref{eq:obj_lms} as outlined in Section~\ref{sec:direct}, can be leveraged for this purpose. For simplicity, we only 
 %outline the case for linear multistep schemes. 
 \methodAcronym\ with an \spaceTimeAcronym\ trial subspace and the direct approach sequentially computes the generalized coordinates $\stgenstateArg{n}$, $n=1,\ldots,\nslabs$ that satisfy
+\EP{I noticed you got rid of the assumption about the size of the generalized coordinates. Why don't we need to worry about this?}
  \begin{equation}\label{eq:obj_gen_lms_final_st}
 \begin{split}
 & \underset{\stgenstatey \in \RR{\stdimArg{n}}}{\text{minimize } }
-\objectiveArgLMS{n}_{\text{D-ST}} (\stbasisArg{n}{\timeWindowArg{n}{1}} \stgenstatey + \stateInterceptSTArg{n},\ldots,\stbasisArg{n}{\timeWindowArg{n}{\nstepsArg{n}}} \stgenstatey + \stateInterceptSTArg{n}),%  \\
+\objectiveArgLMS{n}_{\text{D}} (\stbasisArg{n}{\timeWindowArg{n}{1}} \stgenstatey + \stateInterceptSTArg{n},\ldots,\stbasisArg{n}{\timeWindowArg{n}{\nstepsArg{n}}} \stgenstatey + \stateInterceptSTArg{n} ;\\
+& \hspace{2. in}  \approxstateArg{\indexMappern(n,0)}{\timeWindow^{\indexMapper(n,0)}},\ldots, 
+ \approxstateArg{\indexMappern(n,-\lmsWidthArg{n}{1}+1)}{\timeWindow^{\indexMapper(n,-\lmsWidthArg{n}{1}+1)}}).%  \\
 %&\text{subject to } \;  \stbasisArg{n}{\timeStartArg{n}}\stgenstateyArg{n} = \begin{cases} 
 %\mathbb{P}^n(\stbasisArgnt{n-1}\stgenstateArg{n-1})(\timeEndArg{n-1}) & n = 2,\ldots,\nslabs, \\ 
 %\mathbb{P}^n(\stateFOMArgnt{1})(0) &
 %n=1. \end{cases}
 \end{split} 
 \end{equation}
-where the space--time objective function for the direct method is defined as
-$$
-\objectiveArgLMS{n}_{\text{D-ST}}  :  (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto \objectiveArgLMS{n}_{\text{D}}(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}; \approxstateArg{\indexMappern(n,0)}{\timeWindow^{\indexMapper(n,0)}},\ldots, 
- \approxstateArg{\indexMappern(n,-\lmsWidthArg{n}{1}+1)}{\timeWindow^{\indexMapper(n,-\lmsWidthArg{n}{1}+1)}}).
-$$
+%where the space--time objective function for the direct method is defined as
+%$$
+%\objectiveArgLMS{n}_{\text{D-ST}}  :  (\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}) \mapsto \objectiveArgLMS{n}_{\text{D}}(\stateyDiscreteArgnt{1},\ldots,\stateyDiscreteArgnt{\nstepsArg{n}}; \approxstateArg{\indexMappern(n,0)}{\timeWindow^{\indexMapper(n,0)}},\ldots, 
+% \approxstateArg{\indexMappern(n,-\lmsWidthArg{n}{1}+1)}{\timeWindow^{\indexMapper(n,-\lmsWidthArg{n}{1}+1)}}).
+%$$
 The boundary conditions are automatically satisfied through the definition of the \spaceTimeAcronym\ trial subspace. The minimization problem~\eqref{eq:obj_gen_lms_final_st} again yields a least-squares problem.
+\begin{remark}
+\methodAcronym\ with the direct solution approach and an \spaceTimeAcronym\ subspace comprises minimizing the same objective function as \methodAcronym\ with the direct solution approach and an \spatialAcronym\ trial subspace. 
+\end{remark}
 \KTC{I would add a remark that highlights the similarities between the direct
 approach for the two kinds of subspaces. They minimize the exact same
-objective function, which is interesting.}
+objective function, which is interesting.} \EP{See if you agree with what I have}
 \begin{remark}
 For the limiting case where one window comprises entire domain (i.e.,
 	$\DeltaSlabArg{1}\equiv T$), uniform quadrature weights are used, the trial
-	space is set to be $\stspaceSTArg{1} = \stspaceST$, the weighting matrices
-	$\stweightingMatArg{1}$ and $\lspgWeightingST$ comprise the identity matrix
-	$\mathbf{I}$ \KTC{Don't we just need simply
+	space is set to be $\stspaceSTArg{1} = \stspaceST$, the weighting matrix $\lspgWeightingST = \text{diag}(\stweightingMatOneArg{1})$
+	\KTC{Don't we just need simply
 	$W_{ST}=\text{diag}(W^1)$ (with $W^1$ the half-factor of $A^1$)?. I think this
-	would be more general.}, and $\nstepsArg{1} = N_t$ time instances are employed that
+	would be more general.}\EP{Yes, this is better. Is diag the right command though? It should be $W_{ST} = [W \; W \; W \; W]$}, and $\nstepsArg{1} = N_t$ time instances are employed that
 	satisfy $\timeWindowArg{1}{i} = t^i$, $i=1,\ldots,N_t$, then
 	$\stgenstateArg{1} =  \stgenstate_\text{ST-LSPG}$ and direct \methodAcronym\
 	with an \spaceTimeAcronym\ trial subspace recovers ST-LSPG. 
@@ -151,13 +156,16 @@ $\stgenstateArg{n}$, $n=1,\ldots,\nslabs$ that satisfy
 %\end{split} 
 %\end{equation}
 where the discrete objective function is given by
-$$\objectiveDiscreteSTArg{n}: \statey \mapsto \frac{1}{2}\sum_{i=1}^{\ncollocSTArg{n}} \zeta^{n,i} 
+\begin{equation*}
+\begin{split}
+\objectiveDiscreteSTArg{n} &\vcentcolon \statey \mapsto \frac{1}{2}\sum_{i=1}^{\ncollocSTArg{n}} \zeta^{n,i} 
 \bigg[ \dot{\statey}(\collocPointSTArg{n}{i})  - \velocity (\stateyArg{}{\collocPointSTArg{n}{i}},\collocPointSTArg{n}{i} ) \bigg]^T 
 \stweightingMatArg{n} 
-\bigg[ \dot{\statey}(\collocPointSTArg{n}{i})  - \velocity (\stateyArg{}{\collocPointSTArg{n}{i}},\collocPointSTArg{n}{i} ) \bigg]
-$$
-\KTC{Can you add the domain and codomain of the function to be consistent with
-earlier functionals?} and $\zeta^{n,i} \in \RRplus$, $i=1,\ldots,\ncollocSTArg{n}$ are quadrature
+\bigg[ \dot{\statey}(\collocPointSTArg{n}{i})  - \velocity (\stateyArg{}{\collocPointSTArg{n}{i}},\collocPointSTArg{n}{i} ) \bigg] \\
+& \vcentcolon \RR{\fomdim} \otimes \timeSpaceArg{n} \rightarrow \RRplus,
+\end{split}
+\end{equation*}
+and $\zeta^{n,i} \in \RRplus$, $i=1,\ldots,\ncollocSTArg{n}$ are quadrature
 weights over the $n$th time window. The optimization problem~\eqref{eq:obj_gen_slab2} again comprises a least-squares problem.
 \KTC{It would be great to a comment about how this is equivalent to Qiqi Wang
 and Paul Constantine's method in the case of one time window and $\Pi^1$
