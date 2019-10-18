@@ -12,19 +12,26 @@ and then briefly outline direct and indirect methods for \spaceTimeAcronym\ tria
 %body of work. In this section, we outline a variety of such techniques. 
 \subsection{\spatialAcronym: direct and indirect methods}
 \methodAcronym\ with \spatialAcronym\ trial subspaces can be viewed as an optimal-control problem.
-Numerical techniques to
-solve optimal-control problems can be classified as either
+Numerical solution techniques for
+optimal-control problems can be classified as either
 \textit{direct} or \textit{indirect}
-methods~\cite{conway_optimalcontrolreview}. Rather than working with the first order optimality conditions~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs}, direct methods ``directly" solve the optimization problem~\eqref{eq:tclsrm} by first
-numerically discretizing the system and objective functional and ``transcribing"
-the infinite dimensional problem into a finite-dimensional nonlinear
-programming (optimization) problem. Direct approaches thus
-``discretize-then-optimize''.
-In contrast, indirect methods compute solutions to the Euler--Lagrange equations~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs} (which comprise the first-order optimality conditions of the objective functional). Thus, indirect methods ``optimize-then-discretize," and solve the optimization problem
-``indirectly". A variety of both discretization and solution techniques are possible
+methods~\cite{conway_optimalcontrolreview}. Rather than working with the first-order optimality conditions~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs}, direct methods ``directly" solve the optimization problem~\eqref{eq:tclsrm} by first
+numerically discretizing the system \KTC{What does it mean to discretize the
+system?} and objective functional and ``transcribing"
+the infinite-dimensional problem into a finite-dimensional 
+problem. Direct approaches thus
+``discretize then optimize''. \KTC{Note: only use hyphens when
+discretize-then-optimize is used as an adjective.}
+In contrast, indirect methods compute solutions to the Euler--Lagrange
+equations~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs} (which comprise the
+first-order optimality conditions). \KTC{Note: they are not first-order
+optimality conditions of the objective functional only; they are first-order
+optimality conditions of the optimization problem} Thus, indirect methods
+``optimize then discretize," and solve the optimization problem
+``indirectly.'' A variety of both discretization and solution techniques are possible
 for both direct and indirect methods. Collocation methods,
 finite-element methods, spectral methods, and shooting methods are all examples of
-plausible solution techniques.  
+possible solution techniques.  
 
 In the present context, we investigate both direct and indirect methods to solve \methodAcronym\ with \spatialAcronym\ trial
 subspaces. In particular, we consider:
