@@ -24,10 +24,10 @@ The \methodAcronym\ approach with uniform \spatialAcronym\ subspaces comprises s
       & \underset{\genstateyArgnt{} \in \RR{\romdim} \otimes \timeSpaceArg{n}}{\text{minimize}}\; \mathcal{J}^n(\basisspace \genstateyArgnt{} + \stateIntercept \otimes \onesFunctionArg{n}), \\ 
       & \text{subject to }\; \genstateyArg{}{\timeStartArg{n}} =
 \begin{cases} \genstateArg{n-1}{\timeEndArg{n-1}} & n = 2,\ldots,\nslabs \\
-\genstateIC & n=1, \end{cases} 
+\genstateIC & n=1. \end{cases} 
 \end{split}
 \end{equation}
-for $n = 1,\ldots,\nslabs$. Following the derivation of the Euler--Lagrange equations presented in Appendix~\ref{appendix:eulerlagrange} leads to Eq.~\eqref{eq:euler_lagrange_analysis}, which in this context comprises the sequence of systems to be solved for $\genstate^n$ (and, implicitly, $\genstateDotArgnt{n}$) over $t \in [\timeStartArg{n},\timeEndArg{n}]$:
+Following the derivation of the Euler--Lagrange equations presented in Appendix~\ref{appendix:eulerlagrange} leads to Eq.~\eqref{eq:euler_lagrange_analysis}, which in this context comprises the sequence of systems to be solved for $\genstate^n$ (and, implicitly, $\genstateDotArgnt{n}$) over $t \in [\timeStartArg{n},\timeEndArg{n}]$:
 \begin{multline}\label{eq:g_equiv_1}
  \int_{\timeStartArg{n}}^{\timeEndArg{n}} \bigg( \frac{\partial \minintegrandArg{n}  }{\partial \genstateyDiscrete }(\genstateArg{n}{t},\genstateDotArg{n}{t},t)  \variationArgntt{n}{t}  - \frac{d}{dt}\bigg( \frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDot} (\genstateArg{n}{t},\genstateDotArg{n}{t},t ) \bigg) \variationArgntt{n}{t} \bigg)dt +\\ \bigg(\frac{\partial \minintegrandArg{n}}{\partial \genstateyDiscreteDot}(\genstateArg{n}{\timeEndArg{n}},\genstateDotArg{n}{\timeEndArg{n}},\timeEndArg{n}) \bigg) \variationArgntt{n}{\timeEndArg{n}}   = 0,
 \end{multline}
