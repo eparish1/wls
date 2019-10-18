@@ -234,17 +234,12 @@ Defining a ``vectorization" function
 &\vcentcolon \RR{p} \otimes \RR{m} \rightarrow \RR{pm},
 \end{align*}
 the vectorized generalized coordinates over the $n$th time window are 
-defined as \KTC{notationally, why are we doing a double bar instead of a bar?}
-\EP{The notation for space--time in 2.4 uses bars. I don't want to confuse these generalized coordinates with those, they conceptually two different things} 
+defined as 
 \begin{equation*}
 \genstatecollocMatSlabArg{n} \defeq 
 \unroll (\genstateDiscreteArg{n,1},\ldots,\genstateDiscreteArg{n,\nstepsArg{n}} ).
 \end{equation*}
 We now define the weighted space--time residual over the entire window as
-\KTC{To make this valid for seeping back into the previous time window, the
-second argument could be omitted here (okay because there is already a
-superscript on the residual) and arbitrary previous solutions could be
-included in the first residual here.}
 \begin{equation*}
 \residLMSSlabArg{n} : \genstatecollocMatySlabArg{} \mapsto \begin{bmatrix}
  \sqrt{\frac{\quadWeightsLMSScalarArg{n}{1}}{2}} \stweightingMatOneArg{n} \residLMSArg{n,1}( \basisspaceArg{n} \genstateyDiscreteArgnt{1} + \stateInterceptArg{n}; 
@@ -255,7 +250,7 @@ included in the first residual here.}
  \sqrt{\frac{\quadWeightsLMSScalarArg{n}{\nstepsArg{n}}}{2}} \stweightingMatOneArg{n} \residLMSArg{n,\nstepsArg{n}}( \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n}} + \stateInterceptArg{n}; \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n}-1} + \stateInterceptArg{n} ,  \ldots, \basisspaceArg{n} \genstateyDiscreteArgnt{\nstepsArg{n} - \lmsWidthArg{n}{\nstepsArg{n}} } + \stateInterceptArg{n} ) \\
 \end{bmatrix},
 \end{equation*}
-where $\genstatecollocMatySlabArg{} \defeq \unroll (\genstateyDiscreteArg{1},\ldots,\genstateyDiscreteArg{\nstepsArg{n}} )$ and, for $i \le 0$,
+where $\genstatecollocMatySlabArg{} \equiv \unroll (\genstateyDiscreteArg{1},\ldots,\genstateyDiscreteArg{\nstepsArg{n}} )$ and, for $i \le 0$,
 \begin{equation}\label{eq:wls_genspatial_direct_args}
 \genstateyDiscreteArgnt{n,i}  \equiv 
 \begin{cases}
@@ -263,19 +258,26 @@ where $\genstatecollocMatySlabArg{} \defeq \unroll (\genstateyDiscreteArg{1},\ld
 \genstateICOne  & n = 1. 
 \end{cases}
 \end{equation}
-It is worth noting that, by design, 
+We note that
 \begin{equation*}
 \objectiveArgLMS{n}_{\text{D-S}} \bigg( \basisspaceArg{n} \genstateDiscreteArg{n,1} + \stateInterceptArg{n},\ldots,\basisspaceArg{n} \genstateDiscreteArg{n,\nstepsArg{n}} + \stateInterceptArg{n} \ \bigg) 
 =
 \bigg[\residLMSSlabArg{n}  (\genstatecollocMatSlabArg{n}) \bigg]^T \bigg[ \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n}) \bigg].
 \end{equation*} 
-Using these definitions, Algorithm~\ref{alg:colloc_gn} presents the standard Gauss--Newton method. The algorithm consists of three fundamental steps: (1) compute the FOM O$\Delta$E residual given the current guess, (2) compute the Jacobian of the residual over the time window and (3) solve the linear least-squares problem and update the guess. 
+Using these definitions, Algorithm~\ref{alg:colloc_gn} presents the standard
+Gauss--Newton method. Each Gauss--Newton iteration consists of three fundamental steps: (1)
+compute the FOM O$\Delta$E residual given the current guess, (2) compute the
+Jacobian of the residual over the time window, and (3) solve the linear least-squares problem and update the guess. 
 
-The practical implementation of the Gauss--Newton algorithm requires an efficient method for computing the Jacobian of the residual over the time window. In particular, it is important to note that for linear multistep methods (and many other time marching schemes) the Jacobian of the residual over the time window will yield an almost block-diagonal 
-sparse matrix with the sparsity pattern
-\begin{equation*}
-\frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{}}(\genstatecollocMatSlabArg{n})  =
- \begin{bmatrix*}[l]
+The practical implementation of the Gauss--Newton algorithm requires an
+efficient method for computing the Jacobian of the residual over the time
+window
+$\frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{}}$.
+For this purpose, we can leverage the fact that this Jacobian is a block lower
+triangular matrix with the following sparsity pattern (for $\lmsWidthArg{n}{i} = 1$,
+$i=1,\ldots,\nstepsArg{n}$):  \KTC{make sure the column widths are correct.
+Maybe add dimensions for each block?}
+\begin{equation*} \begin{bmatrix*}[l]
 \matshapeb & \\%[-5pt]
  \matshapea & \matshapea & \\%[-5pt]
  & \matshapea  & \matshapea & \\%[-5pt]
@@ -290,18 +292,22 @@ sparse matrix with the sparsity pattern
 % & &  & & \hspace{-15 pt} \matshapea 
 %\end{bmatrix*}.
 \end{equation*}
-This sparsity pattern can be leveraged to assemble the Jacobian of the residual over the time window from Jacobians of the residual at single time instances. 
-Further, for solution techniques based on the normal equations, one can leverage the sparsity pattern 
-to efficiently compute the Jacobian matrix--matrix product.
-It is also worth noting that the 
-normal equations will comprise a banded block system, this can be leveraged to speed up the linear solves at each Gauss--Newton iteration.
+In particular, solution techniques can leverage this structure, e.g., to
+efficiently compute Jacobian--vector products.
+Another consequence of this sparsity pattern is that the normal equations
+arising at each Gauss--Newton iteration 
+comprise a banded block system that can also be exploited.
 
-\begin{remark}\label{remark:gaussnewton}\textit{(Acceleration of the Gauss--Newton Solve)}\\
+\begin{remark}\label{remark:gaussnewton}\textit{(Acceleration of the
+	Gauss--Newton Method)}\\
 	The principal cost of a Gauss--Newton method is often the formation of the Jacobian matrix. A variety of techniques aimed at 
-reducing this computational burden exist; Jacobian-free Newton-Krylov
+reducing this computational burden exist; Jacobian-free Newton--Krylov
 	methods~\cite{jfnk}, Broyden's method~\cite{broyden} (as explored in
 	Ref.~\cite{carlberg_thesis}, Appendix A), and frozen Jacobian approximations
-	are several such examples. Further, the space--time formulation introduces an extra dimension for parallelization that can be used to accelerate the wall-clock time of the ROM. The investigation of these additional, potentially more efficient, solution algorithms will be a topic of future work. 
+	are several such examples. Further, the space--time formulation introduces
+	an extra dimension for parallelization that can be exploited to furture
+	reduce the wall time. The investigation of these additional, potentially
+	more efficient, solution algorithms is a topic of future work. 
 \end{remark}
 %\subsubsection{Jacobian-Free Implementation}
 %The dominant cost of the Gauss Newton algorithm is the computatation of the action of the Jacobian matrix on the trial basis. To alleviate this burden, the following Jacobian-free method is proposed:
