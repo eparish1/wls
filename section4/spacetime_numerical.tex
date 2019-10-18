@@ -159,6 +159,12 @@ $$
 \KTC{Can you add the domain and codomain of the function to be consistent with
 earlier functionals?} and $\zeta^{n,i} \in \RRplus$, $i=1,\ldots,\ncollocSTArg{n}$ are quadrature
 weights over the $n$th time window. The optimization problem~\eqref{eq:obj_gen_slab2} again comprises a least-squares problem.
+\KTC{It would be great to a comment about how this is equivalent to Qiqi Wang
+and Paul Constantine's method in the case of one time window and $\Pi^1$
+corresponding to full solution trajectories. They use collocation-based
+hyper-reduction at a few points in time (but for the full ODE residual at that
+time), which you could mention. This is a very cool connection I didn't
+realize before, and I think it's definitely worth mentioning!}
 %$$\objectiveDiscreteSTArg{n}: \stgenstatey \mapsto \sum_{i=1}^{\ncollocSTArg{n}} \gamma_i 
 %\bigg[ \stbasisDotArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ }  - \velocity (\stbasisArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ } + \stateInterceptSTArg{n},\collocPointSTArg{n,i}) \bigg]^T 
 %\stweightingMatArg{n} 
