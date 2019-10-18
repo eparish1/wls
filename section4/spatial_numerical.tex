@@ -56,7 +56,7 @@ other time-integration methods (e.g., Runge--Kutta) follows closely.
 %%\timeWindowArg{n}{0} = \timeStartArg{n}, \timeWindowArg{n}{\nstepsArg{n}} =
 %%\timeEndArg{n}
 %\end{align*}
-\subsubsection{Linear multistep schemes}
+\subsubsection{Linear multistep schemes}\label{sec:lmm}
 Linear multistep schemes approximate the solution at time instance $\timeWindowArg{n}{i}$ using the previous $\lmsWidthArg{n}{i}$ time instances, where $\lmsWidthArg{n}{i}$ denotes the number of time steps employed by the scheme at the $i$th time instance of the $n$th window. 
 %Discretizing the FOM ODE~\eqref{eq:FOM} with a linear $k$-step scheme at the $i$th time-instance over the $n$th time slab yields,
 %\begin{equation}\label{eq:kstep}
@@ -267,7 +267,7 @@ Jacobian of the residual over the time window, and (3) solve the linear least-sq
 The practical implementation of the Gauss--Newton algorithm requires an
 efficient method for computing the Jacobian of the residual over the time
 window
-$\frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{}}$.
+${\partial \residLMSSlabArg{n}}/{\partial \genstatecollocMatySlabArg{}}$.
 For this purpose, we can leverage the fact that this Jacobian is a block lower
 triangular matrix with the following sparsity pattern (for $\lmsWidthArg{n}{i} = 1$,
 $i=1,\ldots,\nstepsArg{n}$): 
@@ -462,33 +462,54 @@ $\genstate_i^{n} \leftarrow  \genstate_{i-1}^{n}$ \Comment{Reset state to value 
 }
 Return converged solution, $\genstateArgnt{n}= \genstateArgnt{n}_i$
 \end{algorithm}
-\subsubsection{Numerical considerations for the forward and backward problems}
-The FBSM requires solving the systems~\eqref{eq:lspg_continuous} and~\eqref{eq:lspg_adjoint}, both of which are defined at the time-continuous level. 
+\subsubsection{Considerations for the numerically solving the forward and
+backward systems}
+The FBSM requires solving the forward~\eqref{eq:lspg_continuous} and
+backward~\eqref{eq:lspg_adjoint} systems, both of which are defined at the time-continuous level. 
 The numerical implementation of the FBSM requires two main ingredients: (1) temporal discretization schemes for the forward and backward problems and (2) 
-an efficient method for computing the action of the Jacobian transpose on a vector.  
+an efficient method for computing terms involving the transpose of the
+Jacobian of the velocity.
 
-This work examines the use of linear multistep methods for the purpose of temporal discretization of the forward and 
-backwards problems. As described in  
-the direct solution approach, temporal discretization is achieved by introducing $\nstepsArg{n} + 1$ time instances over each time window. Linear multistep methods then use this time-grid for temporal discretization of~\eqref{eq:lspg_continuous} and~\eqref{eq:lspg_adjoint}. 
+This work employs linear multistep schemes for time discretization of the
+forward and backward problems. As described in Section \ref{sec:lmm},
+temporal discretization is achieved by introducing $\nstepsArg{n} + 1$ time
+instances over each time window.
 
-The second ingredient, namely an efficient method for computing the action of the Jacobian transpose on a vector, can be challenging. 
-In the case one does not have access to the full-order model Jacobian (or it is too costly to compute), the evaluation of this term can be challenging and expensive. Here, two methods are discussed that can be used to evaluate the action of the Jacobian transpose on a vector as seen in~\eqref{eq:lspg_adjoint}:
+The second ingredient, namely devising an efficient method for computing terms
+involving the transpose of the Jacobain of the velocity,
+can be challenging if one
+does not have explicit access to this Jacobian or it is too costly to
+compute. We discuss two methods that can be used to evaluate such terms
+that appear in the forward system~\eqref{eq:lspg_adjoint}:
 \begin{enumerate}
-\item \textit{Jacobian-free approximation}: A non-intrusive way to evaluate the Jacobian transpose in~\eqref{eq:lspg_adjoint} is to recognize that all terms including the Jacobian transpose are left multiplied by the transpose of the trial basis. One can make the manipulation,
-$$\basisspaceTArg{n} \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn)\bigg]^T = \bigg[  \frac{\partial \velocity}{\partial \stateyDiscrete} (\veloargsromn) \basisspaceArg{n} \bigg]^T.$$
-This manipulation allows one to compute the action of the Jacobian on each column of $\basisspaceArg{n}$ by, e.g., the finite difference approximation
-$$\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \basisvec_i^n \approx \frac{1}{\epsilon}\bigg( \velocity(\basisspaceArg{n}\genstateArg{n}{t} + \stateInterceptArg{n} + \epsilon \basisvec_i^n,t) - \velocity(\veloargsromn) \bigg).$$
-The Jacobian transpose can be formed in $\romdimArg{n}+1$ evaluations of the velocity. For cases where the reduced-order model is low dimensional, this approach is feasible. For higher dimensional reduced-order models, this approach can be prohibitively expensive.
+\item \textit{Jacobian-free approximation}: A non-intrusive way to evaluate
+	these terms is to recognize that all terms including the transpose of the
+		Jacobian of the velocity are left multiplied by the transpose of the
+		spatial trial basis; this can be manipulated as
+$$\basisspaceTArg{n} \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}
+		(\veloargsromn)\bigg]^T = \bigg[  \frac{\partial \velocity}{\partial
+		\stateyDiscrete} (\veloargsromn) \basisspaceArg{n} \bigg]^T,$$
+		which exposes the ability to approximate rows of this matrix via
+		finite differences, e.g., via forward differences as
+$$\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn)
+		\basisvec_i^n \approx \frac{1}{\epsilon}\bigg(
+		\velocity(\basisspaceArg{n}\genstateArg{n}{t} + \stateInterceptArg{n} +
+		\epsilon \basisvec_i^n,t) - \velocity(\veloargsromn) \bigg),\quad
+		i=1,\ldots,\romdimArg{n},$$
+which requires $\romdimArg{n}+1$ evaluations of the velocity. 
 
-\item \textit{Automatic differentiation}: A more intrusive, but potentially
-	more efficient, method of computing the action of the Jacobian transpose on
-		a vector is through automatic differentiation (AD). AD methods comprise a
-		class of techniques that can be used to numerically evaluate derivatives
-		of functions (e.g., Jacobians, vector-Jacobian products) by recursively
-		applying the chain rule. The numerical examples presented later in this
-		work leverage AD. The principal drawback of AD is that AD methods are intrusive and may not be suitable for, e.g., legacy codes.  
+\item \textit{Automatic differentiation}: A more intrusive, but exact
+	method for computing these terms is
+		through automatic differentiation (AD), which evaluate derivatives of
+		functions (e.g., Jacobians, vector-Jacobian products) in a numerically
+		exact manner by recursively applying the chain rule. The numerical
+		examples presented later in this work leverage AD. The principal drawback
+		of this approach is their intrusiveness, which may prevent them from
+		practical application, e.g., in legacy codes.
+		\KTC{EP: verify this paragraph.}
 \end{enumerate}
 
+\KTC{HERE}
 \begin{remark}\label{remark:fbsm}(Acceleration of Indirect Methods)
 The FBSM is a simple iterative method for solving the coupled two-point boundary value problem. For large time windows, however, the FBSM may require many 
 forward--backward iterations for convergence. More sophisticated solution techniques, such as a multiple FBSM method or multiple shooting methods, promise 
