@@ -143,6 +143,8 @@ where
 &\vcentcolon \RR{\fomdim} \otimes \RR{\nstepsArg{n}} \rightarrow \RR{}_+,
 \end{split}
 \end{equation*}
+\KTC{On the RHS, shouldn't this be $\objectiveArgLMS{n}_\text{D}$? I couldn't
+find the definition of $\objectiveArgLMS{n}$ anywhere.}
 with the initial condition $\approxstateDiscreteArg{1,0} = \basisspaceArg{n}\basisspaceTArg{n} (\stateFOMIC - \stateInterceptArg{n}) + \stateInterceptArg{n}$.
 %We additionally set $\approxstateDiscreteArg{1,0} = \projectorSpatialArg{n}(\stateFOMIC)$, where
 %$\projectorSpatialArg{n} : \RR{\fomdim} \rightarrow \trialspaceArg{n}$ is the $\elltwo$-orthogonal projector 
@@ -504,13 +506,13 @@ which requires $\romdimArg{n}+1$ evaluations of the velocity.
 		examples presented later in this work leverage AD. The principal drawback
 		of this approach is their intrusiveness, which may prevent them from
 		practical application, e.g., in legacy codes.
-		\KTC{EP: verify this paragraph.} \EP{This looks good to me}
 \end{enumerate}
 
-\KTC{HERE}
 \begin{remark}\label{remark:fbsm}(Acceleration of Indirect Methods)
 The FBSM is a simple iterative method for solving the coupled two-point boundary value problem. For large time windows, however, the FBSM may require many 
-forward--backward iterations for convergence. More sophisticated solution techniques, such as a multiple FBSM method or multiple shooting methods, promise 
-to reduce this cost. Analyses of additional solution techniques will be a subject of future work.
+forward--backward iterations for convergence. More sophisticated solution
+	techniques, such as a multiple FBSM method or multiple shooting methods, can 
+reduce this cost in principle. Analyzing additional solution techniques is
+	the subject of future work.
 \end{remark}
 
