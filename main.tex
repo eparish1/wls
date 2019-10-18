@@ -710,18 +710,26 @@ purpose.
 
 
 \section{Conclusions}\label{sec:conclude}
-This paper introduced the windowed least-squares (\methodAcronym) \approachKwd\ for model reduction  of dynamical systems. The approach sequentially minimizes the time-continuous full-order model residual within a low-dimensional trial subspace over a series of time windows. The formulation is applicable to both spatial and space--time dimension reduction trial subspaces. The Galerkin, Least-Squares Petrov--Galerkin (LSPG) and space--time LSPG methods were shown to be specific instances of the proposed method 
+This paper proposed the windowed least-squares (\methodAcronym) \approachKwd\ for model reduction  of dynamical systems. The approach sequentially minimizes the
+	time-continuous full-order-model residual within a low-dimensional space--time trial
+	subspace over time windows. The approach was formulated for two types of trial subspaces: one that reduces only the spatial dimension of the full-order model, and one that reduces both the spatial and temporal dimensions of the full-order model. For each type of trial
+	subspace, we then outlined two different solution techniques: direct (i.e.,
+	discretize then optimize) and indirect (i.e., optimize then discretize). We showed that particular instances of the approach recover Galerkin,
+	least-squares Petrov--Galerkin (LSPG), and space–time LSPG projection.  
 
-We considered two differing techniques to solve the least-squares minimization problems arising from the \methodAcronym\ \approachKwd: direct (discretize-then-optimize) and indirect (optimize-then-discretize). 
-The case of \spatialAcronym\ trial subspaces proved particularly interesting: it was shown that indirect methods comprise solving a coupled two-point 
-Hamiltonian boundary value problem. The forward problem evolves the standard Galerkin ROM forced by a ``costate" variable, while a backward problem evolves the costate and is forced by the ROM residual.
+The case of \spatialAcronym\ trial subspaces is of particular interest in the \methodAcronym\ context: it was shown that indirect methods comprise solving a coupled two-point 
+Hamiltonian boundary value problem.
+The forward system, which is forced by an auxiliary costate,
+		evolves the (spatial) generalized coordinates of the ROM in time. The
+		backward system, which is forced by the time-continuous FOM residual
+		evaluated about the ROM state, governs the dynamics of the costate. 
 
-Numerical experiments of the compressible Euler and Navier--Stokes equations demonstrated the utility in the proposed approach. The first numerical experiment, in where the Sod shock tube was examined, demonstrated that \methodAcronymROMs\ minimizing the residual over larger time windows yielded solutions with lower space--time residuals. Increasing the window size over which the residual was minimized, however, did not necessarily decrease the $\elltwo$ solution error; this was observed to occur over an intermediary window size. We additionally observed that the  
-\methodAcronym\ \approachKwd\ overcomes the time-step sensitivity challenges that LSPG is subject to. The second numerical experiment, which examined collocated ROMs of a compressible cavity flow, demonstrated the utility of the \methodAcronym\ formulation on a more complex flow. In this experiment, \methodAcronymROMs\ yielded predictions with relative errors less than $5-10\%$, while the Galerkin and LSPG ROMs failed to converge/blew up. Increasing the window size over which the residual was minimized again led to a lower space--time residual, but not necessarily a lower $\elltwo$ error.
+Numerical experiments of the compressible Euler and Navier--Stokes equations demonstrated the utility in the proposed approach. The first numerical experiment, in where the Sod shock tube was examined, demonstrated that \methodAcronymROMs\ minimizing the residual over larger time windows yielded solutions with lower space--time residuals. Increasing the window size over which the residual was minimized, however, did not necessarily decrease the solution error in the $\elltwo$-norm; this was observed to occur over an intermediary window size. We additionally observed that the  
+\methodAcronym\ \approachKwd\ overcomes the time-discretization sensitivity that LSPG is subject to. The second numerical experiment, which examined collocated ROMs of a compressible cavity flow, demonstrated the utility of the \methodAcronym\ formulation on a more complex flow. In this experiment, \methodAcronymROMs\ yielded predictions with relative errors less than $5-10\%$, while the Galerkin and LSPG ROMs failed to converge/blew up. Increasing the window size over which the residual was minimized again led to a lower space--time residual, but not necessarily a lower error in the $\elltwo$-norm.
 
 %In the case of spatial dimension-reduction-only, \methodAcronym\ displays improved performance over LSPG at the expense of an increased computational cost. This increase in computational cost is due to the fact that forming and/or solving the nonlinear minimization problem becomes more difficult as the time-slab size grows. To minimize this increase in cost, we intend to pursue the development of new solution techniques tailored to \methodAcronym.
  
-The principal challenge encountered in the \methodAcronym\ formulation is the computational cost: increasing the window size over which the residual is minimized leads to, in general, a higher computational cost. In the context of the direct solution approach, this increased cost is due to the fact that forming and solving the least-squares problem becomes more expensive as the window size grows. In the context of indirect methods, this increased cost is a result of the increased number of iterations of the forward backward sweep method. While numerical experiments demonstrated that the increase in computational cost is mild, future work will focus on the development of solution techniques to improve the scaling of the method.
+The principal challenge encountered in the \methodAcronym\ formulation is the computational cost: increasing the window size over which the residual is minimized leads to a higher computational cost. In the context of the direct solution approach, this increased cost is due to the increased cost of forming and solving the least-squares problem associated with larger window sizes. In the context of indirect methods, this increased cost is a result of the increased number of iterations of the forward backward sweep method. While numerical experiments demonstrated that the increase in computational cost is mild, future work will focus on the development of solution techniques to improve the scaling of the method.
 
  
 
@@ -817,12 +825,8 @@ where $\integrand: \RR{M}  \times \RR{M}  \times[a,b] \rightarrow  \RRplus$
 	(\stateyDiscrete,\stateyDotDiscrete,\timeDummy) \mapsto
 	\integrand(\stateyDiscrete,\stateyDotDiscrete,\timeDummy)$. We now introduce
 	the function $\statez: [a,b] \rightarrow \RR{M}$ with $\statez: \timeDummy \mapsto \statez(\timeDummy)$ along with $\statezDot \equiv d \statez /d\timeDummy$. We define this function to be a stationary point of~\eqref{eq:el_gen} (with $\statez$ being the first argument and $\statezDot$ being the second argument) subject to the boundary condition
-	$\statez(a) = \statez_a$. \KTC{This previous sentence isn't correct. The
-	functional defined here has two arguments; the extremum can't be a single
-	argument, as it's a pair of arguments. You need to connect these by defining
-	a new function that maps a time-dependent function to this functional
-	evaluated at the time-dependent function and its derivative..}\EP{ Check this, I think this is more precise now.} 
-We introduce an arbitrary function $\variation : [a,b] \rightarrow \RR{M}$
+	$\statez(a) = \statez_a$. 
+We additionally introduce an arbitrary function $\variation : [a,b] \rightarrow \RR{M}$
 with the boundary condition $\variationArg{a} = \bz$ and define a variation
 from the stationary point by
 \begin{align*}
@@ -830,7 +834,7 @@ from the stationary point by
 &: [a,b] \times \RR{} \rightarrow \RR{M}.
 \end{align*}
 We note that $\statezBar$ satisfies the same boundary condition $\statez$ since $\variationArg{a} = \bz$.
-We define a new function that is equivalent to~\eqref{eq:el_gen} evaluated at $\statezBar$ in the first argument and 
+We define a new function that is equivalent to the function~\eqref{eq:el_gen} evaluated at $\statezBar$ in the first argument and 
 $\statezDotBar \equiv d\statezBar / d\timeDummy$ in the second argument,
 $$
 \mathcal{J}_{\delta}: \delta \mapsto \int_a^b \integrand(\statezBar(t,\delta),\statezDotBar(t,\delta) ,t)  dt.
@@ -873,19 +877,20 @@ $$
 = \int_a^b \bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \variation(t)  + \frac{\partial \integrand}{\partial \stateyDotDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) ,t \big) \variationDot(t) \bigg]dt. $$
 %$$\int_a^b \bigg[\frac{\partial \integrand  }{\partial \overline{\genstate}} \variation + \frac{\partial \integrand}{\partial {\overline{\genstateDot}}}\variationDot \bigg]_{\epsilon = 0}dt = 0.$$
 We integrate the second term by parts,
-\begin{align}\label{eq:gradient}
-	\begin{split}
+\begin{multline}\label{eq:gradient}
+%	\begin{split}
 %\int_a^b \frac{d}{d\epsilon}\bigg[ \integrand \big(\statezBar(t;\epsilon),\statezDotBar(t;\epsilon),t \big) \bigg] dt 
 \frac{d}{d\delta} \big( \mathcal{J}_{\delta} \big)(\epsilon)
-	=&  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete }
+	=  \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete }
 	\big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon) , t \big)
 	\variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial
 	\stateyDotDiscrete }  \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon)
-	,t \big) \bigg) \variation(t) \bigg]dt + \\ &\frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(b,\epsilon),\statezDotBar(b,\epsilon) ,b \big) \variation(b) , 
-	\end{split}
-\end{align}
+	,t \big) \bigg) \variation(t) \bigg]dt + \\ 
+\frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(b,\epsilon),\statezDotBar(b,\epsilon) ,b \big) \variation(b) , 
+%	\end{split}
+\end{multline}
 where we have used $\variationArg{a} = \bz$.
-Substituting Eq.~\eqref{eq:gradient} in the stationarity conditions~\eqref{eq:stationaryOne} yields
+Substituting Eq.~\eqref{eq:gradient} in the stationarity condition~\eqref{eq:stationaryOne} yields
 \begin{equation}\label{eq:statOne}
   \int_a^b  \bigg[\frac{\partial \integrand  }{\partial \stateyDiscrete } \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \variation(t) - \frac{d}{dt}\bigg( \frac{\partial \integrand}{\partial \stateyDotDiscrete }  \big(\statezBar(t,\epsilon),\statezDotBar(t,\epsilon),t \big) \bigg) \variation(t) \bigg]dt + \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statezBar(b,\epsilon),\statezDotBar(b,\epsilon),b \big) \variation(b)  = 0. 
 \end{equation}
@@ -901,13 +906,15 @@ As $\variation$ is an arbitrary function, this equality requires
 %\begin{equation}\label{eq:euler_lagrange_appendix}
 %\bigg[ \frac{\partial \integrand  }{\partial \genstate} \bigg]^T  - \bigg[\frac{\partial \integrand}{\partial {\genstateDot}}\bigg]^T = \boldsymbol 0, 
 %\end{equation}
-\begin{gather}\label{eq:euler_lagrange_appendix}
-\bigg[ \frac{\partial \integrand  }{\partial \stateyDiscrete }
+\begin{equation}\label{eq:euler_lagrange_appendix}
+\begin{split}
+\bigg[ &\frac{\partial \integrand  }{\partial \stateyDiscrete }
 	\big(\statez(t),\statezDot(t) ,t\big) \bigg]^T - \bigg[ \frac{d}{dt}\bigg(
 	\frac{\partial \integrand}{\partial \stateyDotDiscrete }
-	\big(\statez(t),\statezDot(t),t \big) \bigg) \bigg]^T = \bz  \\
-\statez(a) = \statez_a, \qquad \bigg[ \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statez(b),\statezDot(b),b \big) \bigg]^T = \bz.
-\end{gather}
+	\big(\statez(t),\statezDot(t),t \big) \bigg) \bigg]^T = \bz , \\
+&\statez(a) = \statez_a, \hspace{0.65 in} \bigg[ \frac{\partial \integrand}{\partial \stateyDotDiscrete} \big(\statez(b),\statezDot(b),b \big) \bigg]^T = \bz.
+\end{split}
+\end{equation}
 %\genstate(a) = \genstate_a, \qquad \bigg[ \frac{\partial \integrand}{\partial {\genstateDot}} \bigg]^T_{t=b} = \bz.
 \KTC{I removed "subject to" as this is only used in an optimization-problem
 statement. Also, I don't understand the $z(a) = z_a$ conditions, or how that
@@ -934,7 +941,7 @@ To obtain the specific form of the Euler--Lagrange equations for the \methodAcro
 \basisspace \genstateyDiscreteDotArgnt{} - \velocity(\basisspace \genstateyDiscreteArgnt{}
 + \stateIntercept,\timeDummy) \big]^T \stweightingMatArg{} \big[
 \basisspace \genstateyDiscreteDotArgnt{}  - \velocity(\basisspace \genstateyDiscreteArgnt{} +
-\stateIntercept,t) \big], \\ & 
+\stateIntercept,\timeDummy) \big], \\ & 
 \vcentcolon \RR{\romdim} \times \RR{\romdim} \times [0,T]
  \rightarrow \RR{} .  
 \end{align*}
@@ -951,9 +958,9 @@ For notational purposes, we write the above as,
 $$  \minintegrand(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy) =  \minintegrand_1(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy) +  \minintegrand_2(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy) +  \minintegrand_3(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy),$$
 where
 \begin{align*}
-&\minintegrand_1(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy) \equiv  \frac{1}{2}\big[\basisspace \genstateyDiscreteDotArgnt{}  \big]^T  \stweightingMatArg{}  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big], \\
-&   \minintegrand_2(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy) \equiv   -  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big], \\
-&  \minintegrand_3(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy) \equiv  \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big] . 
+&\minintegrand_1(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy) =  \frac{1}{2}\big[\basisspace \genstateyDiscreteDotArgnt{}  \big]^T  \stweightingMatArg{}  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big], \\
+&   \minintegrand_2(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy) = -  \big[ \basisspace \genstateyDiscreteDotArgnt{} \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big], \\
+&  \minintegrand_3(\genstateyDiscrete,\genstateyDiscreteDot,\timeDummy) = \frac{1}{2}\big[\velocity(\veloargsromy) \big]^T \stweightingMatArg{} \big[ \velocity(\veloargsromy) \big] . 
 \end{align*}
 Constructing the Euler--Lagrange equations for this functional $\minintegrand$ requires evaluating the derivatives $\frac{\partial \minintegrand}{\partial \genstateyDiscrete}$ and $\frac{\partial \minintegrand}{\partial \genstateyDiscreteDot}$. We start by evaluating $\frac{\partial \minintegrand}{\partial \genstateyDiscrete}$ and go term by term.
 
