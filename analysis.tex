@@ -314,7 +314,7 @@ Using the definition of the costate~\eqref{eq:costate_def} and residual yields
 \le \\  \DeltaSlabArg{n} \sqrt{ \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2 +   \norm{\basisspaceTArg{n} \resid( \basisspaceArg{n} \stateROMSolArg{n} + \stateInterceptArg{n} , {\timeStartArg{n}} ) - 
  \basisspaceTArg{n} \resid( \basisspaceArg{n} \stateROMStarSolArg{n} + \stateInterceptArg{n}, {\timeStartArg{n}}  )}^2  } .
 \end{multline*}
-As, 
+As 
 \begin{multline*}
 \norm{\basisspaceTArg{n} \resid( \basisspace \stateROMSolArg{n} + \stateInterceptArg{n} , {\timeStartArg{n}}) - 
  \basisspaceTArg{n} \resid( \basisspaceArg{n} \stateROMStarSolArg{n} + \stateInterceptArg{n}, {\timeStartArg{n}}  )}
@@ -322,12 +322,12 @@ As,
  \norm{\basisspaceTArg{n}} \norm{ \resid( \basisspaceArg{n} \stateROMSolArg{n} + \stateInterceptArg{n} , {\timeStartArg{n}}) - 
   \resid( \basisspaceArg{n} \stateROMStarSolArg{n} + \stateInterceptArg{n} , {\timeStartArg{n}}  )},
 \end{multline*}
-with $\norm{\basisspaceTArg{n}} = 1$, applying A1 yields\EP{uncomment in .tex for steps if this isn't clear}
-%\begin{equation*}
-%\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt 
-%\le  \DeltaSlabArg{n} \big[ \sqrt{ \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2 +   \norm{\resid( \basisspace \stateROMSolArg{n} + \stateIntercept , {\timeStartArg{n}} ) - 
-%\resid( \basisspace \stateROMStarSolArg{n} + \stateIntercept, {\timeStartArg{n}}  )}^2  } \big].
-%\end{equation*}
+we get the simplification (note $\norm{\basisspaceTArg{n}} = 1$)
+\begin{equation*}
+\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt 
+\le  \DeltaSlabArg{n}  \sqrt{ \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2 +   \norm{\resid( \basisspace \stateROMSolArg{n} + \stateIntercept , {\timeStartArg{n}} ) - 
+\resid( \basisspace \stateROMStarSolArg{n} + \stateIntercept, {\timeStartArg{n}}  )}^2  } .
+\end{equation*}
 %\begin{equation*}
 %\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt 
 %\le  \DeltaSlabArg{n} \big[ \sqrt{ \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2 +  \lipshitz^2 \norm{ \stateROMSolArgt{n}{\timeStartArg{n}} - 
@@ -338,6 +338,7 @@ with $\norm{\basisspaceTArg{n}} = 1$, applying A1 yields\EP{uncomment in .tex fo
 %\le  \DeltaSlabArg{n} \big[ \sqrt{ (1 + \lipshitz^2) \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2  
 % } \big].
 %\end{equation*}
+Applying A1 and factoring yields
 \begin{equation}\label{eq:ustarbound}
 \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt 
 \le  \DeltaSlabArg{n} \sqrt{1 + \lipshitz^2} \norm{\stateROMSolArgt{n}{\timeStartArg{n}} - \stateROMStarSolArgt{n}{\timeStartArg{n} } }.
