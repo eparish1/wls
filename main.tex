@@ -631,7 +631,7 @@ Space--time methods reduce the number of equations in
 We now outline one such method: space--time least-squares Petrov--Galerkin (ST-LSPG)
 ~\cite{choi_stlspg}. 
 While the space--time Galerkin method~\cite{benner_st} is another alternative, it does not
-associate with any residual minimization principle, and thus we do not discuss
+associate with any residual-minimization principle, and thus we do not discuss
 it further.
 \subsubsection{Space--time LSPG projection} 
 Analogously to LSPG, space--time LSPG~\cite{choi_stlspg}
@@ -721,7 +721,7 @@ Numerical experiments of the compressible Euler and Navier--Stokes equations dem
 
 %In the case of spatial dimension-reduction-only, \methodAcronym\ displays improved performance over LSPG at the expense of an increased computational cost. This increase in computational cost is due to the fact that forming and/or solving the nonlinear minimization problem becomes more difficult as the time-slab size grows. To minimize this increase in cost, we intend to pursue the development of new solution techniques tailored to \methodAcronym.
  
-The principle challenge encountered in the \methodAcronym\ formulation is the computational cost: increasing the window size over which the residual is minimized leads to, in general, a higher computational cost. In the context of the direct solution approach, this increased cost is due to the fact that forming and solving the least-squares problem becomes more expensive as the window size grows. In the context of indirect methods, this increased cost is a result of the increased number of iterations of the forward backward sweep method. While numerical experiments demonstrated that the increase in computational cost is mild, future work will focus on the development of solution techniques to improve the scaling of the method.
+The principal challenge encountered in the \methodAcronym\ formulation is the computational cost: increasing the window size over which the residual is minimized leads to, in general, a higher computational cost. In the context of the direct solution approach, this increased cost is due to the fact that forming and solving the least-squares problem becomes more expensive as the window size grows. In the context of indirect methods, this increased cost is a result of the increased number of iterations of the forward backward sweep method. While numerical experiments demonstrated that the increase in computational cost is mild, future work will focus on the development of solution techniques to improve the scaling of the method.
 
  
 

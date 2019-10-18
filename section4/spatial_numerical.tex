@@ -209,23 +209,30 @@ backward Euler method is used to discretize the FOM ODE, then a backward Euler m
 \begin{remark}
 For the limiting case where $\nstepsArg{n} = 1$, $n=1,\ldots,\nslabs$ such that the window size is equivalent to the time step (i.e., $\DeltaSlabArg{n} = \timeWindowArg{n}{1} - \timeWindowArg{n}{0}$), uniform 
 quadrature weights are used, a uniform trial space is employed (i.e., $\trialspaceArg{n} = \trialspace$ and $\stateInterceptArg{n} = \stateInterceptArg{}, n=1,\ldots,\nslabs$), the weighting matrices are taken to be
-$\stweightingMatOneArg{n} = \lspgWeightingArg{}, n=1,\ldots,\nslabs$, and the time instances $\timeWindowArg{n}{1} = t^n$, $n=1,\ldots,\nslabs$, then 
+$\stweightingMatOneArg{n} = \lspgWeightingArg{}, n=1,\ldots,\nslabs$, and the
+	time instances correspond to the time grid used for time discretization $\timeWindowArg{n}{1} = t^n$, $n=1,\ldots,\nslabs$, then 
 $\approxstateDiscreteArg{n,1}  = \approxstateLSPG^n$, $n=1,\ldots,\nslabs$ and  
 \methodAcronym\ with \spatialAcronym\ trial
 	subspaces solved via the direct approach recovers the LSPG approach. 
 \end{remark} 
 \subsubsection{Solution to the least-squares problem through the Gauss--Newton
 	method}
-Discretization through linear multistep methods (as well as other techniques) 
-results in a least-squares problem. In particular, for the case where the full-order model~\eqref{eq:FOM} is nonlinear, the direct approach yields a nonlinear least-squares problem. 
-A variety of algorithms exist for solving nonlinear least-squares problems, including trust region approaches, the Gauss–Newton method, and the Levenberg–Marquardt method. The numerical experiments presented in this work comprise nonlinear systems and are solved via the Gauss--Newton method, and as such we outline this approach here. 
+	Problem \eqref{eq:obj_gen_lms_final} corresponds to a discrete least-squares
+	problem, which is nonlinear if the full-order-model velocity $\velocity$ is nonlinear in
+	its first argument. 
+A variety of algorithms exist for solving nonlinear least-squares problems,
+	including the Gauss--Newton method, and the Levenberg--Marquardt method.
+	\KTC{Removed `trust-region approaches', because Levenberg--Marquardt is a
+	trust-region approach. Also added en-dashed.} The numerical experiments
+	presented in this work consider nonlinear dynamical systems and are solved
+	via the Gauss--Newton method; as such, we outline this approach here. 
 
-To describe the Gauss--Newton method, we first define a ``vectorization" function 
+Defining a ``vectorization" function 
 \begin{align*}
  \unroll &\vcentcolon (\stateyDiscreteArg{1},\ldots,\stateyDiscreteArg{m} ) \mapsto \begin{bmatrix} [\stateyDiscreteArg{1}]^T & \ldots & [\stateyDiscreteArg{m}]^T \end{bmatrix}^T  \\
-&\vcentcolon \RR{p} \otimes \RR{m} \rightarrow \RR{pm}.
+&\vcentcolon \RR{p} \otimes \RR{m} \rightarrow \RR{pm},
 \end{align*}
-The vectorized generalized coordinates over the $n$th time window are then
+the vectorized generalized coordinates over the $n$th time window are 
 defined as \KTC{notationally, why are we doing a double bar instead of a bar?}
 \EP{The notation for space--time in 2.4 uses bars. I don't want to confuse these generalized coordinates with those, they conceptually two different things} 
 \begin{equation*}
@@ -461,7 +468,13 @@ This manipulation allows one to compute the action of the Jacobian on each colum
 $$\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsromn) \basisvec_i^n \approx \frac{1}{\epsilon}\bigg( \velocity(\basisspaceArg{n}\genstateArg{n}{t} + \stateInterceptArg{n} + \epsilon \basisvec_i^n,t) - \velocity(\veloargsromn) \bigg).$$
 The Jacobian transpose can be formed in $\romdimArg{n}+1$ evaluations of the velocity. For cases where the reduced-order model is low dimensional, this approach is feasible. For higher dimensional reduced-order models, this approach can be prohibitively expensive.
 
-\item \textit{Automatic differentiation}: A more intrusive, but potentially more efficient, method of computing the action of the Jacobian transpose on a vector is through automatic differentiation (AD). AD methods comprise a class of techniques that can be used to numerically evaluate derivatives of functions (e.g., Jacobians, vector-Jacobian products) by recursively applying the chain rule. The numerical examples presented later in this work leverage AD. The principle drawback of AD is that AD methods are intrusive and may not be suitable for, e.g., legacy codes.  
+\item \textit{Automatic differentiation}: A more intrusive, but potentially
+	more efficient, method of computing the action of the Jacobian transpose on
+		a vector is through automatic differentiation (AD). AD methods comprise a
+		class of techniques that can be used to numerically evaluate derivatives
+		of functions (e.g., Jacobians, vector-Jacobian products) by recursively
+		applying the chain rule. The numerical examples presented later in this
+		work leverage AD. The principal drawback of AD is that AD methods are intrusive and may not be suitable for, e.g., legacy codes.  
 \end{enumerate}
 
 \begin{remark}\label{remark:fbsm}(Acceleration of Indirect Methods)
