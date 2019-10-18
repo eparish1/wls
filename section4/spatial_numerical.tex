@@ -421,12 +421,12 @@ value of $\rho$.
 \begin{algorithm} \caption{\spatialAcronym\ trial subspace: algorithm for the FBSM over the $n$th window.} \label{alg:st_iter} 
 \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
 \Input{tolerance, $\epsilon$; relaxation factor, $\rho \le 1$; growth factor, $\fbsmGrowth \ge 1$; decay
-factor, $\fbsmDecay \ge 1$} 
+factor, $\fbsmDecay \ge 1$; initial guess for state $\genstate^n_0$; initial guess for costate $\controllerArgnt{n}$} 
 \Output{Stationary point, $\genstateArgnt{n}$ }
 \textbf{Online Steps:}\\ 
-$\genstate^n_0 \leftarrow \bz$ \Comment{Set initial guess for state} \\
-$\controllerArgnt{n} \leftarrow \boldsymbol 0$ \Comment{Set initial
-guess for costate}\\ 
+%$\genstate^n_0 \leftarrow \bz$ \Comment{Set initial guess for state} \\
+%$\controllerArgnt{n} \leftarrow \boldsymbol 0$ \Comment{Set initial
+%guess for costate}\\ 
 $\text{Compute } \genstateArgnt{n}_1 \text{ satisfying }  \massArg{n} \genstateDotArgnt{n}_1(t)  -  \basisspaceTArg{n} \stweightingMatArg{n}
 \velocity(\veloargsromArg{1}) =  \massArg{n} \controllerArg{n}{t}$ 
 % Eq.~\ref{eq:lspg_continuous} with $\adjoint^n(t) = \controllerArg{n}{t}$ to
