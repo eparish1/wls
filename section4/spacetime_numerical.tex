@@ -8,11 +8,6 @@ techniques for this purpose: a direct method
 that operates on the FOM O$\Delta$E and an indirect method that operates on the FOM ODE. 
 
 \subsection{\spaceTimeAcronym\ trial subspaces: direct solution approach}
-\KTC{Fix this section:
-\begin{enumerate} 
-\item remove $\theta^\star$ \EP{I think we still need this for Eq. 38}
- \end{enumerate}
-}
 The direct solution technique seeks to minimize the fully discrete objective
 function associated with the FOM O$\Delta$E. We consider linear
 multistep methods and leverage the discretization introduced in
@@ -28,7 +23,6 @@ n & n \ge 1, \; i > 0, \\
 %The definition of the fully discrete objective functions~\eqref{eq:obj_lms} as outlined in Section~\ref{sec:direct}, can be leveraged for this purpose. For simplicity, we only 
 %outline the case for linear multistep schemes. 
 \methodAcronym\ with an \spaceTimeAcronym\ trial subspace and the direct approach sequentially computes the generalized coordinates $\stgenstateArg{n}$, $n=1,\ldots,\nslabs$ that satisfy
-\EP{I noticed you got rid of the assumption about the size of the generalized coordinates. I think we need to mention this, I put in a note below. Let me know if I'm missing something}
  \begin{equation}\label{eq:obj_gen_lms_final_st}
 \begin{split}
 & \underset{\stgenstatey \in \RR{\stdimArg{n}}}{\text{minimize } }
@@ -49,18 +43,17 @@ n & n \ge 1, \; i > 0, \\
 The boundary conditions are automatically satisfied through the definition of the \spaceTimeAcronym\ trial subspace. 
 Assuming $\text{Rank}(\stweightingMatOneArg{n}) \nstepsArg{n} \ge \stdimArg{n}$, the minimization problem~\eqref{eq:obj_gen_lms_final_st} again yields a least-squares problem.
 \begin{remark}
-\methodAcronym\ with the direct solution approach and an \spaceTimeAcronym\ subspace comprises minimizing the same objective function as \methodAcronym\ with the direct solution approach and an \spatialAcronym\ trial subspace. 
+	Comparing optimization problems \eqref{eq:obj_gen_lms_final} and
+	\eqref{eq:obj_gen_lms_final_st} reveals that
+\methodAcronym\ with the direct solution approach minimizes the same objective
+	function in the case of both \spaceTimeAcronym\ and \spatialAcronym\ trial
+	subspaces.
 \end{remark}
-\KTC{I would add a remark that highlights the similarities between the direct
-approach for the two kinds of subspaces. They minimize the exact same
-objective function, which is interesting.} \EP{See if you agree with what I have}
 \begin{remark}
 For the limiting case where one window comprises the entire domain (i.e.,
 	$\DeltaSlabArg{1}\equiv T$), uniform quadrature weights are used, the trial
-	space is set to be $\stspaceSTArg{1} = \stspaceST$, the weighting matrix $\lspgWeightingST = \begin{bmatrix} \stweightingMatOneArg{1} & \cdots & \stweightingMatOneArg{1}\end{bmatrix}$
-	\KTC{Don't we just need simply
-	$W_{ST}=\text{diag}(W^1)$ (with $W^1$ the half-factor of $A^1$)?. I think this
-	would be more general.}\EP{Yes, this is better. Not sure if diag is right though, see if you agree.}, and $\nstepsArg{1} = N_t$ time instances are employed that
+	subspace is set to be $\stspaceSTArg{1} = \stspaceST$, the weighting matrix
+	$\lspgWeightingST = \mathrm{diag}(\stweightingMatOneArg{1})$, and $\nstepsArg{1} = N_t$ time instances are employed that
 	satisfy $\timeWindowArg{1}{i} = t^i$, $i=1,\ldots,N_t$, then
 	$\stgenstateArg{1} =  \stgenstate_\text{ST-LSPG}$ and direct \methodAcronym\
 	with an \spaceTimeAcronym\ trial subspace recovers ST-LSPG. 
@@ -172,16 +165,18 @@ weights over the $n$th time window. The optimization problem~\eqref{eq:obj_gen_s
 \begin{remark}
 For the limiting case where one window comprises the entire domain (i.e.,
 	$\DeltaSlabArg{1}\equiv T$), the trial
-	space is set to comprise the span of full solution trajectories, $\stspaceSTArg{1} = \text{span}\{ \stateFOMArgnt{}_i\}_{i=1}^{\stdimArg{1}}$ (where $\stateFOMArgnt{}_i$ are obtained, e.g.,  from training simulations at different parameter instances), and the weighting matrix is set to $\stweightingMatArg{1} = \mathbf{I}$, \methodAcronym\ with \spaceTimeAcronym\ trial subspaces and the indirect approach closely resembles the model reduction procedure proposed in~\cite{constantine_strom}; the approaches differ only in that Ref.~\cite{constantine_strom} places the constraint $\sum_{i=1}^{\stdimArg{1}} \stgenstateArg{1}_i = 1$. 
+	subspace is set to the span of full solution trajectories, $\stspaceSTArg{1}
+	= \text{span}\{ \stateFOMArgnt{}_i\}_{i=1}^{\stdimArg{1}}$ (where
+	$\stateFOMArgnt{}_i$ are obtained, e.g.,  from training simulations at
+	different parameter instances), and the weighting matrix is set to
+	$\stweightingMatArg{1} = \mathbf{I}$, \methodAcronym\ with
+	\spaceTimeAcronym\ trial subspaces and the indirect approach closely
+	resembles the model reduction procedure proposed in
+	Ref.~\cite{constantine_strom}; the approaches differ only in that
+	Ref.~\cite{constantine_strom} imposes the constraint
+	$\sum_{i=1}^{\stdimArg{1}} \stgenstateArg{1}_i = 1$ in the associated
+	minimization problem. 
 \end{remark}
-
-\KTC{It would be great to a comment about how this is equivalent to Qiqi Wang
-and Paul Constantine's method in the case of one time window and $\Pi^1$
-corresponding to full solution trajectories. They use collocation-based
-hyper-reduction at a few points in time (but for the full ODE residual at that
-time), which you could mention. This is a very cool connection I didn't
-realize before, and I think it's definitely worth mentioning!}
-\EP{See if you agree with what I have. I worked with the trial space instead of the basis because we prescribe certain structure to the basis (such as the affine transformation)}.
 %$$\objectiveDiscreteSTArg{n}: \stgenstatey \mapsto \sum_{i=1}^{\ncollocSTArg{n}} \gamma_i 
 %\bigg[ \stbasisDotArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ }  - \velocity (\stbasisArg{n}{\collocPointSTArg{n}{i}} \stgenstateyArg{ } + \stateInterceptSTArg{n},\collocPointSTArg{n,i}) \bigg]^T 
 %\stweightingMatArg{n} 
