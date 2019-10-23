@@ -195,7 +195,7 @@ $$ \stateFOMSolArgt{n}{\timeStartArg{n}} \in \trialspaceArg{n} +
 %$$ \norm{ \stateROMSolArgt{n}{\timeStartArg{n}} - \stateFOMSolArgt{n}{\timeStartArg{n}} } \le \constAInt \intSlabArg{n-1} \norm{ \errorArg{n-1} }dt.$$
 
 \begin{theorem}(\textit{A priori} error bounds)\label{theorem:apriori_bound}
-Under Assumptions A1--A3, the error in the solution computed by the \methodAcronymROMs\ method with
+Under Assumptions A1--A3, the error in the solution computed by the \methodAcronymROM\ method with
 	\spatialAcronym\ trial subspaces over the $n$th window is bounded as
 \begin{equation}\label{eq:apriori_bound}
 \intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \DeltaSlabArg{n} \sqrt{1 + \lipshitz^2} \norm{ \errorArgt{n}{\timeStartArg{n}}  }   + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
@@ -291,7 +291,7 @@ $\stateROMStarSolArg{n}$ and $\stateROMSolArg{n}$ are defined by the systems,
 %$$\norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}^2 \le  \norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}^2 + \norm{\adjointROMSolArg{n} - 
 %\adjointROMStarSolArg{n} }^2 .$$ 
 \end{comment}
-We now find an upper bound for $\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt$. 
+We now derive an upper bound for $\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt$. 
 First we can bound $\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}^2$ by above:
 \begin{align*}
 \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}^2 &\le  \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}^2 + \norm{ \adjointROMSolArgt{n}{t} - 
@@ -312,7 +312,6 @@ Applying Liouville's theorem for Hamiltonian systems, we have the requirement
 $$ \frac{d}{dt}  \sqrt{ \norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}^2 + \norm{\adjointROMSolArg{n} - 
 \adjointROMStarSolArg{n} }^2}  = \bz, \qquad t \in [\timeStartArg{n},\timeEndArg{n}].$$
 \KTC{I'm not familiar with the above; can you double check and verify?}
-\KTC{HERE}
 Thus, we have
 \begin{align*}
 \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt &\le 
@@ -348,7 +347,10 @@ Thus, we have
 %\adjointROMStarSolArgt{n}{\timeStartArg{n}}  }^2}.
 %\end{align*}
 %================
-Using the definition of the costate~\eqref{eq:costate_def} and residual yields 
+Using the definition of the costate~\eqref{eq:costate_def} and residual yields
+\KTC{In the rest of this section, you need to include the time argument for
+$\stateROMSolArg{n}$ and $\stateROMStarSolArg{n}$ within the residual. Please
+fix.}
 \begin{multline*}
 \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt 
 \le \\  \DeltaSlabArg{n} \sqrt{ \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2 +   \norm{\basisspaceTArg{n} \resid( \basisspaceArg{n} \stateROMSolArg{n} + \stateInterceptArg{n} , {\timeStartArg{n}} ) - 
@@ -359,10 +361,10 @@ As
 \norm{\basisspaceTArg{n} \resid( \basisspace \stateROMSolArg{n} + \stateInterceptArg{n} , {\timeStartArg{n}}) - 
  \basisspaceTArg{n} \resid( \basisspaceArg{n} \stateROMStarSolArg{n} + \stateInterceptArg{n}, {\timeStartArg{n}}  )}
 \le \\
- \norm{\basisspaceTArg{n}} \norm{ \resid( \basisspaceArg{n} \stateROMSolArg{n} + \stateInterceptArg{n} , {\timeStartArg{n}}) - 
+ \norm{ \resid( \basisspaceArg{n} \stateROMSolArg{n} + \stateInterceptArg{n} , {\timeStartArg{n}}) - 
   \resid( \basisspaceArg{n} \stateROMStarSolArg{n} + \stateInterceptArg{n} , {\timeStartArg{n}}  )},
 \end{multline*}
-we get the simplification (note $\norm{\basisspaceTArg{n}} = 1$)
+where we have used $\norm{\basisspaceTArg{n}} = 1$. This leads to 
 \begin{equation*}
 \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt 
 \le  \DeltaSlabArg{n}  \sqrt{ \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2 +   \norm{\resid( \basisspace \stateROMSolArg{n} + \stateIntercept , {\timeStartArg{n}} ) - 
@@ -410,14 +412,19 @@ Substituting bound~\eqref{eq:ustarbound} into bound~\eqref{eq:boundtmp}, noting 
 %===============
 \end{proof}
 \begin{corollary}
-When only a single space-time window is used, error bounds are given by
+	Under Assumption A2,  \KTC{Verify which specific assumptions are needed for
+	this!}
+	the error in the solution computed by the \methodAcronymROM\ method with
+	\spatialAcronym\ trial subspaces is bounded as
 \begin{equation*}
 \int_0^T \norm{\errorArgt{1}{t}} dt \le \lipshitziArg{1} \int_0^T \norm{\resid(\stateFOMProjSolArgt{1}{t},t)}dt. %+
 % T \sqrt{1 + \lipshitz} \norm{\errorArgt{1}{\timeStartArg{1}} } .
 \end{equation*}
 \end{corollary}
 \begin{proof}
-Setting $n=1$ in~\eqref{eq:apriori_bound} with the time intervals $\timeStartArg{1}=0$, $\timeEndArg{1}=T$, employing assumption A3, and noting that the initial conditions are known yields the desired result.
+Setting $n=1$ in~\eqref{eq:apriori_bound} with the time intervals
+	$\timeStartArg{1}=0$, $\timeEndArg{1}=T$, employing Assumption A3 \KTC{Don't
+	you only need Assumption A2?}, and noting that the initial conditions are known yields the desired result.
 \end{proof}
 
 \begin{comment}
