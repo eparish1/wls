@@ -120,6 +120,7 @@
 
 \newcommand{\Range}[1]{\mathrm{Ran}(#1)}
 
+\newcommand{\lipshitzf}{\Gamma}
 \newcommand{\lipshitz}{\kappa}
 \newcommand{\lipshitzi}{\alpha}
 \newcommand{\lipshitziArg}[1]{\alpha^{#1}}
@@ -147,6 +148,24 @@
 
 %\newcommand{\approxstateIC}{\approxstateDiscrete_0}
 \newcommand{\approxstateIC}{\basisspace \basisspace^T (\stateFOMIC - \stateIntercept) + \stateIntercept}
+
+
+\newcommand{\errorStar}{\hat{\error}_{*}}
+\newcommand{\errorStarArg}[1]{\errorStar^{#1}}
+\newcommand{\errorStarArgt}[2]{\errorStar^{#1}(#2)}
+\newcommand{\errorStarDot}{\dot{\hat{\error}}_{*}}
+\newcommand{\errorStarDotArg}[1]{\errorStarDot^{#1}}
+\newcommand{\errorStarDotArgt}[2]{\errorStarDot^{#1}(#2)}
+
+
+\newcommand{\stateROMSolDot}{\dot{\tilde{\state}}}
+\newcommand{\stateROMSolDotArg}[1]{\stateROMSolDot^{#1}}
+\newcommand{\stateROMSolDotArgt}[2]{\stateROMSolDot^{#1}(#2)}
+
+\newcommand{\stateROMStarSolDot}{\dot{\tilde{\state}}_{*}}
+\newcommand{\stateROMStarSolDotArg}[1]{\stateROMStarSolDot^{#1}}
+\newcommand{\stateROMStarSolDotArgt}[2]{\stateROMStarSolDot^{#1}(#2)}
+
 
 \newcommand{\stateROMSol}{\tilde{\state}}
 \newcommand{\stateROMSolArg}[1]{\stateROMSol^{#1}}

@@ -137,8 +137,7 @@ In the limit of $\zeta \rightarrow 0^+$ (and hence $\nslabs
 
 \subsection{\textit{A priori} error bounds}
 We now derive \textit{a priori} error bounds for \spatialAcronym\ trial
-subspaces in the case that the velocity is autonomous (i.e.,
-$\velocity(\cdot,t) \equiv \velocity(\cdot)$) and no weighting matrix is
+subspaces in the case that no weighting matrix is
 employed (i.e., $\stweightingMat = \mathbf{I}$).
 %We define the residual as,
 %$$\resid(\state) = \dot{\state} - \velocity(\state).$$
@@ -163,16 +162,22 @@ We employ the following assumptions.
 	$\lipshitz>0$ such that
 $$ \norm{\resid(\statew,\timeDummy) - \resid(\statey,\timeDummy) } \le
 		\lipshitz \norm{\statew(\timeDummy) - \statey(\timeDummy)},\quad \forall
-		\statew,\, \statey\in\RR{N} \otimes \timeSpaceArg{},$$
+		\statew,\, \statey\in\RR{N} \otimes \timeSpaceArg{}, \tau \in [0,T],$$
 where  
 \begin{align*}
-\resid &: \, (\statey,\timeDummy) \mapsto \dot{\statey}(\timeDummy) - \velocity(\stateyArg{}{\timeDummy}) ,\\
+\resid &: \, (\statey,\timeDummy) \mapsto \dot{\statey}(\timeDummy) - \velocity(\stateyArg{}{\timeDummy},\timeDummy) ,\\
 &: \, \RR{N} \otimes \timeSpaceArg{} \times [0,T] \mapsto \RR{N}.
 \end{align*}
 %		\KTC{Should the second argument of $f$ be there? Above, you said we were
 %		considering only autonomous velocities}
+\item \textbf{A2:} The velocity is Lipshitz continuous in its first argument, i.e., there exists
+	$\lipshitzf>0$ such that
+$$ \norm{\velocity(\statewDiscrete,\timeDummy) - \velocity(\stateyDiscrete,\timeDummy) } \le
+		\lipshitzf \norm{\statewDiscrete - \stateyDiscrete},\quad \forall
+		\statewDiscrete,\, \stateyDiscrete \in\RR{\fomdim} ,\tau \in [0,T].$$
 
-\item \textbf{A2:} The integrated residual is inverse Lipshitz continuous over
+
+\item \textbf{A3:} The integrated residual is inverse Lipshitz continuous over
 	each time window, i.e., there exist $\lipshitziArg{n}>0$,
 		$n=1,\ldots,\nslabs$ such that
 %$\forall \statew,\statey$ with $\statew(\timeStartArg{n} ) = \statey(\timeStartArg{n})$ \EP{Put this in  a set maybe? I think that this, along with the trajectory being ''sufficiently smooth", should be enough to avoid the case where we have two different trajectories that exactly satisfy the residual. Something like $\statew,\statey \in \stspaceArg{n}_*, \stspaceArg{n}_* = \{ \statew \in \stspaceArg{n} | \statew(\timeStartArg{n}) = \mathbf{g} \}$ for arbitrary $\mathbf{g}$},
@@ -182,10 +187,11 @@ $$  \intSlabArg{n} \norm{\statew(t) - \statey(t)} dt \le  \lipshitziArg{n}
 		where
 $\stspaceArg{n}_* = \{ \statew \in \RR{\fomdim} \otimes \timeSpaceArg{n}\, |\,
 		\statew(\timeStartArg{n}) = \stateFOMArg{}{\timeStartArg{n}} \}$.
-\item \textbf{A3:} The FOM solution at the start of each time window lies
+\item \textbf{A4:} The FOM solution at the start of each time window lies
 	within the range of the trial subspace, i.e.,
 $$ \stateFOMSolArgt{n}{\timeStartArg{n}} \in \trialspaceArg{n} +
 		\stateInterceptArg{n},\quad n=1,\ldots,\nslabs.$$
+
 \end{itemize} 
 %A3: We assume Lipshitz continuity on the velocity
 %$$ \norm{\velocity(\state) - \velocity(\boldsymbol y) } \le \lipshitzv \norm{\state - \boldsymbol y}.$$
@@ -194,11 +200,17 @@ $$ \stateFOMSolArgt{n}{\timeStartArg{n}} \in \trialspaceArg{n} +
 %$$ \norm{ \stateROMSolArgt{n}{\timeStartArg{n}} - \stateFOMSolArgt{n}{\timeStartArg{n}} } \le \constAInt \intSlabArg{n-1} \norm{ \errorArg{n-1} }dt.$$
 
 \begin{theorem}(\textit{A priori} error bounds)\label{theorem:apriori_bound}
-Under Assumptions A1--A3, the error in the solution computed by the \methodAcronymROM\ method with
+Under Assumptions A1--A4, the error in the solution computed by the \methodAcronymROM\ \approachKwd\ with
 	\spatialAcronym\ trial subspaces over the $n$th window is bounded as
+%\begin{equation}\label{eq:apriori_bound}
+%\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \DeltaSlabArg{n} \sqrt{1 + \lipshitz^2} \norm{ \errorArgt{n}{\timeStartArg{n}}  }   + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
+%\end{equation}
 \begin{equation}\label{eq:apriori_bound}
-\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \DeltaSlabArg{n} \sqrt{1 + \lipshitz^2} \norm{ \errorArgt{n}{\timeStartArg{n}}  }   + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
+\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le  \norm{\errorArgt{n}{\timeStartArg{n}}} 
+ \bigg(\frac{ e^{ \DeltaSlabArg{n}(\lipshitz + \lipshitzf)} - 1}{ \lipshitz + \lipshitzf} \bigg)
++ \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
 \end{equation}
+
 %\begin{equation}\label{eq:apriori_bound}
 %\sum_{i=1}^{\nslabs} \intSlabArg{i} \norm{\errorArgt{i}{t}} dt \le \sum_{i=1}^{\nslabs} \DeltaSlabArg{i} (1 + \lipshitz) \norm{\errorArgt{i}{\timeStartArg{i}} }   + \lipshitzi \int_0^T \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
 %\end{equation}
@@ -234,7 +246,7 @@ Applying triangle inequality yields
 %$$ \le \norm{\state_R - \state^*_R} + \norm{\state^*_R - \state_f}.$$
 Integrating over the $n$th window and using the definition of the error yields
 $$\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt +  \intSlabArg{n} \norm{\stateROMStarSolArgt{n}{t} - \stateFOMSolArgt{}{t}}dt.$$
-Applying Assumption A2 and 
+Applying Assumption A3 and 
 	$\resid(\stateFOMSolArg{},t) = \bz$, $\forall t \in [0,T]$
 	yields
 %\begin{equation*}
@@ -246,7 +258,7 @@ Applying Assumption A2 and
 %$$\int \norm{\error} dt \le \int \norm{\state_R - \state^*_R} dt +  \int \norm{\resid{\state^*_R}}dt.$$
 Leveraging the residual-minimization property of \methodAcronym\ and noting
 	that $\stateFOMProjSolArg{n}(\timeStartArg{n}) =
-	\stateFOMSolArgt{n}{\timeStartArg{n}}$ by Assumption A3, we have 
+	\stateFOMSolArgt{n}{\timeStartArg{n}}$ by Assumption A4, we have 
 $$ \intSlabArg{n} \norm{\resid(\stateROMStarSolArg{n},t)}dt \le \intSlabArg{n} \norm{\resid(\stateFOMProjSolArg{n},t)}dt.$$
 %$$ \int \norm{\resid{\state^*_R}}dt \le \int \norm{\resid{\tilde{\state}_f}}dt,$$
 	This leads to the following expression for the error over the $n$th window,
@@ -289,7 +301,36 @@ $\stateROMStarSolArg{n}$ and $\stateROMSolArg{n}$ are defined by the systems,
 %$$\norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}^2 \le  \norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}^2 + \norm{\adjointROMSolArg{n} - 
 %\adjointROMStarSolArg{n} }^2 .$$ 
 \end{comment}
-We now derive an upper bound for $\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt$. 
+We now derive an upper bound for $\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt$.
+\EP{Changes here}
+Defining $\errorStarArg{n} = \genstateROMSolArg{n} - \genstateROMStarSolArg{n}$, $n=1,\ldots,\nslabs$, where $\genstateROMStarSolArg{n}$ are the generalized coordinates of $\stateROMStarSolArg{n}$ (i.e., $\stateROMStarSolArgt{n}{t} = \basisspaceArg{n} \genstateROMStarSolArgt{n}{t} + \stateInterceptArg{n}$), a differential equation for the difference is given by
+$$\errorStarDotArgt{n}{t} = \basisspaceTArg{n}[\velocity(\basisspaceArg{n} \genstateROMSolArgt{n}{t} + \stateInterceptArg{n},t) - \velocity(\basisspaceArg{n} \genstateROMStarSolArgt{n}{t} + \stateInterceptArg{n},t) ] + \adjointROMSolArgt{n}{t} - \adjointROMStarSolArgt{n}{t},$$
+for $t \in [\timeStartArg{n},\timeEndArg{n}]$ and with the initial condition $\errorStarArgt{n}{\timeStartArg{n}}.$ We have used the notation $ \errorStarDotArg{n}\equiv d \errorStarArg{n} / d\tau$. 
+Taking the norm of both sides and applying triangle inequality yields
+%$$\norm{ \errorStarDotArgt{n}{t} } \le \norm{ \basisspaceTArg{n}[\velocity(\basisspaceArg{n} \genstateROMSolArgt{n}{t} + \stateInterceptArg{n},t) - \velocity(\basisspaceArg{n} \genstateROMStarSolArgt{n}{t} + \stateInterceptArg{n},t) ]} + \norm{\adjointROMSolArgt{n}{t} - \adjointROMStarSolArgt{n}{t}}.$$
+$$\norm{ \errorStarDotArgt{n}{t} } \le \norm{[\velocity(\basisspaceArg{n} \genstateROMSolArgt{n}{t} + \stateInterceptArg{n},t) - \velocity(\basisspaceArg{n} \genstateROMStarSolArgt{n}{t} + \stateInterceptArg{n},t) ]} + \norm{\adjointROMSolArgt{n}{t} - \adjointROMStarSolArgt{n}{t}},$$
+with the initial condition $\norm{\errorStarArgt{n}{\timeStartArg{n}}}$. We note we have used $\norm{\basisspaceArg{n}} = 1$. Using the definition of the costate~\eqref{eq:costate_def} yields 
+$$\norm{ \errorStarDotArgt{n}{t} } \le \norm{[\velocity(\basisspaceArg{n} \genstateROMSolArgt{n}{t} + \stateInterceptArg{n},t) - \velocity(\basisspaceArg{n} \genstateROMStarSolArgt{n}{t} + \stateInterceptArg{n},t) ]} + \norm{\basisspaceTArg{n} \big( \resid(\stateROMSolArg{n},t) - \resid(\stateROMStarSolArg{n},t) \big)}.$$
+Employing assumptions A1-A2 yields the bound on the dynamic
+%$$\norm{ \errorStarDotArgt{n}{t} } \le \lipshitzf \norm{ \errorStarArgt{n}{t} } + \lipshitz \norm{ \errorStarArgt{n}{t}}.$$
+$$\norm{ \errorStarDotArgt{n}{t} } \le (\lipshitzf + \lipshitz)  \norm{ \errorStarArgt{n}{t} } .$$
+We use the fact that $ d \norm{ \errorStarArg{n} } / d\tau \le \norm{ \errorStarDotArg{n} } $ to get 
+$$\big(\frac{d \norm{\errorStarArg{n}}}{d\tau} \big)(t)  \le (\lipshitzf + \lipshitz)  \norm{ \errorStarArgt{n}{t} } .$$
+The above is a linear homogeneous equation for the bound of $\norm{\errorStarArg{n}}$ and has the solution for $t \in [\timeStartArg{n},\timeEndArg{n}]$
+$$\norm{\errorStarArgt{n}{t}} \le \norm{ \errorStarArgt{n}{\timeStartArg{n}} }e^{(\lipshitz + \lipshitzf)(t - \timeStartArg{n})}.$$
+Noting that $\norm{\errorStarArgt{n}{\timeStartArg{n}}} = \norm{\errorArgt{n}{\timeStartArg{n}}}$ we get the bound
+%$$\intSlabArg{n} \norm{\errorStarArgt{n}{t}} dt \le \errorStarArgt{n}{\timeStartArg{n}} \intSlabArg{n} e^{(\lipshitz + \lipshitzf)(t - \timeStartArg{n})} dt.$$
+\begin{equation}\label{eq:ustarbound} 
+\intSlabArg{n} \norm{\errorStarArgt{n}{t}} dt \le \norm{\errorArgt{n}{\timeStartArg{n}}} \bigg(\frac{ e^{ \DeltaSlabArg{n}(\lipshitz + \lipshitzf)} - 1}{ \lipshitz + \lipshitzf} \bigg) .
+\end{equation}
+Substituting bound~\eqref{eq:ustarbound} into bound~\eqref{eq:boundtmp} and noting that $\norm{\stateROMSolArg{n} - \stateROMStarSolArg{n}} = \norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}$ gives the upper bound
+\begin{equation*}
+\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le  \norm{\errorArgt{n}{\timeStartArg{n}}} 
+ \bigg(\frac{ e^{ \DeltaSlabArg{n}(\lipshitz + \lipshitzf)} - 1}{ \lipshitz + \lipshitzf} \bigg)
++ \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
+\end{equation*}
+
+\begin{comment}
 First we can bound $\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}^2$ by above:
 \begin{align*}
 \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}^2 &\le  \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}^2 + \norm{ \adjointROMSolArgt{n}{t} - 
@@ -404,9 +445,10 @@ Substituting bound~\eqref{eq:ustarbound} into bound~\eqref{eq:boundtmp}, noting 
 %\end{equation*}
 %\EP{Can bound error at the start of the time-slab vs integral over previous time-slab; but not sure if I like this}
 %===============
+\end{comment}
 \end{proof}
 \begin{corollary}
-	Under Assumption A2 and A3,  
+	Under Assumptions A3--A4,  
 	the error in the solution computed by the \methodAcronymROM\ method with
 	\spatialAcronym\ trial subspaces is bounded as
 \begin{equation*}

@@ -310,7 +310,7 @@ The former case is of particular
 		is bounded \textit{a priori} by a combination of the
 		error at the start of the window and the integrated FOM ODE residual
 		evaluated at the FOM state projected onto the trial subspace. 
-\EP{Updated this, I don't show what you said}%As a result,
+%As a result,
 %		the error bound exhibits exponential growth in the number of time windows
 %		(not total time instances), yielding smaller error-bound growth in thime than
 %		Galerkin or LSPG projection. \KTC{Check this}
@@ -912,14 +912,14 @@ As $\variation$ is an arbitrary function, this equality requires
 \end{split}
 \end{equation}
 %\genstate(a) = \genstate_a, \qquad \bigg[ \frac{\partial \integrand}{\partial {\genstateDot}} \bigg]^T_{t=b} = \bz.
-\KTC{I removed "subject to" as this is only used in an optimization-problem
-statement. Also, I don't understand the $z(a) = z_a$ conditions, or how that
-derives obviously from above. Can you clarify? Also note the inconsistent use
-of $a$, $b$, and $0$, $T$.} \EP{Yes, sorry about the [a,b], I changed this recently and obviously missed things. As for the BC, 
-the requirement that $z(a)=z_a$ comes in first from the implicit definition of $z$, which is required to satisfy this BC. Then, in defining the variation, 
-we explicitly force the variation to be zero at the IC such that all possible functions satisfy the BC. We don't, however, make any such requirement on the end point 
-condition, $\eta(b)$ can be anything. This yields the endpoint boundary condition on the gradient (i.e., second term in Eq 56.). If we had a fixed final boundary condition, then the second term in Eq. 56 would be replaced 
-with this end point condition.} 
+%\KTC{I removed "subject to" as this is only used in an optimization-problem
+%statement. Also, I don't understand the $z(a) = z_a$ conditions, or how that
+%derives obviously from above. Can you clarify? Also note the inconsistent use
+%of $a$, $b$, and $0$, $T$.} \EP{Yes, sorry about the [a,b], I changed this recently and obviously missed things. As for the BC, 
+%the requirement that $z(a)=z_a$ comes in first from the implicit definition of $z$, which is required to satisfy this BC. Then, in defining the variation, 
+%we explicitly force the variation to be zero at the IC such that all possible functions satisfy the BC. We don't, however, make any such requirement on the end point 
+%condition, $\eta(b)$ can be anything. This yields the endpoint boundary condition on the gradient (i.e., second term in Eq 56.). If we had a fixed final boundary condition, then the second term in Eq. 56 would be replaced 
+%with this end point condition.} 
 Equation~\eqref{eq:euler_lagrange_appendix} is known as the Euler--Lagrange
 equation. It states that, for ($\statez$,$\statezDot$) to define a stationary point of $\mathcal{J}$, then they must 
 satisfy~\eqref{eq:euler_lagrange_appendix}. It is emphasized
