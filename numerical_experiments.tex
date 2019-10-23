@@ -39,21 +39,37 @@ The 1D compressible Euler equations are solved using a finite volume method. The
 %  The solution is saved every other time-step, resulting in 500 solutions snapshots. These snapshots are used to generate a trial basis for the reduced-order models through POD. The trial basis is selected to be of dimension $K = 46$, which corresponds to a $99.99\%$ energy criterion. No affine transformation is used in the construction of the trial subspace, i.e., $\stateIntercept = \bz$.
 
 \subsubsection{Description of reduced-order models}
-We consider reduced-order models based on the Galerkin, LSPG, and \methodAcronym\ approach. No hyper-reduction is considered 
+We consider reduced-order models based on Galerkin projection, LSPG
+projection, and the \methodAcronym\ approach. No hyper-reduction is considered 
 in this example, i.e., $\stweightingMatArg{n} = \mathbf{I}$, $n=1,\ldots,\nslabs$. Details on the implementation of the 
 different reduced-order models is as follows:
 \begin{itemize}
 \item \textit{Galerkin ROM}: The Galerkin ROM is obtained through Galerkin projection of the FOM. The Galerkin ROM is evolved in time with the CN time scheme at 
 a constant time step of $ \Delta t = 0.002$.
 
-\item \textit{LSPG ROM:} The LSPG ROM is built on top of the FOM discretization leveraging the CN time scheme as previously described. Unless noted otherwise, the LSPG ROM uses a constant time step of $\Delta t = 0.002$. The nonlinear least-squares problem arising at each time instance is solved via the Gauss--Newton method. The linear least-squares problems arising at each Gauss--Newton iteration are solved via the normal equations. All Jacobians are computed via automatic differentiation~\cite{adolc}. The Gauss--Newton algorithm is deemed converged when the gradient norm is lower than $10^{-4}$. 
-\item \textit{\methodAcronymROM:} \methodAcronymROMs\ are solved via the direct and indirect methods with two different time-stepping schemes: 
+\item \textit{LSPG ROM:} The LSPG ROM is built on top of the FOM
+	discretization leveraging the CN time scheme as previously described. Unless
+		noted otherwise, the LSPG ROM uses a constant time step of $\Delta t =
+		0.002$. The nonlinear least-squares problem arising at each time instance
+		is solved via the Gauss--Newton method. The linear least-squares problems
+		arising at each Gauss--Newton iteration are solved via the normal
+		equations. All Jacobians are computed via automatic
+		differentiation~\cite{adolc}. The Gauss--Newton algorithm is deemed
+		converged when the gradient norm is less than $10^{-4}$. 
+\item \textit{\methodAcronymROM:} \methodAcronymROMs\ are solved via the
+	direct and indirect methods with two different time-stepping schemes:
+		\KTC{are these time stepping schemes? earlier we referred to them as
+		solution techniques}
 \begin{itemize}
-\item Direct method: We consider \methodAcronymROMs\ solved via the direct method for both the same CN discretization employed in the FOM and LSPG, as well as for the second-order explicit Adams Bashforth (AB2) discretization using a constant time step of $\Delta t = 0.0005$. The nonlinear least-squares problem 
-arising over each window is solved via the Gauss--Newton method. The linear least-squares problems arising at each Gauss--Newton iteration is solved via the normal equations. All Jacobians are again computed via automatic differentiation, and the Gauss--Newton algorithm is deemed converged when the gradient norm is lower than $10^{-4}$ (i.e., we use the parameter $\epsilon = 10^{-4}$ in Algorithm~\ref{alg:colloc_gn}). Critically, it is noted that the Jacobian 
+	\item \textit{Direct method}: We consider \methodAcronymROMs\ solved via the direct method for both the same CN discretization employed in the FOM and LSPG, as well as for the second-order explicit Adams Bashforth (AB2) discretization using a constant time step of $\Delta t = 0.0005$. The nonlinear least-squares problem 
+arising over each window is solved via the Gauss--Newton method. The linear
+		least-squares problems arising at each Gauss--Newton iteration is solved
+		via the normal equations. All Jacobians are again computed via automatic
+		differentiation, and the Gauss--Newton algorithm is deemed converged when
+		the gradient norm is less than $10^{-4}$ (i.e., we use the parameter $\epsilon = 10^{-4}$ in Algorithm~\ref{alg:colloc_gn}). Critically, it is noted that the Jacobian 
 matrix over a window is constructed by assembling local (dense) Jacobians. The global Jacobian over a single window is then stored in a compressed sparse row format. Uniform quadrature weights are used for evaluating the integral in~\eqref{eq:obj_gen_slab}. 
 
-\item Indirect method: We consider two \methodAcronymROMs\ solved via the indirect method. The first uses the same CN discretization at at time step of $\Delta t = 0.002$, while the second uses the AB2 discretization using a time step of $\Delta t = 0.0005$. The coupled two-point boundary 
+\item \textit{Indirect method}: We consider two \methodAcronymROMs\ solved via the indirect method. The first uses the same CN discretization at at time step of $\Delta t = 0.002$, while the second uses the AB2 discretization using a time step of $\Delta t = 0.0005$. The coupled two-point boundary 
 problem is solved via the forward--backward sweep method. The action of the Jacobian transpose on vectors is computed via automatic differentiation. We use parameters $\epsilon = 10^{-6}$, $\fbsmGrowth = 1.1$, and $\fbsmDecay=2$ in Algorithm~\ref{alg:st_iter}. 
 \end{itemize}
 \end{itemize}
@@ -125,14 +141,17 @@ the Galerkin and LSPG ROMs. Critically, we see that the solution becomes less os
 \includegraphics[width=1.\linewidth]{figs/sod/xt_w500.pdf}
 \caption{\methodAcronym: $\DeltaSlabArg{} = 1.0$}
 \end{subfigure}
-\caption{$x-t$ diagrams for the density fields as predicted by the FOM, G-ROM, LSPG-ROM, and \methodAcronymROMs.}
+\caption{$x-t$ diagrams for the density fields as predicted by the FOM, G-ROM,
+	LSPG-ROM, and \methodAcronymROMs. \KTC{Xlabel should be `spatial variable
+	$\mathcal x$. Ylabel should be `time $t$'. I wouldn't call this an $x-t$
+	diagram; I'd call is a density-solution plot}}
 \label{fig:sod_xt}
 \end{center}
 \end{figure}
 
 Next, Figure~\ref{fig:sod_error} shows space--time (i.e., integrated) state errors and the objective function~\eqref{eq:obj} (i.e., the space--time residual norm) over $t \in [0,1]$ for the various ROMs. Most notably, we observe 
 that increasing the window size over which the residual is minimized does \textit{not} lead to a monotonic decrease in the space--time $\elltwo$  
-error. Increasing the window size does lead to a monotonic decrease in the space--time residual, however. We additionally note that, although the space--time
+error. As expected, increasing the window size does lead to a monotonic decrease in the space--time residual, however. We additionally note that, although the space--time
 $\elltwo$ error of 
 the projected FOM solution is significantly lower than that of the various ROM solutions, the space--time residual norm of the projected FOM solution is \textit{higher} 
 than all ROMs. Thus, although the projected FOM solution is more accurate in the $\elltwo$ norm, it does not satisfy the governing equations as well the ROM solutions. 
