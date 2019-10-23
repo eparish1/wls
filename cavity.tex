@@ -4,7 +4,7 @@ The flow is described by the two-dimensional compressible Navier-Stokes equation
 \begin{equation}\label{eq:compressible_ns}
 \frac{\partial \mathbf{u}}{\partial t} + \nabla \cdot \big( \mathbf{F}(\mathbf{u} ) - \mathbf{F}_v (\mathbf{u},\nabla \mathbf{u} )      \big) =\bz,
 \end{equation}
-where $\mathbf{u}: [0,T] \times \Omega \rightarrow \RR{4}$ comprise the density, x and y momentum, and total energy. The terms $\mathbf{F}$ and $ \mathbf{F}_v$ are the inviscid and viscous fluxes, respectively. For a two-dimensional flow, the state vector and inviscid fluxes are
+where $\mathbf{u}: [0,T] \times \Omega \rightarrow \RR{4}$ comprise the density, $\mathsf{x}_1$ and $\mathsf{x}_2$ momentum, and total energy. The terms $\mathbf{F}$ and $ \mathbf{F}_v$ are the inviscid and viscous fluxes, respectively. For a two-dimensional flow, the state vector and inviscid fluxes are
 $$
 \mathbf{u} = \begin{Bmatrix}
 \rho \\ \rho u_1 \\ \rho u_2 \\ \rho E \end{Bmatrix}, \qquad \mathbf{F}_{1} = \begin{Bmatrix} \rho u_1 \\ \rho u_1^2 +      p \\ \rho u_1 u_2 \\ u_1(E + p) \end{Bmatrix}, 
@@ -24,18 +24,17 @@ where
 \begin{equation*}
  S_{ij} = \frac{1}{2} \big( \frac{\partial u_i}{\partial \mathsf{x}_j} + \frac{\partial u_j}{\partial \mathsf{x}_i} \big) - \frac{1}{3} \frac{\partial      u_k}{\partial \mathsf{x}_i} \delta_{ij}.
 \end{equation*}
-The Navier--Stokes equations are closed with a constitutive relationship for a calorically perfect gas,
+We close the Navier--Stokes equations with a constitutive relationship for a calorically perfect gas,
 $$p = (\gamma - 1)( \rho E - \frac{1}{2} \rho u_1^2 - \frac{1}{2} \rho u_2^2 \big),$$
 where $\gamma = 1.4$ is the heat-capacity ratio.
 
-Figure~\ref{fig:cav_fig} depicts the domain $\Omega$ and flow conditions. Free-stream boundary conditions 
-are used at the inlet, outlet, and top wall of the cavity. No-slip boundary conditions are enforced 
+Figure~\ref{fig:cav_fig} depicts the domain $\Omega$ and flow conditions. We note that the Reynolds number is defined as $\text{Re} = \rho \norm{\mathbf{v}_{\infty}} L / \mu$ with a characteristic length set at $L=1$ and $\mathbf{v} = [u_1 \; \; u_2]^T$, the speed of sound by $a_{\infty} = \sqrt{\gamma p_{\infty}/\rho}$, and $\infty$ subscripts refer to free-stream conditions. We employ free-stream boundary conditions at the inlet, outlet, and top wall of the cavity. We enforce no-slip boundary conditions 
 on the bottom wall of the cavity. 
 
 \subsubsection{Description of FOM and generation of \spatialAcronym\ trial subspace}
-The full-order model comprises a discontinuous-Galerkin discretization. The discretization 
-is obtained by partitioning the domain into $100$ elements in the flow direction and $40$ elements 
-in the wall-normal direction. The solution is represented to third order over each element using tensor product polynomials of order $p=2$, 
+The full-order model comprises a discontinuous-Galerkin discretization. We obtain the discretization 
+by partitioning the domain into $100$ elements in the flow direction and $40$ elements 
+in the wall-normal direction. The discretization represents the solution to third order over each element using tensor product polynomials of order $p=2$, 
 resulting in $36000$ unknowns for each conserved variable. Spatial discretization via the discontinuous Galerkin method yields a dynamical system 
 of the form
 $$\frac{d \state}{dt} = \mass_{\text{DG}}^{-1} \velocity_{\text{DG}} (\state),$$
@@ -46,7 +45,7 @@ DG method uses the Rusanov flux at the cell interfaces~\cite{rusanov} and uses t
 is performed via a third-order strong stability preserving Runge-Kutta method~\cite{ssp_rk3} with a time step of $\Delta t = 0.001$. 
  
 The reduced-order models leverage POD to construct the \spatialAcronym\ trial basis and use q-sampling~\cite{qdeim_drmac} based on snapshots of the FOM velocity to select the sampling points (and as a result the weighting 
-matrix $\stweightingMatArg{}$); we use a constant weighting matrix across all windows, e.g., $\stweightingMatArg{n} \equiv \stweightingMatArg{}$. The process used to construct the initial conditions and trial subspaces for the ROMs is as follows:
+matrix $\stweightingMatArg{}$); we use a constant weighting matrix across all windows, e.g., $\stweightingMatArg{n} \equiv \stweightingMatArg{}$, $n=1,\ldots,\nslabs$. The process used to construct the initial conditions and trial subspaces for the ROMs is as follows:
 \begin{enumerate}
 \item Initialize the FOM with uniform free-stream conditions.
 \item Evolve the FOM for $t \in [0,400]$.
@@ -74,20 +73,13 @@ Basis \# & Trial Basis Dimension ($K$) &  Energy Criterion & Sample Points ($n_S
 \subsubsection{Description of reduced-order models}
 We consider collocated ROMs based on the Galerkin, least-squares Petrov--Galerkin, and \methodAcronym\ approaches. Details on the implementation of the methods is as follows:
 \begin{itemize}
-\item \textit{Galerkin ROM with collocation}: We consider a Galerkin ROM with collocation. 
-The Galerkin ROM is evolved in time with the CN time scheme at a time step of $\Delta t =0.1$.
+\item \textit{Galerkin ROM with collocation}: We consider a Galerkin ROM with collocation and evolve the ROM in time with the CN time scheme at a time step of $\Delta t =0.1$.
 
 \item \textit{LSPG ROM with collocation}: We consider a collocated LSPG ROM, which is built on top of the FOM discretization using the Crank--Nicolson scheme for temporal 
-discretization. Unless otherwise noted, the time step for the LSPG ROM is $\Delta t  = 0.1$. As in the previous example, 
-the Gauss--Newton method is used to solve the nonlinear least-squares problem arising at each time instance. The linear least-squares problems 
-arising at each Gauss--Newton iteration are solved via the normal equations. We deem the Gauss--Newton 
-algorithm converged when the gradient norm is less than $1e-4$. All Jacobians are computed via automatic differentiation.
+discretization. We employ a time step of $\Delta t  = 0.1$. The implementation is the same as previously described. 
  
 \item \textit{\methodAcronymROMs\ with collocation}: We consider \methodAcronymROMs\ solved via the direct method. The ROMs use the Crank--Nicolson time-discretization with a time step of 
-$\Delta t = 0.1$. We deem the Gauss--Newton algorithm converged when the gradient norm is less than $1e-4$. The linear least-squares problems
-arising at each Gauss--Newton iteration are solved via the normal equations. All Jacobians are computed via automatic differentiation. Uniform quadrature 
-weights are used for evaluating the integral in the minimization problem~\eqref{eq:obj_gen_slab}. 
- 
+$\Delta t = 0.1$. The implementation is the same as previously described. 
 %\begin{itemize}
 %\item Direct Method: \methodAcronym ROMs solved via the direct method are again implemented with the same Crank--Nicolson time discretization with a nominal 
 %time-step size of $\Delta t = 0.1$. 
@@ -158,7 +150,7 @@ weights are used for evaluating the integral in the minimization problem~\eqref{
 We first assess the performance of \methodAcronymROMs\ with varying window sizes. To this end, we consider \methodAcronymROMs\ with uniform window 
 sizes of $\Delta T^n \equiv \Delta T = 0.2,0.5,1.0,$ and $2.0$, along with the Galerkin and LSPG ROMs. We first consider results for basis \#1 as described in 
 Table~\ref{tab:rom_basis_details}. For all ROMs, we evolve 
-the solution for $t \in [0,100]$. This comprises the same time interval used to construct the trial subspace. First, Figure~\ref{fig:cav_results1a} depicts the evolution of the pressure at the bottom wall in the midpoint of the computational domain, while Figure~\ref{fig:cav_results1b} depicts the evolution of the normalized $\elltwo$ state error of the various reduced-order models. Both the collocated Galerkin and LSPG ROMs blow up/fail to converge within the first several time units. The \methodAcronymROM\ minimizing the residual over a window of size $\Delta T = 0.2$ also fails to converge. The \methodAcronymROMs\ that minimize the residual over window sizes of $\Delta T \ge 0.5$ are seen to all be stable and accurate; the pressure response is well characterized and the normalized state errors are again less than $10\%$. The most notable discrepancy between the \methodAcronymROM\ and FOM solutions is a slight phase difference. 
+the solution for $t \in [0,100]$. This comprises the same time interval used to construct the trial subspace. First, Figure~\ref{fig:cav_results1a} depicts the evolution of the pressure at the bottom wall in the midpoint of the computational domain, while Figure~\ref{fig:cav_results1b} depicts the evolution of the normalized $\elltwo$ error of the various reduced-order models. Both the collocated Galerkin and LSPG ROMs blow up/fail to converge within the first several time units. The \methodAcronymROM\ minimizing the residual over a window of size $\Delta T = 0.2$ also fails to converge. The \methodAcronymROMs\ that minimize the residual over window sizes of $\Delta T \ge 0.5$ are seen to all be stable and accurate; the pressure response is well characterized and the normalized state errors are less than $10\%$. The most notable discrepancy between the \methodAcronymROM\ and FOM solutions is a phase difference. 
 
 
 
@@ -185,9 +177,9 @@ the solution for $t \in [0,100]$. This comprises the same time interval used to 
 \label{fig:cav_results1}
 \end{figure}
 
-Figure~\ref{fig:cav_results2} shows the space--time error and objective function of the stable \methodAcronymROMs. It is seen that growing the window size over 
+Figure~\ref{fig:cav_results2} shows the space--time error and objective function of the stable \methodAcronymROMs. We observe that growing the window size over 
 which the residual is minimized leads to a lower space--time residual, but not necessarily a lower $\elltwo$ error. This result is consistent with the previous numerical example. Next, Figure~\ref{fig:cav_wallclock}
-shows the wall-clock times of the \methodAcronymROMs\ for $t \in [0,10]$ as compared to the LSPG ROM\footnote{Note that LSPG blew up at $t \approx 16.0$, so we focus on the first ten time units.}. As expected, increasing $\Delta T$ again leads to an increase in computational cost; minimizing the residual over a window comprising 20 time instances yields a 2.5x increase in cost over LSPG. 
+shows the wall-clock times of the \methodAcronymROMs\ for $t \in [0,10]$ as compared to the LSPG ROM\footnote{We note that LSPG failed to converge at $t \approx 16.0$, so we focus on the first ten time units.}. As expected, increasing $\Delta T$ again leads to an increase in computational cost; minimizing the residual over a window comprising 20 time instances yields a 2.5x increase in cost over LSPG. 
 
 
 \begin{figure}
@@ -248,7 +240,7 @@ Figure~\ref{fig:cav_snapshots} shows vorticity fields for the FOM, LSPG ROM, and
 
 Next, we assess the performance of the various ROMs for basis \#2 as described in Table~\ref{tab:rom_basis_details}, which comprises a richer spatial basis.
  Figure~\ref{fig:cav_results1_basis1} shows the same pressure and error profiles as Figure~\ref{fig:cav_results1}, but for the enriched basis. The LSPG and Galerkin ROMs blow up faster as compared to Figure~\ref{fig:cav_results1}; LSPG fails to converge around $t \approx 8$ (opposed to $t \approx 16$), while Galerkin blows up almost immediately. The 
-\methodAcronymROMs\ again yield improved performance: \methodAcronymROMs\ minimizing the residual over window sizes of $\Delta T \ge 0.5$ are seen to all be stable and accurate; the pressure response is well characterized and the normalized state errors are less than $5\%$. The \methodAcronymROMs\ with $\Delta T \ge 0.5$ and basis \#2 yield more accurate results than \methodAcronymROMs\ with basis \#1.
+\methodAcronymROMs\ again yield improved performance: \methodAcronymROMs\ minimizing the residual over window sizes of $\Delta T \ge 0.5$ are seen to all be stable and accurate; the pressure response is well characterized and the normalized state errors are less than $5\%$. The \methodAcronymROMs\ employing basis \#2 yield more accurate results than \methodAcronymROMs\ employing basis \#1.
  
 
 \begin{figure}
@@ -289,7 +281,7 @@ Next, we assess the performance of the various ROMs for basis \#2 as described i
 \end{figure}
 
 
-Finally, Figure~\ref{fig:cav_wallclock} shows the wall-clock times of the \methodAcronymROMs\ as compared to the LSPG ROMs for basis \#2. Increasing the window size again leads to an increase in computational cost. Minimizing the residual over a window comprising 20 time instances yields a 2.5x increase in cost over LSPG. This increase in computational cost is particularly reasonable in this example as LSPG yielded an unstable solution. 
+Finally, Figure~\ref{fig:cav_wallclock} shows the wall-clock times of the \methodAcronymROMs\ as compared to the LSPG ROMs for basis \#2. Increasing the window size again leads to an increase in computational cost. Minimizing the residual over a window comprising 20 time instances yields a 3x increase in cost over LSPG. This increase in computational cost is particularly reasonable in this example as LSPG yielded an unstable solution. 
 \begin{figure}
 \begin{center}
 \includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=0.49\linewidth]{figs/cavity/walltime_vs_window_compare.pdf}

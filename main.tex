@@ -391,13 +391,13 @@ Projection-based ROMs generate approximate solutions to the FOM
 	this purpose:\footnote{For both spatial and space--time ROMs of dynamical systems, all trial subspaces are, strictly speaking, space--time subspaces.} 
 \begin{enumerate} 
 	\item \textit{Subspaces that reduce only the spatial dimension of the full-order
-		model (\spatialAcronym)}. These trial subspaces are characterized by a \textit{spatial projection operator}, associate with a basis that represents the spatial dependence of the state, and are employed in classic model reduction approaches, e.g., Galerkin and LSPG. %These 
+		model (\spatialAcronym)}. These trial subspaces are characterized by a spatial projection operator, associate with a basis that represents the spatial dependence of the state, and are employed in classic model reduction approaches, e.g., Galerkin and LSPG. %These 
 %	trial subspaces are commonly used
 %		in model-reduction methods based on spatial projection followed by time
 %		integration (e.g., the Galerkin and LSPG approaches).
 	\item \textit{Subspaces that reduce both the spatial and temporal dimensions of the full-order
 		model (\spaceTimeAcronym)}.
-These trial subspaces are characterized by a \textit{space--time projection operator}, associate with a basis that represents the spatial and temporal dependence of the state, and are employed in space--time 
+These trial subspaces are characterized by a space--time projection operator, associate with a basis that represents the spatial and temporal dependence of the state, and are employed in space--time 
 model reduction approaches (e.g., space--time Galerkin~\cite{benner_st}, space--time LSPG~\cite{choi_stlspg}). 
 % These trial subspaces are commonly employed in
 %		model-reduction methods based on space--time projection (e.g., space--time
@@ -555,7 +555,7 @@ that define the linear multistep method at the $n$th time instance.
 %\end{equation}
 %where $\stateFOMDiscreteArg{n} \approx \stateFOM(t^n)$ denotes the discrete approximation to the state at the $n${th} time instance.
 
-At each time instance on the time grid, the LSPG method substitutes the \spatialAcronym\ trial subspace approximation
+At each time instance on the time grid, LSPG substitutes the \spatialAcronym\ trial subspace approximation
 \eqref{eq:affine_trialspace} into the FOM O$\Delta$E~\eqref{eq:lms} and
 minimizes the residual, i.e., LSPG sequentially computes the solutions
 $\approxstateLSPG^n \approx \stateFOMDiscreteArg{n}$, $n=1,\ldots,
@@ -594,10 +594,10 @@ trajectory
  \stspaceST \defeq 
 	\Range{\stbasis} + 
 	\stateFOMIC\otimes\onesFunction
-	\subseteq \RR{N} \otimes \timeSpace
+	\subseteq \RR{N} \otimes \timeSpace.
 \end{equation}
 %and $\stbasis\in\RR{N \times \stdim}\otimes \timeSpace$ with 
-and $\stbasis:\timeDummy\mapsto\stbasis(\timeDummy)$ with $\stbasis(0) =
+Here $\stbasis \in \RR{\fomdim \times \stdim} \otimes \timeSpace$, with $\stbasis:\timeDummy\mapsto\stbasis(\timeDummy)$ and $\stbasis(0) =
 \boldsymbol 0$
 denotes the space--time trial basis. 
 Thus, at any time instance $t\in[0,T]$, ROMs that employ the
@@ -646,7 +646,7 @@ multistep methods as
 %\frac{\stateyDiscreteArg{N_t-1} - \stateFOMDiscreteArg{N_t-2}  }{\Delta t} -  \velocity(\stateyDiscreteArg{N_t-1}) \\
 \vdots \\
 %\frac{\stateyDiscreteArg{1} - \stateFOMIC }{\Delta t} -  \velocity(\stateyDiscreteArg{1}) \\
-\residLMSArg{N_t}(\stateyDiscreteArg{N_t};\stateyDiscreteArg{N_t-1},\ldots,\stateyDiscreteArg{N_t - k^{N_t}}) \end{bmatrix}  \\
+\residLMSArg{N_t}(\stateyDiscreteArg{N_t};\stateyDiscreteArg{N_t-1},\ldots,\stateyDiscreteArg{N_t - k^{N_t}}) \end{bmatrix} , \\
 & \vcentcolon \RR{\fomdim} \otimes \RR{N_t+1} \rightarrow \RR{\fomdim N_t},
 \end{align*}
 and define the counterpart function acting on space--time generalized
@@ -658,7 +658,7 @@ coordinates:
 \\ 
 \vdots \\
 \residLMSArg{N_t}\bigg( \stbasisArg{}{t^{N_t}}\stgenstatey + \stateIntercept; \stbasisArg{}{t^{N_t-1}}\stgenstatey + \stateIntercept ,\ldots,  \stbasisArg{}{t^{N_t-k^{N_t}}}\stgenstatey + \stateIntercept \bigg)  \\ 
-\end{bmatrix}  \\
+\end{bmatrix} , \\
 & \vcentcolon \RR{\stdim} \times \RR{N} \rightarrow \RR{\fomdim N_t}. 
 \end{align*}
 ST-LSPG computes the space--time generalized coordinates that
@@ -710,10 +710,9 @@ purpose.
 This paper proposed the windowed least-squares (\methodAcronym) \approachKwd\ for model reduction  of dynamical systems. The approach sequentially minimizes the
 	time-continuous full-order-model residual within a low-dimensional space--time trial
 	subspace over time windows. The approach was formulated for two types of trial subspaces: one that reduces only the spatial dimension of the full-order model, and one that reduces both the spatial and temporal dimensions of the full-order model. For each type of trial
-	subspace, we then outlined two different solution techniques: direct (i.e.,
+	subspace, we outlined two different solution techniques: direct (i.e.,
 	discretize then optimize) and indirect (i.e., optimize then discretize). We showed that particular instances of the approach recover Galerkin,
 	least-squares Petrov--Galerkin (LSPG), and space–time LSPG projection.  
-
 The case of \spatialAcronym\ trial subspaces is of particular interest in the \methodAcronym\ context: it was shown that indirect methods comprise solving a coupled two-point 
 Hamiltonian boundary value problem.
 The forward system, which is forced by an auxiliary costate,
@@ -721,7 +720,7 @@ The forward system, which is forced by an auxiliary costate,
 		backward system, which is forced by the time-continuous FOM residual
 		evaluated about the ROM state, governs the dynamics of the costate. 
 
-Numerical experiments of the compressible Euler and Navier--Stokes equations demonstrated the utility in the proposed approach. The first numerical experiment, in where the Sod shock tube was examined, demonstrated that \methodAcronymROMs\ minimizing the residual over larger time windows yielded solutions with lower space--time residuals. Increasing the window size over which the residual was minimized, however, did not necessarily decrease the solution error in the $\elltwo$-norm; this was observed to occur over an intermediary window size. We additionally observed that the  
+Numerical experiments of the compressible Euler and Navier--Stokes equations demonstrated the utility in the proposed approach. The first numerical experiment, in where the Sod shock tube was examined, demonstrated that \methodAcronymROMs\ minimizing the residual over larger time windows yielded solutions with lower space--time residuals. Increasing the window size over which the residual was minimized, however, did not necessarily decrease the solution error in the $\elltwo$-norm; we observed this to occur over an intermediary window size. We additionally observed that the  
 \methodAcronym\ \approachKwd\ overcomes the time-discretization sensitivity that LSPG is subject to. The second numerical experiment, which examined collocated ROMs of a compressible cavity flow, demonstrated the utility of the \methodAcronym\ formulation on a more complex flow. In this experiment, \methodAcronymROMs\ yielded predictions with relative errors less than $5-10\%$, while the Galerkin and LSPG ROMs failed to converge/blew up. Increasing the window size over which the residual was minimized again led to a lower space--time residual, but not necessarily a lower error in the $\elltwo$-norm.
 
 %In the case of spatial dimension-reduction-only, \methodAcronym\ displays improved performance over LSPG at the expense of an increased computational cost. This increase in computational cost is due to the fact that forming and/or solving the nonlinear minimization problem becomes more difficult as the time-slab size grows. To minimize this increase in cost, we intend to pursue the development of new solution techniques tailored to \methodAcronym.
@@ -1026,7 +1025,7 @@ Gathering terms and multiplying by negative one, the final form of the Euler--La
 This is the \methodAcronym-ROM. Note that this is a second order equation and can be written as two separate first order equations. Defining the ``costate" as,
 \begin{equation*}
 %\adjoint^n(t) \defeq \basisspace^T \stweightingMatArg{n} \basisspace \genstateDotArg{n}{t}  -  \basisspace^T \stweightingMatArg{n} \velocity(\veloargsromn) ,
-\adjointArg{}{\timeDummy}  : \timeDummy \mapsto \genstateDotArg{}{\timeDummy}  -  \mass^{-1} \basisspace^T \stweightingMatArg{} \velocity(\basisspace \genstateArg{}{t} + \stateIntercept, \timeDummy) ,
+\adjointArgnt{}  : \timeDummy \mapsto \genstateDotArg{}{\timeDummy}  -  \mass^{-1} \basisspace^T \stweightingMatArg{} \velocity(\basisspace \genstateArg{}{t} + \stateIntercept, \timeDummy) ,
 \end{equation*}
 we can manipulate Eq.~\eqref{eq:el_secondorder} as follows: %First, to enable hyper-reduction later on, we leverage the fact that $\stweightingMat^2 = \stweightingMat$,
 %$$
@@ -1060,7 +1059,7 @@ Re-arranging,
 \mass \frac{d }{dt}\adjointArg{}{t} + \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete} ( \veloargsrom ) \bigg]^T \stweightingMatArg{} \basisspace  \adjointArg{}{t}  \\
 = - \basisspace^T \bigg[\frac{\partial \velocity}{\partial \stateyDiscrete}(\veloargsrom)\bigg]^T \stweightingMatArg{}\bigg( \mathbf{I} - \basisspace [\massArgnt{}]^{-1} \basisspace^T \stweightingMatArg{} \bigg)  \bigg(  \basisspace \genstateDotArg{}{t}   -  \velocity(\veloargsrom) \bigg).
 \end{multline*}
-We thus get the splitting,
+We thus get the splitting
 %Eq.~\ref{eq:clspg_2ord} can be split as,
 %\begin{equation}
 \begin{align*}\label{eq:lspg_continuous_appendix}
@@ -1070,11 +1069,11 @@ We thus get the splitting,
 \end{align*}
 \section{Evaluation of gradients for optimal control formulation}\label{appendix:optimal_control}
 When formulated as an optimal control problem of Lagrange type, the gradients of the Hamiltonian with respect to the state, controller, and costate 
-need to be evaluated. This section details this evaluation.
+need to be evaluated. This section details this evaluation. The case derivation is presented for the case with one window, for notational simplicity.
 
 The Pontryagin Maximum Principle leverages the following Hamiltonian,
 \begin{align*}
-\hamiltonian^n \; &: \;  (\genstateyDiscreteArgnt{},\adjointDiscreteDumArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \mapsto 
+\hamiltonian \; &: \;  (\genstateyDiscreteArgnt{},\adjointDiscreteDumArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \mapsto 
  \adjointDiscreteDumArgnt{T} \bigg[  [\massArgnt{}]^{-1}\basisspace^T \stweightingMatArg{}\velocity(\veloargsromy) + [\massArgnt{}]^{-1}\controllerDiscreteDumArgnt{} \bigg] +  \objectiveControlArg{}(\genstateyDiscreteArgnt{},\controllerDiscreteDumArgnt{},\timeDummy) \\
 &: \; \RR{\romdim} \times \RR{\romdim} \times \RR{\romdim} \times [0,T] \rightarrow \RR{},
 \end{align*} 

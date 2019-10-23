@@ -124,7 +124,7 @@ where $\quadWeightsLMSScalarArg{n}{i} \in \RRplus$ are quadrature weights.
 
 \methodAcronym\ with the direct approach and a linear multistep method sequentially computes the solutions
 $\approxstateDiscreteArg{n,1},\ldots,\approxstateDiscreteArg{n,\nstepsArg{n}}$,
-$n=1,\ldots,\nslabs$, that satisfy
+$n=1,\ldots,\nslabs$ that satisfy
 %	\KTC{What is $\genstate^{n-1}(\timeEndArg{n-1} ) $ doing here? Two problems
 %	(1) there is no notion of a generalized coordinate $\genstate$ yet, and (2)
 %	this should be the discrete solution, not the exact solution evaluated at
@@ -205,7 +205,7 @@ backward Euler method is used to discretize the FOM ODE, then a backward Euler m
 For the limiting case where $\nstepsArg{n} = 1$, $n=1,\ldots,\nslabs$ such that the window size is equivalent to the time step (i.e., $\DeltaSlabArg{n} = \timeWindowArg{n}{1} - \timeWindowArg{n}{0}$), uniform 
 quadrature weights are used, a uniform trial space is employed (i.e., $\trialspaceArg{n} = \trialspace$ and $\stateInterceptArg{n} = \stateInterceptArg{}, n=1,\ldots,\nslabs$), the weighting matrices are taken to be
 $\stweightingMatOneArg{n} = \lspgWeightingArg{}, n=1,\ldots,\nslabs$, and the
-	time instances correspond to the time grid used for time discretization $\timeWindowArg{n}{1} = t^n$, $n=1,\ldots,\nslabs$, then 
+	time instances satisfy $\timeWindowArg{n}{1} = t^n$, $n=1,\ldots,\nslabs$, then 
 $\approxstateDiscreteArg{n,1}  = \approxstateLSPG^n$, $n=1,\ldots,\nslabs$ and  
 \methodAcronym\ with \spatialAcronym\ trial
 	subspaces solved via the direct approach recovers the LSPG approach. 
@@ -223,7 +223,7 @@ A variety of algorithms exist for solving nonlinear least-squares problems,
 
 Defining a ``vectorization" function 
 \begin{align*}
- \unroll &\vcentcolon (\stateyDiscreteArg{1},\ldots,\stateyDiscreteArg{m} ) \mapsto \begin{bmatrix} [\stateyDiscreteArg{1}]^T & \ldots & [\stateyDiscreteArg{m}]^T \end{bmatrix}^T  \\
+ \unroll &\vcentcolon (\stateyDiscreteArg{1},\ldots,\stateyDiscreteArg{m} ) \mapsto \begin{bmatrix} [\stateyDiscreteArg{1}]^T & \ldots & [\stateyDiscreteArg{m}]^T \end{bmatrix}^T , \\
 &\vcentcolon \RR{p} \otimes \RR{m} \rightarrow \RR{pm},
 \end{align*}
 the vectorized generalized coordinates over the $n$th time window are 
@@ -502,7 +502,7 @@ which requires $\romdimArg{n}+1$ evaluations of the velocity.
 		functions (e.g., Jacobians, vector-Jacobian products) in a numerically
 		exact manner by recursively applying the chain rule. The numerical
 		examples presented later in this work leverage AD. The principal drawback
-		of this approach is their intrusiveness, which may prevent them from
+		of this approach is its intrusiveness, which may prevent them from
 		practical application, e.g., in legacy codes.
 \end{enumerate}
 

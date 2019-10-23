@@ -1,5 +1,4 @@
 \section{Analysis}\label{sec:analysis}
-\KTC{HERE}
 This section provides theoretical analyses of the \methodAcronym\ \approachKwd. First, we demonstrate equivalence conditions 
 between \methodAcronym\  with (uniform) \spatialAcronym\ trial subspaces and
 the Galerkin ROM in the limit $\DeltaSlabArg{n} \rightarrow 0$.
@@ -83,12 +82,12 @@ with the boundary conditions  $\genstateArg{n}{\zeta (n-1)} = \genstateArg{n-1}{
 %\bigg[  \frac{d}{dt}{\genstate^n} -  \basisspace^T  \velocity(\decoder(\genstate^n)) \bigg]_{t=n\zeta}= \boldsymbol 0, \qquad n = 1,2,\nslabs,
 %\end{equation*}
 %subject to $\genstate^n( n\zeta) = \genstate^{n-1}(n\zeta)$. 
-In the limit of $\zeta \rightarrow 0^+$ \KTC{I added a superscript + here to
-be consistent with the previous. Please check.} (and hence $\nslabs
-\rightarrow \infty$) this is a (weak) statement of the Galerkin ROM. \KTC{I
-removed the footnote as the limit of the number of time windows going to
-infinity is obvious. Also note that it should be ``countably infinite'' not
-``infinitely countable''}
+In the limit of $\zeta \rightarrow 0^+$ (and hence $\nslabs
+\rightarrow \infty$) this is a (weak) statement of the Galerkin ROM. 
+%\KTC{I
+%removed the footnote as the limit of the number of time windows going to
+%infinity is obvious. Also note that it should be ``countably infinite'' not
+%``infinitely countable''}
 %\footnote{Formally, the continuous time domain $[0,T]$ with $T \in \RR{+}$ cannot be recovered as the set $n=\{1,\ldots,\infty\}$ is an \textit{infinitely countable set}, while $\RR{+}$ is uncountable.}
 %where at every time-instance the system obeys,
 %\begin{equation*}
@@ -167,11 +166,11 @@ $$ \norm{\resid(\statew,\timeDummy) - \resid(\statey,\timeDummy) } \le
 		\statew,\, \statey\in\RR{N} \otimes \timeSpaceArg{},$$
 where  
 \begin{align*}
-\resid &: \, (\statey,\timeDummy) \mapsto \dot{\statey}(\timeDummy) - \velocity(\stateyArg{}{\timeDummy},\timeDummy) ,\\
+\resid &: \, (\statey,\timeDummy) \mapsto \dot{\statey}(\timeDummy) - \velocity(\stateyArg{}{\timeDummy}) ,\\
 &: \, \RR{N} \otimes \timeSpaceArg{} \times [0,T] \mapsto \RR{N}.
 \end{align*}
-		\KTC{Should the second argument of $f$ be there? Above, you said we were
-		considering only autonomous velocities}
+%		\KTC{Should the second argument of $f$ be there? Above, you said we were
+%		considering only autonomous velocities}
 
 \item \textbf{A2:} The integrated residual is inverse Lipshitz continuous over
 	each time window, i.e., there exist $\lipshitziArg{n}>0$,
@@ -200,7 +199,6 @@ Under Assumptions A1--A3, the error in the solution computed by the \methodAcron
 \begin{equation}\label{eq:apriori_bound}
 \intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \DeltaSlabArg{n} \sqrt{1 + \lipshitz^2} \norm{ \errorArgt{n}{\timeStartArg{n}}  }   + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
 \end{equation}
-\EP{We can do over the entire time domain, but we have to introduce an assumption to relate $ \errorArgt{n}{\timeStartArg{n}} $ to $\intSlabArg{n-1} \norm{\errorArgt{n-1}{t}} dt$}
 %\begin{equation}\label{eq:apriori_bound}
 %\sum_{i=1}^{\nslabs} \intSlabArg{i} \norm{\errorArgt{i}{t}} dt \le \sum_{i=1}^{\nslabs} \DeltaSlabArg{i} (1 + \lipshitz) \norm{\errorArgt{i}{\timeStartArg{i}} }   + \lipshitzi \int_0^T \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
 %\end{equation}
@@ -311,7 +309,6 @@ Applying Liouville's theorem for Hamiltonian systems, we have the requirement
 %constant as that volume moves through phase-space~\cite{liouville}.'' In the present context, Liouville's theorem states, 
 $$ \frac{d}{dt}  \sqrt{ \norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}^2 + \norm{\adjointROMSolArg{n} - 
 \adjointROMStarSolArg{n} }^2}  = \bz, \qquad t \in [\timeStartArg{n},\timeEndArg{n}].$$
-\KTC{I'm not familiar with the above; can you double check and verify?}
 Thus, we have
 \begin{align*}
 \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt &\le 
@@ -348,27 +345,24 @@ Thus, we have
 %\end{align*}
 %================
 Using the definition of the costate~\eqref{eq:costate_def} and residual yields
-\KTC{In the rest of this section, you need to include the time argument for
-$\stateROMSolArg{n}$ and $\stateROMStarSolArg{n}$ within the residual. Please
-fix.}
-\begin{multline*}
+\begin{equation*}
 \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt 
-\le \\  \DeltaSlabArg{n} \sqrt{ \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2 +   \norm{\basisspaceTArg{n} \resid( \basisspaceArg{n} \stateROMSolArg{n} + \stateInterceptArg{n} , {\timeStartArg{n}} ) - 
- \basisspaceTArg{n} \resid( \basisspaceArg{n} \stateROMStarSolArg{n} + \stateInterceptArg{n}, {\timeStartArg{n}}  )}^2  } .
-\end{multline*}
-As 
-\begin{multline*}
-\norm{\basisspaceTArg{n} \resid( \basisspace \stateROMSolArg{n} + \stateInterceptArg{n} , {\timeStartArg{n}}) - 
- \basisspaceTArg{n} \resid( \basisspaceArg{n} \stateROMStarSolArg{n} + \stateInterceptArg{n}, {\timeStartArg{n}}  )}
+\le \\  \DeltaSlabArg{n} \sqrt{ \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2 +   \norm{\basisspaceTArg{n} \resid(  \stateROMSolArg{n}  , {\timeStartArg{n}} ) - 
+ \basisspaceTArg{n} \resid(  \stateROMStarSolArg{n} , {\timeStartArg{n}}  )}^2  } .
+\end{equation*}
+Additionally 
+\begin{equation*}
+\norm{\basisspaceTArg{n} \resid( \stateROMSolArg{n}  , {\timeStartArg{n}}) - 
+ \basisspaceTArg{n} \resid( \stateROMStarSolArg{n}, {\timeStartArg{n}}  )}
 \le \\
- \norm{ \resid( \basisspaceArg{n} \stateROMSolArg{n} + \stateInterceptArg{n} , {\timeStartArg{n}}) - 
-  \resid( \basisspaceArg{n} \stateROMStarSolArg{n} + \stateInterceptArg{n} , {\timeStartArg{n}}  )},
-\end{multline*}
+ \norm{ \resid(  \stateROMSolArg{n} , {\timeStartArg{n}}) - 
+  \resid(  \stateROMStarSolArg{n} , {\timeStartArg{n}}  )},
+\end{equation*}
 where we have used $\norm{\basisspaceTArg{n}} = 1$. This leads to 
 \begin{equation*}
 \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt 
-\le  \DeltaSlabArg{n}  \sqrt{ \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2 +   \norm{\resid( \basisspace \stateROMSolArg{n} + \stateIntercept , {\timeStartArg{n}} ) - 
-\resid( \basisspace \stateROMStarSolArg{n} + \stateIntercept, {\timeStartArg{n}}  )}^2  } .
+\le  \DeltaSlabArg{n}  \sqrt{ \norm{\genstateROMSolArgt{n}{\timeStartArg{n}} - \genstateROMStarSolArgt{n}{\timeStartArg{n} }}^2 +   \norm{\resid( \stateROMSolArg{n} , {\timeStartArg{n}} ) - 
+\resid(  \stateROMStarSolArg{n} , {\timeStartArg{n}}  )}^2  } .
 \end{equation*}
 %\begin{equation*}
 %\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt 
@@ -399,7 +393,7 @@ Applying A1 and factoring yields
 %\end{equation}
 Substituting bound~\eqref{eq:ustarbound} into bound~\eqref{eq:boundtmp}, noting that $\stateROMStarSolArgt{n}{\timeStartArg{n}}=  \stateFOMArg{}{\timeStartArg{n}}$, and using $\errorArgt{n}{\timeStartArg{n}} =  \stateFOMArg{}{\timeStartArg{n} } -  \stateROMSolArgt{n}{\timeStartArg{n}}$ gives the upper bound
 \begin{equation*}
-\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \DeltaSlabArg{n} \sqrt{1 + \lipshitz^2} \norm{ \errorArgt{n}{\timeStartArg{n}}  }   + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArgt{n}{t},t) } dt.
+\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \DeltaSlabArg{n} \sqrt{1 + \lipshitz^2} \norm{ \errorArgt{n}{\timeStartArg{n}}  }   + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
 \end{equation*}
 %\begin{equation*}
 %\intSlabArg{n} \norm{\errorArg{n}} dt \le \DeltaSlabArg{} (1 + \lipshitz) \norm{\errorArgt{n}{\timeStartArg{n}} }   + \lipshitzi \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n}) } dt.
@@ -412,19 +406,17 @@ Substituting bound~\eqref{eq:ustarbound} into bound~\eqref{eq:boundtmp}, noting 
 %===============
 \end{proof}
 \begin{corollary}
-	Under Assumption A2,  \KTC{Verify which specific assumptions are needed for
-	this!}
+	Under Assumption A2 and A3,  
 	the error in the solution computed by the \methodAcronymROM\ method with
 	\spatialAcronym\ trial subspaces is bounded as
 \begin{equation*}
-\int_0^T \norm{\errorArgt{1}{t}} dt \le \lipshitziArg{1} \int_0^T \norm{\resid(\stateFOMProjSolArgt{1}{t},t)}dt. %+
+\int_0^T \norm{\errorArgt{1}{t}} dt \le \lipshitziArg{1} \int_0^T \norm{\resid(\stateFOMProjSolArg{1},t)}dt. %+
 % T \sqrt{1 + \lipshitz} \norm{\errorArgt{1}{\timeStartArg{1}} } .
 \end{equation*}
 \end{corollary}
 \begin{proof}
 Setting $n=1$ in~\eqref{eq:apriori_bound} with the time intervals
-	$\timeStartArg{1}=0$, $\timeEndArg{1}=T$, employing Assumption A3 \KTC{Don't
-	you only need Assumption A2?}, and noting that the initial conditions are known yields the desired result.
+	$\timeStartArg{1}=0$, $\timeEndArg{1}=T$, employing Assumption A3, and noting that the initial conditions are known yields the desired result.
 \end{proof}
 
 \begin{comment}
