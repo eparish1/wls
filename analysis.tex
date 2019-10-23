@@ -195,7 +195,7 @@ $$ \stateFOMSolArgt{n}{\timeStartArg{n}} \in \trialspaceArg{n} +
 %$$ \norm{ \stateROMSolArgt{n}{\timeStartArg{n}} - \stateFOMSolArgt{n}{\timeStartArg{n}} } \le \constAInt \intSlabArg{n-1} \norm{ \errorArg{n-1} }dt.$$
 
 \begin{theorem}(\textit{A priori} error bounds)\label{theorem:apriori_bound}
-The error in the solution computed by the \methodAcronymROMs\ method with
+Under Assumptions A1--A3, the error in the solution computed by the \methodAcronymROMs\ method with
 	\spatialAcronym\ trial subspaces over the $n$th window is bounded as
 \begin{equation}\label{eq:apriori_bound}
 \intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \DeltaSlabArg{n} \sqrt{1 + \lipshitz^2} \norm{ \errorArgt{n}{\timeStartArg{n}}  }   + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
@@ -246,12 +246,12 @@ Applying Assumption A2 and
 \intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateROMStarSolArg{n},t) } dt.
 \end{equation*}
 %$$\int \norm{\error} dt \le \int \norm{\state_R - \state^*_R} dt +  \int \norm{\resid{\state^*_R}}dt.$$
-Leveraging the residual-minimization property of \methodAcronym, we have 
+Leveraging the residual-minimization property of \methodAcronym\ and noting
+	that $\stateFOMProjSolArg{n}(\timeStartArg{n}) =
+	\stateFOMSolArgt{n}{\timeStartArg{n}}$ by Assumption A3, we have 
 $$ \intSlabArg{n} \norm{\resid(\stateROMStarSolArg{n},t)}dt \le \intSlabArg{n} \norm{\resid(\stateFOMProjSolArg{n},t)}dt.$$
 %$$ \int \norm{\resid{\state^*_R}}dt \le \int \norm{\resid{\tilde{\state}_f}}dt,$$
-	\KTC{Not sure you can say the above. Does $\stateFOMProjSolArg{n}$ satisfy
-	the same constraints as $\stateROMStarSolArg{n}$?}
-This leads to the following expression for the error over the $n$th window,
+	This leads to the following expression for the error over the $n$th window,
 \begin{equation}\label{eq:boundtmp}
 \intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
 \end{equation}
@@ -296,13 +296,11 @@ First we can bound $\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}^2
 \begin{align*}
 \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}^2 &\le  \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}^2 + \norm{ \adjointROMSolArgt{n}{t} - 
 \adjointROMStarSolArgt{n}{t} }^2 , \\
-&\le  \norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}}^2 + \norm{ \adjointROMSolArgt{n}{t} - 
+&=  \norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}}^2 + \norm{ \adjointROMSolArgt{n}{t} - 
  \adjointROMStarSolArgt{n}{t} }^2, 
 \end{align*}
 where $\genstateROMStarSolArg{n}$ are the generalized coordinates of $\stateROMStarSolArg{n}$ 
-(i.e., $\stateROMStarSolArgt{n}{t} = \basisspaceArg{n} \genstateROMStarSolArgt{n}{t} + \stateInterceptArg{n}$) and it is additionally noted that 
-$\norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}} = 
- \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}}$. Taking the square root yields
+(i.e., $\stateROMStarSolArgt{n}{t} = \basisspaceArg{n} \genstateROMStarSolArgt{n}{t} + \stateInterceptArg{n}$). Taking the square root yields
 \begin{align*}
 \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} &\le \sqrt{ \norm{\genstateROMSolArgt{n}{t} - \genstateROMStarSolArgt{n}{t}}^2 + \norm{ \adjointROMSolArgt{n}{t} - 
  \adjointROMStarSolArgt{n}{t} }^2}. 
@@ -312,7 +310,9 @@ Applying Liouville's theorem for Hamiltonian systems, we have the requirement
 %states that, for Hamiltonian systems, ``the volume enclosed by a closed surface in phase-space is 
 %constant as that volume moves through phase-space~\cite{liouville}.'' In the present context, Liouville's theorem states, 
 $$ \frac{d}{dt}  \sqrt{ \norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}^2 + \norm{\adjointROMSolArg{n} - 
-\adjointROMStarSolArg{n} }^2}  = \bz \qquad t \in [\timeStartArg{n},\timeEndArg{n}].$$
+\adjointROMStarSolArg{n} }^2}  = \bz, \qquad t \in [\timeStartArg{n},\timeEndArg{n}].$$
+\KTC{I'm not familiar with the above; can you double check and verify?}
+\KTC{HERE}
 Thus, we have
 \begin{align*}
 \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt &\le 
