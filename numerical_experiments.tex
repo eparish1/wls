@@ -153,7 +153,7 @@ than all ROMs. Thus, although the projected FOM solution is more accurate in the
 \begin{center}
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/error_vs_window_compare.pdf}
-\caption{Space--time $\elltwo$ error of various ROMs.}
+\caption{Space--time $\elltwo$-error of various ROMs.}
 \label{fig:sod_error_a}
 \end{subfigure}
 \begin{subfigure}[t]{0.45\textwidth}
@@ -178,7 +178,7 @@ $\elltwo$-error occurs when the window size is $\DeltaSlabArg{} = 0.1$, and the 
 \begin{center}
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/error_vs_window.pdf}
-\caption{Integrated $\elltwo$ error of the \methodAcronymROMs.}
+\caption{Integrated $\elltwo$-error of the \methodAcronymROMs.}
 \label{fig:sod_error_methods_a}
 \end{subfigure}
 \begin{subfigure}[t]{0.45\textwidth}
@@ -235,7 +235,7 @@ are less than 6x the cost of LSPG; this is despite the window sizes comprising u
 \begin{center}
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/error_vs_window_dtvar.pdf}
-\caption{Space--time $\elltwo$ error of the \methodAcronymROM.}
+\caption{Space--time $\elltwo$-error of the \methodAcronymROM.}
 \label{fig:sod_error_methods_a}
 \end{subfigure}
 \begin{subfigure}[t]{0.45\textwidth}
@@ -265,8 +265,8 @@ are less than 6x the cost of LSPG; this is despite the window sizes comprising u
 The key observations from the results of the first numerical example are: 
 \begin{enumerate}
 \item Increasing the window size over which the residual is minimized led to more physically relevant solutions. Specifically, we observed that as the window size over which the residual was minimized grew, \methodAcronym\ led to less oscillatory solutions.
-\item Increasing the window size over which the residual is minimized does not necessary lead to a lower space--time error as measured by the $\elltwo$ norm. We observed that minimizing the residual over an intermediary window size led to the lowest space--time error in the $\elltwo$ norm. 
-\item \methodAcronym\ displays time-step convergence: both the space--time $\elltwo$ error and residual norm decreased and displayed time-step convergence as the time step decreased. This is in contrast to LSPG.
+\item Increasing the window size over which the residual is minimized does not necessary lead to a lower space--time error as measured by the $\elltwo$-norm. We observed that minimizing the residual over an intermediary window size led to the lowest space--time error in the $\elltwo$-norm. 
+\item \methodAcronym\ displays time-step convergence: both the $\elltwo$-error and residual norm decreased and displayed time-step convergence as the time step decreased. This is in contrast to LSPG.
 \item For all examples considered, in where the windows comprised up to 2000 time instances, \methodAcronym\ with the direct method is between 1x and 10x the cost of the LSPG. The 
 direct method was observed to be slightly more efficient and robust than the indirect method.
 \end{enumerate} 
