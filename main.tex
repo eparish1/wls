@@ -144,8 +144,6 @@ As LSPG and Galerkin projection are equivalent in the
 limit of $\Delta t \rightarrow 0$, the accuracy of LSPG approaches the (sometimes poor)
 accuracy of Galerkin as the time step shrinks.
 For too-large a time step the accuracy of LSPG also degrades. It is unclear if this is due to the time-discretization error associated with enlarging the time step, or rather if it is due to the size of the window the residual is being minimized over.
-% but this also has the effect of
-%reducing the time-dicretization error of the full-order model.
 As a
 consequence, LSPG often yields the smallest error for an intermediate value of the
 time step (see, e.g., Ref.~\cite[Figure 9]{carlberg_lspg_v_galerkin}); there
@@ -292,7 +290,7 @@ associated with spatial dimension reduction only.
 \item Support of two space--time trial subspaces: one that associates with spatial dimension reduction and 
     one that associates with spatial and temporal dimension reduction.
 The former case is of particular
-		interest in the \methodAcronym\  contex, as the stationary conditions are
+		interest in the \methodAcronym\  context, as the stationary conditions are
 		derived via the Euler--Lagrange equations and comprise a coupled two-point
 		Hamiltonian boundary value problem containing a forward and backward
 		system. The forward system, which is forced by an auxiliary costate,
@@ -315,7 +313,7 @@ The former case is of particular
 %		(not total time instances), yielding smaller error-bound growth in thime than
 %		Galerkin or LSPG projection. \KTC{Check this}
 \item Numerical experiments for 
-	trial subspaces associated with spatial dimenion reduction, which demonstrate two key findings:
+	trial subspaces associated with spatial dimension reduction, which demonstrate two key findings:
 \begin{itemize}
 \item Minimizing the residual over a larger time window leads to more stable solutions 
 with lower space--time residuals norms.
@@ -444,7 +442,7 @@ coordinates. From the space--time perspective, this is equivalent to approximati
 \begin{equation}\label{eq:spatial_subspace}
 \begin{split}
 & \stspaceS \defeq \trialspace \otimes \timeSpace +
-	\stateIntercept\otimes\onesFunction\subseteq\RR{N}\otimes\timeSpace
+	\stateIntercept\otimes\onesFunction\subseteq\RR{N}\otimes\timeSpace,
 \end{split}
 \end{equation}
 with $\onesFunction\in\timeSpace$ defined as
@@ -495,15 +493,6 @@ Thus, the computed velocity $\genstateGalerkinDotArg{}{t}$ minimizes the
 FOM ODE residual evaluated at the state $\basisspace
 \genstateGalerkin(t) + \stateIntercept$ and time instance $t$ over the spatial trial
 subspace $\trialspace$.
-%To perform dimension reduction, 
-%To perform dimension reduction, the governing equations are projected by a ``test" basis,
-%\begin{equation}\label{eq:g_truncation}
-%\testbasis^T \basisspace \frac{d \genstate}{dt} = \testbasis^T \velocity(\basisspace \genstate + \state_0,t; \param ), \qquad t \in [0,T],
-%\end{equation}
-%The most common choice is to set the test space and trial space to be equivalent, which results in the Galerkin reduced-order model,
-%\begin{equation}\label{eq:g_truncation}
-%\frac{d \genstate}{dt} = \basisspace^T \velocity(\basisspace \genstate + \state_0,t; \param ), \qquad t \in [0,T],
-%\end{equation}
 \subsubsection{Least-squares Petrov--Galerkin projection}
 Despite its time-instantaneous residual-minimization optimality property 
 \eqref{eq:GalOptimal}, the Galerkin approach can yield inaccurate solutions,
@@ -536,7 +525,7 @@ as the implicit solution to the system of algebraic equations
 	(\stateFOMDiscreteArg{n};\stateFOMDiscreteArg{n-1},\ldots,\stateFOMDiscreteArg{n-k^n})
 	= \bz,\qquad n=1,\ldots,N_t,
 \end{equation}
-where  $k^n$ denotes the number of steps employed by the scheme at the $n$th
+with the initial condition $\stateFOMDiscreteArg{0} = \stateFOMIC$. In the above, $k^n$ denotes the number of steps employed by the scheme at the $n$th
 time instance and 
 $\residLMSArg{n}$ denotes the FOM O$\Delta$E residual defined as
 \begin{align*}
@@ -546,14 +535,6 @@ $\residLMSArg{n}$ denotes the FOM O$\Delta$E residual defined as
 \end{align*} 
 Here, $\alpha^n_j,\beta^n_j\in\RR{}$, $j=0,\ldots,k^n$ are coefficients
 that define the linear multistep method at the $n$th time instance.
-%\begin{equation}\label{eq:coarse_implicit_euler_0}
-%\residLMS \frac{\stateFOMDiscreteArg{n} - \stateFOMDiscreteArg{n-1}  }{\Delta t} - \velocity(\stateFOMDiscreteArg{n}) = \mathbf{0}, \qquad n = 1,2,\ldots,N_t,
-%\end{equation}
-%the algebraic FOM O$\Delta$E obtained after an implicit Euler temporal discretization is given by,
-%\begin{equation}\label{eq:coarse_implicit_euler_0}
-%\frac{\stateFOMDiscreteArg{n} - \stateFOMDiscreteArg{n-1}  }{\Delta t} - \velocity(\stateFOMDiscreteArg{n}) = \mathbf{0}, \qquad n = 1,2,\ldots,N_t,
-%\end{equation}
-%where $\stateFOMDiscreteArg{n} \approx \stateFOM(t^n)$ denotes the discrete approximation to the state at the $n${th} time instance.
 
 At each time instance on the time grid, LSPG substitutes the \spatialAcronym\ trial subspace approximation
 \eqref{eq:affine_trialspace} into the FOM O$\Delta$E~\eqref{eq:lms} and
@@ -723,9 +704,9 @@ The forward system, which is forced by an auxiliary costate,
 Numerical experiments of the compressible Euler and Navier--Stokes equations demonstrated the utility in the proposed approach. The first numerical experiment, in where the Sod shock tube was examined, demonstrated that \methodAcronymROMs\ minimizing the residual over larger time windows yielded solutions with lower space--time residuals. Increasing the window size over which the residual was minimized, however, did not necessarily decrease the solution error in the $\elltwo$-norm; we observed this to occur over an intermediary window size. We additionally observed that the  
 \methodAcronym\ \approachKwd\ overcomes the time-discretization sensitivity that LSPG is subject to. The second numerical experiment, which examined collocated ROMs of a compressible cavity flow, demonstrated the utility of the \methodAcronym\ formulation on a more complex flow. In this experiment, \methodAcronymROMs\ yielded predictions with relative errors less than $5-10\%$, while the Galerkin and LSPG ROMs failed to converge/blew up. Increasing the window size over which the residual was minimized again led to a lower space--time residual, but not necessarily a lower error in the $\elltwo$-norm.
 
-%In the case of spatial dimension-reduction-only, \methodAcronym\ displays improved performance over LSPG at the expense of an increased computational cost. This increase in computational cost is due to the fact that forming and/or solving the nonlinear minimization problem becomes more difficult as the time-slab size grows. To minimize this increase in cost, we intend to pursue the development of new solution techniques tailored to \methodAcronym.
+In the case of \spatialAcronym\ trial subspaces, \methodAcronym\ displays improved performance over Galerkin and LSPG projection at the expense of an increased computational cost. This increase in computational cost is due to the fact that forming and/or solving the nonlinear minimization problem becomes more difficult as the time window grows. To minimize this increase in cost, future work will target the development of new solution techniques tailored to \methodAcronym.
  
-The principal challenge encountered in the \methodAcronym\ formulation is the computational cost: increasing the window size over which the residual is minimized leads to a higher computational cost. In the context of the direct solution approach, this increased cost is due to the increased cost of forming and solving the least-squares problem associated with larger window sizes. In the context of indirect methods, this increased cost is a result of the increased number of iterations of the forward backward sweep method. While numerical experiments demonstrated that the increase in computational cost is mild, future work will focus on the development of solution techniques to improve the scaling of the method.
+%The principal challenge encountered in the \methodAcronym\ formulation is the computational cost: increasing the window size over which the residual is minimized leads to a higher computational cost. In the context of the direct solution approach, this increased cost is due to the increased cost of forming and solving the least-squares problem associated with larger window sizes. In the context of indirect methods, this increased cost is a result of the increased number of iterations of the forward backward sweep method. While numerical experiments demonstrated that the increase in computational cost is mild, future work will focus on the development of solution techniques to improve the scaling of the method.
 
  
 
@@ -743,7 +724,7 @@ The principal challenge encountered in the \methodAcronym\ formulation is the co
 %$$\genstate = \genstate_s \otimes \genstate_t$$
 
 \section{Acknowledgments}
-The authors thank Yukiko Shimizo and Patrick Blonigan for numerous conversations from which this work benefited. 
+The authors thank Yukiko Shimizu and Patrick Blonigan for numerous conversations from which this work benefited. 
 E.\ Parish acknowledges an appointment to the Sandia National Laboratories'
 John von Neumann Postdoctoral Research Fellowship in Computational Science. 
 This work was partially sponsored by Sandia's Advanced Simulation and

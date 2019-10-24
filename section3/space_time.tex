@@ -1,12 +1,4 @@
 \subsection{\spaceTimeAcronym\ trial spaces}\label{sec:wls_spacetime}
-%\KTC{Error in first equation. This is the approximate solution not the real
-%one. Use parallel language to hwo this was done in the last section for
-%S-reduction trial subspaces. Also make sure the basis is zero at the beginning
-%of the interval and the affine transformation is taken to be the solution at
-%the end of the last window. This will not be too trivial, as the solution on
-%the previous slab enters the trial subspace definition.}
-
-%We now briefly consider \spaceTimeAcronym\ trial subspaces. 
 The \spaceTimeAcronym\ trial subspace over the $n$th time window approximates
 the FOM ODE solution trajectory $\stateFOM\in\RR{N}\otimes\timeSpace$
 with $\approxstateArgnt{n} \in \stspaceSTArg{n}$, where
@@ -24,30 +16,6 @@ At any time instance $t \in [\timeStartArg{n},\timeEndArg{n}]$, the \spaceTimeAc
  \stateFOMArg{n}{t} \approx \approxstateArg{n}{t}  = \stbasisArg{n}{t} \stgenstateArg{n} + \stateInterceptSTArg{n},
 \end{equation}
 where $\stgenstateArg{n} \in \RR{\stdimArg{n}}$ are the space--time generalized coordinates over the $n$th window. 
-\begin{comment}
-each window, we introduce the space--time trial subspace
-$$ \stateArgnt{n} \in \stspaceSTArg{n} \subseteq \RR{N} \otimes \timeSpaceArg{n},$$
-along with the space--time trial basis matrix \textit{function}, 
-\begin{align*}
-\stbasisArgnt{n} &: t \mapsto \stbasis(t) \\
- &: [\timeStartArg{n},\timeEndArg{n}] \rightarrow  \RR{N \times \stdimArg{n}}  ,%\spaceTrialSpace , \\
-\end{align*}
-\KTC{shouldn't be $\equiv$. Look earlier for this. the right hand side should
-be on the left with $\defeq$.} with $\Range{\stbasisArgnt{n}} + \stateInterceptSTArg{} \equiv \stspaceSTArg{n} $ and where $\stdimArg{n}$ is the number of space--time generalized coordinates over the $n$th window. 
-For simplicity we assume the reference state to be equivalent for each time window, although no such requirement is necessary. 
-\KTC{Remove all commas before equations unless it makes sense gramatically.
-Add the $n$ superscript to $x_{ref}$}
-The state over each window is approximated by,
-\begin{equation}\label{eq:stapprox}
- \stateFOMArg{n}{t} \approx \approxstateArg{n}{t}  = \stbasisArg{n}{t} \stgenstateArg{n} + \stateInterceptSTArg{},
-\end{equation}
-%and the state is then approximated by,
-%\begin{equation}\label{eq:stapprox}
-% \stateArg{n}{t} \approx \approxstateArg{n}{t}  = \stbasisArg{n}{t} \stgenstate + \stateInterceptArg{n},
-%\end{equation}
-%where $\stgenstateArg{n} \in \RR{\stdimArg{n}}$ are the space--time generalized coordinates over the $n$th window.
-
-\end{comment}
 Setting $\stspace^n \leftarrow \stspaceSTArg{n}$ in the
 \methodAcronym\ minimization problem~\eqref{eq:tclsrm} implies that
 \methodAcronym\ with \spaceTimeAcronym\ trial subspaces sequentially computes

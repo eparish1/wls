@@ -7,50 +7,13 @@ This section outlined the \methodAcronym\ \approachKwd\ for model reduction. In
 summary, \methodAcronym\ sequentially minimizes the time continuous FOM ODE
 residual within the range of a space--time trial subspace over time
 windows; i.e.,  
-%\methodAcronym\  
-%computes the generalized coordinates
-%$\genstateArgnt{n}$, for $n = 1,\ldots,\nslabs$, as the solution to the
-%minimization problems, 
 \methodAcronym\ sequentially computes approximate solutions
 $\approxstateArgnt{n}\in\stspace^n$, $n=1,\ldots,\nslabs$ that comprise
 solutions to the optimization problem \eqref{eq:tclsrm}.
-%\KTC{I removed repeated equations here and just referred to their previous
-%definitions. This will cut down on the text.}
-%\begin{equation*}
-%\underset{\stateyArgnt{} \in \stspace^n}{\text{minimize } }
-%\mathcal{J}^n(\stateyArgnt{}),
-%\end{equation*}
-%where
-%\begin{align*}
-%\mathcal{J}^n &\vcentcolon \statey \mapsto
-%\frac{1}{2} \int_{\timeStartArg{n}}^{\timeEndArg{n}} \big[ \dot{\statey}(t)
-%- \velocity(\stateyArg{}{t},t) \big]^T \stweightingMatArg{n} \big[
-%\dot{\statey}(t) - \velocity(\stateyArg{}{t},t) \big] d t \\
-%&\vcentcolon \RR{\fomdim}\otimes \timeSpaceArg{n} \rightarrow
-%\RRplus,
-%\end{align*}
-%subject to the boundary conditions. 
 For \spatialAcronym\ trial subspaces, the stationary conditions for the
 residual minimization problem can be derived via the Euler--Lagrange equations
 and yield the system \eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs} over the $n$th window for $t \in
 [\timeStartArg{n},\timeEndArg{n}]$.
-%\begin{align*}\
-%&\massArg{n}  \genstateDotArg{n}{t}  -  \basisspaceTArg{n}
-%\stweightingMatArgt{n}{t} \velocity(\veloargsromn) =  \massArg{n} \adjointArg{n}{t} , \\
-% &\massArg{n} \adjointDotArg{n}{t}  + \basisspaceTArg{n} \bigg[\frac{\partial
-%\velocity}{\partial \statey} (\veloargsromn) \bigg]^T \stweightingMatArgt{n}{t} \basisspaceArg{n}
-% \adjointArg{n}{t} = \nonumber \\ 
-%&-\basisspaceTArg{n} \big[
-%\frac{\partial \velocity}{\partial \statey}(\veloargsromn) \big]^T \stweightingMatArgt{n}{t} \big( \mathbf{I} -
-%\basisspaceArg{n} [\massArg{n}]^{-1} \basisspaceTArg{n} \stweightingMatArgt{n}{t} \big)
-% \big( \basisspace \genstateDotArg{n}{t}  -
-%\velocity(\veloargsromn) \big),  &
-%%\genstateArg{n}{\timeStartArg{n}} = \begin{cases}
-%%\genstate^{n-1}(\timeEndArg{n-1}) & n=2,\ldots,\nslabs, \\
-%%\basisspace^T(\approxstate_0 - \stateIntercept) & n=1, \end{cases}\\ &
-%%\adjointArg{n}{\timeEndArg{n}} = \boldsymbol 0.
-%\end{align*} 
-%subject to the boundary conditions~\eqref{eq:lspg_bcs1}--\eqref{eq:lspg_bcs}. 
 \methodAcronym\ with \spatialAcronym\ trial subspaces can be alternatively interpreted as a Lagrange problem from optimal control: the Galerkin method is forced by a 
 controller that enforces the residual minimization property. 
 Section~\ref{sec:wls_spacetime} additionally considered \spaceTimeAcronym\

@@ -298,12 +298,10 @@ reducing this computational burden exist; Jacobian-free Newton--Krylov
 	methods~\cite{jfnk}, Broyden's method~\cite{broyden} (as explored in
 	Ref.~\cite{carlberg_thesis}, Appendix A), and frozen Jacobian approximations
 	are several such examples. Further, the space--time formulation introduces
-	an extra dimension for parallelization that can be exploited to furture
+	an extra dimension for parallelization that can be exploited to future
 	reduce the wall time. The investigation of these additional, potentially
 	more efficient, solution algorithms is a topic of future work. 
 \end{remark}
-%\subsubsection{Jacobian-Free Implementation}
-%The dominant cost of the Gauss Newton algorithm is the computatation of the action of the Jacobian matrix on the trial basis. To alleviate this burden, the following Jacobian-free method is proposed:
 \begin{algorithm}
 \caption{\spatialAcronym\ trial subspace: algorithm for the direct solution technique with the Gauss--Newton method and a linear multistep method over the $n$th window}
 \label{alg:colloc_gn}
@@ -335,7 +333,6 @@ Return: $\genstatecollocMatSlabArg{n} = \genstatecollocMatSlabArg{n}_{k+1} $ \Co
 }
 \Else{
  Compute  $\Delta  \genstatecollocMatSlabArg{n} $ that minimizes $\norm{ \mathbf{J} \Delta \genstatecollocMatSlabArg{n} +\mathbf{r}}^2$ \Comment{Solve the linear least-squares problem} \\
-% Compute  $\Delta  \genstatecollocMatSlabArg{n} $ satisfying $ [\mathbf{J}]^T \mathbf{J} \Delta \genstatecollocMatSlabArg{n}=  -\mathbf{J}^T\mathbf{r}$ \Comment{Solve the normal equations} \\
 $\alpha \leftarrow \text{linesearch}(\Delta  \genstatecollocMatSlabArg{n} ,\genstatecollocMatSlabArg{n}_k ) $ \Comment{Compute $\alpha$ based on a line search, or set to 1}\\
 $\genstatecollocMatSlabArg{n}_{k+1} \leftarrow \genstatecollocMatSlabArg{n}_k + \alpha \Delta \genstatecollocMatSlabArg{n}$ \Comment{Update guess to the state} \\
 }
@@ -474,7 +471,7 @@ temporal discretization is achieved by introducing $\nstepsArg{n} + 1$ time
 instances over each time window.
 
 The second ingredient, namely devising an efficient method for computing terms
-involving the transpose of the Jacobain of the velocity,
+involving the transpose of the Jacobian of the velocity,
 can be challenging if one
 does not have explicit access to this Jacobian or it is too costly to
 compute. We discuss two methods that can be used to evaluate such terms

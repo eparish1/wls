@@ -1,6 +1,4 @@
 \subsection{\spatialAcronym\ trial subspaces}
-%\KTC{Make sure that $\trialspace$ and $\stateIntercept$ depend on $n$.}
-%\KTC{HERE}
 In this context, the \spatialAcronym\ trial subspace over the $n$th time window approximates
 the FOM ODE solution trajectory $\stateFOM(t)$,
 $t\in[\timeStartArg{n},\timeEndArg{n}]$ 
@@ -20,8 +18,6 @@ $, the reference states $\stateInterceptArg{n} \in \RR{\fomdim}$, $n=1,\ldots,\n
 and  
 $\onesFunction^n\in\timeSpaceArg{n}$ is defined as
 $\onesFunction^n:\timeDummy\mapsto 1.$
-% and  
-%$\approxstateArgnt{n}: [\timeStartArg{n},\timeEndArg{n}] \rightarrow  \trialspace$ is the \methodAcronym\ approximation to the state over the $n$th time slab.
 Thus, at any time instance $t\in[\timeStartArg{n},\timeEndArg{n}]$, the
 \spatialAcronym\ trial subspace 
 approximates the FOM ODE solution as
@@ -41,15 +37,6 @@ implies that
 \methodAcronym\ with \spatialAcronym\ space--time trial subspaces
 sequentially computes solutions
 $\genstateArgnt{n}$, $n = 1,\ldots,\nslabs$ that satisfy
-%For notational purposes, we define the ``decoder", or ``lifting operator",
-%that maps the generalized coordinates to the state-space of the full-order
-%model as, \begin{align}\label{eq:decoder} \decoder  \vcentcolon & \;
-%\genstatey(t) \mapsto \basisspace \genstatey(t) + \stateIntercept, \\
-%\vcentcolon & \; \RR{\romdim}  \rightarrow \RR{\fomdim} .  \end{align}
-%With $\state(t) \approx \approxstate(t)  =  \decoder(\genstate(t))$, the
-%constrained minimization problem at the $n$th time slab can be re-written as,
-%The
-%constrained minimization problem over the $n$th time slab can be re-written as,
 \begin{equation}\label{eq:obj_gen_slab}
 \begin{split}
 	& \underset{\genstateyArgnt{} \in \RR{\romdimArg{n}} \otimes \timeSpaceArg{n}
@@ -61,20 +48,8 @@ $\genstateArgnt{n}$, $n = 1,\ldots,\nslabs$ that satisfy
 \genstateICOne & n=1. \end{cases} 
 \end{split}
 \end{equation}
-%We emphasize that problem~\eqref{eq:obj_gen_slab} aims to compute the
-%\textit{function} $\approxstateArgnt{n}\in\stspaceSArg{n}$ that minimizes the \textit{functional}
-	%$\objectiveArg{n}$. 	%corresponds to
-%an infinite dimensional minimization problem: the problem 
 
 \subsubsection{Stationary conditions and the Euler--Lagrange equations}
-%	\KTC{HERE}
-%	\KTC{Quite a few issues here. Need to make $\mathcal I$ have a superscript
-%	$n$ everywhere, including (19), (20), need to replace $[0,T]$ with
-%	$[t_s^n,t_f^n]$ in the function argumentsi, need to make the functions in
-%	(19) and (20) depend also on the functional $\hat x^n$ (but use a general
-%	notation for this variable). Need to make sure all the basis $\basismat$
-%	have arguments throughout as well as the reference states. }
-
 We derive stationary conditions for optimization problem~\eqref{eq:obj_gen_slab} via 
 	the Euler--Lagrange equations from the
 calculus of variations. To begin, we define the

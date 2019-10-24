@@ -3,13 +3,6 @@ We now consider numerical-solution techniques for the \methodAcronym\ \approachK
 We focus primarily on 
 direct (i.e., discretize-then-optimize) and indirect (i.e., optimize-then-discretize) methods for \spatialAcronym\ trial subspaces, 
 and then briefly outline direct and indirect methods for \spaceTimeAcronym\ trial subspaces. 
-%It is noted that, as \methodAcronym\ with \spatialAcronym\ trial subspaces 
-%Given the formulation of the \methodAcronym\ method presented in Section
-%\ref{sec:tclspg}, we now consider numerical-solution techniques for the method. 
-%Due to the commonalities that the \methodAcronym\ method exhibits with
-%optimal-control problems, \KTC{is this only for S-reduction subspaces? If so,
-%state this.} the derivation of these techniques can leverage a large existing
-%body of work. In this section, we outline a variety of such techniques. 
 \subsection{\spatialAcronym: direct and indirect methods}
 \methodAcronym\ with \spatialAcronym\ trial subspaces can be viewed as an optimal-control problem.
 Numerical solution techniques for
@@ -31,10 +24,10 @@ possible solution techniques.
 
 In the present context, we investigate both direct and indirect methods to solve \methodAcronym\ with \spatialAcronym\ trial
 subspaces. In particular, we consider:
-\begin{itemize} \item \textit{Direct methods (discretize-then-optimize)}: A
+\begin{itemize} \item \textit{Direct methods (discretize then optimize)}: A
 			direct approach that leverages linear multistep methods to directly solve the optimization problem~\eqref{eq:obj_gen_slab}.
 Section~\ref{sec:direct} outlines this approach.
-\item \textit{Indirect methods (optimize-then-discretize)}: An indirect
+\item \textit{Indirect methods (optimize then discretize)}: An indirect
 	approach that leverages the forward--backward sweep algorithm to solve the
 		Euler--Lagrange equations~\eqref{eq:lspg_continuous}--\eqref{eq:lspg_bcs}.
 Section~\ref{sec:indirect} outlines this technique.
