@@ -15,7 +15,7 @@ $$
 \qquad \mathbf{F}_{v_1} = \begin{Bmatrix} 0 \\ \tau_{11} \\ \tau_{12}  \\ u_j \tau_{j1} + c_p \frac{\mu}{\text{Pr}} \frac{\partial T}{\partial x_1}  \end{Bmatrix}, 
 \qquad \mathbf{F}_{v_2} = \begin{Bmatrix} 0 \\ \tau_{21} \\ \tau_{22}  \\ u_j \tau_{j2} + c_p \frac{\mu}{\text{Pr}} \frac{\partial T}{\partial x_2}  \end{Bmatrix},
 $$
-where $\mu \in \RRplus$ is the dynamic viscosity, $\text{Pr} = 0.72$ is the Prandtl number, and $c_p \in \RRplus$ the heat capacity ratio.
+where $\mu \in \RRplus$ is the dynamic viscosity, $\text{Pr} = 0.72$ is the Prandtl number, $T : \Omega \rightarrow \RRplus$ the temperature, and $c_p \in \RRplus$ the heat capacity ratio.
 We assume a Newtonian fluid, which leads to a viscous stress tensor of the form
 \begin{equation*}
 \tau_{ij} = 2\mu S_{ij},
@@ -45,7 +45,7 @@ DG method uses the Rusanov flux at the cell interfaces~\cite{rusanov} and uses t
 is performed via a third-order strong stability preserving Runge-Kutta method~\cite{ssp_rk3} with a time step of $\Delta t = 0.001$. 
  
 The reduced-order models leverage POD to construct the \spatialAcronym\ trial basis and use q-sampling~\cite{qdeim_drmac} based on snapshots of the FOM velocity to select the sampling points (and as a result the weighting 
-matrix $\stweightingMatArg{}$); we use a constant weighting matrix across all windows, e.g., $\stweightingMatArg{n} \equiv \stweightingMatArg{}$, $n=1,\ldots,\nslabs$. The process used to construct the initial conditions and trial subspaces for the ROMs is as follows:
+matrix $\stweightingMatArg{}$); we use a constant weighting matrix across all windows, e.g., $\stweightingMatArg{n} \equiv \stweightingMatArg{}$, $n=1,\ldots,\nslabs$. The process used to construct the initial conditions, trial subspaces, and weighting matrices for the ROMs is as follows:
 \begin{enumerate}
 \item Initialize the FOM with uniform free-stream conditions.
 \item Evolve the FOM for $t \in [0,400]$.
@@ -75,10 +75,10 @@ We consider collocated ROMs based on the Galerkin, least-squares Petrov--Galerki
 \begin{itemize}
 \item \textit{Galerkin ROM with collocation}: We consider a Galerkin ROM with collocation and evolve the ROM in time with the CN time scheme at a time step of $\Delta t =0.1$.
 
-\item \textit{LSPG ROM with collocation}: We consider a collocated LSPG ROM, which is built on top of the FOM discretization using the Crank--Nicolson scheme for temporal 
+\item \textit{LSPG ROM with collocation}: We consider a collocated LSPG ROM, which is built on top of the FOM discretization using the CN scheme for temporal 
 discretization. We employ a time step of $\Delta t  = 0.1$. The implementation is the same as previously described. 
  
-\item \textit{\methodAcronymROMs\ with collocation}: We consider \methodAcronymROMs\ solved via the direct method. The ROMs use the Crank--Nicolson time-discretization with a time step of 
+\item \textit{\methodAcronymROMs\ with collocation}: We consider \methodAcronymROMs\ solved via the direct method. The ROMs use the CN time discretization with a time step of 
 $\Delta t = 0.1$. The implementation is the same as previously described. 
 %\begin{itemize}
 %\item Direct Method: \methodAcronym ROMs solved via the direct method are again implemented with the same Crank--Nicolson time discretization with a nominal 
@@ -208,7 +208,7 @@ shows the wall-clock times of the \methodAcronymROMs\ for $t \in [0,10]$ as comp
 \end{center}
 \end{figure}
 
-Figure~\ref{fig:cav_snapshots} shows vorticity fields for the FOM, LSPG ROM, and \methodAcronymROMs\ with $\Delta T = 0.5,1.0$ for the time instance $t = 5.0$. LSPG is observed to exhibit artificial oscillations; the Gauss-Newton method fails to converge at $t \approx 16.0$. The \methodAcronymROM\ at $\Delta T = 0.5$ is able to capture the important features of the flow, including the points of flow separation at the start and end of the ramp, and remains stable for the entire time interval.  
+Figure~\ref{fig:cav_snapshots} shows vorticity fields for the FOM, LSPG ROM, and \methodAcronymROMs\ with $\Delta T = 0.5,1.0$ for the time instance $t = 5.0$. LSPG is observed to exhibit artificial oscillations; the Gauss-Newton method fails to converge at $t \approx 16.0$. The \methodAcronymROMs\ at $\Delta T = 0.5,1.0$ are able to capture the important features of the flow, including the points of flow separation at the start and end of the ramp, and remain stable for the entire time interval.  
 
 %\begin{figure}
 %\begin{center}
@@ -306,7 +306,7 @@ Next, we assess the performance of the various ROMs for basis \#2 as described i
 \end{figure}
 
 
-Finally, Figure~\ref{fig:cav_wallclock} shows the wall-clock times of the \methodAcronymROMs\ as compared to the LSPG ROMs for basis \#2. Increasing the window size again leads to an increase in computational cost. Minimizing the residual over a window comprising 20 time instances yields a 3x increase in cost over LSPG. This increase in computational cost is particularly reasonable in this example as LSPG yielded an unstable solution. 
+Finally, Figure~\ref{fig:cav_wallclock} shows the wall-clock times for $t \in [0,4]$ of the \methodAcronymROMs\ as compared to the LSPG ROMs for basis \#2. Increasing the window size again leads to an increase in computational cost. Minimizing the residual over a window comprising 20 time instances yields a 3x increase in cost over LSPG. 
 \begin{figure}
 \begin{center}
 \includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=0.49\linewidth]{figs/cavity/walltime_vs_window_compare.pdf}

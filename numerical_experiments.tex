@@ -85,7 +85,7 @@ problem via the forward--backward sweep method, and compute the action of the Ja
 We first assess the impact of the window size on the performance of the \methodAcronymROMs.  We consider a set of \methodAcronymROMs\ that minimize the residual over windows of constant size 
 $\DeltaSlabArg{n} \equiv \DeltaSlabArg{} =  .002$, $0.004$ ,$0.008$, $0.02$, $0.04$, $0.10$, $0.20$, $1.0$. We additionally consider the standard Galerkin and LSPG ROMs. We first show results for \methodAcronymROMs\ using the direct method with CN time discretization; a comparison of different time-marching methods and direct/indirect solution techniques will be provided later in this section. 
 First, Figure~\ref{fig:sod_density} presents the density solutions produced by the various ROMs at $t = 0.5$ and $1.0$. Figure~\ref{fig:sod_xt} shows 
-$x-t$ diagrams for the same density solutions. From Figures~\ref{fig:sod_density} and~\ref{fig:sod_xt}, we observe that the LSPG and Galerkin ROMs accurately characterize 
+$\mathsf{x}-t$ diagrams for the same density solutions. From Figures~\ref{fig:sod_density} and~\ref{fig:sod_xt}, we observe that the LSPG and Galerkin ROMs accurately characterize 
 the system: they correctly track the shock location, expansion waves, etc. We observe both predictions, however, to be highly oscillatory. These oscillations are 
 not physical and can lead to numerical instabilities; e.g., due to negative pressure. We observe the \methodAcronymROMs\ to produce less oscillatory solutions than both 
 the Galerkin and LSPG ROMs. Critically, we see that the solution becomes less oscillatory as the window size over which the residual is minimized grows. The solution displays no oscillations when the residual is minimized over the entire space--time domain. 
