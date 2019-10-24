@@ -142,12 +142,11 @@ employed (i.e., $\stweightingMat = \mathbf{I}$).
 %We define the residual as,
 %$$\resid(\state) = \dot{\state} - \velocity(\state).$$
 %In the following,  $\stateFOMSolArg{}$ is the state implicitly defined as the solution to full-order model, $\stateROMSolArg{n}$ is the state implicitly defined as the solution to the \methodAcronym-ROM, $\adjointROMSolArg{n}$ is the costate solution to the \methodAcronymROM, 
-We denote the error in the \methodAcronymROMs\ solution over the $n$th window
+We denote the error in the \methodAcronymROM\ solution over the $n$th window
 as
-$[\timeStartArg{n},\timeEndArg{n}]$, is defined as
 \begin{align*}
 	\errorArg{n}\vcentcolon& \timeDummy \mapsto \stateFOMSolArg{}(\timeDummy)-
-	\stateROMSolArg{n} (\timeDummy)\\
+	\stateROMSolArg{n} (\timeDummy),\\
 	:&[\timeStartArg{n},\timeEndArg{n}]\rightarrow\RR{\fomdim},
 \end{align*}
 $n=1,\ldots,\nslabs$.
@@ -158,7 +157,7 @@ $$\stateFOMProjSolArg{n} = \underset{\statey \in
 We employ the following assumptions.
 
 \begin{itemize}
-\item \textbf{A1:} The residual is Lipshitz continuous, i.e., there exists
+\item \textbf{A1:} The residual is Lipshitz continuous in the first argument, i.e., there exists
 	$\lipshitz>0$ such that
 $$ \norm{\resid(\statew,\timeDummy) - \resid(\statey,\timeDummy) } \le
 		\lipshitz \norm{\statew(\timeDummy) - \statey(\timeDummy)},\quad \forall
@@ -177,7 +176,7 @@ $$ \norm{\velocity(\statewDiscrete,\timeDummy) - \velocity(\stateyDiscrete,\time
 		\statewDiscrete,\, \stateyDiscrete \in\RR{\fomdim} ,\tau \in [0,T].$$
 
 
-\item \textbf{A3:} The integrated residual is inverse Lipshitz continuous over
+\item \textbf{A3:} The integrated residual is inverse Lipshitz continuous in its first argument over
 	each time window, i.e., there exist $\lipshitziArg{n}>0$,
 		$n=1,\ldots,\nslabs$ such that
 %$\forall \statew,\statey$ with $\statew(\timeStartArg{n} ) = \statey(\timeStartArg{n})$ \EP{Put this in  a set maybe? I think that this, along with the trajectory being ''sufficiently smooth", should be enough to avoid the case where we have two different trajectories that exactly satisfy the residual. Something like $\statew,\statey \in \stspaceArg{n}_*, \stspaceArg{n}_* = \{ \statew \in \stspaceArg{n} | \statew(\timeStartArg{n}) = \mathbf{g} \}$ for arbitrary $\mathbf{g}$},
@@ -302,8 +301,8 @@ $\stateROMStarSolArg{n}$ and $\stateROMSolArg{n}$ are defined by the systems,
 %\adjointROMStarSolArg{n} }^2 .$$ 
 \end{comment}
 We now derive an upper bound for $\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt$.
-\EP{Changes here}
-Defining $\errorStarArg{n} = \genstateROMSolArg{n} - \genstateROMStarSolArg{n}$, $n=1,\ldots,\nslabs$, where $\genstateROMStarSolArg{n}$ are the generalized coordinates of $\stateROMStarSolArg{n}$ (i.e., $\stateROMStarSolArgt{n}{t} = \basisspaceArg{n} \genstateROMStarSolArgt{n}{t} + \stateInterceptArg{n}$), a differential equation for the difference is given by
+%\EP{Changes here}
+Defining $\errorStarArg{n} = \genstateROMSolArg{n} - \genstateROMStarSolArg{n}$, $n=1,\ldots,\nslabs$, where $\genstateROMStarSolArg{n}$ are the generalized coordinates of $\stateROMStarSolArg{n}$ (i.e., $\stateROMStarSolArgt{n}{t} = \basisspaceArg{n} \genstateROMStarSolArgt{n}{t} + \stateInterceptArg{n}$), the differential equation for $\errorStarArg{n}$ is given by
 $$\errorStarDotArgt{n}{t} = \basisspaceTArg{n}[\velocity(\basisspaceArg{n} \genstateROMSolArgt{n}{t} + \stateInterceptArg{n},t) - \velocity(\basisspaceArg{n} \genstateROMStarSolArgt{n}{t} + \stateInterceptArg{n},t) ] + \adjointROMSolArgt{n}{t} - \adjointROMStarSolArgt{n}{t},$$
 for $t \in [\timeStartArg{n},\timeEndArg{n}]$ and with the initial condition $\errorStarArgt{n}{\timeStartArg{n}}.$ We have used the notation $ \errorStarDotArg{n}\equiv d \errorStarArg{n} / d\tau$. 
 Taking the norm of both sides and applying triangle inequality yields
@@ -311,7 +310,7 @@ Taking the norm of both sides and applying triangle inequality yields
 $$\norm{ \errorStarDotArgt{n}{t} } \le \norm{[\velocity(\basisspaceArg{n} \genstateROMSolArgt{n}{t} + \stateInterceptArg{n},t) - \velocity(\basisspaceArg{n} \genstateROMStarSolArgt{n}{t} + \stateInterceptArg{n},t) ]} + \norm{\adjointROMSolArgt{n}{t} - \adjointROMStarSolArgt{n}{t}},$$
 with the initial condition $\norm{\errorStarArgt{n}{\timeStartArg{n}}}$. We note we have used $\norm{\basisspaceArg{n}} = 1$. Using the definition of the costate~\eqref{eq:costate_def} yields 
 $$\norm{ \errorStarDotArgt{n}{t} } \le \norm{[\velocity(\basisspaceArg{n} \genstateROMSolArgt{n}{t} + \stateInterceptArg{n},t) - \velocity(\basisspaceArg{n} \genstateROMStarSolArgt{n}{t} + \stateInterceptArg{n},t) ]} + \norm{\basisspaceTArg{n} \big( \resid(\stateROMSolArg{n},t) - \resid(\stateROMStarSolArg{n},t) \big)}.$$
-Employing assumptions A1-A2 yields the bound on the dynamic
+Employing assumptions A1-A2 yields the bound
 %$$\norm{ \errorStarDotArgt{n}{t} } \le \lipshitzf \norm{ \errorStarArgt{n}{t} } + \lipshitz \norm{ \errorStarArgt{n}{t}}.$$
 $$\norm{ \errorStarDotArgt{n}{t} } \le (\lipshitzf + \lipshitz)  \norm{ \errorStarArgt{n}{t} } .$$
 We use the fact that $ d \norm{ \errorStarArg{n} } / d\tau \le \norm{ \errorStarDotArg{n} } $ to get 
@@ -448,8 +447,8 @@ Substituting bound~\eqref{eq:ustarbound} into bound~\eqref{eq:boundtmp}, noting 
 \end{comment}
 \end{proof}
 \begin{corollary}
-	Under Assumptions A3--A4,  
-	the error in the solution computed by the \methodAcronymROM\ method with
+	For the case of one time window $\DeltaSlabArg{1} = T$, then under Assumptions A3--A4  
+	the error in the solution computed by the \methodAcronymROM\ \approachKwd\ with
 	\spatialAcronym\ trial subspaces is bounded as
 \begin{equation*}
 \int_0^T \norm{\errorArgt{1}{t}} dt \le \lipshitziArg{1} \int_0^T \norm{\resid(\stateFOMProjSolArg{1},t)}dt. %+
@@ -458,7 +457,7 @@ Substituting bound~\eqref{eq:ustarbound} into bound~\eqref{eq:boundtmp}, noting 
 \end{corollary}
 \begin{proof}
 Setting $n=1$ in~\eqref{eq:apriori_bound} with the time intervals
-	$\timeStartArg{1}=0$, $\timeEndArg{1}=T$, employing Assumption A3, and noting that the initial conditions are known yields the desired result.
+	$\timeStartArg{1}=0$, $\timeEndArg{1}=T$, noting that the initial conditions are known and employing Assumption A4 yields the desired result.
 \end{proof}
 
 \begin{comment}
