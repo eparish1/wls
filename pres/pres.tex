@@ -1,0 +1,54 @@
+%\documentclass{article}
+\documentclass[3p,computermodern,10pt]{elsarticle}
+\input{../packages}
+\input{../commands}
+\input{../commands_cwst}
+%\input{title}
+%\begin{frontmatter}
+%\title{Continuous Least-Squares Petrov-Galerkin for Model Reduction}
+%\author{Eric J. Parish}
+\begin{document}
+\begin{frontmatter}
+
+%\title{Model Reduction via \methodName}
+%\title{Windowed least--squares reduced-order models for dynamical systems}
+\title{Windowed least-squares model reduction for dynamical systems}
+%\title{The windowed least-squares framework for model reduction of dynamical systems}
+
+\author[a]{Eric J. Parish and Kevin T. Carlberg}
+%\ead{ejparis@sandia.gov}
+
+\address[a]{Sandia National Laboratories,  Livermore, CA}
+\begin{abstract}
+This work proposes a \methodNameLower\ (\methodAcronym) approach for model-reduction
+	of dynamical systems. The proposed approach sequentially minimizes the
+	time-continuous full-order-model residual within a low-dimensional space--time trial
+	subspace over time windows. The approach comprises a generalization 
+of existing model reduction approaches, as particular instances of
+  the methodology recover Galerkin,
+	least-squares Petrov--Galerkin (LSPG), and space–time LSPG projection. In
+	addition, the approach
+	addresses key deficiencies in existing model-reduction
+	techniques, e.g., the dependence of LSPG and space--time LSPG projection on the
+	time discretization and the exponential growth in time exhibited by \textit{a posteriori}
+	error bounds for both Galerkin and LSPG projection.  We consider two types of
+	space--time trial
+	subspaces within the proposed approach: one that reduces only the spatial dimension of the full-order model, and one that reduces both the spatial and temporal dimensions of the full-order model. For each type of trial
+	subspace, we consider two different solution techniques: direct (i.e.,
+	discretize then optimize) and indirect (i.e., optimize then discretize).
+	Numerical experiments conducted using trial subspaces characterized by spatial
+	dimension reduction demonstrate that the \methodAcronym\
+	approach can yield more accurate solutions with lower space--time residuals than
+	Galerkin and LSPG projection. 
+
+\end{abstract}
+\end{frontmatter}
+
+
+%\maketitle
+\section{Introduction}
+
+$$\state \approx \approxstate \in \stspace \subseteq \RR{N} \otimes \timeSpaceArg{} , \qquad  n = 1,\ldots,\nslabs$$
+
+\end{document}
+
