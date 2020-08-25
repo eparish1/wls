@@ -222,7 +222,7 @@ algorithms tailored to the windowed minimization problem.
 \end{center}
 \end{figure}
 
-Finally, we study the impact of the time step on the \methodAcronymROM\ results. We examine \methodAcronymROMs\ that use a
+Next, we study the impact of the time step on the \methodAcronymROM\ results. We examine \methodAcronymROMs\ that use a
 window size of $\Delta T = 0.1$, with time steps $\Delta t =$  $0.001$, $0.002$, $0.005$, $0.01$, $0.05$, $0.1$ (i.e.,  
 $100$, $50$, $20$, $10$, $2$, and $1$ time instances per window). We additionally 
 consider LSPG ROMs leveraging the same set of time steps. To assess time step convergence, we compare results to a new full-order model, which is as described in Section~\ref{sec:sod_fom} but uses a fine time step of $\Delta t = 10^{-4}$. Figure~\ref{fig:time_step_study} shows the $\elltwo$-error and residual norm  
@@ -259,6 +259,32 @@ are less than 6x the cost of LSPG; this is despite the window sizes comprising u
 \label{fig:walltime_dtvar}
 \end{center}
 \end{figure}
+
+
+\subsubsection{Results as a function of basis dimension}
+Lastly, we assess the impact of the basis dimension on the performance of the various reduced-order models. We again consider S-reduction trial subspaces. We obtain the trial subspaces by evolving the FOM for $t \in [0.0,1.0]$ at a time-step of $\Delta t = 0.002$ with the CN scheme. We execute Algorithm~\ref{alg:pod} with inputs $N_{\text{skip}} = 2$, $\stateIntercept = \state_0$\footnote{We observed negative pressures in the projected initial conditions for trial subspaces of dimension $K=20,30,40$ if we used the offset $\stateIntercept = \bz$. Thus, for our convergence study we employed $\stateIntercept = \state_0$ so-as to avoid negative pressures in the projected initial conditions.}, and $\romdim = 10,20,30,40,50$. We investigate reduced-order models based on Galerkin projection, LSPG projection, and the WLS approach. All methods leverage the CN time scheme with $\Delta t = 0.002$. We present results for windows of size $\Delta T^n \equiv \Delta T = 0.002,0.004,0.02,0.04,0.10$ for the WLS approach. All WLS ROMs are solved via the direct approach described previously. 
+
+Figure~\ref{fig:convergence_study} shows the integrated $\ell^2$-error of the various ROM solutions, as well as the optimal solution as measured in the $\ell^2$-norm. In Figure~\ref{fig:sod_error_converge} we first observe that for a basis of dimension $\romdim = 10$, the Galerkin, LSPG, and WLS $\Delta T = 0.002$, $\Delta T = 0.004$ ROMs do not converge. Upon investigation, this lack of convergence occurred due to the presence of negative pressure. We next observe that the $\ell^2$-error monotonically decreases as the basis dimension increases for all remaining ROM solutions with the exception of the Galerkin, LSPG, and WLS $\Delta T = 0.002$, $\Delta T = 0.004$ at dimension $\romdim = 30$. Overall, we observe that larger window sizes yield lower errors when the basis dimension is small. For larger basis dimensions we observe all ROMs to yield accurate solutions, and a larger window size does not always yield a lower error. In Figure~\ref{fig:sod_residual_converge}, we next observe that the residual monotonically decreases as the basis dimension grows. This result is supported, although not guaranteed, by the error analysis presented in Section~\ref{sec:analysis} and Ref.~\cite{carlberg_lspg_v_galerkin}. Finally, we observe that larger window sizes yields lower integrated residuals.  
+
+
+\begin{figure}
+\begin{center}
+\begin{subfigure}[t]{0.45\textwidth}
+\includegraphics[width=1.\linewidth]{figs/sod/error_converge.pdf}
+\caption{Space--time $\elltwo$-error of the \methodAcronymROM.}
+\label{fig:sod_error_converge}
+\end{subfigure}
+\begin{subfigure}[t]{0.45\textwidth}
+\includegraphics[width=1.\linewidth]{figs/sod/residual_converge.pdf}
+\caption{Space--time residual norm of the \methodAcronymROM.} 
+\label{fig:sod_residual_converge}
+\end{subfigure}
+\caption{Performance metrics of the Galerkin, LSPG, and \methodAcronymROMs\ as a function of basis dimension. Missing entries indicate that the solver did not converge.} 
+\label{fig:convergence_study}
+\end{center}
+\end{figure}
+
+
 
 
 \subsubsection{Summary of numerical results for the Sod shock tube}
