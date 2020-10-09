@@ -35,7 +35,7 @@ u =
 along with reflecting boundary conditions at $\mathsf{x}=0$ and $\mathsf{x}=1$. 
 
 \subsubsection{Description of FOM and generation of \spatialAcronym\ trial subspace}\label{sec:sod_fom}
-We solve the 1D compressible Euler equations with a finite volume method. We partition the domain into 500 cells of uniform width and employ the Rusanov flux~\cite{rusanov} at the cell interfaces. We employ the Crank--Nicolson (CN) scheme, which is a linear multistep method defined by the coefficients $\alpha_0 = 1,\alpha_1 = -1, \beta_0 = \beta_1 = 1/2$, for temporal integration. We evolve the FOM for $t \in [0.0,1.0]$ at a time-step of $\Delta t = 0.002$. We construct the \spatialAcronym\ trial subspace by executing Algorithm~\ref{alg:pod} with inputs $N_{\text{skip}}=2, \stateIntercept = \bz, K=46 $. The resulting trial subspace corresponds to an energy criterion of $99.99\%$.
+We solve the 1D compressible Euler equations with a finite volume method. We partition the domain into 500 cells of uniform width and employ the Rusanov flux~\cite{rusanov} at the cell interfaces. We employ the Crank--Nicolson (CN) scheme, which is a linear multistep method defined by the coefficients $\alpha_0 = 1,\alpha_1 = -1, \beta_0 = \beta_1 = 1/2$, for temporal integration. We evolve the FOM for $t \in [0.0,1.0]$ at a time-step of $\Delta t = 0.002$. We construct the \spatialAcronym\ trial subspace by executing Algorithm~\ref{alg:pod} with inputs $N_{\text{skip}}=2, \stateIntercept = \bz, K=46 $, and $\mathbf{P} = \mathbf{I}$. The resulting trial subspace corresponds to an energy criterion of $99.99\%$.
 %  The solution is saved every other time-step, resulting in 500 solutions snapshots. These snapshots are used to generate a trial basis for the reduced-order models through POD. The trial basis is selected to be of dimension $K = 46$, which corresponds to a $99.99\%$ energy criterion. No affine transformation is used in the construction of the trial subspace, i.e., $\stateIntercept = \bz$.
 
 \subsubsection{Description of reduced-order models}
@@ -83,7 +83,7 @@ problem via the forward--backward sweep method, and compute the action of the Ja
 
 \subsubsection{Numerical results}
 We first assess the impact of the window size on the performance of the \methodAcronymROMs.  We consider a set of \methodAcronymROMs\ that minimize the residual over windows of constant size 
-$\DeltaSlabArg{n} \equiv \DeltaSlabArg{} =  .002$, $0.004$ ,$0.008$, $0.02$, $0.04$, $0.10$, $0.20$, $1.0$. We additionally consider the standard Galerkin and LSPG ROMs. We first show results for \methodAcronymROMs\ using the direct method with CN time discretization; a comparison of different time-marching methods and direct/indirect solution techniques will be provided later in this section. 
+$\DeltaSlabArg{n} \equiv \DeltaSlabArg{} =  0.002$, $0.004$ ,$0.008$, $0.02$, $0.04$, $0.10$, $0.20$, $1.0$. We additionally consider the standard Galerkin and LSPG ROMs. We first show results for \methodAcronymROMs\ using the direct method with CN time discretization; a comparison of different time-marching methods and direct/indirect solution techniques will be provided later in this section. 
 First, Figure~\ref{fig:sod_density} presents the density solutions produced by the various ROMs at $t = 0.5$ and $1.0$. Figure~\ref{fig:sod_xt} shows 
 $\mathsf{x}-t$ diagrams for the same density solutions. From Figures~\ref{fig:sod_density} and~\ref{fig:sod_xt}, we observe that the LSPG and Galerkin ROMs accurately characterize 
 the system: they correctly track the shock location, expansion waves, etc. We observe both predictions, however, to be highly oscillatory. These oscillations are 
@@ -143,50 +143,49 @@ the Galerkin and LSPG ROMs. Critically, we see that the solution becomes less os
 \end{center}
 \end{figure}
 
-Next, Figure~\ref{fig:sod_error} shows space--time state errors and the objective function~\eqref{eq:obj} (i.e., the space--time residual norm) over $t \in [0,1]$ for the various ROMs. Most notably, we observe 
-that increasing the window size over which the residual is minimized does \textit{not} lead to a monotonic decrease in the space--time error as measured in the $\elltwo$-norm (we refer to this as the $\elltwo$-error). As expected, increasing the window size does lead to a monotonic decrease in the space--time residual, however. We additionally note that, although the space--time
-$\elltwo$-error of 
-the projected FOM solution is significantly lower than that of the various ROM solutions, the space--time residual norm of the projected FOM solution is \textit{higher} 
+Next, Figure~\ref{fig:sod_error} shows time-integrated $\ell^2$-norm of the state errors and the objective function~\eqref{eq:obj} (i.e., the time-integrated residual norm) over $t \in [0,1]$ for the various ROMs. Most notably, we observe 
+that increasing the window size over which the residual is minimized does \textit{not} lead to a monotonic decrease in the error as measured in the time-integrated $\elltwo$-norm (we refer to this as the $\elltwo$-error). As expected, increasing the window size does lead to a monotonic decrease in the time-integrated residual norm, however. We additionally note that, although the time-integrated $\elltwo$-error of 
+the projected FOM solution is significantly lower than that of the various ROM solutions, the time-integrated residual norm of the projected FOM solution is \textit{higher} 
 than all ROMs. Thus, although the projected FOM solution is more accurate in the $\elltwo$-norm, it does not satisfy the governing equations as well the ROM solutions. 
 
 \begin{figure}
 \begin{center}
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/error_vs_window_compare.pdf}
-\caption{Space--time $\elltwo$-error of various ROMs.}
+\caption{Relative time-integrated $\elltwo$-error of various ROMs.}
 \label{fig:sod_error_a}
 \end{subfigure}
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/objective_vs_window_compare.pdf}
-\caption{Integrated residual norm of various ROMs.} 
+\caption{Time-integrated residual norm of various ROMs.} 
 \label{fig:sod_error_b}
 \end{subfigure}
-\caption{Integrated performance metrics of the Galerkin, LSPG, and \methodAcronymROMs.  Note that the Galerkin and LSPG ROMs do not depend on the window size.} 
+\caption{Time-integrated performance metrics of the Galerkin, LSPG, and \methodAcronymROMs.  Note that the Galerkin and LSPG ROMs do not depend on the window size.} 
 \label{fig:sod_error}
 \end{center}
 \end{figure}
 
 We now examine the comparative performance of the direct and indirect solution techniques for the \methodAcronymROMs\ using various time discretization techniques. 
 Figure~\ref{fig:sod_error_methods} 
-shows the same space--time $\elltwo$-errors and residual norms as in Figure~\ref{fig:sod_error}, but this time results are shown for 
+shows the same time-integrated $\elltwo$-errors and residual norms as in Figure~\ref{fig:sod_error}, but this time results are shown for 
 the various \methodAcronymROMs. In both Figures~\ref{fig:sod_error_methods_a} and~\ref{fig:sod_error_methods_b}, we observe that the \methodAcronym\ method 
 is relatively insensitive to the solution technique (direct vs indirect) and underlying discretization scheme, although some minor differences are observed.
 In particular, ROMs using the second order explicit AB2 scheme with a time step of $\Delta t = 0.0005$ provide similar results to the 
-ROMs using the second-order CN scheme at a time step of $\Delta t = 0.002$. All methods display similar dependence on the window size: the optimal 
-$\elltwo$-error occurs when the window size is $\DeltaSlabArg{} = 0.1$, and the residual decreases monotonically as the window size grows. 
+ROMs using the second-order CN scheme at a time step of $\Delta t = 0.002$. All methods display similar dependence on the window size: the optimal time-integrated 
+$\elltwo$-error occurs when the window size is $\DeltaSlabArg{} = 0.1$, and the time-integrated residual norm decreases monotonically as the window size grows. 
 \begin{figure}
 \begin{center}
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/error_vs_window.pdf}
-\caption{Integrated $\elltwo$-error of the \methodAcronymROMs.}
+\caption{Relative time-integrated $\elltwo$-error of the \methodAcronymROMs.}
 \label{fig:sod_error_methods_a}
 \end{subfigure}
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/objective_vs_window.pdf}
-\caption{Integrated residual norm of the \methodAcronymROMs.} 
+\caption{Time-integrated residual norm of the \methodAcronymROMs.} 
 \label{fig:sod_error_methods_b}
 \end{subfigure}
-\caption{Integrated performance metrics of various \methodAcronymROMs.} 
+\caption{Time-integrated performance metrics of various \methodAcronymROMs.} 
 \label{fig:sod_error_methods}
 \end{center}
 \end{figure}
@@ -225,9 +224,9 @@ algorithms tailored to the windowed minimization problem.
 Next, we study the impact of the time step on the \methodAcronymROM\ results. We examine \methodAcronymROMs\ that use a
 window size of $\Delta T = 0.1$, with time steps $\Delta t =$  $0.001$, $0.002$, $0.005$, $0.01$, $0.05$, $0.1$ (i.e.,  
 $100$, $50$, $20$, $10$, $2$, and $1$ time instances per window). We additionally 
-consider LSPG ROMs leveraging the same set of time steps. To assess time step convergence, we compare results to a new full-order model, which is as described in Section~\ref{sec:sod_fom} but uses a fine time step of $\Delta t = 10^{-4}$. Figure~\ref{fig:time_step_study} shows the $\elltwo$-error and residual norm  
-of the various ROMs. We observe that the $\elltwo$-error and residual norm 
-of the \methodAcronymROMs\ decrease and converge as the time step decreases. This is in direct contrast to the LSPG ROMs, in where the $\elltwo$-error and residual norm display a complex dependence on the time step. This result 
+consider LSPG ROMs leveraging the same set of time steps. To assess time step convergence, we compare results to a new full-order model, which is as described in Section~\ref{sec:sod_fom} but uses a fine time step of $\Delta t = 10^{-4}$. Figure~\ref{fig:time_step_study} shows the time-integrated $\elltwo$-error and residual norm  
+of the various ROMs. We observe that the time-integrated $\elltwo$-error and residual norm 
+of the \methodAcronymROMs\ decrease and converge as the time step decreases. This is in direct contrast to the LSPG ROMs, in where the time-integrated $\elltwo$-error and residual norm display a complex dependence on the time step. This result 
 demonstrates that \methodAcronym\ overcomes the time-step dependence inherit to the LSPG approach. Lastly, Figure~\ref{fig:walltime_dtvar}
 shows the relative wall-clock times of the \methodAcronymROMs\ with respect to the LSPG ROMs. It is seen that for all time steps considered, the \methodAcronymROMs\ 
 are less than 6x the cost of LSPG; this is despite the window sizes comprising up to 100 time instances. 
@@ -235,12 +234,12 @@ are less than 6x the cost of LSPG; this is despite the window sizes comprising u
 \begin{center}
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/error_vs_window_dtvar.pdf}
-\caption{Space--time $\elltwo$-error of the \methodAcronymROM.}
+\caption{Relative time-integrated $\elltwo$-error of the \methodAcronymROM.}
 \label{fig:sod_error_methods_a}
 \end{subfigure}
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/objective_vs_window_dtvar.pdf}
-\caption{Space--time residual norm of the \methodAcronymROM.} 
+\caption{Time-integrated residual norm of the \methodAcronymROM.} 
 \label{fig:sod_error_methods_b}
 \end{subfigure}
 \caption{Performance metrics of the Galerkin, LSPG, and \methodAcronymROMs.} 
@@ -264,19 +263,18 @@ are less than 6x the cost of LSPG; this is despite the window sizes comprising u
 \subsubsection{Results as a function of basis dimension}
 Lastly, we assess the impact of the basis dimension on the performance of the various reduced-order models. We again consider S-reduction trial subspaces. We obtain the trial subspaces by evolving the FOM for $t \in [0.0,1.0]$ at a time-step of $\Delta t = 0.002$ with the CN scheme. We execute Algorithm~\ref{alg:pod} with inputs $N_{\text{skip}} = 2$, $\stateIntercept = \state_0$\footnote{We observed negative pressures in the projected initial conditions for trial subspaces of dimension $K=20,30,40$ if we used the offset $\stateIntercept = \bz$. Thus, for our convergence study we employed $\stateIntercept = \state_0$ so-as to avoid negative pressures in the projected initial conditions.}, and $\romdim = 10,20,30,40,50$. We investigate reduced-order models based on Galerkin projection, LSPG projection, and the WLS approach. All methods leverage the CN time scheme with $\Delta t = 0.002$. We present results for windows of size $\Delta T^n \equiv \Delta T = 0.002,0.004,0.02,0.04,0.10$ for the WLS approach. All WLS ROMs are solved via the direct approach described previously. 
 
-Figure~\ref{fig:convergence_study} shows the integrated $\ell^2$-error of the various ROM solutions, as well as the optimal solution as measured in the $\ell^2$-norm. In Figure~\ref{fig:sod_error_converge} we first observe that for a basis of dimension $\romdim = 10$, the Galerkin, LSPG, and WLS $\Delta T = 0.002$, $\Delta T = 0.004$ ROMs do not converge. Upon investigation, this lack of convergence occurred due to the presence of negative pressure. We next observe that the $\ell^2$-error monotonically decreases as the basis dimension increases for all remaining ROM solutions with the exception of the Galerkin, LSPG, and WLS $\Delta T = 0.002$, $\Delta T = 0.004$ at dimension $\romdim = 30$. Overall, we observe that larger window sizes yield lower errors when the basis dimension is small. For larger basis dimensions we observe all ROMs to yield accurate solutions, and a larger window size does not always yield a lower error. In Figure~\ref{fig:sod_residual_converge}, we next observe that the residual monotonically decreases as the basis dimension grows. This result is supported, although not guaranteed, by the error analysis presented in Section~\ref{sec:analysis} and Ref.~\cite{carlberg_lspg_v_galerkin}. Finally, we observe that larger window sizes yields lower integrated residuals.  
-
+Figure~\ref{fig:convergence_study} shows the time-integrated $\ell^2$-error of the various ROM solutions, as well as that of the optimal solution as measured in the $\ell^2$-norm (i.e., the orthogonal projection of the FOM solution onto the trial subspace). In Figure~\ref{fig:sod_error_converge} we first observe that for a basis of dimension $\romdim = 10$, the Galerkin, LSPG, and WLS ($\Delta T = 0.002$, $\Delta T = 0.004$) ROMs do not converge. Upon investigation, this lack of convergence occurred due to the presence of negative pressure. We next observe that the time-integrated $\ell^2$-error monotonically decreases as the basis dimension increases for all remaining ROM solutions with the exception of the Galerkin, LSPG, and WLS ($\Delta T = 0.002$, $\Delta T = 0.004$) ROMs at the dimension $\romdim = 30$. Overall, we observe that larger window sizes yield lower errors when the basis dimension is small. For larger basis dimensions we observe all ROMs to yield accurate solutions, and a larger window size does not always yield a lower error. In Figure~\ref{fig:sod_residual_converge}, we next observe that the time-integrated residual norm monotonically decreases as the basis dimension grows. This result is supported, although not guaranteed, by the error analysis presented in Section~\ref{sec:analysis} (and Ref.~\cite{carlberg_lspg_v_galerkin} for LSPG). Finally, we observe that larger window sizes yield lower time-integrated residuals.  
 
 \begin{figure}
 \begin{center}
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/error_converge.pdf}
-\caption{Space--time $\elltwo$-error of the \methodAcronymROM.}
+\caption{Relative time-integrated $\elltwo$-error of the \methodAcronymROM.}
 \label{fig:sod_error_converge}
 \end{subfigure}
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/residual_converge.pdf}
-\caption{Space--time residual norm of the \methodAcronymROM.} 
+\caption{Time-integrated residual norm of the \methodAcronymROM.} 
 \label{fig:sod_residual_converge}
 \end{subfigure}
 \caption{Performance metrics of the Galerkin, LSPG, and \methodAcronymROMs\ as a function of basis dimension. Missing entries indicate that the solver did not converge.} 
@@ -284,7 +282,37 @@ Figure~\ref{fig:convergence_study} shows the integrated $\ell^2$-error of the va
 \end{center}
 \end{figure}
 
+Next, Figure~\ref{fig:convergence_study_pareto} presents Pareto plots for the time-integrated $\elltwo$-error and residual as a function of wall-clock time for ROMs with varying basis dimensions and window sizes. We observe intermediate window sizes (i.e., $\Delta T = 0.02,0.04$) to be Pareto-optimal for the error (i.e., lowest CPU time for a given error tolerance) for all runs with the exception of the $K=50$ case, in which case window sizes of $\Delta T = 0.002$ (i.e., LSPG) and $\Delta T = 0.004$ are Pareto-optimal. We next observe that intermediate window sizes are Pareto-optimal for the integrated residual norm for all cases, with the exception of runs using $\Delta T = 0.02, 0.04$, and $K=20$. Summing across the Pareto plots for the time-integrated error and residual, we find that --- for the window sizes and bases considered --- $\Delta T = 0.002$ (i.e., LSPG) is Pareto optimal three times, $\Delta T = 0.004$ one time, $\Delta T = 0.02$ 2 times, $\Delta T = 0.04$ 6 times, and $\Delta T = 0.2$ two times.  
 
+
+\begin{figure}
+\begin{center}
+\begin{subfigure}[t]{0.45\textwidth}
+\includegraphics[width=1.\linewidth]{figs/sod/pareto_error.pdf}
+\caption{Relative time-integrated $\elltwo$-error of the \methodAcronymROM.}
+\label{fig:sod_error_converge}
+\end{subfigure}
+\begin{subfigure}[t]{0.45\textwidth}
+\includegraphics[width=1.\linewidth]{figs/sod/pareto_resids.pdf}
+\caption{Time-integrated residual norm of the \methodAcronymROM.} 
+\label{fig:sod_residual_converge}
+\end{subfigure}
+\caption{Pareto fronts for the time-integrate $\elltwo$-error (left) and time-integrated residual norm (right) as a function of wall-clock time.} 
+\label{fig:convergence_study_pareto}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\begin{subfigure}[t]{0.45\textwidth}
+\includegraphics[width=1.\linewidth]{figs/sod/converge_walltimes.pdf}
+\caption{Relative time-integrated $\elltwo$-error of the \methodAcronymROM.}
+\label{fig:sod_error_converge}
+\end{subfigure}
+\caption{Performance metrics of the Galerkin, LSPG, and \methodAcronymROMs\ as a function of basis dimension. Missing entries indicate that the solver did not converge.} 
+\label{fig:convergence_study}
+\end{center}
+\end{figure}
 
 
 \subsubsection{Summary of numerical results for the Sod shock tube}

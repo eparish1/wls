@@ -1,5 +1,5 @@
-\subsection{Cavity flow}
-The next numerical example considers collocated ROMs\footnote{Collocation is a form of hyper-reduction which requires sampling the full-order model at only select grid points.} of a viscous, compressible flow in a two-dimensional cavity. 
+\subsection{Supersonic cavity flow}
+The next numerical example considers collocated ROMs\footnote{Collocation is a form of hyper-reduction which requires sampling the full-order model at only select grid points.} of a viscous, supersonic compressible flow in a two-dimensional cavity. 
 The flow is described by the two-dimensional compressible Navier-Stokes equations,
 \begin{equation}\label{eq:compressible_ns}
 \frac{\partial \mathbf{u}}{\partial t} + \nabla \cdot \big( \mathbf{F}(\mathbf{u} ) - \mathbf{F}_v (\mathbf{u},\nabla \mathbf{u} )      \big) =\bz,
@@ -33,36 +33,36 @@ on the bottom wall of the cavity.
 
 \subsubsection{Description of FOM and generation of \spatialAcronym\ trial subspace}
 The full-order model comprises a discontinuous-Galerkin discretization. We obtain the discretization 
-by partitioning the domain into $100$ elements in the flow direction and $40$ elements 
+by partitioning the domain into $200$ elements in the flow direction and $80$ elements 
 in the wall-normal direction. The discretization represents the solution to third order over each element using tensor product polynomials of order $p=2$, 
-resulting in $36000$ unknowns for each conserved variable. Spatial discretization via the discontinuous Galerkin method yields a dynamical system 
+resulting in $144000$ unknowns for each conserved variable. Spatial discretization via the discontinuous Galerkin method yields a dynamical system 
 of the form
-$$\frac{d \state}{dt} = \mass_{\text{DG}}^{-1} \velocity_{\text{DG}} (\state),$$
+$$  \mass_{\text{DG}}\frac{d \state}{dt} = \velocity_{\text{DG}} (\state),$$
 where $\mass_{\text{DG}} \in \RR{N \times N}$ is the (block diagonal) DG mass matrix and $\velocity_{\text{DG}}: \RR{N} \rightarrow \RR{N}$ is the DG velocity operator containing 
 surface and volume integrals. By the definition of the FOM~\eqref{eq:FOM}, the dynamical system velocity is $\velocity = \mass_{\text{DG}}^{-1} \velocity_{\text{DG}}$. 
 Figure~\ref{fig:cav_mesh} shows the computational mesh. The 
-DG method uses the Rusanov flux at the cell interfaces~\cite{rusanov} and uses the first form of Bassi and Rebay~\cite{br1} for the viscous fluxes. Time integration 
-is performed via a third-order strong stability preserving Runge-Kutta method~\cite{ssp_rk3} with a time step of $\Delta t = 0.001$. 
+DG method uses the Rusanov flux at the cell interfaces~\cite{rusanov} and uses an interior penalty method for the viscous fluxes. Time integration 
+is performed via the Crank Nicolson method  with a time step of $\Delta t = 5 \times 10^{-3}.$\footnote{We note that the Newton solver in our code failed to converge for simulations using Crank Nicolson at a higher time step.} The nonlinear system arising at each time step is solved via a Jacobian-free general minimized residual (GMRES) algorithm~\cite{gmres,jfnk}. 
  
-The reduced-order models leverage POD to construct the \spatialAcronym\ trial basis and use q-sampling~\cite{qdeim_drmac} based on snapshots of the FOM velocity to select the sampling points (and as a result the weighting 
+The reduced-order models leverage POD to construct the \spatialAcronym\ trial basis and use q-sampling~\cite{qdeim_drmac} based on snapshots of the FOM solution to select the sampling points (and as a result the weighting 
 matrix $\stweightingMatArg{}$); we use a constant weighting matrix across all windows, e.g., $\stweightingMatArg{n} \equiv \stweightingMatArg{}$, $n=1,\ldots,\nslabs$. The process used to construct the initial conditions, trial subspaces, and weighting matrices for the ROMs is as follows:
 \begin{enumerate}
 \item Initialize the FOM with uniform free-stream conditions.
-\item Evolve the FOM for $t \in [0,400]$.
-\item Reset the time coordinate, $0 \leftarrow t$, and execute Algorithm~\ref{alg:pod} with $\stateInterceptArg{} = \bz, N_{\text{skip}} = 100$ and $K = \{136,193\}$ over $t \in [0,100]$ to construct two trial subspaces comprising $\approx 95\%$ and $\approx 97\%$ of the snapshot energy, respectively. 
-\item Execute Algorithm~\ref{alg:qdeim} with $N_{\text{skip}} = 100$, $n_s = 129$ to obtain the sampling point matrix of dimension $\stweightingMatOneArg{} \in \{0,1\}^{1603 \times \fomdim }$. 
+\item Evolve the FOM until a statistically steady state has been reached.
+\item Reset the time coordinate, $0 \leftarrow t$, and execute Algorithm~\ref{alg:pod} with $\stateInterceptArg{} = \bz, N_{\text{skip}} = 8$, $K = \{50,100,156,200\}$, and $\podIP =  \mass_{\text{DG}}$ over $t \in [0,50]$ to construct the four trial subspaces tabulated in Table~\ref{tab:rom_basis_details}. 
+\item Execute Algorithm~\ref{alg:qdeim} with $N_{\text{skip}} = 8$, $n_s = 250$ to obtain the sampling point matrix of dimension $\stweightingMatOneArg{} \in \{0,1\}^{10170 \times \fomdim }$. 
 \end{enumerate}
-Figure~\ref{fig:cav_sampmesh} shows the resulting sample mesh used in the ROM simulations. To depict the nature of the flow, Figure~\ref{fig:fom_sols_cav} shows snapshots of the vorticity field generated by the FOM for several time instances used in training.  
+Figure~\ref{fig:cav_sampmesh} shows the resulting sample mesh used in the ROM simulations. To depict the nature of the flow, Figure~\ref{fig:fom_sols_cav} shows snapshots of the vorticity and density gradient fields generated by the FOM for several time instances used in training.  
 \begin{table}[]
 \begin{centering}
 \begin{tabular}{c c c c}
 \hline
 Basis \# & Trial Basis Dimension ($K$) &  Energy Criterion & Sample Points ($n_S$) \\
 \hline
-%1    & $136$ & $95.0\%$ & $580$ \\
-%2    & $193$ & $97.0\%$ & $580$ \\
-1    & $136$ & $95.0\%$ & $1603$ \\
-2    & $193$ & $97.0\%$ & $1603$ \\
+1    & $50$ &  $99.99738\%$ & $10170$ \\
+2    & $100$ & $99.99956\%$ & $10170$ \\
+3    & $156$ & $99.99990\%$ & $10170$ \\
+4    & $200$ & $99.99999\%$ & $10170$ \\
 \hline
 \end{tabular}
 \caption{Summary of the various basis sizes employed in the cavity flow example.}
@@ -71,15 +71,15 @@ Basis \# & Trial Basis Dimension ($K$) &  Energy Criterion & Sample Points ($n_S
 \end{table}
 
 \subsubsection{Description of reduced-order models}
-We consider collocated ROMs based on the Galerkin, least-squares Petrov--Galerkin, and \methodAcronym\ approaches. Details on the implementation of the methods is as follows:
+We consider collocated ROMs based on the least-squares Petrov--Galerkin and \methodAcronym\ approaches. Details on the implementation of the methods is as follows:
 \begin{itemize}
-\item \textit{Galerkin ROM with collocation}: We consider a Galerkin ROM with collocation and evolve the ROM in time with the CN time scheme at a time step of $\Delta t =0.1$.
+%\item \textit{Galerkin ROM with collocation}: We consider a Galerkin ROM with collocation and evolve the ROM in time with the CN time scheme at a time step of $\Delta t =0.1$.
 
 \item \textit{LSPG ROM with collocation}: We consider a collocated LSPG ROM, which is built on top of the FOM discretization using the CN scheme for temporal 
-discretization. We employ a time step of $\Delta t  = 0.1$. The implementation is the same as previously described. 
+discretization. We employ a time step of $\Delta t  = 0.05$. The implementation is the same as previously described. 
  
 \item \textit{\methodAcronymROMs\ with collocation}: We consider \methodAcronymROMs\ solved via the direct method. The ROMs use the CN time discretization with a time step of 
-$\Delta t = 0.1$. The implementation is the same as previously described. 
+$\Delta t = 0.05$. The implementation is the same as previously described. 
 %\begin{itemize}
 %\item Direct Method: \methodAcronym ROMs solved via the direct method are again implemented with the same Crank--Nicolson time discretization with a nominal 
 %time-step size of $\Delta t = 0.1$. 
@@ -89,9 +89,9 @@ $\Delta t = 0.1$. The implementation is the same as previously described.
 
 \begin{figure}
 \begin{center}
-%\begin{subfigure}[t]{0.85\textwidth}
-\includegraphics[trim={2cm 7cm 4cm 6cm},clip,width=0.95\linewidth]{cav_fig.pdf}
-%\end{subfigure}
+\begin{subfigure}[t]{0.85\textwidth}
+\includegraphics[trim={2cm 5.5cm 1cm 7cm},clip,width=0.98\linewidth]{figs/cavity_new/cav_geom.pdf}
+\end{subfigure}
 \caption{Figure depicting geometry and flow conditions of the cavity flow problem.} 
 \label{fig:cav_fig}
 \end{center}
@@ -99,58 +99,76 @@ $\Delta t = 0.1$. The implementation is the same as previously described.
 
 \begin{figure}
 \begin{center}
-\includegraphics[trim={0cm 14cm 0cm 14cm},clip,width=1.\linewidth]{figs/cavity/grid.png}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={2cm 2cm 4cm 2cm},clip,width=1.\linewidth]{figs/cavity_new/grid.png}
+\caption{Full computational mesh}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.0\linewidth]{figs/cavity_new/sampleMesh.png}
+\caption{Close up of computational mesh with highlighted collocation cells.} 
+\label{fig:cav_sampmesh}
+\end{subfigure}
 \caption{Computational mesh employed in cavity flow simulations.}
 \label{fig:cav_mesh}
 \end{center}
 \end{figure}
 
-\begin{figure} 
-\begin{center}
-\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=0.65\linewidth]{figs/cavity/hyper_grid.png}
-\caption{Close up of computational mesh with highlighted collocation cells.} 
-\label{fig:cav_sampmesh}
-\end{center}
-\end{figure}
+%\begin{figure} 
+%\begin{center}
+%\caption{Close up of computational mesh with highlighted collocation cells.} 
+%
+%\end{center}
+%\end{figure}
 
 \begin{figure}
 \begin{center}
 %\begin{subfigure}[t]{0.85\textwidth}
 \begin{subfigure}[t]{0.49\textwidth}
-\includegraphics[trim={18cm 16cm 18cm 15cm},clip,width=1.0\linewidth]{figs/cavity/animate/sol0000.png}
+\includegraphics[trim={15cm 7cm 16cm 20cm},clip,width=1.0\linewidth]{figs/cavity_new/vort_anim0000.png}
 \caption{$t=0.0$}
 \end{subfigure}
+%\begin{subfigure}[t]{0.24\textwidth}
+%\includegraphics[trim={12cm 7cm 16cm 16cm},clip,width=1.0\linewidth]{figs/cavity_new/vort_anim0010.png}
+%\caption{$t=2.0$}
+%\end{subfigure}
+%\begin{subfigure}[t]{0.24\textwidth}
+%\includegraphics[trim={12cm 7cm 16cm 16cm},clip,width=1.0\linewidth]{figs/cavity_new/vort_anim0020.png}
+%\caption{$t=4.0$}
+%\end{subfigure}
 \begin{subfigure}[t]{0.49\textwidth}
-\includegraphics[trim={18cm 16cm 18cm 15cm},clip,width=1.0\linewidth]{figs/cavity/animate/sol0040.png}
-\caption{$t=4.0$}
+\includegraphics[trim={15cm 7cm 16cm 20cm},clip,width=1.0\linewidth]{figs/cavity_new/vort_anim0030.png}
+\caption{$t=6.0$}
 \end{subfigure}
+%\begin{subfigure}[t]{0.85\textwidth}
 \begin{subfigure}[t]{0.49\textwidth}
-\includegraphics[trim={18cm 16cm 18cm 15cm},clip,width=1.0\linewidth]{figs/cavity/animate/sol0080.png}
-\caption{$t=8.0$}
+\includegraphics[trim={15cm 7cm 16cm 20cm},clip,width=1.0\linewidth]{figs/cavity_new/dense_anim0000.png}
+\caption{$t=0.0$}
 \end{subfigure}
+%\begin{subfigure}[t]{0.24\textwidth}
+%\includegraphics[trim={12cm 7cm 16cm 16cm},clip,width=1.0\linewidth]{figs/cavity_new/dense_anim0010.png}
+%\caption{$t=2.0$}
+%\end{subfigure}
+%\begin{subfigure}[t]{0.24\textwidth}
+%\includegraphics[trim={12cm 7cm 16cm 16cm},clip,width=1.0\linewidth]{figs/cavity_new/dense_anim0020.png}
+%\caption{$t=4.0$}
+%\end{subfigure}
 \begin{subfigure}[t]{0.49\textwidth}
-\includegraphics[trim={18cm 16cm 18cm 15cm},clip,width=1.0\linewidth]{figs/cavity/animate/sol0120.png}
-\caption{$t=12.0$}
+\includegraphics[trim={15cm 7cm 16cm 20cm},clip,width=1.0\linewidth]{figs/cavity_new/dense_anim0030.png}
+\caption{$t=6.0$}
 \end{subfigure}
-\begin{subfigure}[t]{0.49\textwidth}
-\includegraphics[trim={18cm 16cm 18cm 15cm},clip,width=1.0\linewidth]{figs/cavity/animate/sol0160.png}
-\caption{$t=16.0$}
-\end{subfigure}
-\begin{subfigure}[t]{0.49\textwidth}
-\includegraphics[trim={18cm 16cm 18cm 15cm},clip,width=1.0\linewidth]{figs/cavity/animate/sol0200.png}
-\caption{$t=20.0$}
-\end{subfigure}
-\caption{Vorticity snapshots from the FOM simulation at various time instances.} 
+\caption{Vorticity (top) and density gradient snapsots (bottom) from the FOM simulation at various time instances.} 
 \label{fig:fom_sols_cav}
 \end{center}
 \end{figure}
 
 
-\subsubsection{Numerical results}
-We first assess the performance of \methodAcronymROMs\ with varying window sizes. To this end, we consider \methodAcronymROMs\ with uniform window 
-sizes of $\Delta T^n \equiv \Delta T = 0.2,0.5,1.0,$ and $2.0$, along with the Galerkin and LSPG ROMs. We first consider results for basis \#1 as described in 
+\subsubsection{Numerical results for varying window size}
+We first assess the performance of \methodAcronymROMs\ with varying window sizes for a fixed basis size. To this end, we consider \methodAcronymROMs\ with uniform window 
+sizes of $\Delta T^n \equiv \Delta T = 0.1,0.25,0.5,$ and $1.0$, along with the LSPG ROM. We first consider results for basis \#3 as described in 
 Table~\ref{tab:rom_basis_details}. For all ROMs, we evolve 
-the solution for $t \in [0,100]$. This comprises the same time interval used to construct the trial subspace. First, Figure~\ref{fig:cav_results1a} depicts the evolution of the pressure at the bottom wall in the midpoint of the computational domain, while Figure~\ref{fig:cav_results1b} depicts the evolution of the normalized $\elltwo$-error of the various reduced-order models. Both the collocated Galerkin and LSPG ROMs blow up/fail to converge within the first several time units. The \methodAcronymROM\ minimizing the residual over a window of size $\Delta T = 0.2$ also fails to converge. The \methodAcronymROMs\ that minimize the residual over window sizes of $\Delta T \ge 0.5$ are seen to all be stable and accurate; the pressure response is well characterized and the normalized state errors are less than $10\%$. The most notable discrepancy between the \methodAcronymROM\ and FOM solutions is a phase difference. 
+the solution for $t \in [0,50]$. This comprises the same time interval used to construct the trial subspace. First, Figure~\ref{fig:cav_results1a} depicts the evolution of the pressure at the bottom wall in the midpoint of the computational domain, while Figure~\ref{fig:cav_results1b} depicts the evolution of the normalized $\elltwo$-error of the various reduced-order models. We first observe that the collocated LSPG ROM fails to yield an accurate prediction for the pressure signal. We next observe the collocated WLS ROMs to yield more accurate solutions than LSPG. The pressure signal is well characterized by all WLS ROMs, and the $\ell^2$-errors are significantly lower. 
+Figure~\ref{fig:cav_snapshots} shows vorticity and density gradient fields for the FOM, LSPG ROM, and \methodAcronymROMs\ with $\Delta T = 0.25,1.0$ for the final time instance $t = 50.0$. LSPG is observed to exhibit artificial oscillations, and poorly captures the flow state at the final time instane. The \methodAcronymROMs\ at $\Delta T = 0.25,1.0$ yield substantial improvements: both are able to capture the important features of the flow, including the structure of the shock at the end of the ramp, and remain accurate for the entire time interval.  
+
 
 
 
@@ -160,14 +178,13 @@ the solution for $t \in [0,100]$. This comprises the same time interval used to 
 \begin{figure}
 \begin{center}
 
-\begin{subfigure}[t]{0.95\textwidth}
-\includegraphics[trim={0cm 3.0cm 0cm 3cm},clip,width=1.\linewidth]{figs/cavity/pressure_basis2.pdf}
+\begin{subfigure}[t]{0.495\textwidth}
+\includegraphics[trim={0cm 00.0cm 0cm 0cm},clip,width=1.\linewidth]{figs/cavity_new/p_vs_t.pdf}
 \caption{Pressure} 
 \label{fig:cav_results1a}
 \end{subfigure}
-
-\begin{subfigure}[t]{0.95\textwidth}
-\includegraphics[trim={0cm 2.8cm 0cm 3cm},clip,width=1.\linewidth]{figs/cavity/error_basis2.pdf}
+\begin{subfigure}[t]{0.495\textwidth}
+\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.\linewidth]{figs/cavity_new/error_vs_t.pdf}
 \caption{Normalized $\elltwo$-error}
 \label{fig:cav_results1b}
 \end{subfigure}
@@ -177,20 +194,79 @@ the solution for $t \in [0,100]$. This comprises the same time interval used to 
 \label{fig:cav_results1}
 \end{figure}
 
-Figure~\ref{fig:cav_results2} shows the space--time error and objective function of the stable \methodAcronymROMs. We observe that growing the window size over 
-which the residual is minimized leads to a lower space--time residual, but not necessarily a lower $\elltwo$-error. This result is consistent with the previous numerical example. Next, Figure~\ref{fig:cav_wallclock}
-shows the wall-clock times of the \methodAcronymROMs\ for $t \in [0,10]$ as compared to the LSPG ROM\footnote{We note that LSPG failed to converge at $t \approx 16.0$, so we focus on the first ten time units.}. As expected, increasing $\Delta T$ again leads to an increase in computational cost; minimizing the residual over a window comprising 20 time instances yields a 2.5x increase in cost over LSPG. 
+\begin{figure}
+\begin{center}
+%\begin{subfigure}[t]{0.85\textwidth}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={10cm 3cm 10cm 12cm},clip,width=1.0\linewidth]{figs/cavity_new/vort_fom_t50.png}
+\caption{FOM}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={10cm 3cm 10cm 12cm},clip,width=1.0\linewidth]{figs/cavity_new/vort_wls_numStepsInWindow_1_t50.png}
+\caption{LSPG}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={10cm 3cm 10cm 12cm},clip,width=1.0\linewidth]{figs/cavity_new/vort_wls_numStepsInWindow_5_t50.png}
+\caption{\methodAcronym, $\Delta T = 0.25$}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={10cm 3cm 10cm 12cm},clip,width=1.0\linewidth]{figs/cavity_new/vort_wls_numStepsInWindow_20_t50.png}
+\caption{\methodAcronym, $\Delta T = 1.0$}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={10cm 3cm 10cm 12cm},clip,width=1.0\linewidth]{figs/cavity_new/dens_fom_t50.png}
+\caption{FOM}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={10cm 3cm 10cm 12cm},clip,width=1.0\linewidth]{figs/cavity_new/dens_wls_numStepsInWindow_1_t50.png}
+\caption{LSPG}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={10cm 3cm 10cm 12cm},clip,width=1.0\linewidth]{figs/cavity_new/dens_wls_numStepsInWindow_5_t50.png}
+\caption{\methodAcronym, $\Delta T = 0.25$}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={10cm 3cm 10cm 12cm},clip,width=1.0\linewidth]{figs/cavity_new/dens_wls_numStepsInWindow_20_t50.png}
+\caption{\methodAcronym, $\Delta T = 1.0$}
+\end{subfigure}
+\caption{Vorticity (a-d) and density gradient (e-h) snapshots from the FOM and ROM simulations at $t=50.0$.} 
+\label{fig:cav_snapshots}
+\end{center}
+\end{figure}
+
+Next, Figure~\ref{fig:cav_results2} shows the time-integrated $\elltwo$-errors and residual norms of the WLS ROMs as a function of the window size. We observe that growing the window size over 
+which the residual is minimized leads to a lower time-integrated residual, but not necessarily a lower $\elltwo$-error. This result is consistent with the previous numerical example. We find that, with respect to LSPG, WLS ROMs with window sizes of $\Delta T = 0.1, 0.25, 0.5,$  and $1.0$ are able to drive down the $\elltwo$-errors by approximately a factor of $3, 5.5, 4.5$, and $4$, respectively. Similarly, for the residual, WLS ROMs with window sizes of $\Delta T = 0.1, 0.25, 0.5,$  and $1.0$ are able to drive down the residual by approximately a factor of $13,57,65$, and $70$, respectively. 
+
+Next, Figure~\ref{fig:cav_wallclock}
+shows the wall-clock times\footnote{We computed wall-clock times over the time inteval $t \in [0,1]$} of the \methodAcronymROMs\ as compared to (1) the LSPG ROM (Figure~\ref{fig:cav_wallclock_lspg}) and (2) the FOM (Figure~\ref{fig:cav_wallclock_fom}).  As expected, increasing $\Delta T$ again leads to an increase in computational cost; minimizing the residual over a window comprising 20 time instances yields a 4x increase in cost over LSPG. With respect to the FOM, we find that WLS ROMs with window sizes of $\Delta T = 0.1, 0.25, 0.5,$  and $1.0$ are approximately $25$x, $16$x, $12$x, and $8$x faster, repectively. The LSPG ROM is approximately 30x faster than the FOM.  We make several remarks about these CPU times. First, it must be noted that, due to a decreased stiffness in the system, we are able to run the ROMs at a time step that is 10x greater than the FOM. Second, we note that in our DG code, the vast majority of CPU time in the WLS ROMs is spent computing the Jacobians. For WLS ROMs emplying a sample mesh of size $n_s=10170$ with $K=156$ basis vectors and a window size of $\Delta T = 0.025$, it takes approximately $2$(s) to compute the residual over one time window; it takes $500$(s) to compute the Jacobian via automatic differentiation. Our full-order model solver uses a Jacobian-free GMRES solver, and thus is not subject to this bottleneck. While this is in part due to the fact that high-order DG methods have dense block Jacobians (each element has 45 DOFs associated with it for a $p=2$ discretization of the Navier--Stokes equations), we expect that significant computational speedups can be obtained by employing, e.g., analytic Jacobians, matrix-free Jacobian transpose methods~\cite{doi:10.2514/6.2016-0833}. This will be a topic of future work. Nonetheless, the present example demonstrates some of the practical challenges that exist for least-squares ROMs such as WLS and LSPG. 
+
+\begin{figure}
+\begin{center}
+\begin{subfigure}[t]{0.45\textwidth}
+\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.0\linewidth]{figs/cavity_new/walltime_vs_windowSize.pdf}
+\caption{Wall-clock times of \methodAcronymROMs\ with respect to the LSPG ROM.}
+\label{fig:cav_wallclock_lspg}
+\end{subfigure}
+\begin{subfigure}[t]{0.45\textwidth}
+\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.0\linewidth]{figs/cavity_new/rel_walltime_vs_windowSize.pdf}
+\caption{Wall-clock times of \methodAcronymROMs\ with respect to the full-order model.}
+\label{fig:cav_wallclock_fom}
+\end{subfigure}
+\caption{Relative wall-clock times of \methodAcronymROMs.}
+\label{fig:cav_wallclock}
+\end{center}
+\end{figure}
 
 
 \begin{figure}
 \begin{center}
 \begin{subfigure}[t]{0.45\textwidth}
-\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.\linewidth]{figs/cavity/error_vs_window_basis2.pdf}
+\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.\linewidth]{figs/cavity_new/error_vs_windowSize.pdf}
 \caption{Space--time $\elltwo$-error}
 \label{fig:cav_results2a}
 \end{subfigure}
 \begin{subfigure}[t]{0.45\textwidth}
-\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.\linewidth]{figs/cavity/objective_vs_window_basis2.pdf}
+\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.\linewidth]{figs/cavity_new/residual_vs_windowSize.pdf}
 \caption{Objective function} 
 \label{fig:cav_results2b}
 \end{subfigure}
@@ -199,16 +275,49 @@ shows the wall-clock times of the \methodAcronymROMs\ for $t \in [0,10]$ as comp
 \label{fig:cav_results2}
 \end{figure}
 
+\subsubsection{Numerical results as a function of basis dimension}
+We next consider the impact of the basis dimension on the ROM performance. We consider WLS ROMs with a uniform window
+size of $\Delta T^n \equiv \Delta T = 0.25$, along with LSPG ROMs. For both WLS and LSPG ROMs, we consider results for bases of 
+dimension $K=50,100,156$, and $200$, as described in Table~\ref{tab:rom_basis_details}. Figure~\ref{fig:cav_results_basisdim}
+presents results for the time-integrated $\elltwo$-error and residual norm as a function of basis dimension. Figure~\ref{fig:cav_results_pressure} presents the $\elltwo$-error in the pressure at the midpoint of the bottom wall, as well as the pressure signal in the same location. We observe that, for WLS, increasing the basis dimension monotinically decreases the $\elltwo$-error, residual norm, and $\elltwo$-error in the pressure. Increasing the basis dimension does not yield monotonically decreasing error metrics for LSPG. We find that LSPG yields a stable, although inaccurate, prediction at $K=50$, but then yields an unstable prediction at $K=100$. Increasing the basis dimension to $K=156$ and $K=200$ results in a stable, but still inaccurate solution. We note that not a single LSPG ROM yields a qualitatively accurate pressure signal for the entire time domain, while the WLS ROM is able to achieve this with a basis dimension of $K=100$. 
+\begin{figure}
+\begin{center}
+\begin{subfigure}[t]{0.45\textwidth}
+\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.\linewidth]{figs/cavity_new/error_vs_basisSize.pdf}
+\caption{Space--time $\elltwo$-error}
+\label{fig:cav_results_basisdima}
+\end{subfigure}
+\begin{subfigure}[t]{0.45\textwidth}
+\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.\linewidth]{figs/cavity_new/residual_vs_basisSize.pdf}
+\caption{Objective function} 
+\label{fig:cav_results_basisdimb}
+\end{subfigure}
+\end{center}
+\caption{Space--time error (left) and objective function (right) as a function of window size.}
+\label{fig:cav_results_basisdim}
+\end{figure}
+
 
 \begin{figure}
 \begin{center}
-\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=0.49\linewidth]{figs/cavity/walltime_vs_window_compare_basis2.pdf}
-\caption{Wall-clock times of \methodAcronymROMs\ with respect to the LSPG ROM.}
-\label{fig:cav_wallclock}
+\begin{subfigure}[t]{0.45\textwidth}
+\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.\linewidth]{figs/cavity_new/perror_vs_basisSize.pdf}
+\caption{Objective function} 
+\label{fig:cav_results_pressurea}
+\end{subfigure}
+\begin{subfigure}[t]{0.54\textwidth}
+\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.\linewidth]{figs/cavity_new/p_vs_basisSize.pdf}
+\caption{Space--time $\elltwo$-error}
+\label{fig:cav_results_pressureb}
+\end{subfigure}
 \end{center}
+\caption{Space--time error (left) and objective function (right) as a function of window size.}
+\label{fig:cav_results_pressure}
 \end{figure}
 
-Figure~\ref{fig:cav_snapshots} shows vorticity fields for the FOM, LSPG ROM, and \methodAcronymROMs\ with $\Delta T = 0.5,1.0$ for the time instance $t = 5.0$. LSPG is observed to exhibit artificial oscillations; the Gauss-Newton method fails to converge at $t \approx 16.0$. The \methodAcronymROMs\ at $\Delta T = 0.5,1.0$ are able to capture the important features of the flow, including the points of flow separation at the start and end of the ramp, and remain stable for the entire time interval.  
+
+
+
 
 %\begin{figure}
 %\begin{center}
@@ -237,30 +346,7 @@ Figure~\ref{fig:cav_snapshots} shows vorticity fields for the FOM, LSPG ROM, and
 %\end{center}
 %\end{figure}
 
-\begin{figure}
-\begin{center}
-%\begin{subfigure}[t]{0.85\textwidth}
-\begin{subfigure}[t]{0.49\textwidth}
-\includegraphics[trim={10cm 7cm 10cm 12cm},clip,width=1.0\linewidth]{figs/cavity/fom.png}
-\caption{FOM}
-\end{subfigure}
-\begin{subfigure}[t]{0.49\textwidth}
-\includegraphics[trim={10cm 7cm 10cm 12cm},clip,width=1.0\linewidth]{figs/cavity/lspg.png}
-\caption{LSPG}
-\end{subfigure}
-\begin{subfigure}[t]{0.49\textwidth}
-\includegraphics[trim={10cm 7cm 10cm 12cm},clip,width=1.0\linewidth]{figs/cavity/wls_window5.png}
-\caption{\methodAcronym, $\Delta T = 0.5$}
-\end{subfigure}
-\begin{subfigure}[t]{0.49\textwidth}
-\includegraphics[trim={10cm 7cm 10cm 12cm},clip,width=1.0\linewidth]{figs/cavity/wls_window10.png}
-\caption{\methodAcronym, $\Delta T = 1.0$}
-\end{subfigure}
-\caption{Vorticity snapshots from the FOM and ROM simulations at $t=5.0$.} 
-\label{fig:cav_snapshots}
-\end{center}
-\end{figure}
-
+\begin{comment}
 
 
 Next, we assess the performance of the various ROMs for basis \#2 as described in Table~\ref{tab:rom_basis_details}, which comprises a richer spatial basis.
@@ -315,21 +401,51 @@ Finally, Figure~\ref{fig:cav_wallclock} shows the wall-clock times for $t \in [0
 \end{center}
 \end{figure}
 
+\end{comment}
 
-%\begin{figure}
-%\begin{center}
-%\begin{subfigure}[t]{0.45\textwidth}
-%\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.\linewidth]{figs/cavity/error_vs_window.pdf}
-%\caption{Integrated $L^2$ error}
-%\label{fig:cav_results2a_basis1}
-%\end{subfigure}
-%\begin{subfigure}[t]{0.45\textwidth}
-%\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.\linewidth]{figs/cavity/objective_vs_window.pdf}
-%\caption{Objective function} 
-%\label{fig:cav_results2b_basis1}
-%\end{subfigure}
-%\end{center}
-%\caption{Integrated error (left) and objective function (right) as a function of window size.}
-%\label{fig:cav_results2_basis1}
-%\end{figure}
+\begin{comment}
 
+\subsection{Supersonic cavity flow with varying Reynolds number and time-local bases}
+Lastly, we consider the supersonic cavity flow presented above with a varying Reynolds number over the domain $\text{Re} \in \mathsf{U}(5000,15000)$. We again consider colllocated reduced-order models based on the LSPG and WLS approaches leveraging \spatialAcronym\ trial subspaces. The ROMs use the same collocation points generated in the previous example. As opposed to the previous example, however, here we consider time-local subspaces. The process used to construct these subspaces is as follows:
+\begin{enumerate}
+\item Initialize the FOM with uniform free-stream conditions.
+\item Evolve the FOM for $t \in [0,500]$ at $\text{Re} = 10000$. (Same as step 2 described previously).
+\item Reset the time coordinate, $0 \leftarrow t$, and set parameter samples to be $\text{Re} = 5000, 7500, 10000,12500,15000$.
+\item Execute Algorithm~\ref{alg:pod_tlp} ten different times --- with the inputs descibed in Table~\ref{tab:} --- to construct 10 trial subspaces: one for $t \in [0,5)$, one for $t \in [5,10)$, ..., one for $t \in [45,50]$. We denote these trial susbpaces as $\spaceTrialSpace_{\text{S1}}, \ldots, \spaceTrialSpace_{\text{S10}}.$
+\end{enumerate}  
+
+To demonstrate the impact of Reynolds number on the flow, Figure~\ref{fig:cav_param_dens} shows FOM solutions for the Re=$5000$ and $15000$ cases at $t=50$. Similarly, Figure~\ref{cav_param_ptrain} presents the pressure signal at the midpoint of the bottom wall for all training simulations. We observe that increasing the Reynolds number leads to an increase in unsteadiness in the shock location, increases the frequency of, e.g., the pressure signal, and in general leads to more fine-scale features in the flow. 
+
+\begin{figure}
+\begin{center}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={4cm 8cm 0cm 4cm},clip,width=1.\linewidth]{figs/cavity_new/re5000_vort_t50.png}
+\caption{Re=$5000$}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={4cm 8cm 0cm 4cm},clip,width=1.\linewidth]{figs/cavity_new/re15000_vort_t50.png}
+\caption{Re=$15000$}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={4cm 8cm 0cm 4cm},clip,width=1.\linewidth]{figs/cavity_new/re5000_dens_t50.png}
+\caption{Re=$5000$}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={4cm 8cm 0cm 4cm},clip,width=1.\linewidth]{figs/cavity_new/re15000_dens_t50.png}
+\caption{Re=$15000$}
+\end{subfigure}
+\end{center}
+\caption{Density gradient fields at $t=50$ for the Re=$5000$ (left) and Re=$15000$ (right) training runs.}
+\label{fig:cav_param_dens}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\begin{subfigure}[t]{0.45\textwidth}
+\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.\linewidth]{figs/cavity_new/pfom_param.pdf}
+\end{subfigure}
+\end{center}
+\caption{Pressure signal at the midpoint of the bottom wall for all training simulations}
+\label{fig:cav_param_ptrain}
+\end{figure}
+\end{comment}

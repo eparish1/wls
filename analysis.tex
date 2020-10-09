@@ -145,13 +145,12 @@ employed (i.e., $\stweightingMat = \mathbf{I}$).
 We denote the error in the \methodAcronymROM\ solution over the $n$th window
 as
 \begin{align*}
-	\errorArg{n} &\vcentcolon \timeDummy \mapsto \stateFOMSolArg{}(\timeDummy)-
+	\errorProjectArg{n} &\vcentcolon \timeDummy \mapsto  \stateFOMProjSolArg{n}(\timeDummy)-
 	\stateROMSolArg{n} (\timeDummy),\\
 	&:[\timeStartArg{n},\timeEndArg{n}]\rightarrow\RR{\fomdim},
 \end{align*}
-$n=1,\ldots,\nslabs$.
-Additionally, we denote $\stateFOMProjSolArg{n}$, $n=1,\ldots,\nslabs$ to be
-the $\elltwo$-optimal solution over the $n$th window
+$n=1,\ldots,\nslabs$, where $\stateFOMProjSolArg{n}$, $n=1,\ldots,\nslabs$ is the
+the $\elltwo$-optimal solution over the $n$th window, i.e., the orthogonal projection of the FOM solution onto the trial space,
 $$\stateFOMProjSolArg{n} = \underset{\statey \in
 \stspace^n}{\text{arg}\,\text{min } } \intSlabArg{n} \norm{ \statey(t) - \stateFOMSolArgt{}{t} }^2 dt.$$ 
 We employ the following assumptions.
@@ -186,12 +185,16 @@ $$  \intSlabArg{n} \norm{\statew(t) - \statey(t)} dt \le  \lipshitziArg{n}
 		where
 $\stspaceArg{n}_* = \{ \statew \in \RR{\fomdim} \otimes \timeSpaceArg{n}\, |\,
 		\statew(\timeStartArg{n}) = \stateFOMArg{}{\timeStartArg{n}} \}$.
-\item \textbf{A4:} The FOM solution at time $t=0$ lies
-	within the range of the trial subspace, i.e.,
-$$ \stateFOMSolArgt{0}{\timeStartArg{0}} \in \trialspaceArg{0} +
-		\stateInterceptArg{0},\quad n=1,\ldots,\nslabs.$$
+%\item \textbf{A4:} The FOM solution at the start of each window lies 
+%	within the range of the trial subspace, i.e.,
+%$$ \stateFOMSolArgt{n}{\timeStartArg{n}} \in \trialspaceArg{n} +
+%		\stateInterceptArg{n},\quad n=1,\ldots,\nslabs.$$
+%
+\end{itemize}
 
-\end{itemize} 
+\begin{remark}
+We note that, in practice, computing the Lipshitz constants in A2 and A3 is expected to be computationally expensive. To the best of the authors knowledge, minimal work exists within the reduced-order modeling community that examines the computation of Lipshitz constants for general, high-dimensional ODEs.  
+\end{remark} 
 %A3: We assume Lipshitz continuity on the velocity
 %$$ \norm{\velocity(\state) - \velocity(\boldsymbol y) } \le \lipshitzv \norm{\state - \boldsymbol y}.$$
 %
@@ -199,15 +202,15 @@ $$ \stateFOMSolArgt{0}{\timeStartArg{0}} \in \trialspaceArg{0} +
 %$$ \norm{ \stateROMSolArgt{n}{\timeStartArg{n}} - \stateFOMSolArgt{n}{\timeStartArg{n}} } \le \constAInt \intSlabArg{n-1} \norm{ \errorArg{n-1} }dt.$$
 
 \begin{theorem}(\textit{A priori} error bounds)\label{theorem:apriori_bound}
-Under Assumptions A1--A4, the error in the solution computed by the \methodAcronymROM\ \approachKwd\ with
+Under Assumptions A1--A3, the error in the solution computed by the \methodAcronymROM\ \approachKwd\ with
 	\spatialAcronym\ trial subspaces over the $n$th window is bounded as
 %\begin{equation}\label{eq:apriori_bound}
 %\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \DeltaSlabArg{n} \sqrt{1 + \lipshitz^2} \norm{ \errorArgt{n}{\timeStartArg{n}}  }   + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
 %\end{equation}
 \begin{equation}\label{eq:apriori_bound}
-\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le  \norm{\errorArgt{n}{\timeStartArg{n}}} 
+\intSlabArg{n} \norm{\errorProjectArgt{n}{t}} dt \le  \norm{\errorProjectArgt{n}{\timeStartArg{n}}} 
  \bigg(\frac{ e^{ \DeltaSlabArg{n}(\lipshitz + \lipshitzf)} - 1}{ \lipshitz + \lipshitzf} \bigg)
-+ \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
++ 2 \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
 \end{equation}
 
 %\begin{equation}\label{eq:apriori_bound}
@@ -228,41 +231,45 @@ we define new quantities $\stateROMStarSolArg{n}$, $n=1,\ldots,\nslabs$, where
 & \text{subject to } \statey(\timeStartArg{n})= \stateFOMProjSolArgt{}{\timeStartArg{n}}.
 \end{split}
 \end{equation}
-Note that minimization problem~\eqref{eq:min_correct} is equivalent to the \methodAcronym\ minimization problem~\eqref{eq:tclsrm}, but uses the FOM solution projected onto the $n$th trial space for the initial conditions. 
+Note that minimization problem~\eqref{eq:min_correct} is equivalent to the \methodAcronym\ minimization problem~\eqref{eq:tclsrm}, but uses the FOM solution projected onto the trial space for the initial conditions. 
 Additionally, define $\adjointROMStarSolArg{n}$, $n=1,\ldots,\nslabs$ to be the costate solution associated with optimization problem~\eqref{eq:min_correct}.
  The error in the solution obtained by the 
 \methodAcronymROM\ over the $n$th window at time $t \in [\timeStartArg{n},\timeEndArg{n}]$ can be written as
 \begin{equation*}
-\norm{ \stateROMSolArgt{n}{t} - \stateFOMSolArgt{}{t}} = 
-\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t} + \stateROMStarSolArgt{n}{t} -  \stateFOMSolArgt{}{t} }.
+\norm{ \stateROMSolArgt{n}{t} - \stateFOMProjSolArgt{}{t}} = 
+\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t} + \stateROMStarSolArgt{n}{t} -  \stateFOMProjSolArgt{}{t} }.
 \end{equation*}
 Applying triangle inequality yields
 \begin{equation*}
-\norm{ \stateROMSolArgt{n}{t} - \stateFOMSolArgt{}{t}} \le 
-\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} + \norm{ \stateROMStarSolArgt{n}{t} -  \stateFOMSolArgt{}{t} }.
+\norm{ \stateROMSolArgt{n}{t} - \stateFOMProjSolArgt{}{t}} \le 
+\norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} + \norm{ \stateROMStarSolArgt{n}{t} -  \stateFOMProjSolArgt{}{t} }.
 \end{equation*}
 %$$\norm{ \state_R - \state_f} = \norm{ \state_R - \state^*_R + \state^*_R - \state_f}.$$
 %$$ \le \norm{\state_R - \state^*_R} + \norm{\state^*_R - \state_f}.$$
 Integrating over the $n$th window and using the definition of the error yields
-$$\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt +  \intSlabArg{n} \norm{\stateROMStarSolArgt{n}{t} - \stateFOMSolArgt{}{t}}dt.$$
-Applying Assumption A3 and 
-	$\resid(\stateFOMSolArg{},t) = \bz$, $\forall t \in [0,T]$
-	yields
+$$\intSlabArg{n} \norm{\errorProjectArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt +  \intSlabArg{n} \norm{\stateROMStarSolArgt{n}{t} - \stateFOMProjSolArgt{}{t}}dt.$$
+Applying Assumption A3 yields
+%	$\resid(\stateFOMSolArg{},t) = \bz$, $\forall t \in [0,T]$
+%	yields
 %\begin{equation*}
 %\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt +  \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateROMStarSolArg{n},t) - \resid(\stateFOMSolArg{},t)} dt.
 %\end{equation*}
 \begin{equation*}
-\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateROMStarSolArg{n},t) } dt.
+\intSlabArg{n} \norm{\errorProjectArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateROMStarSolArg{n},t) - \resid(\stateFOMProjSolArgt{n}{t}) } dt.
+\end{equation*}
+Applying triangle inequality to the last term on the right hand side givs 
+\begin{equation*}
+\intSlabArg{n} \norm{\errorProjectArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateROMStarSolArg{n},t)} + \norm{ \resid(\stateFOMProjSolArgt{n}{t}) } dt.
 \end{equation*}
 %$$\int \norm{\error} dt \le \int \norm{\state_R - \state^*_R} dt +  \int \norm{\resid{\state^*_R}}dt.$$
-Leveraging the residual-minimization property of \methodAcronym\footnote{We assume here that \methodAcronym\ yields the \textit{global} minimum.} and noting
+Leveraging the residual-minimization property of \methodAcronym\footnote{We assume here that executing a solve of \methodAcronym\ yields the \textit{global} minimum. We note that, as the optimization problem is potentially nonconvex, there may exist local minima.} and noting
 	that $\stateROMStarSolArg{n}(\timeStartArg{n}) =
 	\stateFOMProjSolArgt{n}{\timeStartArg{n}}$ by definition, we have 
 $$ \intSlabArg{n} \norm{\resid(\stateROMStarSolArg{n},t)}dt \le \intSlabArg{n} \norm{\resid(\stateFOMProjSolArg{n},t)}dt.$$
 %$$ \int \norm{\resid{\state^*_R}}dt \le \int \norm{\resid{\tilde{\state}_f}}dt,$$
 	This leads to the following expression for the error over the $n$th window,
 \begin{equation}\label{eq:boundtmp}
-\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
+\intSlabArg{n} \norm{\errorProjectArgt{n}{t}} dt \le \intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt + 2 \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
 \end{equation}
 %$$\int \norm{\error} dt \le \int \norm{\state_R - \state^*_R} dt +   \int \norm{\resid{\tilde{\state}_f}}dt.$$
 \begin{comment}
@@ -300,7 +307,7 @@ $\stateROMStarSolArg{n}$ and $\stateROMSolArg{n}$ are defined by the systems,
 %$$\norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}^2 \le  \norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}^2 + \norm{\adjointROMSolArg{n} - 
 %\adjointROMStarSolArg{n} }^2 .$$ 
 \end{comment}
-We now derive an upper bound for $\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt$.
+We now derive an upper bound for $\intSlabArg{n} \norm{\stateROMSolArgt{n}{t} - \stateROMStarSolArgt{n}{t}} dt$.\footnote{Here, we draw attention to the fact that, for linear time invariant systems, Liouville's theorem can be used to obtain a much tighter bound on this term than can be obtained in the nonlinear case.}
 %\EP{Changes here}
 Defining $\errorStarArg{n} = \genstateROMSolArg{n} - \genstateROMStarSolArg{n}$, $n=1,\ldots,\nslabs$, where $\genstateROMStarSolArg{n}$ are the generalized coordinates of $\stateROMStarSolArg{n}$ (i.e., $\stateROMStarSolArgt{n}{t} = \basisspaceArg{n} \genstateROMStarSolArgt{n}{t} + \stateInterceptArg{n}$), the differential equation for $\errorStarArg{n}$ is given by
 $$\errorStarDotArgt{n}{t} = \basisspaceTArg{n}[\velocity(\basisspaceArg{n} \genstateROMSolArgt{n}{t} + \stateInterceptArg{n},t) - \velocity(\basisspaceArg{n} \genstateROMStarSolArgt{n}{t} + \stateInterceptArg{n},t) ] + \adjointROMSolArgt{n}{t} - \adjointROMStarSolArgt{n}{t},$$
@@ -317,14 +324,14 @@ We use the fact that $ d \norm{ \errorStarArg{n} } / d\tau \le \norm{ \errorStar
 $$\big(\frac{d \norm{\errorStarArg{n}}}{d\tau} \big)(t)  \le (\lipshitzf + \lipshitz)  \norm{ \errorStarArgt{n}{t} } .$$
 The above is a linear homogeneous equation for the bound of $\norm{\errorStarArg{n}}$ and has the solution for $t \in [\timeStartArg{n},\timeEndArg{n}]$
 $$\norm{\errorStarArgt{n}{t}} \le \norm{ \errorStarArgt{n}{\timeStartArg{n}} }e^{(\lipshitz + \lipshitzf)(t - \timeStartArg{n})}.$$
-Noting that $\norm{\errorStarArgt{n}{\timeStartArg{n}}} = \norm{\errorArgt{n}{\timeStartArg{n}}}$ we get the bound
+Noting that $\norm{\errorStarArgt{n}{\timeStartArg{n}}} = \norm{\errorProjectArgt{n}{\timeStartArg{n}}}$ we get the bound
 %$$\intSlabArg{n} \norm{\errorStarArgt{n}{t}} dt \le \errorStarArgt{n}{\timeStartArg{n}} \intSlabArg{n} e^{(\lipshitz + \lipshitzf)(t - \timeStartArg{n})} dt.$$
 \begin{equation}\label{eq:ustarbound} 
-\intSlabArg{n} \norm{\errorStarArgt{n}{t}} dt \le \norm{\errorArgt{n}{\timeStartArg{n}}} \bigg(\frac{ e^{ \DeltaSlabArg{n}(\lipshitz + \lipshitzf)} - 1}{ \lipshitz + \lipshitzf} \bigg) .
+\intSlabArg{n} \norm{\errorStarArgt{n}{t}} dt \le \norm{\errorProjectArgt{n}{\timeStartArg{n}}} \bigg(\frac{ e^{ \DeltaSlabArg{n}(\lipshitz + \lipshitzf)} - 1}{ \lipshitz + \lipshitzf} \bigg) .
 \end{equation}
 Substituting bound~\eqref{eq:ustarbound} into bound~\eqref{eq:boundtmp} and noting that $\norm{\stateROMSolArg{n} - \stateROMStarSolArg{n}} = \norm{\genstateROMSolArg{n} - \genstateROMStarSolArg{n}}$ gives the upper bound
 \begin{equation*}
-\intSlabArg{n} \norm{\errorArgt{n}{t}} dt \le  \norm{\errorArgt{n}{\timeStartArg{n}}} 
+\intSlabArg{n} \norm{\errorProjectArgt{n}{t}} dt \le  \norm{\errorProjectArgt{n}{\timeStartArg{n}}} 
  \bigg(\frac{ e^{ \DeltaSlabArg{n}(\lipshitz + \lipshitzf)} - 1}{ \lipshitz + \lipshitzf} \bigg)
 + \lipshitziArg{n} \intSlabArg{n} \norm{ \resid(\stateFOMProjSolArg{n},t) } dt.
 \end{equation*}
@@ -447,11 +454,12 @@ Substituting bound~\eqref{eq:ustarbound} into bound~\eqref{eq:boundtmp}, noting 
 \end{comment}
 \end{proof}
 \begin{corollary}
-	For the case of one time window $\DeltaSlabArg{1} = T$, then under Assumption A3  
+	For the case of one time window $\DeltaSlabArg{1} = T$, then under Assumption A3, and assuming the FOM initial condition lies within the range of the 
+trial subspace $\stateFOMSolArgt{0}{\timeStartArg{0}} \in \trialspaceArg{0}$,  
 	the error in the solution computed by the \methodAcronymROM\ \approachKwd\ with
 	\spatialAcronym\ trial subspaces is bounded as
 \begin{equation*}
-\int_0^T \norm{\errorArgt{1}{t}} dt \le \lipshitziArg{1} \int_0^T \norm{\resid(\stateFOMProjSolArg{1},t)}dt. %+
+\int_0^T \norm{\errorProjectArgt{1}{t}} dt \le 2\lipshitziArg{1} \int_0^T \norm{\resid(\stateFOMProjSolArg{1},t)}dt. %+
 % T \sqrt{1 + \lipshitz} \norm{\errorArgt{1}{\timeStartArg{1}} } .
 \end{equation*}
 \end{corollary}

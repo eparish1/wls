@@ -155,8 +155,7 @@ optimality over the entire time domain of interest. As a result, LSPG is not
 equipped with \textit{a priori} guarantees of accuracy or stability, even for
 linear time-invariant systems~\cite{bui_thesis}.
 
-Researchers have pursued the development of space--time
-residual-minimization approaches~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC} to
+Researchers have pursued the development of space--time residual-minimization approaches~\cite{choi_stlspg,constantine_strom,URBAN2012203,Yano2014ASC} to
 address the issues incurred by sequential residual minimization in time.
 Existing space--time approaches differ from the classic LSPG and Galerkin approaches in (1) the definition of the space--time trial subspace and (2) the definition of the residual minimization problem. 
 First, space--time approaches leverage a space--time trial basis that characterizes both the spatial \textit{and} temporal dependence of the state, classic ``spatial" model reduction approaches such as LSPG and Galerkin leverage only a spatial trial basis that characterizes the spatial dependence of the state. 
@@ -259,13 +258,17 @@ windows. We note that,
 similar to the current work, Ref.~\cite{constantine_strom} employs
 minimization of the time-continuous FOM residual as a starting point; as such,
 this work shares some thematic similarities with
-Ref.~\cite{constantine_strom}.  Lastly, Ref.~\cite{choi_stlspg} develops a
+Ref.~\cite{constantine_strom}.  Additionally, Ref.~\cite{choi_stlspg} develops a
 space--time extension of LSPG projection that minimizes the time-discrete
 FOM residual over the entire time domain.  The present work distinguishes
 itself from Ref.~\cite{choi_stlspg} in that (1) this work minimizes the
 time-continuous FOM residual, (2) this work minimizes this residual over
 arbitrary time windows, and (3) this work also considers trial subspaces
-associated with spatial dimension reduction only.
+associated with spatial dimension reduction only. Lastly, we note that the windowing approach proposed here  
+displays commonalities with space--time methods employing space--time slabs, e.g., Refs.\cite{HUGHES1988339,PIRONNEAU1992117,HUGHES1996217,HUGHES1989173}. 
+In these approaches, the space--time domain is typically decomposed into a series of space--time slabs. A system of algebraic equations is then formed over each slab 
+via, e.g., the discontinuous Galerkin method, and the space--time method operates by sequentially marching through these space--time slabs. From this perspective, the proposed windowing approach is best viewed as a space--time method in where each window comprises multiple time-slabs. The time-slabs within each window experience a two-way coupling to each other, by virtue of the residual minimization statement being defined over the entire window, and thus one can no longer sequentially march over the time-slabs. 
+
 
 \begin{figure} 
 \begin{centering} 
@@ -389,7 +392,8 @@ Projection-based ROMs generate approximate solutions to the FOM
 	this purpose:\footnote{For both spatial and space--time ROMs of dynamical systems, all trial subspaces are, strictly speaking, space--time subspaces.} 
 \begin{enumerate} 
 	\item \textit{Subspaces that reduce only the spatial dimension of the full-order
-		model (\spatialAcronym)}. These trial subspaces are characterized by a spatial projection operator, associate with a basis that represents the spatial dependence of the state, and are employed in classic model reduction approaches, e.g., Galerkin and LSPG. %These 
+		model (\spatialAcronym)}\footnote{In this work, we refer to the ``state-space" dimension of an ordinary differential equation as the ``spatial" dimension. We use this notation due to the common application of projection-based ROMs to semi-discretized partial differential equations. We emphasize, however, that the presented approach is applicable to ordinary differential equations that do not associate with some type of spatial discretization, i.e., as in molecular dynamics.}
+. These trial subspaces are characterized by a spatial projection operator, associate with a basis that represents the spatial dependence of the state, and are employed in classic model reduction approaches, e.g., Galerkin and LSPG. %These 
 %	trial subspaces are commonly used
 %		in model-reduction methods based on spatial projection followed by time
 %		integration (e.g., the Galerkin and LSPG approaches).
@@ -742,23 +746,41 @@ Security Administration under contract DE-NA-0003525.
 \section{Proper orthogonal decomposition}
 Algorithm~\ref{alg:pod} presents the algorithm for computing the trial basis via proper orthogonal decomposition.
 \begin{algorithm}
-\caption{Algorithm for generating POD Basis.}
+\caption{Algorithm for generating POD basis.}
 \label{alg:pod}
-\textbf{Input:} Number of time-steps between snapshots $N_{\text{skip}}$; intercept $\stateInterceptArg{}$; basis dimension $K$ \; 
+\textbf{Input:} Number of time-steps between snapshots $N_{\text{skip}}$; intercept $\stateInterceptArg{}$; basis dimension $K$; weighting matrix, $\mathbf{P}$ \; 
 %\newline
-\textbf{Output:} POD Basis $\basisspace \in \mathbb{V}_{K}(\RR{N})$ \;
+\textbf{Output:} POD Basis $\basisspace \in \{ \mathbf{X} \in \RR{\fomdim \times \romdim} | \mathbf{X}^T\mathbf{P} \mathbf{X} = \mathbf{I} \} $ \;
 %\newline
 \textbf{Steps:}
 \begin{enumerate}
     \item Solve FOM O$\Delta$E and collect solutions into snapshot matrix
 $$\mathbf{S}(N_{\text{skip}}) \defeq \begin{bmatrix} \stateFOMDiscreteArg{0} - \stateInterceptArg{n} & \stateFOMDiscreteArg{N_{\text{skip}}} - \stateInterceptArg{n} & \cdots & \stateFOMDiscreteArg{\text{floor}(N_t/N_{\text{skip}})N_{\text{skip}}} - \stateInterceptArg{n} \end{bmatrix}$$
-    \item Compute the thin singular value decomposition, $$\mathbf{S} (N_{\text{skip}}) = \mathbf{U \Sigma Z}^T,$$
-    where $\mathbf{U} \equiv \begin{bmatrix} \mathbf{u}_1 & \cdots & \mathbf{u}_{\text{floor}(N_t/N_{\text{skip}})}\end{bmatrix}$
-    \item Truncate left singular vectors and to form the basis, $\basisspace \equiv \begin{bmatrix} \mathbf{u}_1 & \cdots & \mathbf{u}_K \end{bmatrix}$
+    \item Compute the thin singular value decomposition, $$ \sqrt{\mathbf{P}}^T\mathbf{S} (N_{\text{skip}}) = \mathbf{U \Sigma Z}^T,$$
+    where $\mathbf{U} \equiv \begin{bmatrix} \mathbf{u}_1 & \cdots & \mathbf{u}_{\text{floor}(N_t/N_{\text{skip}})}\end{bmatrix}$ and $\sqrt{\mathbf{P}}$ is the Cholesky decomposition of $\mathbf{P}$, i.e., $\sqrt{\mathbf{P}} \sqrt{\mathbf{P}}^T = \mathbf{P}$
+    \item Truncate left singular vectors and to form the basis, $\basisspace \equiv \begin{bmatrix} [\sqrt{\mathbf{P}}^T]^{-1}  \mathbf{u}_1 & \cdots & [\sqrt{\mathbf{P}}^T]^{-1} \mathbf{u}_K \end{bmatrix}$
 \end{enumerate}
 
 
 \end{algorithm}
+
+%In the final numerical experiment, time-local trial bases are constructed for a set of varying input parameters. Algorithm~\ref{alg:pod_tlp} describes the construction of the POD bases for this case.
+%\begin{algorithm}
+%\caption{Algorithm for generating time-local POD basis over multiple parameter instances}
+%\label{alg:pod_tlp}
+%\textbf{Input:} Number of time-steps between snapshots $N_{\text{skip}}$; starting time-instance, $N_s$; number of instances $N_{i}$; intercept $\stateInterceptArg{}$; parameter instances $\param_{1} , \ldots, \param_{n_{\text{train}}}$; basis dimension $K$ \\
+%%\newline
+%\textbf{Output:} POD Basis $\basisspace \in \mathbb{V}_{K}(\RR{N})$ \;
+%%\newline
+%\textbf{Steps:}
+%\begin{enumerate}
+%    \item Solve FOM O$\Delta$E for $\param_1, \ldots, \param_{n_{\text{train}}}$ and collect solutions into snapshot matrix
+%\small{$$\mathbf{S}(N_{\text{skip}}) \defeq \begin{bmatrix} \stateFOMDiscreteParamArg{N_s}{\param_1} - \stateInterceptArg{n} & \cdots & \stateFOMDiscreteParamArg{N_s + N_i N_{\text{skip}}}{\param_1}- \stateInterceptArg{n} & \cdots & \stateFOMDiscreteParamArg{N_s + N_i N_{\text{skip}}}{\param_{n_{\text{train}}}}- \stateInterceptArg{n} \end{bmatrix}$$}
+%    \item Compute the thin singular value decomposition, $$\mathbf{S} (N_{\text{skip}}) = \mathbf{U \Sigma Z}^T,$$
+%    where $\mathbf{U} \equiv \begin{bmatrix} \mathbf{u}_1 & \cdots & \mathbf{u}_{\text{floor}(N_t/N_{\text{skip}})}\end{bmatrix}$
+%    \item Truncate left singular vectors and to form the basis, $\basisspace \equiv \begin{bmatrix} \mathbf{u}_1 & \cdots & \mathbf{u}_K \end{bmatrix}$
+%\end{enumerate}
+%\end{algorithm}
 
 
 \section{Selection of sampling points}
@@ -775,7 +797,8 @@ mesh concept~\cite{carlberg_gnat}. Algorithm~\ref{alg:qdeim} outlines the steps 
 \textbf{Steps:}
 \begin{enumerate}
     \item Solve FOM O$\Delta$E and collect velocity snapshots 
-$$\mathbf{F}(N_{\text{skip}}) \defeq \begin{bmatrix} \velocity (\stateFOMDiscreteArg{0})  & \velocity( \stateFOMDiscreteArg{N_{\text{skip}}}) & \cdots & \velocity( \stateFOMDiscreteArg{\text{floor}(N_t/N_{\text{skip}})N_{\text{skip}}} ) \end{bmatrix}$$
+%$$\mathbf{F}(N_{\text{skip}}) \defeq \begin{bmatrix} \velocity (\stateFOMDiscreteArg{0})  & \velocity( \stateFOMDiscreteArg{N_{\text{skip}}}) & \cdots & \velocity( \stateFOMDiscreteArg{\text{floor}(N_t/N_{\text{skip}})N_{\text{skip}}} ) \end{bmatrix}$$
+$$\mathbf{F}(N_{\text{skip}}) \defeq \begin{bmatrix} \stateFOMDiscreteArg{0} & \stateFOMDiscreteArg{N_{\text{skip}}}  & \cdots & \stateFOMDiscreteArg{\text{floor}(N_t/N_{\text{skip}})N_{\text{skip}}} \end{bmatrix}$$
     \item Compute the thin singular value decomposition, $$\mathbf{F} (N_{\text{skip}}) = \mathbf{U \Sigma Z}^T,$$
     where $\mathbf{U} \equiv \begin{bmatrix} \mathbf{u}_1 & \cdots & \mathbf{u}_{\text{floor}(N_t/N_{\text{skip}})}\end{bmatrix}$
     \item Compute the QR factorization of  $\mathbf{U}^T$ with column pivoting,
@@ -784,7 +807,7 @@ $$\mathbf{F}(N_{\text{skip}}) \defeq \begin{bmatrix} \velocity (\stateFOMDiscret
     \end{equation*}
     with $\mathbf{P}^* \equiv \begin{bmatrix} \mathbf{p}_1 & \cdots & \mathbf{p}_{\text{floor}(N_t/N_{\text{skip}})} \end{bmatrix}$, $\mathbf{p}_i \in \{0,1\}^N$. 
     \item Select the first $n_s$ columns of $\mathbf{P}^*$ to form the sampling point matrix $\stweightingMatOneTArg{} \in \{0,1\}^{N \times n_s}$. 
-    \item Augment the sampling point matrix, $\stweightingMatOneArg{}$, with additional columns such that all unknowns are computed at the mesh cells selected by Step 3. For the second numerical experiment, these additional unknowns correspond to each conserved variable and quadrature point in the selected cells. 
+    \item Augment the sampling point matrix, $\stweightingMatOneArg{}$, with additional columns such that all unknowns are computed at the mesh cells selected by Step 3. For the second numerical experiment, these additional unknowns correspond to each conserved variable and degree of freedom in the selected cells. 
 \end{enumerate}
 
 

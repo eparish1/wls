@@ -1,0 +1,118 @@
+%\documentclass{article}
+\documentclass[3p,computermodern,10pt]{elsarticle}
+\input{../packages}
+\input{../commands}
+\input{../commands_cwst}
+%\input{title}
+%\begin{frontmatter}
+%\title{Continuous Least-Squares Petrov-Galerkin for Model Reduction}
+%\author{Eric J. Parish}
+\begin{document}
+\begin{frontmatter}
+
+%\title{Model Reduction via \methodName}
+%\title{Windowed least--squares reduced-order models for dynamical systems}
+\title{Windowed least-squares model reduction for dynamical systems}
+%\title{The windowed least-squares framework for model reduction of dynamical systems}
+
+\author[a]{Eric J. Parish and Kevin T. Carlberg}
+%\ead{ejparis@sandia.gov}
+
+\address[a]{Sandia National Laboratories,  Livermore, CA}
+\end{frontmatter}
+
+
+%\maketitle
+We would like to thank both of the reviewers for their helpful comments. We have done our best to address all concerns, and we feel that the comments have improved the quality of the manuscript. We have primarily improved our numerical results section, where we have (1) included studies of convergence with basis dimension, (2) included a parameterized example, and (3) increased the difficulty of our cavity flow experiment. In addition, we have worked on our analyses to try and address several of the concerns raised by the reviewers. Please see our responses below, in red.
+\section{Reviewer 2}
+The article proposes a windowed least-squares approach for model reduction of dynamical systems. The methodology is proposed as a generalization of existing approaches such as the least square Petrov-Galerkin (LSPG) method and the space-time LSPG method. The proposed methodology is clearly presented and related with existing and previously proposed approaches. The WLS methods is numerically implemented using two different approaches a direct one, which first discretizes then optimizes and an indirect one which first optimizes then discretizes. The article proposes also a theoretical analysis of the proposed methods. The paper is well written and easy to follows. All the methods are presented with a great level of details and results are convincing therefore I recommend publication after the raised issues are addressed.
+
+\subsection{Major comments}
+My biggest concern is about the numerical results section that in my opinion should be improved
+\begin{enumerate}
+\item Both numerical results should also show a convergence analysis of the methodology with respect to the dimension of the trial subspace used for the projection. Is the methodology sensitive with respect to the dimension of the trial subspace? Does the error decreases monotonically as I increase the number of reduced basis functions?
+
+{\color{red} We have added a new sections to both of our first numerical experiment to address this question. We show that the behavior of the method is as one would expect: increasing the basis dimension yields both lower errors and lower residuals. We observe that the error monotonically decreases for larger window sizes. For smaller window sizes we do not see monotonic convergence of the error; this result has been seen in the community for, e.g., the Galerkin method and LSPG. We observe similar behavior with the residuals.} 
+
+\item In order to have a better understanding of the time saving of the implemented ROM, in figure 8 the authors should report also the wall-clock times of the FOM. Also figure 10 should have a comparison also with the FOM wall-clock times.
+{\color{red} We have added CPU timings to our second numerical experiment to address this concern. In our first numerical experiment, which serves as a reproducible benchmark, we do not employ hyper-reduction, and therefore do not obtain computational savings. Our reasoning for not including CPU timings in the first draft of the manuscript was that we felt that the timing with respect to the least-squares Petrov--Galerkin method was the relevant metric to report. The reason for this is that the speedup obtained by the ROM for nonlinear problems is highly dependent on the sample mesh, the associated stencil, and the computational kernels involved in evaluating residuals on the sample mesh. As LSPG has been shown to yield significant computational speedups in previous work (e.g.,~\cite{carlberg_lspg_v_galerkin}), and WLS with S-reduction subspaces is a windowed extension of the LSPG approach, we felt that comparing the speed of the proposed method to LSPG is the relevant timing. However, we do agree that comparison to the FOM walltime is a metric of interest, and therefore we have worked hard to integrate it into the second example.}
+
+\item I think that both numerical examples are rather simple to test the effectiveness of the method in real world situations. Moreover the numerical examples are used only to the test the reproductive ability of the ROM. I think that the authors should show the effectiveness of the methods on a more complex example which involves parametric dependency or time extrapolation.
+
+{\color{red} To address this concern, we have (1) increased the difficulty of the second numerical experiment by raising the mach number such that is supersonic, thus adding a complex shock boundary layer interaction to the problem, and (3) added a new numerical experiment with varying parameters. In both cases, we observe WLS to yield improvements over the LSPG approach.}  
+
+\end{enumerate}
+
+\subsection{Minor comments}
+
+\begin{itemize}
+\item page 25 second line, $\Delta T = .002 \rightarrow  \Delta T = 0.002$
+{\color{red} Thank you, good catch!}
+
+\item Could the authors explain what is the meaning of the integrated residual norm for the l2
+projection? This is not clear to me.
+
+{\color{red} We have rephrased this as the ``time-integrated residual norm". By integrated norm, we were referring to the Euclidean $\ell^2$-norm of the state integrated in time, as denoted in, e.g., Figure 6a. In the previous manuscript, we also had an inconsistency of using both the term ``space--time" error norm and "integrated" error norm to refer to the same thing; we have corrected this in the revision by replacing space--time error norm with time-integrated norm.} 
+
+\item In figure 6, the metric used to measure the error is not so informative, probably a relative error would be more informative.
+
+{\color{red} Thank you, we have updated figures with relative errors.}
+\end{itemize}
+
+\section{Reviewer 3}
+The authors presented a space-time model reduction method that aims to generalize/unify a number of different model reduction techniques and improve some shortcomings (exponential error growth in time, strong dependence on time discretization, non-intuitive relationship between error and time step size, etc). The proposed approach minimizes the time-continuous residual (integrated) over some time window in a space-only or space-time trial space. Two different approaches are proposed for solving the resulting WLS optimization problem: direct and indirect; both approaches perform similarly in numerical experiments. Numerical experiments show improved performance of WLS over the Galerkin and minimum-residual methods (called LSPG in this paper) and extensive testing is done to determine the performance of the method with respect to time step and time window. The proposed method is interesting and novel; however, I am recommending major revisions as there are
+important aspects of the analysis and numerical experiments that should be addressed.
+
+\subsection{Minor comments}
+\begin{enumerate}
+\item The "windowing" approach proposed in this work is very similar or identical to the concept of a space-time slab. There is no need to change the name of the method, but the similarity should be mentioned at least in the introduction and relevant literature cited.
+
+{\color{red} We agree with the reviewer in this similarity (in fact, we used the terminology time-slab in our early drafts of the manuscript) , and have added several relevant citations. We are glad to add additional ones if the author has any recommendations. As to the difference between our approach and a time-slab, our perspective is as follows: While the term time-slab can entail many things, from our perspective, typically a space--time slab is viewed as a discretization technique. For example, in a space--time DG method, we might break the space--time domain down into space--time slabs, then represent the spatial and temporal dependence of the solution with polynomials on each space--time slab. In our setup, we break the space--time domain down into windows, and then rather than discretizing in time, we reformulate the problem as a least-squares problem on each window. We are then flexible to use any time discretization technique on that window, so perhaps a window may comprise various space--time slabs in the traditional sense. However, the two concepts are very closely tied and its easy to make a counter argument to our perspective! We have added the following to the manuscript, at the end of page 2 in or related work sections:
+
+``Lastly, we note that the windowing approach proposed here displays commonalities with space–time methods employing space–time slabs, e.g., Refs.[35, 54, 36, 34]. In these approaches, the space–time domain is typically decomposed into a series of space–time slabs. A system of algebraic equations is then formed over each slab via, e.g., the discontinuous Galerkin method, and the space–time method operates by sequentially marching through these space–time slabs. From this perspective, the proposed windowing approach is best viewed as a space–time method in where each window comprises multiple time-slabs. The time-slabs within each window experience a two-way coupling to each other, by virtue of the residual minimization statement being defined over the entire window, and thus one can no longer sequentially march over the time-slabs."
+} 
+\item It should be pointed out that the argument in the middle of Page 22 (the equation before (5.5)) assumes the WLS method finds the *global* minimizer (which is not guaranteed because the optimization problems are non-convex).
+
+{\color{red} We have added a footnote clarifying this, thank you!}
+\end{enumerate}
+Major comments
+\begin{enumerate}
+\item A confusing aspect of the paper that should be addressed is the "space" terminology. There is no concept of a spatial domain here since the starting point is a system of ODEs (2.1); there is only a concept of the state and how it evolves in time. If these ODEs come from the discretization of PDEs, then there is an equivalence between the ODE state and the solution of the PDE at points in space (which is the case in the numerical examples). If the authors believe the method is useful beyond semi-discrete PDEs, then the terminology should be adjusted or at least clarified. If not, then the paper should indicate this method only makes sense for semi-discrete PDEs.
+
+{\color{red} This is a good point, and one that was on our mind while preparing the manuscript. We have added the following clarifying footnote to Page 6 after the concept of "spatial" model reduction is first introduced:
+
+\textit{In this work, we refer to the “state-space” dimension of an ordinary differential equation as the “spatial” dimension. We use this notation due to the common application of projection-based ROMs to semi-discretized partial differential equations. We emphasize, however, that the presented approach is applicable to ordinary differential equations that do not associate with some type of spatial discretization, i.e., as in molecular dynamics.}
+
+We have not modified the terminology in the paper, however. We feel that it is best to not do this as 1) previous work on which this builds uses the notion of space in a similar fashion (i.e., the space--time LSPG approach), and 2) we feel that referring to the ``spatial" dimension as, i.e., the ``state-space" dimension becomes cumbersome and slightly confusing. We are glad to adapt a new notation at the editors request, however.} 
+
+
+ \item  Assumption A4 is also very strong. What would happen if a similar assumption was introduced into the analysis of the Galerkin or LSPG methods? To provide a "fair" comparison between the error bound for the WLS method and Galerkin/LSPG methods (to support the claim the WLS method overcomes the exponential error growth) the authors are attempting to improve upon, the same (or very similar) assumptions should be made in both cases.
+
+{\color{red} In our revision, we have removed this assumption by slightly modifying our analysis. We now place a bound on the in-plane error, and the constant multiplying the residual term now has an additional factor of two. The main take away of  the analysis remains the same.}
+           
+\item While I appreciate the author's analysis, Assumptions A3 is unreasonable unless somehow justified. Are there any relevant dynamical systems whose residual function is inverse Lipschitz continuous? If so, are any of these semi-discrete PDEs? It seems unlikely even for simpler PDEs as inverse Lipschitz continuity would guarantee that PDE residual bounds the PDE error. The analysis would be much more meaningful without this assumption; obviously it would change the theorem because the last term of (5.3) would be different. At minimum, a detailed remark should be included regarding the relevance of such an assumption.
+
+{\color{red} We agree that the assumption that the residual is inverse Lipshitz continuous in unreasonable. In our analysis, however, we make the assumption that the integrated residual is inverse Lipshitz continuous for any two trajectories starting from the same initial condition. We do not believe that we explained this very well, and have added a comment on this. 
+
+We believe that this is \textit{not} an unreasonable assumption, as it is essentially stating that the ODE is well-posed. Note that, for the ODE to be well-posed, only one trajectory can give a zero residual. Thus, for a well-posed ODE 
+$$ \int_0^T \| \boldsymbol r(\boldsymbol x,t) - \boldsymbol r(\boldsymbol y,t) \|_2 dt > 0 $$
+for all $\boldsymbol x, \boldsymbol y \in \{ \mathbb{R}^N \otimes \mathcal{T} | \boldsymbol x(0) = \boldsymbol y(0), \boldsymbol x \ne \boldsymbol y$\}. From this, the inverse Lipshitz assumption 
+$$ \int_0^T \| \boldsymbol r(\boldsymbol x,t) - \boldsymbol r(\boldsymbol y,t) \|_2 dt \ge \alpha \int_0^T \| \boldsymbol x(t) - \boldsymbol y(t) \|_2 dt$$
+is reasonable. Additionally, it is worth noting that in Ref.~\cite{choi_stlspg}, the time-discrete space--time residual is shown to be inverse Lipshitz continuous under several assumptions. While there is without a doubt a difference between the present formulation and that provided in~\cite{choi_stlspg}, we feel this supports our argument. 
+
+We are in complete agreement, however, with the fact that computing these Lipshitz constants is not practical. Doing so would be extremely difficult, if not impossible. We have added a remark to our analysis about this. 
+} 
+
+\item I appreciate the authors extensive numerical experiments to study the performance/cost of the method, particularly with dt and the time window; however, there is some important information missing. For Section 6.1, the authors freeze the basis size and perform dt and dT sweeps, but provide no insight on how the various methods perform (accuracy and cost) as the basis size increases. Since the WLS approach is more expensive than Galerkin/LSPG for a given basis size, this basis size sweep will provide critical information regarding the relative performance (accuracy and cost) of the methods. To avoid running an exponential number of cases, the optimal dt and dT determined from the previous studies can be used. Similarly for Section 6.2: two basis sizes were considered but the energy only varies from 95\% to 97\%; many papers have shown higher energy (99\% or more) is required for complex problems like this, which should be done for a "fair" comparison to Galerkin/LSPG.
+
+{\color{red} We appreciate these comments. In an effort to address them, we have added new sections to both our numerical experiments where we assess the performance of the method as a function of basis dimension. For the first numerical experiment, we do this for numerous window sizes, while for the second experiment we do it for a single window size. We additionally report CPU timings for all of these different permutations. With respect to the final comment on basis dimension, we had a typo in reporting the energy content, thank you for pointing this out. This has been corrected in the revised manuscript, and all bases considered contain $99.99\%$ of the energy.}
+ 
+\item Neither of the examples vary parameters (purely reproducing the solution). While this was explicitly stated in the paper as not a priority, it significantly lessens relevance of the paper. I strongly recommend including a parametric example.
+{\color{red} To address this concern, we added a new numerical experiment with varying parameters. We observe WLS to yield improvements over the LSPG approach.}  
+
+\end{enumerate}
+\bibliographystyle{siam}
+\bibliography{../refs}
+
+\end{document}
+
