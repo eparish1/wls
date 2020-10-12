@@ -1,5 +1,5 @@
 \section{Numerical experiments}\label{sec:numerical_experiments}
-We now analyze the performance of \methodAcronymROMs\ leveraging \spatialAcronym\ trial subspaces on two benchmark problems: the Sod shock tube and compressible flow in a cavity. In each experiment, we compare \methodAcronymROMs\ to the Galerkin and LSPG ROMs. The purpose of the numerical experiments is to assess the impact of minimizing the residual over an arbitrarily sized time window on the solution accuracy. We additionally assess the impact of the time step and time scheme on \methodAcronym. In both experiments, the spatial basis is equivalent for each time window, e.g., $\basisspaceArg{n} \equiv \basisspace$, $n=1,\ldots,\nslabs$. We also note that both experiments are designed to test the \textit{reproductive} ability of the ROMs. We do not consider future state prediction and prediction at new parameter instances as these problems introduce factors that confound the solution accuracy with the solution methodology (e.g., accuracy of the basis). 
+We now analyze the performance of \methodAcronymROMs\ leveraging \spatialAcronym\ trial subspaces on three benchmark problems: (1) a reproductive ROM for the Sod shock tube problem (2) a reproductive ROM for a supersonic compressible flow in a cavity, and (3) a predictive ROM for the parameterized shallow water equations. In each experiment, we compare \methodAcronymROMs\ to either the LSPG, or the Galerkin and LSPG, ROMs. In the experiments, we assess (1) the impact of minimizing the residual over an arbitrarily sized time window on the solution accuracy, (2) the impact of the time step and time scheme on \methodAcronym, (3) the impact of the window size on the convergence properties of the ROMs, and (4) the impact of the window size on the cost of the ROMs. In all experiments, the spatial basis is equivalent for each time window, e.g., $\basisspaceArg{n} \equiv \basisspace$, $n=1,\ldots,\nslabs$. We note that the first two experiments are designed to test the \textit{reproductive} ability of the ROMs, while the third experiment tests the predictive capabilities of the ROM. 
  
 \subsection{Sod shock tube}
 We first consider reduced-order models of the Sod shock tube problem, which is governed by the compressible Euler equations in one dimension, 
@@ -35,10 +35,10 @@ u =
 along with reflecting boundary conditions at $\mathsf{x}=0$ and $\mathsf{x}=1$. 
 
 \subsubsection{Description of FOM and generation of \spatialAcronym\ trial subspace}\label{sec:sod_fom}
-We solve the 1D compressible Euler equations with a finite volume method. We partition the domain into 500 cells of uniform width and employ the Rusanov flux~\cite{rusanov} at the cell interfaces. We employ the Crank--Nicolson (CN) scheme, which is a linear multistep method defined by the coefficients $\alpha_0 = 1,\alpha_1 = -1, \beta_0 = \beta_1 = 1/2$, for temporal integration. We evolve the FOM for $t \in [0.0,1.0]$ at a time-step of $\Delta t = 0.002$. We construct the \spatialAcronym\ trial subspace by executing Algorithm~\ref{alg:pod} with inputs $N_{\text{skip}}=2, \stateIntercept = \bz, K=46 $, and $\mathbf{P} = \mathbf{I}$. The resulting trial subspace corresponds to an energy criterion of $99.99\%$.
+We solve the 1D compressible Euler equations with a finite volume method. We partition the domain into 500 cells of uniform width and employ the Rusanov flux~\cite{rusanov} at the cell interfaces. We employ the Crank--Nicolson (CN) scheme, which is a linear multistep method defined by the coefficients $\alpha_0 = 1,\alpha_1 = -1, \beta_0 = \beta_1 = 1/2$, for temporal integration. We evolve the FOM for $t \in [0.0,1.0]$ at a time-step of $\Delta t = 0.002$. We construct the \spatialAcronym\ trial subspace by executing Algorithm~\ref{alg:pod} with inputs $N_{\text{skip}}=2, \stateIntercept = \bz, K=46 $, and $\mathbf{T} = \mathbf{I}$. The resulting trial subspace corresponds to an energy criterion of $99.99\%$.
 %  The solution is saved every other time-step, resulting in 500 solutions snapshots. These snapshots are used to generate a trial basis for the reduced-order models through POD. The trial basis is selected to be of dimension $K = 46$, which corresponds to a $99.99\%$ energy criterion. No affine transformation is used in the construction of the trial subspace, i.e., $\stateIntercept = \bz$.
 
-\subsubsection{Description of reduced-order models}
+\subsubsection{Description of reduced-order models}\label{sec:sod_rom_description}
 We consider reduced-order models based on Galerkin projection, LSPG
 projection, and the \methodAcronym\ approach. No hyper-reduction is considered 
 in this example, i.e., $\stweightingMatArg{n} = \mathbf{I}$, $n=1,\ldots,\nslabs$. Details on the implementation of the 
@@ -145,7 +145,7 @@ the Galerkin and LSPG ROMs. Critically, we see that the solution becomes less os
 
 Next, Figure~\ref{fig:sod_error} shows time-integrated $\ell^2$-norm of the state errors and the objective function~\eqref{eq:obj} (i.e., the time-integrated residual norm) over $t \in [0,1]$ for the various ROMs. Most notably, we observe 
 that increasing the window size over which the residual is minimized does \textit{not} lead to a monotonic decrease in the error as measured in the time-integrated $\elltwo$-norm (we refer to this as the $\elltwo$-error). As expected, increasing the window size does lead to a monotonic decrease in the time-integrated residual norm, however. We additionally note that, although the time-integrated $\elltwo$-error of 
-the projected FOM solution is significantly lower than that of the various ROM solutions, the time-integrated residual norm of the projected FOM solution is \textit{higher} 
+the projected FOM solution is significantly lower than that of the various ROM solutions, the time-integrated residual norm of the projected FOM solution (i.e., the time-integrated norm of the residual evaluated at the $\elltwo$-orthogonal projection of the FOM solution onto the trial subspace) is \textit{higher} 
 than all ROMs. Thus, although the projected FOM solution is more accurate in the $\elltwo$-norm, it does not satisfy the governing equations as well the ROM solutions. 
 
 \begin{figure}
@@ -269,12 +269,12 @@ Figure~\ref{fig:convergence_study} shows the time-integrated $\ell^2$-error of t
 \begin{center}
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/error_converge.pdf}
-\caption{Relative time-integrated $\elltwo$-error of the \methodAcronymROM.}
+\caption{Relative time-integrated $\elltwo$-error.}
 \label{fig:sod_error_converge}
 \end{subfigure}
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/residual_converge.pdf}
-\caption{Time-integrated residual norm of the \methodAcronymROM.} 
+\caption{Time-integrated residual norm.} 
 \label{fig:sod_residual_converge}
 \end{subfigure}
 \caption{Performance metrics of the Galerkin, LSPG, and \methodAcronymROMs\ as a function of basis dimension. Missing entries indicate that the solver did not converge.} 
@@ -326,3 +326,4 @@ direct method was observed to be slightly more efficient and robust than the ind
 \end{enumerate} 
 
 \input{cavity}
+\input{shallow_water}

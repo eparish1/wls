@@ -691,6 +691,7 @@ purpose.
 \input{numerical_experiments}
 
 
+
 \section{Conclusions}\label{sec:conclude}
 This paper proposed the windowed least-squares (\methodAcronym) \approachKwd\ for model reduction  of dynamical systems. The approach sequentially minimizes the
 	time-continuous full-order-model residual within a low-dimensional space--time trial
@@ -705,8 +706,8 @@ The forward system, which is forced by an auxiliary costate,
 		backward system, which is forced by the time-continuous FOM residual
 		evaluated about the ROM state, governs the dynamics of the costate. 
 
-Numerical experiments of the compressible Euler and Navier--Stokes equations demonstrated the utility in the proposed approach. The first numerical experiment, in where the Sod shock tube was examined, demonstrated that \methodAcronymROMs\ minimizing the residual over larger time windows yielded solutions with lower space--time residuals. Increasing the window size over which the residual was minimized, however, did not necessarily decrease the solution error in the $\elltwo$-norm; we observed this to occur over an intermediary window size. We additionally observed that the  
-\methodAcronym\ \approachKwd\ overcomes the time-discretization sensitivity that LSPG is subject to. The second numerical experiment, which examined collocated ROMs of a compressible cavity flow, demonstrated the utility of the \methodAcronym\ formulation on a more complex flow. In this experiment, \methodAcronymROMs\ yielded predictions with relative errors less than $5-10\%$, while the Galerkin and LSPG ROMs failed to converge/blew up. Increasing the window size over which the residual was minimized again led to a lower space--time residual, but not necessarily a lower error in the $\elltwo$-norm.
+Across three numerical experiments conducted on the compressible Euler equations, compressible Navier--Stokes equations, and parameterized shallow water equations, we observed WLS with S-reduction trial subspaces to yield improvements over the Galerkin and LSPG approaches. The first numerical experiment, in where the Sod shock tube was examined, demonstrated that \methodAcronymROMs\ minimizing the residual over larger time windows yielded solutions with lower space--time residuals. Increasing the window size over which the residual was minimized, however, did not necessarily decrease the solution error in the $\elltwo$-norm; we observed this to occur over an intermediary window size. We additionally observed that the  
+\methodAcronym\ \approachKwd\ overcomes the time-discretization sensitivity that LSPG is subject to. The second numerical experiment, which examined collocated ROMs of a supersonic compressible cavity flow featuring a two-dimensional shock boundary layer interaction, demonstrated the utility of the \methodAcronym\ formulation on a more complex flow. In this experiment, \methodAcronymROMs\ yielded accurate predictions at a $10$x reduction in cost as compared to the FOM. The WLS ROMs additionally displayed convergence with respect to an increasing basis dimension. LSPG ROMs, on the other hand, failed to produce an accurate prediction for the quantity-of-interest for every basis dimension considered. Additionally, LSPG did not display convergence with increasing basis dimension. Increasing the window size over which the residual was minimized again led to a lower space--time residual, but not necessarily a lower error in the $\elltwo$-norm. Lastly, the final numerical experiment demonstrated the utility of \methodAcronym\ on a parameterized system of equations. When predicting at a novel parameter instance, we observed WLS to again yield accurate solutions at a $10$x reduction in computational cost. For the same training set, the LSPG ROMs, as well as a surrogate model based on multivariate linear regression, failed to yield accurate solutions.   
 
 %In the case of \spatialAcronym\ trial subspaces, \methodAcronym\ displays improved performance over Galerkin and LSPG projection at the expense of an increased computational cost. This increase in computational cost is due to the fact that forming and/or solving the nonlinear minimization problem becomes more difficult as the time window grows. To minimize this increase in cost, future work will target the development of new solution techniques tailored to \methodAcronym.
  
@@ -743,71 +744,163 @@ International, Inc., for the U.S.\  Department of Energy's National Nuclear
 Security Administration under contract DE-NA-0003525.
 
 \begin{appendices}
+\section{Gauss--Newton method with frozen Jacobians}\label{appendix:gnupdate}
+One of the primary costs incurred by both the windowed least-squares approach (solved via the direct method), and the least-squares Petrov--Galerkin approach, is the computation of the Jacobian in the Gauss--Newton algorithm. For instance, in the second numerical example, for WLS ROMs employing a sample mesh of size $10170$ with $K=156$ basis vectors and a window size of $\Delta T = 0.025$ ($=5\Delta T$), computing the Jacobian over a time window via automatic differentiation incurs a computational cost that is $250$x greater than computing the residual over the window. In the third numerical example, for a sample mesh of size $1752$, a basis size of dimension $K = 83$, and a window size of $\Delta T = 2.0$ ($=100\Delta T$), computing the Jacobian over a time window via automatic differentiation incurs a computational cost that is $50$x greater than computing the residual. 
+
+We expect that the computational cost associated with computing the Jacobian can be reduced by employing, for example, frozen Jacobians, analytic Jacobians, matrix-free Jacobian transpose methods~\cite{doi:10.2514/6.2016-0833}. While we leave a full investigation into these methods as a topic for future work, here we examine the use of a Gauss--Newton method employing frozen Jacobians. The main thesis behind a Gauss--Newton method employing frozen Jacobians is that approximate gradients may suffice for convergence of the nonlinear least-squares problem. The algorithm operates similarly to a standard Gauss--Newton method, but differs in that the Jacobian matrix is only updated ever $n_{\text{update}}$ iterations. Algorithm~\ref{alg:colloc_gn_frozen} outlines the algorithm.  
+  
+\begin{algorithm}
+\caption{\spatialAcronym\ trial subspace: algorithm for the direct solution technique with the Gauss--Newton method with frozen Jacobians and a linear multistep method over the $n$th window}
+\label{alg:colloc_gn_frozen}
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\Input{tolerance, $\epsilon$; initial guess, $\genstateGuessDiscreteArg{n,1}{0},\ldots,\genstateGuessDiscreteArg{n,\nstepsArg{n}}{0}$; global iteration number, $m$; Jacobian update frequency, $n_{\text{update}}$; initial guess to residual-Jacobian $\boldsymbol J$}%; initial condition $\genstateDiscreteArg{n,0}$}
+\Output{Solution to least squares problem, $\genstatecollocMatSlabArg{n}$} 
+\textbf{Online Steps}: \\
+$\text{converged} \leftarrow \text{false}$ \Comment{Set convergence checker} \\
+$\genstatecollocMatSlabArg{n}_0 \leftarrow \unroll(\genstateGuessDiscreteArg{n,1}{0},\ldots,\genstateGuessDiscreteArg{n,\nstepsArg{n}}{0})$ \Comment{Assemble generalized coordinates over window} \\
+$k \leftarrow 0$ \Comment{Set counter}\\
+\While{\text{not converged}}
+{
+%\For{$i=1,\hdots,\nstepsArg{n}$}{
+%  \For{$j=1,\hdots,\ncollocArg{n}{i}$}{
+%Compute: $\approxstateArgnt{n,i}  =  \basisspace  \genstateDiscreteArg{n,i} + \stateIntercept$ 
+%\Comment{Compute state} \\
+%Compute: $\velocity(\basisspace \genstateDiscreteArg{n,i} + \stateIntercept ) $ \Comment{Compute velocity at each time-step instance}\\
+%Compute: $\residLMSArg{n,i}(\basisspace \genstateDiscreteArg{n,i} + \stateIntercept, \ldots , \basisspace \genstateDiscreteArg{n,i - k^n(i)} + \stateIntercept) $  \Comment{Compute residual} \\
+%}
+$\mathbf{r} \leftarrow \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n}_k)$ \Comment{Compute weighted residual over window} \\
+\uIf{ $m \% n_{\text{update}} == 0$}{
+$\mathbf{J} \leftarrow  
+\frac{\partial \residLMSSlabArg{n}}{\partial \genstatecollocMatySlabArg{}}(\genstatecollocMatSlabArg{n}_k)$ 
+\Comment{Compute weighted residual-Jacobian over window} \\
+}
+%Compute: $[\jacobianSlabArg{n}]^T \jacobianSlabArg{n}$ \Comment{Compute system matrix for the normal equations} \\
+%Compute: $[\jacobianSlabArg{n}]^T \residLMSSlabArg{n}(\genstatecollocMatSlabArg{n}_k)$ \Comment{compute RHS for normal equations} \\
+\uIf{ $\norm{ \mathbf{J}^T\mathbf{r}  } \le \epsilon$ }{
+{\text{converged} $\leftarrow$ \text{true}}  \Comment{Check and set convergence based on gradient norm} \\
+Return: $\genstatecollocMatSlabArg{n} = \genstatecollocMatSlabArg{n}_{k+1} $ \Comment{Return converged solution}\\
+}
+\Else{
+ Compute  $\Delta  \genstatecollocMatSlabArg{n} $ that minimizes $\norm{ \mathbf{J} \Delta \genstatecollocMatSlabArg{n} +\mathbf{r}}^2$ \Comment{Solve the linear least-squares problem} \\
+$\alpha \leftarrow \text{linesearch}(\Delta  \genstatecollocMatSlabArg{n} ,\genstatecollocMatSlabArg{n}_k ) $ \Comment{Compute $\alpha$ based on a line search, or set to 1}\\
+$\genstatecollocMatSlabArg{n}_{k+1} \leftarrow \genstatecollocMatSlabArg{n}_k + \alpha \Delta \genstatecollocMatSlabArg{n}$ \Comment{Update guess to the state} \\
+}
+$k\leftarrow k+1$ \\
+$m\leftarrow m+1$
+}
+\end{algorithm}
+
+The final numerical experiment considered in this work presents results for ROMs employing the Gauss--Newton method with frozen Jacobians. Here, we investigate the sensitivity of the ROMs to the parameter controlling the Jacobian update frequency, $n_{\text{update}}$. To this end we consider the case outlined in Section~\ref{sec:swe_results}, in where WLS ROMs of varying window sizes and a basis of dimension $K=83$ are used to solve the shallow water equations for the parameter instance $(\mu_1, \mu_2) = (7.5,0.16)$. Figure~\ref{fig:rom_metrics_swe_updatefreq} presents performance metrics for the various WLS ROMs, solved via the Gauss--Newton method with frozen Jacobians, as a function of the window size. We note that, in Algorithm~\ref{alg:colloc_gn_frozen}, we use the Jacobian over the previous window as our initial guess to the Jacobian. Results are shown for $n_{\text{update}} = 1,2,5,10,20$. We observe that, for all instances of $n_{\text{update}}$, WLS ROMs solved via Gauss--Newton with frozen Jacobians yield results that are similar to those of the WLS ROMs solved via the standard Gauss--Newton algorithm.  
+
+\begin{figure}
+\begin{center}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.0\linewidth]{figs/swe/swe_windowSize_vs_error_updateFreq_K83.pdf}
+\caption{Relative time-integrated $\elltwo$-error.}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.0\linewidth]{figs/swe/swe_windowSize_vs_residual_updateFreq_K83.pdf}
+\caption{Time-integrated residual norm.}
+\end{subfigure}
+\caption{Time-integrated performance metrics of the LSPG and WLS ROMs as a function of window size. We examine ROMs solved via the Gauss--Newton method with frozen Jacobians for different update frequencies, $n_{\text{update}}$} 
+\label{fig:rom_metrics_swe_updatefreq}
+\end{center}
+\end{figure}
+
+Next, Figure~\ref{fig:rom_walltimes_swe_updatefreq} reports the relative wall times of the various WLS ROMs with respect to the FOM. We make several interesting observations. We first observe that, for the values of $n_{\text{update}}$ considered, higher values of $n_{\text{update}}$ yield lower wall times for WLS with smaller window sizes. For WLS with larger window sizes, larger values of $n_{\text{update}}$ yield lower wall times until $n_{\text{update}}$ reaches a critical value. After this value has been exceeded, we do not observe a further reduction in cost. For example, WLS with $\Delta T = 10.0$ incurs the same computational cost for $n_{\text{update}} = 5$, as it does for $n_{\text{update}} = 10$ and $n_{\text{update}} = 20$. Similarly, WLS with $\Delta T = 5.0$ incurs the same computational cost for $n_{\text{update}}= 10$ as it does for $n_{\text{update}} = 20$. Across all cases, employing a frozen Jacobian algorithm leads to between a $2$x and $4$x decrease in computational cost. This speedup is obtained without compromising the solution accuracy, as shown in Figure~\ref{fig:rom_metrics_swe_updatefreq}. 
+\begin{figure}
+\begin{center}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.0\linewidth]{figs/swe/swe_windowSize_vs_walltime_updateFreq_K83.pdf}
+\caption{Relative time-integrated $\elltwo$-error.}
+\end{subfigure}
+%\begin{subfigure}[t]{0.49\textwidth}
+%\includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.0\linewidth]{figs/swe/swe_windowSize_vs_walltimeLspg2_updateFreq_K83.pdf}
+%\caption{Time-integrated residual norm.}
+%\end{subfigure}
+\caption{Relative wall times of WLS ROMs solved via the Gauss--Newton method with frozen Jacobians. Results are presented for various Jacobian update frequencies, $n_{\text{update}}$} 
+\label{fig:rom_walltimes_swe_updatefreq}
+\end{center}
+\end{figure}
+
+
 \section{Proper orthogonal decomposition}
 Algorithm~\ref{alg:pod} presents the algorithm for computing the trial basis via proper orthogonal decomposition.
+In the final numerical experiment, trial bases are constructed for a set of varying input parameters. Algorithm~\ref{alg:pod_tlp} describes the construction of the POD bases for this case.
 \begin{algorithm}
 \caption{Algorithm for generating POD basis.}
 \label{alg:pod}
-\textbf{Input:} Number of time-steps between snapshots $N_{\text{skip}}$; intercept $\stateInterceptArg{}$; basis dimension $K$; weighting matrix, $\mathbf{P}$ \; 
+\textbf{Input:} Number of time-steps between snapshots $N_{\text{skip}}$; intercept $\stateInterceptArg{}$; basis dimension $K$; weighting matrix, $\mathbf{T}$ \; 
 %\newline
-\textbf{Output:} POD Basis $\basisspace \in \{ \mathbf{X} \in \RR{\fomdim \times \romdim} | \mathbf{X}^T\mathbf{P} \mathbf{X} = \mathbf{I} \} $ \;
+\textbf{Output:} POD Basis $\basisspace \in \{ \mathbf{X} \in \RR{\fomdim \times \romdim} | \mathbf{X}^T\mathbf{T} \mathbf{X} = \mathbf{I} \} $ \;
 %\newline
 \textbf{Steps:}
 \begin{enumerate}
     \item Solve FOM O$\Delta$E and collect solutions into snapshot matrix
-$$\mathbf{S}(N_{\text{skip}}) \defeq \begin{bmatrix} \stateFOMDiscreteArg{0} - \stateInterceptArg{n} & \stateFOMDiscreteArg{N_{\text{skip}}} - \stateInterceptArg{n} & \cdots & \stateFOMDiscreteArg{\text{floor}(N_t/N_{\text{skip}})N_{\text{skip}}} - \stateInterceptArg{n} \end{bmatrix}$$
-    \item Compute the thin singular value decomposition, $$ \sqrt{\mathbf{P}}^T\mathbf{S} (N_{\text{skip}}) = \mathbf{U \Sigma Z}^T,$$
-    where $\mathbf{U} \equiv \begin{bmatrix} \mathbf{u}_1 & \cdots & \mathbf{u}_{\text{floor}(N_t/N_{\text{skip}})}\end{bmatrix}$ and $\sqrt{\mathbf{P}}$ is the Cholesky decomposition of $\mathbf{P}$, i.e., $\sqrt{\mathbf{P}} \sqrt{\mathbf{P}}^T = \mathbf{P}$
-    \item Truncate left singular vectors and to form the basis, $\basisspace \equiv \begin{bmatrix} [\sqrt{\mathbf{P}}^T]^{-1}  \mathbf{u}_1 & \cdots & [\sqrt{\mathbf{P}}^T]^{-1} \mathbf{u}_K \end{bmatrix}$
+$$\mathbf{S}(N_{\text{skip}}) \defeq \begin{bmatrix} \stateFOMDiscreteArg{0} - \stateInterceptArg{} & \stateFOMDiscreteArg{N_{\text{skip}}} - \stateInterceptArg{} & \cdots & \stateFOMDiscreteArg{\text{floor}(N_t/N_{\text{skip}})N_{\text{skip}}} - \stateInterceptArg{} \end{bmatrix}$$
+    \item Compute the thin singular value decomposition, $$ \sqrt{\mathbf{T}}^T\mathbf{S} (N_{\text{skip}}) = \mathbf{U \Sigma Z}^T,$$
+    where $\sqrt{\mathbf{T}}$ is the Cholesky decomposition of $\mathbf{T}$, i.e., $\sqrt{\mathbf{T}} \sqrt{\mathbf{T}}^T = \mathbf{T}$
+    \item Truncate left singular vectors and to form the basis, $\basisspace \equiv \begin{bmatrix} [\sqrt{\mathbf{T}}^T]^{-1}  \mathbf{u}_1 & \cdots & [\sqrt{\mathbf{T}}^T]^{-1} \mathbf{u}_K \end{bmatrix}$
 \end{enumerate}
-
-
 \end{algorithm}
-
-%In the final numerical experiment, time-local trial bases are constructed for a set of varying input parameters. Algorithm~\ref{alg:pod_tlp} describes the construction of the POD bases for this case.
-%\begin{algorithm}
-%\caption{Algorithm for generating time-local POD basis over multiple parameter instances}
-%\label{alg:pod_tlp}
-%\textbf{Input:} Number of time-steps between snapshots $N_{\text{skip}}$; starting time-instance, $N_s$; number of instances $N_{i}$; intercept $\stateInterceptArg{}$; parameter instances $\param_{1} , \ldots, \param_{n_{\text{train}}}$; basis dimension $K$ \\
-%%\newline
-%\textbf{Output:} POD Basis $\basisspace \in \mathbb{V}_{K}(\RR{N})$ \;
-%%\newline
-%\textbf{Steps:}
-%\begin{enumerate}
-%    \item Solve FOM O$\Delta$E for $\param_1, \ldots, \param_{n_{\text{train}}}$ and collect solutions into snapshot matrix
-%\small{$$\mathbf{S}(N_{\text{skip}}) \defeq \begin{bmatrix} \stateFOMDiscreteParamArg{N_s}{\param_1} - \stateInterceptArg{n} & \cdots & \stateFOMDiscreteParamArg{N_s + N_i N_{\text{skip}}}{\param_1}- \stateInterceptArg{n} & \cdots & \stateFOMDiscreteParamArg{N_s + N_i N_{\text{skip}}}{\param_{n_{\text{train}}}}- \stateInterceptArg{n} \end{bmatrix}$$}
-%    \item Compute the thin singular value decomposition, $$\mathbf{S} (N_{\text{skip}}) = \mathbf{U \Sigma Z}^T,$$
-%    where $\mathbf{U} \equiv \begin{bmatrix} \mathbf{u}_1 & \cdots & \mathbf{u}_{\text{floor}(N_t/N_{\text{skip}})}\end{bmatrix}$
-%    \item Truncate left singular vectors and to form the basis, $\basisspace \equiv \begin{bmatrix} \mathbf{u}_1 & \cdots & \mathbf{u}_K \end{bmatrix}$
-%\end{enumerate}
-%\end{algorithm}
+\begin{algorithm}
+\caption{Algorithm for generating POD basis over multiple parameter instances}
+\label{alg:pod_tlp}
+\textbf{Input:} Number of time-steps between snapshots $N_{\text{skip}}$; intercept $\stateInterceptArg{}$; parameter training set $\mathcal{D}_{\text{train}}$; basis dimension $K$; weighting matrix, $\mathbf{T}$ \;
+%\newline
+\textbf{Output:} POD Basis $\basisspace \in \{ \mathbf{X} \in \RR{\fomdim \times \romdim} | \mathbf{X}^T\mathbf{T} \mathbf{X} = \mathbf{I} \} $ \;
+%\newline
+\textbf{Steps:}
+\begin{enumerate}
+    \item Execute Algorithm~\ref{alg:pod}, with the following modification to step 1: Solve the FOM O$\Delta$E for $\params \in \mathcal{D}_{\text{train}}$ and collect solutions into snapshot matrix
+\small{$$\mathbf{S}(N_{\text{skip}}) \defeq \begin{bmatrix} \stateFOMDiscreteParamArg{0}{\param_1} - \stateInterceptArg{} & \cdots & \stateFOMDiscreteParamArg{\text{floor}(N_t/N_{\text{skip}})N_{\text{skip}}}{\param_1}- \stateInterceptArg{} & \cdots & \stateFOMDiscreteParamArg{\text{floor}(N_t/N_{\text{skip}})N_{\text{skip}}}{\param_{n_{\text{train}}}}- \stateInterceptArg{} \end{bmatrix}$$}
+\end{enumerate}
+\end{algorithm}
 
 
 \section{Selection of sampling points}
 To construct the sampling point matrix used for hyper-reduction in the second numerical experiment, we employ q-sampling~\cite{qdeim_drmac} and the sample 
-mesh concept~\cite{carlberg_gnat}. Algorithm~\ref{alg:qdeim} outlines the steps used in the second numerical experiment to compute the sampling points.
+mesh concept~\cite{carlberg_gnat}. Algorithm~\ref{alg:qdeim} outlines the steps used in the second numerical experiment to compute the sampling points. In the final numerical experiment, trial bases are constructed for a set of varying input parameters. Algorithm~\ref{alg:qdeim_tlp} outlines the steps used for this case.
+
 
 \begin{algorithm}
 \caption{Algorithm for generating the sampling matrix through q-sampling.}
 \label{alg:qdeim}
-\textbf{Input:} Number of time-steps between snapshots $N_{\text{skip}}$, number of primal sampling points, $n_s$ \; 
+\textbf{Input:} Number of time-steps between snapshots $N_{\text{skip}}$, number of primal sampling points, $n_s$, weighting  matrix, $\mathbf{T}$\; 
 %\newline
 \textbf{Output:} Weighting matrix $\stweightingMatArg{} \equiv \stweightingMatOneTArg{} \stweightingMatOneArg{} \in \{0,1\}^{N \times N}$ \;
 %\newline
 \textbf{Steps:}
 \begin{enumerate}
-    \item Solve FOM O$\Delta$E and collect velocity snapshots 
+    \item Solve FOM O$\Delta$E and collect solution snapshots 
 %$$\mathbf{F}(N_{\text{skip}}) \defeq \begin{bmatrix} \velocity (\stateFOMDiscreteArg{0})  & \velocity( \stateFOMDiscreteArg{N_{\text{skip}}}) & \cdots & \velocity( \stateFOMDiscreteArg{\text{floor}(N_t/N_{\text{skip}})N_{\text{skip}}} ) \end{bmatrix}$$
 $$\mathbf{F}(N_{\text{skip}}) \defeq \begin{bmatrix} \stateFOMDiscreteArg{0} & \stateFOMDiscreteArg{N_{\text{skip}}}  & \cdots & \stateFOMDiscreteArg{\text{floor}(N_t/N_{\text{skip}})N_{\text{skip}}} \end{bmatrix}$$
-    \item Compute the thin singular value decomposition, $$\mathbf{F} (N_{\text{skip}}) = \mathbf{U \Sigma Z}^T,$$
+    \item Compute the thin singular value decomposition, $$ \sqrt{\mathbf{T}}^T \mathbf{F} (N_{\text{skip}}) = \mathbf{U \Sigma Z}^T,$$
     where $\mathbf{U} \equiv \begin{bmatrix} \mathbf{u}_1 & \cdots & \mathbf{u}_{\text{floor}(N_t/N_{\text{skip}})}\end{bmatrix}$
-    \item Compute the QR factorization of  $\mathbf{U}^T$ with column pivoting,
+    \item Set  $\basisspace \equiv \begin{bmatrix} [\sqrt{\mathbf{T}}^T]^{-1}  \mathbf{u}_1 & \cdots & [\sqrt{\mathbf{T}}^T]^{-1} \mathbf{u}_{\text{floor}(N_t/N_{\text{skip}}}\end{bmatrix}$
+    \item Compute the QR factorization of  $\mathbf{\basisspace}^T$ with column pivoting,
     \begin{equation*}
-        \mathbf{U}^T \mathbf{P}^* = \mathbf{QR}
+        \mathbf{\basisspace}^T \mathbf{P}^* = \mathbf{QR}
     \end{equation*}
     with $\mathbf{P}^* \equiv \begin{bmatrix} \mathbf{p}_1 & \cdots & \mathbf{p}_{\text{floor}(N_t/N_{\text{skip}})} \end{bmatrix}$, $\mathbf{p}_i \in \{0,1\}^N$. 
     \item Select the first $n_s$ columns of $\mathbf{P}^*$ to form the sampling point matrix $\stweightingMatOneTArg{} \in \{0,1\}^{N \times n_s}$. 
-    \item Augment the sampling point matrix, $\stweightingMatOneArg{}$, with additional columns such that all unknowns are computed at the mesh cells selected by Step 3. For the second numerical experiment, these additional unknowns correspond to each conserved variable and degree of freedom in the selected cells. 
+    \item Augment the sampling point matrix, $\stweightingMatOneArg{}$, with additional columns such that all unknowns are computed at the mesh cells selected by Step 3. 
+\end{enumerate}
+
+
+\end{algorithm}
+\begin{algorithm}
+\caption{Algorithm for generating the sampling matrix through q-sampling.}
+\label{alg:qdeim_tlp}
+\textbf{Input:} Number of time-steps between snapshots $N_{\text{skip}}$, number of primal sampling points, $n_s$, parameter training set $\mathcal{D}_{\text{train}}$, weighting  matrix, $\mathbf{T}$\;
+%\newline
+\textbf{Output:} Weighting matrix $\stweightingMatArg{} \equiv \stweightingMatOneTArg{} \stweightingMatOneArg{} \in \{0,1\}^{N \times N}$ \;
+%\newline
+\textbf{Steps:}
+\begin{enumerate}
+    \item Execute Algorithm~\ref{alg:qdeim}, with the following modification to step 1: Solve the FOM O$\Delta$E for $\params \in \mathcal{D}_{\text{train}}$ and collect solutions into snapshot matrix
+\small{$$\mathbf{F}(N_{\text{skip}}) \defeq \begin{bmatrix} \stateFOMDiscreteParamArg{0}{\param_1}  & \cdots & \stateFOMDiscreteParamArg{\text{floor}(N_t/N_{\text{skip}})N_{\text{skip}}}{\param_1} & \cdots & \stateFOMDiscreteParamArg{\text{floor}(N_t/N_{\text{skip}})N_{\text{skip}}}{\param_{n_{\text{train}}}} \end{bmatrix}$$}
+
 \end{enumerate}
 
 
