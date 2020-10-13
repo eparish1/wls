@@ -19,7 +19,7 @@ $$h(\spatialvar
 v(\spatialvar ,\spatialvarTwo ,0) = 0,\quad (\spatialvar ,\spatialvarTwo ) \in
 \physDomain,$$ which corresponds to a Gaussian pulse centered at $(1,1)$ with
 a magnitude of $\parameter_2$. We consider a parameter domain
-$(\parameter_1,\parameter_2)\in\parameterdomain = [3,9]\times [0.05,2]$.
+$(\parameter_1,\parameter_2)\in\parameterdomain = [3,9]\times [0.05,0.2]$.
 
 \subsubsection{Description of FOM and generation of \spatialAcronym\ trial subspaces}
 The full-order model again comprises a discontinuous Galerkin discretization of the system~\eqref{eq:swes}. We obtain the discretization 
@@ -34,7 +34,7 @@ GMRES algorithm. We employ slip-wall boundary conditions at the edge of the doma
 
 The reduced-order models again leverage POD to construct the \spatialAcronym\ trial basis with q-sampling based on snapshots of the FOM solution to select the sampling points. Once again, a uniform basis and sampling matrix is employed across all windows. The process used to construct the trial subspaces and weighting matrices for the ROMs is as follows:
 \begin{enumerate}
-\item Set the parameter-grid to be $\mathcal{D}_{\text{train}}  \{ 3,6,7 \} \times \{0.05,0.125,0.2\}$. 
+\item Set the parameter-grid to be $\mathcal{D}_{\text{train}}  \{ 3,6,9 \} \times \{0.05,0.125,0.2\}$. 
 \item Execute Algorithm~\ref{alg:pod_tlp} with inputs $N_{\text{skip}} = 2$, $\stateInterceptArg{} = \bz$, $\mathcal{D}_{\text{train}}$, $\romdim = \{ 83,143 ,223 \}$, and $\mathbf{T} = \mathbf{M}_{\text{DG}}$ to construct POD bases capturing $99.9999\%, \; 99.99999\%,$ and $99.999999\%$ of the energy, respectively.
 \item Execute Algorithm~\ref{alg:qdeim_tlp} with inputs $\nskip = 2$, $\nsamples = 150$, $\mathcal{D}_{\text{train}}$ and $\mathbf{T} = \mathbf{M}_{\text{DG}}$ to construct a sample mesh of dimension $\mathbf{S} \in \{0,1\}^{1752\times \fomdim }$.
  \item Set $\stweightingMatOneArg{} = \mathbf{S} \mass_{\text{DG}}$. 
@@ -83,13 +83,13 @@ $\Delta t = 0.02$. The implementation is the same as previously described in Sec
 \end{itemize}
 As an additional benchmark, we consider a time-local multivariate linear regression surrogate model. For each time instance, this surrogate operates by constructing a linear mapping from the input parameters, $(\mu_1 ,\mu_2)$, to the field solution at each grid point. Thus, the surrogate model is given as
 \begin{equation}\label{eq:lin_surrogate}
-\approxstateLR^n = {\approxstateLRIntercept}^n + \mu_0 \mathbf{c_1}^n + \mu_1 \mathbf{c_2}^n ,
+\approxstateLR^n = {\approxstateLRIntercept}^n + \mu_1 \mathbf{c_1}^n + \mu_2 \mathbf{c_2}^n ,
 \end{equation}
 where $\approxstateLRIntercept^n \in \RR{\fomdim}$, $\mathbf{c_1}^n \in \RR{\fomdim}$, $\mathbf{c_2}^n \in \RR{\fomdim}$, $n=0,\ldots,N_t$, with $\fomdim = 196608$, are the model parameters. 
 The surrogate model parameters are fits via \textsf{scikit-learn}~\cite{scikit-learn}. The same training data used for the ROM is used for the surrogate model.
 
 \subsubsection{Numerical results at novel parameter instance}\label{sec:swe_results}
-We investigate the performance of the reduced-order models at the novel parameter instance $(\mu_1, \mu_2) = (7.5,0.16)$. We emphasize that this parameter instance is not in the training set. We consider a set of WLS ROMs that minimize the residuals over $\DeltaSlabArg{n} \equiv \DeltaSlabArg{} = 0.04$, $0.1$, $0.2$, $0.5$, $1.0$, $2.0$, $5.0$, $10.0$, along with LSPG and the linear surrogate model~\eqref{eq:lin_surrogate}. First, Figure~\ref{fig:rom_sols_swe1} presents results for WLS ROMs at $\Delta T = 0.01,0.5,2.0,$ and $10.0$, as well as for the LSPG ROM and the linear regression surrogate model. Figure~\ref{fig:rom_sols_swe1h} depicts the evolution of the surface height at $(x,y) = (-2.4834,-2.4834)$ as a function of time, while Figure~\ref{fig:rom_sols_swe1e} depicts the relative $\elltwo$-error as a function of time. We first observe that the linear regression surrogate model performs significantly worse than all ROMs; this result demonstrates the complex dynamics of the problem and highlights the utility of ROMs. Next, we observe that LSPG yields poor solutions for later time instances. At $t=10$, LSPG only yields a marginally better prediction than the linear surrogate model. We next observe the WLS ROMs to yield improved solutions as compared to LSPG. We observe that the evolution of the surface height as a function of time is better characterized; specifically we once again observe that growing the window size yields smoother solutions. Next, Figure~\ref{fig:rom_hsols_swe} presents surface plots of the surface height, $h$, for the FOM and various ROMs at $t = 10.0$. We observe the LSPG solution to be contaminated by spurious oscillations and, as a result, it fails to accurately characterize the FOM. On the other hand, we observe the WLS ROMs to yield smooth solutions that accurately characterize the FOM.
+We investigate the performance of the reduced-order models at the novel parameter instance $(\mu_1, \mu_2) = (7.5,0.16)$. We emphasize that this parameter instance is not in the training set. We consider a set of WLS ROMs that minimize the residuals over $\DeltaSlabArg{n} \equiv \DeltaSlabArg{} = 0.04$, $0.1$, $0.2$, $0.5$, $1.0$, $2.0$, $5.0$, $10.0$, along with LSPG and the linear surrogate model~\eqref{eq:lin_surrogate}. First, Figure~\ref{fig:rom_sols_swe1} presents results for WLS ROMs at $\Delta T = 0.01,0.5,2.0,$ and $10.0$, as well as for the LSPG ROM and the linear regression surrogate model. Figure~\ref{fig:rom_sols_swe1h} depicts the evolution of the surface height at $(x,y) = (-2.4834,-2.4834)$ as a function of time, while Figure~\ref{fig:rom_sols_swe1e} depicts the relative $\elltwo$-error as a function of time. We first observe that the linear regression surrogate model performs significantly worse than all ROMs; this result demonstrates the complex dynamics of the problem. Next, we observe that LSPG yields poor solutions for later time instances. At $t=10$, LSPG only yields a marginally better prediction than the linear surrogate model. We next observe the WLS ROMs to yield improved solutions as compared to LSPG. We observe that the evolution of the surface height as a function of time is better characterized; specifically we once again observe that growing the window size yields smoother solutions. Next, Figure~\ref{fig:rom_hsols_swe} presents surface plots of the surface height, $h$, for the FOM and various ROMs at $t = 10.0$. We observe the LSPG solution to be contaminated by spurious oscillations and, as a result, it fails to accurately characterize the FOM. On the other hand, we observe the WLS ROMs to yield smooth solutions that accurately characterize the FOM.
  
 
 
@@ -97,15 +97,15 @@ We investigate the performance of the reduced-order models at the novel paramete
 \begin{center}
 \begin{subfigure}[t]{0.49\textwidth}
 \includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.0\linewidth]{figs/swe/swe_h_vs_t_K83.pdf}
-\caption{Surface height at $(x,y) = (-2.4834,-2.4834)$ as a function of time.}
+\caption{Surface height.}
 \label{fig:rom_sols_swe1h}
 \end{subfigure}
 \begin{subfigure}[t]{0.49\textwidth}
 \includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.0\linewidth]{figs/swe/swe_error_vs_t_K83.pdf}
-\caption{Relative error as a function of time.}
+\caption{Relative error.}
 \label{fig:rom_sols_swe1e}
 \end{subfigure}
-\caption{Surface height (left) and relative error (right) as a function of time.} 
+\caption{Surface height at $(x,y) = (-2.4834,-2.4834)$ (left) and relative error (right) as a function of time.} 
 \label{fig:rom_sols_swe1}
 \end{center}
 \end{figure}
@@ -135,7 +135,7 @@ We investigate the performance of the reduced-order models at the novel paramete
 \end{center}
 \end{figure}
 
-Next, Figure~\ref{fig:rom_swe_metrics} depicts the impact of the window size on the relative error and residual norms. The time-integrated $\elltwo$-error of the linear surrogate model is additionally shown for reference. We make the same observations as before: increasing the window size leads to a monotonic decrease in the time-integrated residual norm, but not in the time-integrated error norm. We observe that the time integrated $\elltwo$-error is lowest for an intermeidate window size. At $\Delta T = 1$, the time-integrated $\elltwo$-error of the WLS ROM is approximately half that of LSPG. We additionally note that all ROMs are significantly more accurate than the linear surrogate model. Similarly, WLS with $\Delta T = 10.0$ yields a time-integrated residual norm that is almost three orders of magnitude lower than LSPG. 
+Figure~\ref{fig:rom_swe_metrics} depicts the impact of the window size on the relative error and residual norms. The time-integrated $\elltwo$-error of the linear surrogate model is additionally shown for reference. We make the same observations as before: increasing the window size leads to a monotonic decrease in the time-integrated residual norm, but not in the time-integrated error norm. We observe that the time integrated $\elltwo$-error is lowest for an intermediate window size. At $\Delta T = 1$, the time-integrated $\elltwo$-error of the WLS ROM is approximately half that of LSPG. We additionally note that all ROMs are significantly more accurate than the linear surrogate model. Similarly, WLS with $\Delta T = 10.0$ yields a time-integrated residual norm that is almost three orders of magnitude lower than LSPG. 
 
 
 \begin{figure}
@@ -150,12 +150,12 @@ Next, Figure~\ref{fig:rom_swe_metrics} depicts the impact of the window size on 
 \caption{Time-integrated residual norm.}
 \end{subfigure}
 %\begin{subfigure}[t]{0.85\textwidth}
-\caption{Time-integrated performance metrics of the LSPG and WLS ROMs as a function of window size} 
+\caption{Time-integrated error metrics of the LSPG and WLS ROMs as a function of window size} 
 \label{fig:rom_swe_metrics}
 \end{center}
 \end{figure}
 
-Next, Figure~\ref{fig:rom_swe_timings} presents timings for the various ROMs as a function of the window size. We note that, as described in Section~\ref{sec:swe_describe_roms}, all ROMs employ a Gauss--Newton solve with a Jacobian update frequency of $n_{\text{update}} = 10$; the sensitity of the results to this parameter are detailed in Appendix~\ref{appendix:gnupdate}. We again obsere that the cost of WLS grows with window size: WLS with $\Delta T = 10.0$ ($=500\Delta t$) incurs a 5x increase in computational cost with repsect to LSPG. With respect to the FOM, we observe LSPG to result in a $20$x speedup, while WLS with the largest window size $\Delta T = 10.0$ yields a $4$x speedup.  
+Figure~\ref{fig:rom_swe_timings} presents timings for the various ROMs as a function of the window size. We note that, as described in Section~\ref{sec:swe_describe_roms}, all ROMs employ a Gauss--Newton solve with a Jacobian update frequency of $n_{\text{update}} = 10$; the sensitity of the results to this parameter are detailed in Appendix~\ref{appendix:gnupdate}. We again observe that the cost of WLS grows with window size: WLS with $\Delta T = 10.0$ ($=500\Delta t$) incurs a 5x increase in computational cost with respect to LSPG. With respect to the FOM, we observe LSPG to result in a $20$x speedup, while WLS with the largest window size $\Delta T = 10.0$ yields a $4$x speedup.  
 \begin{figure}
 \begin{center}
 %\begin{subfigure}[t]{0.85\textwidth}
@@ -172,7 +172,7 @@ Next, Figure~\ref{fig:rom_swe_timings} presents timings for the various ROMs as 
 \end{figure}
 
 We next assess the impact of the basis dimension on the results. Figure~\ref{fig:rom_swe_converge} summarizes the performance of WLS and LSPG ROMs as a function of basis dimension. We first observe that LSPG, and WLS with smaller window sizes, do not display monotonic convergence with increasing basis dimension. 
-We expect that this lack of convergence is because of the fact that, as the basis dimension increases, the ROM trial space can represent sharper gradients. Without proper stabilization, this can yield spurious oscillations, as previously observed in Figure~\ref{fig:rom_hsols_swe}. As the window size increases, the ROM is more stable and, thus, increasing the basis dimension yields improved solutions. 
+We expect that this lack of convergence is due to the fact that, as the basis dimension increases, the ROM trial space can represent sharper gradients. Without proper stabilization, this can yield spurious oscillations, as previously observed in Figure~\ref{fig:rom_hsols_swe}. As the window size increases, the ROM is more stable and, thus, increasing the basis dimension yields improved solutions. 
 For window sizes of $\Delta T \ge 0.5$, we observe that increasing the basis dimension leads to a monotonic decrease in both the time-integrated $\elltwo$-error and residual norm. 
 
 \begin{figure}
@@ -187,7 +187,7 @@ For window sizes of $\Delta T \ge 0.5$, we observe that increasing the basis dim
 \caption{Time integrated residual norm.}
 \end{subfigure}
 %\begin{subfigure}[t]{0.85\textwidth}
-\caption{Performance metrics of the LSPG and WLS ROMs as a function of basis dimension.} 
+\caption{Time-integrated error metrics of the LSPG and WLS ROMs as a function of basis dimension.} 
 \label{fig:rom_swe_converge}
 \end{center}
 \end{figure}
@@ -198,14 +198,14 @@ Lastly, Figure~\ref{fig:rom_swe_pareto} presents Pareto plots for the time-integ
 %\begin{subfigure}[t]{0.85\textwidth}
 \begin{subfigure}[t]{0.49\textwidth}
 \includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.0\linewidth]{figs/swe/swe_converge_error_pareto.pdf}
-\caption{Relative time-inegrated $\elltwo$-error.}
+%\caption{Relative time-inegrated $\elltwo$-error.}
 \end{subfigure}
 \begin{subfigure}[t]{0.49\textwidth}
 \includegraphics[trim={0cm 0cm 0cm 0cm},clip,width=1.0\linewidth]{figs/swe/swe_converge_resid_pareto.pdf}
-\caption{Time integrated residual norm.}
+%\caption{Time integrated residual norm.}
 \end{subfigure}
 %\begin{subfigure}[t]{0.85\textwidth}
-\caption{Performance metrics of the LSPG and WLS ROMs as a function of basis dimension.} 
+\caption{Pareto fronts for the time-integrated $\elltwo$-error (left) and time-integrated residual (right) for LSPG and WLS ROMs.} 
 \label{fig:rom_swe_pareto}
 \end{center}
 \end{figure}

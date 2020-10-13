@@ -20,7 +20,7 @@
 
 \address[a]{Sandia National Laboratories,  Livermore, CA}
 \begin{abstract}
-This work proposes a \methodNameLower\ (\methodAcronym) approach for model-reduction
+This work proposes a \methodNameLower\ (\methodAcronym) approach for model reduction
 	of dynamical systems. The proposed approach sequentially minimizes the
 	time-continuous full-order-model residual within a low-dimensional space--time trial
 	subspace over time windows. The approach comprises a generalization 
@@ -28,7 +28,7 @@ of existing model reduction approaches, as particular instances of
   the methodology recover Galerkin,
 	least-squares Petrov--Galerkin (LSPG), and space–time LSPG projection. In
 	addition, the approach
-	addresses key deficiencies in existing model-reduction
+	addresses key deficiencies in existing model reduction
 	techniques, e.g., the dependence of LSPG and space--time LSPG projection on the
 	time discretization and the exponential growth in time exhibited by \textit{a posteriori}
 	error bounds for both Galerkin and LSPG projection.  We consider two types of
@@ -108,7 +108,7 @@ methods for the current work and comprise the focus of the following review.
 
 Residual-minimization methods in model reduction compute the solution within a
 low-dimensional trial subspace that minimizes the full-order-model residual.\footnote{While we focus our review on residual-minimization approaches in the context of model reduction, we note that these approaches are intimately related to least-squares finite element methods~\cite{bochev_leastsquares,bochev_lsfem_book}.}
-Researchers have developed such residual-minimizing model-reduction methods
+Researchers have developed such residual-minimizing model reduction methods
 for both static systems (i.e., systems without time-dependence)
 \cite{legresley_1,legresley_2,legresley_3,bui_resmin_steady,rovas_thesis,carlberg_thesis,bui_thesis}
 and dynamical
@@ -234,7 +234,7 @@ to explore more fine-grained tradeoffs between computational cost and error.
 Finally, \methodAcronym\ is formulated for two kinds of space--time trial
 subspaces: one that associates with spatial dimension reduction (as employed by traditional spatial-projection-based methods), and one that associates with space--time dimension reduction (as employed by space--time methods).
 The above attributes allow the \methodAcronym\ approach to be viewed as a
-generalization of existing model-reduction methods, as 
+generalization of existing model reduction methods, as 
 Galerkin, LSPG, and space--time LSPG projection correspond to specific
 instances of the formulation.
 Figure~\ref{fig:flowchart} depicts how the proposed \methodAcronym\ method
@@ -347,7 +347,7 @@ function with respect to time with the $\dot\ $ operator.
 %\begin{comment} 
 \section{Mathematical formulation}\label{sec:math}
 	We begin by providing the formulation for the full-order model,
-	followed by a description of standard model-reduction methods
+	followed by a description of standard model reduction methods
 	classified according to the type of trial subspace they employ.
 	\subsection{Full-order model}\label{sec;FOM}
 We consider the full-order model to be a dynamical system expressed as a
@@ -375,7 +375,7 @@ $T \in \RRplus$ denotes the final time,
 	although the problem of interest described in the introduction corresponds
 	to a parameterized dynamical system, we suppress dependence of the FOM ODE
 	\eqref{eq:FOM} on such parameters for notational convenience, as this work
-	focuses on devising a model-reduction approach applicable to a specific parameter instance.
+	focuses on devising a model reduction approach applicable to a specific parameter instance.
 
 Directly solving the FOM ODE~\eqref{eq:FOM} is computationally expensive if
 	either the state-space dimension $\fomdim$ is large, or if the time-interval
@@ -672,7 +672,7 @@ O$\Delta$E residual over all time instances.
   
 \subsection{Outstanding challenges}
 This work seeks to overcome the limitations of existing residual-minimizing
-model-reduction methods, and to provide a unifying framework from which
+model reduction methods, and to provide a unifying framework from which
 existing methods can be assessed. Specifically, we look to overcome the
 complex dependence of LSPG on the time discretization,
 exponential time growth of the error bounds for Galerkin and LSPG,
@@ -729,7 +729,7 @@ The principal challenge encountered in the \methodAcronym\ formulation is the co
 %$$\genstate = \genstate_s \otimes \genstate_t$$
 
 \section{Acknowledgments}
-The authors thank Yukiko Shimizu and Patrick Blonigan for numerous conversations from which this work benefited. 
+The authors thank Yukiko Shimizu, Patrick Blonigan, and Francesco Rizzi for numerous conversations from which this work benefited. 
 E.\ Parish acknowledges an appointment to the Sandia National Laboratories'
 John von Neumann Postdoctoral Research Fellowship in Computational Science. 
 This work was partially sponsored by Sandia's Advanced Simulation and

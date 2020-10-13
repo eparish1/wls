@@ -1,5 +1,5 @@
 \section{Numerical experiments}\label{sec:numerical_experiments}
-We now analyze the performance of \methodAcronymROMs\ leveraging \spatialAcronym\ trial subspaces on three benchmark problems: (1) a reproductive ROM for the Sod shock tube problem (2) a reproductive ROM for a supersonic compressible flow in a cavity, and (3) a predictive ROM for the parameterized shallow water equations. In each experiment, we compare \methodAcronymROMs\ to either the LSPG, or the Galerkin and LSPG, ROMs. In the experiments, we assess (1) the impact of minimizing the residual over an arbitrarily sized time window on the solution accuracy, (2) the impact of the time step and time scheme on \methodAcronym, (3) the impact of the window size on the convergence properties of the ROMs, and (4) the impact of the window size on the cost of the ROMs. In all experiments, the spatial basis is equivalent for each time window, e.g., $\basisspaceArg{n} \equiv \basisspace$, $n=1,\ldots,\nslabs$. We note that the first two experiments are designed to test the \textit{reproductive} ability of the ROMs, while the third experiment tests the predictive capabilities of the ROM. 
+We now analyze the performance of \methodAcronymROMs\ leveraging \spatialAcronym\ trial subspaces on three benchmark problems: (1) a reproductive ROM for the Sod shock tube problem (2) a reproductive ROM for a supersonic compressible flow in a cavity, and (3) a predictive ROM for the parameterized shallow water equations. In each experiment, we compare \methodAcronymROMs\ to either the LSPG, or the Galerkin and LSPG, ROMs. In the experiments, we assess (1) the impact of minimizing the residual over different sized time windows on the solution accuracy, (2) the impact of the time step and time scheme on \methodAcronym, (3) the impact of the window size on the convergence properties of the ROMs, and (4) the impact of the window size on the cost of the ROMs. In all experiments, the spatial basis is equivalent for each time window, e.g., $\basisspaceArg{n} \equiv \basisspace$, $n=1,\ldots,\nslabs$. We note that the first two experiments are designed to test the \textit{reproductive} ability of the ROMs, while the third experiment tests the predictive capabilities of the ROM. The following numerical experiments are all executed on a machine with a 2.7 GHz 12-Core Intel Xeon E5 processor. All codes are written efficiently in Python, and we report timings for runs executed in serial. 
  
 \subsection{Sod shock tube}
 We first consider reduced-order models of the Sod shock tube problem, which is governed by the compressible Euler equations in one dimension, 
@@ -65,7 +65,7 @@ arising over each window with the Gauss--Newton method, and solve the linear
 		the gradient norm is less than $10^{-4}$ (i.e., we use the parameter $\epsilon = 10^{-4}$ in Algorithm~\ref{alg:colloc_gn}). Critically, we note that we assemble the (sparse) Jacobian 
 matrix over a window by computing local (dense) Jacobians. We store the Jacobian matrix over a window in a compressed sparse row format. We employ uniform quadrature weights for evaluating the integral in~\eqref{eq:obj_gen_slab}. 
 
-\item \textit{Indirect method}: We consider two \methodAcronymROMs\ solved via the indirect method. The first uses the same CN discretization at at time step of $\Delta t = 0.002$, while the second uses the AB2 discretization using a time step of $\Delta t = 0.0005$. We solve the coupled two-point boundary 
+\item \textit{Indirect method}: We consider two \methodAcronymROMs\ solved via the indirect method. The first uses the same CN discretization at a time step of $\Delta t = 0.002$, while the second uses the AB2 discretization using a time step of $\Delta t = 0.0005$. We solve the coupled two-point boundary 
 problem via the forward--backward sweep method, and compute the action of the Jacobian transpose on vectors via automatic differentiation. We use parameters $\epsilon = 10^{-6}$, $\fbsmGrowth = 1.1$, and $\fbsmDecay=2$ in Algorithm~\ref{alg:st_iter}. 
 \end{itemize}
 \end{itemize}
@@ -235,12 +235,12 @@ are less than 6x the cost of LSPG; this is despite the window sizes comprising u
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/error_vs_window_dtvar.pdf}
 \caption{Relative time-integrated $\elltwo$-error of the \methodAcronymROM.}
-\label{fig:sod_error_methods_a}
+\label{fig:sod_time_step_a}
 \end{subfigure}
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/objective_vs_window_dtvar.pdf}
 \caption{Time-integrated residual norm of the \methodAcronymROM.} 
-\label{fig:sod_error_methods_b}
+\label{fig:sod_time_step_b}
 \end{subfigure}
 \caption{Performance metrics of the Galerkin, LSPG, and \methodAcronymROMs.} 
 \label{fig:time_step_study}
@@ -261,7 +261,7 @@ are less than 6x the cost of LSPG; this is despite the window sizes comprising u
 
 
 \subsubsection{Results as a function of basis dimension}
-Lastly, we assess the impact of the basis dimension on the performance of the various reduced-order models. We again consider S-reduction trial subspaces. We obtain the trial subspaces by evolving the FOM for $t \in [0.0,1.0]$ at a time-step of $\Delta t = 0.002$ with the CN scheme. We execute Algorithm~\ref{alg:pod} with inputs $N_{\text{skip}} = 2$, $\stateIntercept = \state_0$\footnote{We observed negative pressures in the projected initial conditions for trial subspaces of dimension $K=20,30,40$ if we used the offset $\stateIntercept = \bz$. Thus, for our convergence study we employed $\stateIntercept = \state_0$ so-as to avoid negative pressures in the projected initial conditions.}, and $\romdim = 10,20,30,40,50$. We investigate reduced-order models based on Galerkin projection, LSPG projection, and the WLS approach. All methods leverage the CN time scheme with $\Delta t = 0.002$. We present results for windows of size $\Delta T^n \equiv \Delta T = 0.002,0.004,0.02,0.04,0.10$ for the WLS approach. All WLS ROMs are solved via the direct approach described previously. 
+Lastly, we assess the impact of the basis dimension on the performance of the various reduced-order models. We again consider S-reduction trial subspaces. We obtain the trial subspaces by evolving the FOM for $t \in [0.0,1.0]$ at a time-step of $\Delta t = 0.002$ with the CN scheme. We execute Algorithm~\ref{alg:pod} with inputs $N_{\text{skip}} = 2$, $\stateIntercept = \state_0$\footnote{We observed negative pressures in the projected initial conditions for trial subspaces of dimension $K=20,30,40$ if we used the offset $\stateIntercept = \bz$. Thus, for our convergence study we employed $\stateIntercept = \state_0$ so-as to avoid negative pressures in the projected initial conditions.}, and $\romdim = 10,20,30,40,50$. We investigate reduced-order models based on Galerkin projection, LSPG projection, and the WLS approach. All methods leverage the CN time scheme with $\Delta t = 0.002$. We present results for windows of size $\Delta T^n \equiv \Delta T = 0.002,0.004,0.02,0.04,0.20$ for the WLS approach. All WLS ROMs are solved via the direct approach described previously. 
 
 Figure~\ref{fig:convergence_study} shows the time-integrated $\ell^2$-error of the various ROM solutions, as well as that of the optimal solution as measured in the $\ell^2$-norm (i.e., the orthogonal projection of the FOM solution onto the trial subspace). In Figure~\ref{fig:sod_error_converge} we first observe that for a basis of dimension $\romdim = 10$, the Galerkin, LSPG, and WLS ($\Delta T = 0.002$, $\Delta T = 0.004$) ROMs do not converge. Upon investigation, this lack of convergence occurred due to the presence of negative pressure. We next observe that the time-integrated $\ell^2$-error monotonically decreases as the basis dimension increases for all remaining ROM solutions with the exception of the Galerkin, LSPG, and WLS ($\Delta T = 0.002$, $\Delta T = 0.004$) ROMs at the dimension $\romdim = 30$. Overall, we observe that larger window sizes yield lower errors when the basis dimension is small. For larger basis dimensions we observe all ROMs to yield accurate solutions, and a larger window size does not always yield a lower error. In Figure~\ref{fig:sod_residual_converge}, we next observe that the time-integrated residual norm monotonically decreases as the basis dimension grows. This result is supported, although not guaranteed, by the error analysis presented in Section~\ref{sec:analysis} (and Ref.~\cite{carlberg_lspg_v_galerkin} for LSPG). Finally, we observe that larger window sizes yield lower time-integrated residuals.  
 
@@ -290,29 +290,29 @@ Next, Figure~\ref{fig:convergence_study_pareto} presents Pareto plots for the ti
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/pareto_error.pdf}
 \caption{Relative time-integrated $\elltwo$-error of the \methodAcronymROM.}
-\label{fig:sod_error_converge}
+\label{fig:sod_error_converge_pareto}
 \end{subfigure}
 \begin{subfigure}[t]{0.45\textwidth}
 \includegraphics[width=1.\linewidth]{figs/sod/pareto_resids.pdf}
 \caption{Time-integrated residual norm of the \methodAcronymROM.} 
-\label{fig:sod_residual_converge}
+\label{fig:sod_residual_converge_pareto}
 \end{subfigure}
 \caption{Pareto fronts for the time-integrate $\elltwo$-error (left) and time-integrated residual norm (right) as a function of wall-clock time.} 
 \label{fig:convergence_study_pareto}
 \end{center}
 \end{figure}
 
-\begin{figure}
-\begin{center}
-\begin{subfigure}[t]{0.45\textwidth}
-\includegraphics[width=1.\linewidth]{figs/sod/converge_walltimes.pdf}
-\caption{Relative time-integrated $\elltwo$-error of the \methodAcronymROM.}
-\label{fig:sod_error_converge}
-\end{subfigure}
-\caption{Performance metrics of the Galerkin, LSPG, and \methodAcronymROMs\ as a function of basis dimension. Missing entries indicate that the solver did not converge.} 
-\label{fig:convergence_study}
-\end{center}
-\end{figure}
+%\begin{figure}
+%\begin{center}
+%\begin{subfigure}[t]{0.45\textwidth}
+%\includegraphics[width=1.\linewidth]{figs/sod/converge_walltimes.pdf}
+%\caption{Relative time-integrated $\elltwo$-error of the \methodAcronymROM.}
+%\label{fig:sod_error_converge}
+%\end{subfigure}
+%\caption{Performance metrics of the Galerkin, LSPG, and \methodAcronymROMs\ as a function of basis dimension. Missing entries indicate that the solver did not converge.} 
+%\label{fig:convergence_study}
+%\end{center}
+%\end{figure}
 
 
 \subsubsection{Summary of numerical results for the Sod shock tube}
